@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "MunziAppV2",
+    "slug": "MunziAppV2",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "MunziAppV2"
+}
