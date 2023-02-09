@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, Text, View, Button, TextInput,ScrollView, FlatList, TouchableOpacity, Alert, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { Provider as StoreProvider } from "react-redux";
 import store from "./src/components/Redux/Store";
-import NavigationProvider from './src/Dashboard/Navigation';
+import NavigationProvider from './src/Routes/Navigation';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { LogBox } from 'react-native';
 import { NativeBaseProvider } from 'native-base';

@@ -1,44 +1,41 @@
 import React,{useState} from "react";
 import "react-native-gesture-handler";
-import { StyleSheet, Text, View, Button, TextInput, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import store from "../components/Redux/Store";
-import Dashboard from "./Home";
+import Dashboard from "../Dashboard/Home";
 import { Register } from "../../Register";
 import { LoginPage } from "../Login/Login";
-import MyWallet from "./MyWallet";
+import MyWallet from "../Dashboard/MyWallet";
 import { useDispatch, useSelector } from "react-redux";
-import CreateWallet from "./CreateWallet";
-import ImportWallet from "./ImportWallet"
-import { CardStyleInterpolators, TransitionPreset } from '@react-navigation/stack';
-import { TransitionPresets } from '@react-navigation/stack';
-import MyHeader from "./MyHeader";
-import MyHeader2 from "./MyHeader2";
+import CreateWallet from "../Dashboard/CreateWallet";
+import ImportWallet from "../Dashboard/ImportWallet"
+import MyHeader from "../Dashboard/MyHeader";
+import MyHeader2 from "../Dashboard/MyHeader2";
 import { Extend, Collapse } from "../components/Redux/actions/auth";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { ConfirmOtp } from "../Register/confirmOtp";
 import Generate from "../../Generate"
-import { CoinDetails } from "./CoinDetail";
-import {TxDetail} from "./TxDetail";
-import Welcome from "./Welcome";
-import GenerateWallet from "./GenerateWallet";
-import PrivateKey from "./PrivateKey";
-import Passcode from "./Passcode";
-import ImportAccount from "./ImportAccount";
-import ImportMunziWallet from "./importMunziWallet";
-import ImportOtherWallets from "./ImportOtherWallets"
-import ImportBscWallet from "./importBscWallet";
-import ImportPolygon from "./importPolygon";
-import ImportXrp from "./importXrp";
-import CheckMnemonic from "./CheckMnemonic";
-import ConfirmTransaction from "./ConfirmTransaction";
-import SendTokens from "./tokens/SendTokens";
-import Transactions from "./Transactions";
-import AllWallets from "./Wallets/allWallets";
-import ExchangeRoutes from "./exchange/crypto-exchange-front-end-main/src/exchangeRoutes";
-import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
-import { ExchangeRegister } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/signup";
+import { CoinDetails } from "../Dashboard/CoinDetail";
+import {TxDetail} from "../Dashboard/TxDetail";
+import Welcome from "../Dashboard/Welcome";
+import GenerateWallet from "../Dashboard/GenerateWallet";
+import PrivateKey from "../Dashboard/PrivateKey";
+import Passcode from "../Dashboard/Passcode";
+import ImportAccount from "../Dashboard/ImportAccount";
+import ImportMunziWallet from "../Dashboard/importMunziWallet";
+import ImportOtherWallets from "../Dashboard/ImportOtherWallets"
+import ImportBscWallet from "../Dashboard/importBscWallet";
+import ImportPolygon from "../Dashboard/importPolygon";
+import ImportXrp from "../Dashboard/importXrp";
+import CheckMnemonic from "../Dashboard/CheckMnemonic";
+import ConfirmTransaction from "../Dashboard/ConfirmTransaction";
+import SendTokens from "../Dashboard/tokens/SendTokens";
+import Transactions from "../Dashboard/Transactions";
+import AllWallets from "../Dashboard/Wallets/allWallets";
+import ExchangeRoutes from "../Dashboard/exchange/crypto-exchange-front-end-main/src/exchangeRoutes";
+import { ExchangeLogin } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
+import { ExchangeRegister } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/signup";
 const Stack = createNativeStackNavigator();
 
 
