@@ -1,0 +1,192 @@
+import { LoadingButton } from '@mui/lab'
+import {  Box, Modal } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { authRequest, GET, POST } from '../api'
+import { modalStyle } from './style.modal'
+import { StyleSheet, Text, View,  Button, TouchableOpacity, ScrollView} from "react-native";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import Modal2 from "react-native-modal";
+import { ActivityIndicator, DataTable } from 'react-native-paper'
+
+export const OfferBidsView = ({ offer, self = false }) => {
+  const [modalMessage, setModalMessage] = useState('')
+  const [bids, setBids] = useState()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const[loading,setLoading] = useState(false)
+  const[open,setOpen] = useState(false)
+  const handleOpen = () => {
+    setOpen(true)
+  }
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  useEffect(() => {
+    getOfferDetails()
+  }, [])
+
+  const getOfferDetails = async () => {
+    try {
+      const { err, res } = await authRequest(
+        `/offers/getOfferDetails/${offer._id}`,
+        GET,
+      )
+      if (err) return setModalMessage(`${err.status}: ${err.message}`)
+      setBids(res.offerBids)
+    } catch (err) {
+      console.log(err)
+      setModalMessage(err.message || 'Something went wrong')
+    }
+  }
+
+  const acceptBid = async (bid) => {
+    try {
+      setIsSubmitting(true)
+      const { err } = await authRequest(`/offers/acceptABid`, POST, {
+        offerId: offer._id,
+        bidId: bid._id,
+      })
+      if (err){
+        alert(`${err.message}`)
+        setLoading(false)
+        return setModalMessage(`${err.status}: ${err.message}`)
+      } 
+      setModalMessage('success')
+      setLoading(false)
+      setOpen(false)
+      return alert('Bid Accepted Successfully')
+    } catch (err) {
+      console.log(err)
+      setLoading(false)
+
+      setModalMessage(err.message || 'Something went wrong')
+    } finally {
+      setLoading(false)
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <>
+    <View >
+       
+        <TouchableOpacity
+         style={{width:wp(15), height:hp(3), backgroundColor:'blue', borderRadius:10, alignItems:'center'}}
+         onPress={handleOpen}
+         >
+         <Text style={{fontSize:13, color:'white'}}>See Bids</Text> 
+        </TouchableOpacity>
+      
+      
+       
+      <Modal2
+        animationIn="slideInRight"
+        animationOut="slideOutRight"
+        animationInTiming={100}
+        animationOutTiming={200}
+        isVisible={open}
+        useNativeDriver={true}
+        onBackdropPress={()=>{
+          setOpen(false)
+        }}
+        onBackButtonPress={() => {
+          //setShowModal(!showModal);
+          setOpen(false)
+        }}
+        >
+          <View style={{
+      height: hp(50),
+      width:wp(80),
+      backgroundColor:'white',
+      borderTopRightRadius:10,
+      borderTopLeftRadius:10}} >
+        <View style={{alignItems:'center'}}>
+           <Text > {offer.amount} {offer.assetName} for {offer.pricePerUnit}{' '}
+            {offer.currencyName} per unit.</Text>
+          </View>
+          <Text >{modalMessage}</Text>
+          {bids ? (
+            <DataTable style={styles.container}>
+              <DataTable.Header style={styles.tableHeader}>               
+                  <DataTable.Title>Bid Amount</DataTable.Title>
+                  <DataTable.Title>Bidder</DataTable.Title>
+                  <DataTable.Title>Status</DataTable.Title>
+                  {self && <DataTable.Title></DataTable.Title>}
+              </DataTable.Header>
+                {bids.length ? (
+                  bids.map((bid) => (
+                    <>
+                      <DataTable.Row  key={bid._id}>
+                        <DataTable.Cell >{bid.pricePerUnit}</DataTable.Cell >
+                        <DataTable.Cell >
+                          {bid.user.firstName} {bid.user.lastName}
+                        </DataTable.Cell >
+                        <DataTable.Cell >{bid.status}</DataTable.Cell >
+                        {self&&(
+
+                          
+                          <View>
+                          
+                          <Button
+                            title='Accept Bid'
+                            
+                            //loading={isSubmitting}
+                            color={'blue'}
+                            onPress={() => {
+                              setLoading(true)
+                              acceptBid(bid)
+                            }}
+                            >
+                            </Button>
+                              </View>
+                            )
+                            }
+                            
+                            </DataTable.Row >
+                    </>
+                  ))
+                  ) : (
+                    <DataTable.Row>
+                    <DataTable.Cell >No bids found</DataTable.Cell >
+                  </DataTable.Row>
+                )}
+            </DataTable>
+          ) : (
+            <Text>Loading...</Text>
+            )}
+            {loading?<ActivityIndicator size={'large'} color={'blue'} />:<View></View>}
+            </View>
+      </Modal2>
+            </View>
+    </>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    width:wp(80),
+    height:hp(70),
+  },
+  scrollView:{
+    width:wp(90),
+  },
+  tableHeader: {
+    backgroundColor: '#DCDCDC',
+  },
+  table:{
+   
+      display:'flex',
+      alignContent:'center',
+      alignItems:'center',
+      textAlign:'center',
+    
+  },
+  content:{
+    display:'flex',
+    alignContent:'center',
+    alignItems:'center',
+    textAlign:'center',
+    height:hp(100)
+  },
+  
+})
