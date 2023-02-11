@@ -39,7 +39,7 @@ import { ExchangeRegister } from "../Dashboard/exchange/crypto-exchange-front-en
 const Stack = createNativeStackNavigator();
 
 
-const AuthStack = ({Header1,Header2, state, dispatch, getHeaderTitle}) => (
+const AuthStack = () => (
   
   <NavigationContainer>
     <Stack.Navigator initialRouteName="Passcode" mode='modal' 

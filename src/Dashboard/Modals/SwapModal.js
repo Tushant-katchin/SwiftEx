@@ -21,6 +21,7 @@ import PancakeList from "../tokens/pancakeSwap/PancakeList.json"
 import chooseSwap from '../tokens/chooseSwap.json'
 import { getSwapPrice } from '../tokens/pancakeSwap/pancakeFunctions';
 import SelectSwap from './SelectSwap';
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
 const UNISWAP = require("@uniswap/sdk")
 const { Token, WETH, Fetcher, Route, Trade, TokenAmount, TradeType, Percent} = require("@uniswap/sdk");
 
@@ -96,7 +97,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
 
     const SaveTransaction = async (type,hash,walletType,chainType) => {
       const user = await state.user
-      const token = await state.token
+      const token = await AsyncStorageLib.getItem('token')
 
               try {
           const response= await fetch(`http://${urls.testUrl}/user/saveTx`, {
@@ -106,10 +107,10 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
                      'Content-Type': 'application/json'
             },
            body: JSON.stringify({
+            token:token,
             user: user,
             type:type,
             hash:hash,
-            token:token,
             walletType:walletType,
             chainType:chainType
 
@@ -539,6 +540,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
       <View style={{display:'flex', flexDirection:'row'}}> 
 
       <TextInput style={styles.textInput2} 
+      keyboardType='numeric'
       placeholder="0"
       onChangeText={(text) => {
         setAmount(text)
@@ -565,6 +567,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
       <View style={{display:'flex', flexDirection:'row'}}> 
 
       <TextInput style={styles.textInput2} 
+      keyboardType='numeric'
       placeholder={tradePrice?`${tradePrice.token1totoken2}`:'0'}
       onChangeText={(text) => {
         setAmount2(text)

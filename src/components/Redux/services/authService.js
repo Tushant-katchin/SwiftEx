@@ -5,6 +5,7 @@ import "@ethersproject/shims"
 import { ethers } from "ethers"
 import { saveFile, encryptFile } from "../../../utilities/utilities";
 import { urls } from "../../../Dashboard/constants";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
 const logIn = async (user) => {
   console.log("user info", user)
   let response
@@ -240,7 +241,7 @@ const getBalance = async (address) => {
   console.log(e)
 }  */
 
-
+ const token = await AsyncStorageLib.getItem('token')
 
   const response = await fetch(`http://${urls.testUrl}/user/Balance`, {
     method: 'POST',
@@ -249,6 +250,7 @@ const getBalance = async (address) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
+      token:token,
       address:address})
     }).then((response) => response.json())
     .then( (responseJson) => {
@@ -297,6 +299,7 @@ const getBalance = async (address) => {
   };
 
   const getEthBalance = async (address) =>{
+    const token = await AsyncStorageLib.getItem('token')
 
     const response = await fetch(`http://${urls.testUrl}/user/getEthBalance`, {
     method: 'POST',
@@ -305,6 +308,7 @@ const getBalance = async (address) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
+      token:token,
       address:address})
     }).then((response) => response.json())
     .then( (responseJson) => {
@@ -690,6 +694,7 @@ return{
 
 const getMaticBalance = async (address) =>{
 
+  const token = await AsyncStorageLib.getItem('token')
   const response = await fetch(`http://${urls.testUrl}/user/getMaticBalance`, {
     method: 'POST',
     headers: {
@@ -697,6 +702,7 @@ const getMaticBalance = async (address) =>{
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
+      token:token,
       address:address})
     }).then((response) => response.json())
     .then( (responseJson) => {
@@ -742,6 +748,7 @@ const getMaticBalance = async (address) =>{
 
   }
   const getXrpBalance = async (address) =>{
+    const token = await AsyncStorageLib.getItem('token')
     const response = await fetch(`http://${urls.testUrl}/user/getXrpBalance`, {
     method: 'POST',
     headers: {
@@ -749,6 +756,7 @@ const getMaticBalance = async (address) =>{
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
+      token:token,
       address:address})
     }).then((response) => response.json())
     .then( (responseJson) => {

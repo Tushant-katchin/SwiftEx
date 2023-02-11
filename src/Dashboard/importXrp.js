@@ -215,9 +215,9 @@ async function saveUserDetails(address){
                       }]
                       AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(allWallets))
                       AsyncStorageLib.setItem("user",accountName)
-                      AsyncStorageLib.setItem(`wallet`,JSON.stringify(wallet))
+                      AsyncStorageLib.setItem("wallet",JSON.stringify(allWallets[0]))
                       AsyncStorageLib.setItem('currentWallet',accountName)
-
+                      AsyncStorageLib.setItem("token",token)
                       dispatch(setUser(accountName))
                       dispatch(setCurrentWallet(wallet.address,accountName,privateKey, wallet.classicAddress))
                       dispatch(AddToAllWallets(wallets,accountName))
@@ -284,11 +284,11 @@ async function saveUserDetails(address){
                         walletType:'Xrp',
 
                       }]
+                      AsyncStorageLib.setItem("wallet",JSON.stringify(allWallets[0]))
                       AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(allWallets))
                       AsyncStorageLib.setItem("user",accountName)
-                      AsyncStorageLib.setItem(`wallet`,JSON.stringify(wallet))
                       AsyncStorageLib.setItem('currentWallet',accountName)
-
+                      AsyncStorageLib.setItem("token",token)
 
                       dispatch(setUser(accountName))
                       dispatch(setCurrentWallet(wallet.address,accountName,privateKey, wallet.classicAddress))

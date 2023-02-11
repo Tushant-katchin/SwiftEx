@@ -125,6 +125,7 @@ const SendTokens = (props) => {
         <Text style={{marginLeft:wp(5), marginTop:hp(1)}} >Available balance {balance?balance:0}</Text>
         <Text style={{marginLeft:wp(5), marginTop:hp(10)}} > Amount </Text>
         <TextInput style={style.textInput2}
+        keyboardType='numeric'
         onChangeText={(input)=>{
           console.log(input)
           setAmount(input)

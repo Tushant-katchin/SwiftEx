@@ -42,6 +42,7 @@ const ImportPolygonWalletModal = ({props,setWalletVisible,Visible, setModalVisib
 async function saveUserDetails(address){
   let response
   const user = await AsyncStorageLib.getItem('user')
+  const token = await AsyncStorageLib.getItem('token')
   console.log(user)
   try{
 
@@ -53,6 +54,7 @@ async function saveUserDetails(address){
                'Content-Type': 'application/json'
       },
      body: JSON.stringify({
+               token:token,
                user: user,
                walletAddress:address,
                accountName:accountName

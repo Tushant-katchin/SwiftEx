@@ -124,9 +124,9 @@ const Screen = () => {
               }
               if (key === "custom_right") {
                 if(status==='verify'){
-                  alert(pin===enteredPin)
+                  
                   if(pin===enteredPin){
-                    alert('success')
+                    
                     pinView.current.clearAll()
                     props.navigation.navigate('Welcome')
 
@@ -168,7 +168,7 @@ const Screen = () => {
 
                   setPin(enteredPin)
                   setStatus('verify')
-                  alert("Entered Pin: " + enteredPin)
+                  
                   pinView.current.clearAll()
                 }
               }

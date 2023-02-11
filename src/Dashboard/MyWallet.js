@@ -32,6 +32,7 @@ const MyWallet = (props) => {
     let LeftContent2 = props => <Avatar.Image {...props}  source={  Etherimage}  />
  
     const getPrice = async (address,address2) => {
+      const token = await AsyncStorageLib.getItem('token')
      const result = await fetch(`http://${urls.testUrl}/user/getEtherTokenPrice`, {
     method: 'POST',
     headers: {
@@ -39,6 +40,7 @@ const MyWallet = (props) => {
              'Content-Type': 'application/json'
     },
    body: JSON.stringify({
+            token:token,
              Ethaddress:address,
              Bnbaddress:address2
             })

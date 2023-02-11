@@ -157,12 +157,16 @@ async function saveUserDetails(){
                       name:props.route.params.wallet.accountName,
                       walletType:'Multi-coin'
                     }]
+                    
+                    AsyncStorageLib.setItem("wallet",JSON.stringify(allWallets[0]))
                     AsyncStorageLib.setItem(`${props.route.params.wallet.accountName}-wallets`,JSON.stringify(allWallets))
                     AsyncStorageLib.setItem("user",props.route.params.wallet.accountName)
                     AsyncStorageLib.setItem("currentWallet",props.route.params.wallet.accountName)
+                    AsyncStorageLib.setItem("token",token)
 
-                    dispatch(setUser(props.route.params.wallet.emailId))
-                   // dispatch(setCurrentWallet(props.route.params.wallet.address,props.route.params.wallet.accountName,props.route.params.wallet.privateKey))
+
+                    dispatch(setUser(props.route.params.wallet.accountName))
+                    dispatch(setCurrentWallet(props.route.params.wallet.address,props.route.params.wallet.accountName,props.route.params.wallet.privateKey))
                     dispatch(AddToAllWallets(wallets,props.route.params.wallet.accountName))
                     dispatch(getBalance(props.route.params.wallet.address))
                     dispatch(setToken(token))

@@ -175,9 +175,12 @@ async function saveUserDetails(address){
                   name:accountName,
                   walletType:'Multi-coin',
                 }]
+               
+                AsyncStorageLib.setItem("wallet",JSON.stringify(allWallets[0]))
                 AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(allWallets))
                 AsyncStorageLib.setItem("user",accountName)
                 AsyncStorageLib.setItem('currentWallet',accountName)
+                AsyncStorageLib.setItem("token",token)
                 dispatch(setUser(accountName))
                 dispatch(setCurrentWallet(wallet.address,accountName,wallet.privateKey))
                 dispatch(AddToAllWallets(wallets,accountName))

@@ -38,6 +38,7 @@ async function saveUserDetails(){
   let response
   const user = await AsyncStorageLib.getItem('user')
   console.log(user)
+  const token = await AsyncStorageLib.getItem('token')
   try{
 
   
@@ -48,6 +49,7 @@ async function saveUserDetails(){
                'Content-Type': 'application/json'
       },
      body: JSON.stringify({
+               token:token,
                user: user,
                walletAddress:Wallet.address,
                accountName:Wallet.accountName

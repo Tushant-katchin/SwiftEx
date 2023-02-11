@@ -9,12 +9,14 @@ import CryptoES from "crypto-es";
 import CryptoJS from "react-native-crypto-js";
 import { getPassword } from '../constants/alertConstants';
 import { useDispatch, useSelector } from "react-redux";
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
 var ethers = require('ethers');
 
 //var CryptoJS = require("crypto-js");
 
-export async function SendTransaction(signedTx, token){
+export async function SendTransaction(signedTx, Token){
   let response
+  const token = await AsyncStorageLib.getItem('token')
   try{
 
   
@@ -47,6 +49,7 @@ export async function SendTransaction(signedTx, token){
 }
 export async function getNonce(address){
   let response
+  const token = await AsyncStorageLib.getItem('token')
   try{
 
   
@@ -57,6 +60,7 @@ export async function getNonce(address){
                'Content-Type': 'application/json'
       },
      body: JSON.stringify({
+               token:token,
                address:address})
      }).then((response) => response.json())
      .then(async (responseJson) => {
@@ -695,7 +699,7 @@ export async function checkWalletValidity(name, emailId){
 }
 
 export async function getAmountsOut(amountIn,inToken,outToken,type){
-
+  const token = await AsyncStorageLib.getItem('token')
   const response = await fetch(`http://${urls.testUrl}/user/getAmountsOut`, {
     method: 'POST',
     headers: {
@@ -703,6 +707,7 @@ export async function getAmountsOut(amountIn,inToken,outToken,type){
              'Content-Type': 'application/json'
     },
    body: JSON.stringify({
+    token:token,
     inToken:inToken,       
     outToken:outToken,
     amountIn:amountIn,
@@ -780,8 +785,9 @@ export async function approveSwap(tokenAdd,amount,PRIVATE_KEY,token){
 
 }
 
-export const SaveTransaction = async (type,hash,emailid,token,walletType,chainType) => {
+export const SaveTransaction = async (type,hash,emailid,Token,walletType,chainType) => {
   
+  const token = await AsyncStorageLib.getItem('token')
 
           try {
       const response= await fetch(`http://${urls.testUrl}/user/saveTx`, {
@@ -791,6 +797,7 @@ export const SaveTransaction = async (type,hash,emailid,token,walletType,chainTy
                  'Content-Type': 'application/json'
         },
        body: JSON.stringify({
+        token:token,
         user: emailid,
         type:type,
         hash:hash,
