@@ -111,6 +111,7 @@
     "react-native-password-meter": "^0.1.0",
     "react-native-phone-number-input": "^2.1.0",
     "react-native-pin-view": "^3.0.2",
+    "react-native-pure-jwt": "^3.0.1",
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "^1.13.4",

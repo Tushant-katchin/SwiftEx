@@ -14,7 +14,7 @@ import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers"
-
+import { genrateAuthToken } from './Auth/jwtHandler';
 
 
 const CheckMnemonic = (props) => {
@@ -132,14 +132,27 @@ async function saveUserDetails(){
            
             
              if(mnemonic===props.route.params.wallet.mnemonic){
-                const response = await saveUserDetails().then((response)=>{
+               /* const response = await saveUserDetails().then((response)=>{
+
                   if(response.code===400){
                     return alert(response.message)
                   }
                   else if(response.code===401){
                     return alert(response.message)
                   }
-                    const token =`${response.token}`
+                }).catch((e)=>{
+                  console.log(e)
+                  //return alert('failed to create account. please try again')
+                })*/
+
+                const pin = await AsyncStorageLib.getItem('pin')
+                console.log(pin)
+                const body ={
+                  accountName:props.route.params.wallet.accountName,
+                  pin:pin
+
+                }
+                    const token = genrateAuthToken(body)
                     console.log(token)
 
                     const accounts ={
@@ -169,16 +182,12 @@ async function saveUserDetails(){
                     dispatch(setCurrentWallet(props.route.params.wallet.address,props.route.params.wallet.accountName,props.route.params.wallet.privateKey))
                     dispatch(AddToAllWallets(wallets,props.route.params.wallet.accountName))
                     dispatch(getBalance(props.route.params.wallet.address))
-                    dispatch(setToken(token))
                     dispatch(setWalletType('Multi-coin'))
+                    dispatch(setToken(token))
 
                      props.navigation.navigate('HomeScreen')
                  
-                  }).catch((e)=>{
-                    console.log(e)
-                    //return alert('failed to create account. please try again')
-                  })
-
+                 
              }else{
               return alert('Wrong Mnemonic. Please retry with correct mnemonic ')
              }

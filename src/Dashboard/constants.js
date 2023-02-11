@@ -1,7 +1,7 @@
 
 export const urls={
     testUrl:'172.20.10.6:2000',
-    mainUrl:'172.20.10.6:2000',
+    mainUrl:'3.19.76.40:2000',
 }
 
 export const PolygonSecret={
@@ -21,9 +21,18 @@ export const tokenAddresses ={
 
 }
 
+export const jwtSecret = "0xC02aaA3MunziAppTestMode0xbb4CdB9"
 
+export const RPC ={
+    BSCRPC:'https://data-seed-prebsc-1-s1.binance.org:8545',
+    BSCRPC2:"https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/testnet/",
+    MATICRPC:"https://polygon-mumbai.g.alchemy.com/v2/WUJnVsFyDvgwlbSdNrpr-lMg0-NKaNLH",
+    ETHRPC:"https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG"
+}
 
-
+export const WSS ={
+    XRPWSS:'"wss://s.altnet.rippletest.net:51233"'
+}
 //172.20.10.6:2000
 
 /*<WebView 

@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers"
 import { saveFile, encryptFile } from "../../../utilities/utilities";
-import { urls } from "../../../Dashboard/constants";
+import { urls,RPC, WSS } from "../../../Dashboard/constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+const xrpl = require("xrpl")
+
 const logIn = async (user) => {
   console.log("user info", user)
   let response
@@ -207,16 +208,11 @@ const Collapse = async () => {
 
 const getBalance = async (address) => {
   console.log(address)
-  /*try{
+  try{
 
     if(address) {
-      const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545'); 
-      const balancee=await provider.getBalance(address).then((balance) => {
-        // convert a currency unit from wei to ether
-        const balanceInEth = ethers.utils.formatEther(balance)
-        console.log(`balance: ${balanceInEth} ETH`)
-        return balance
-       })
+      const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC); 
+      const balancee=await provider.getBalance(address)
       const balanceInEth = ethers.utils.formatEther(balancee);
       console.log(balanceInEth)
       // AsyncStorage.setItem('balance', balance);
@@ -239,8 +235,8 @@ const getBalance = async (address) => {
   }catch(e)
 {
   console.log(e)
-}  */
-
+}  
+/*
  const token = await AsyncStorageLib.getItem('token')
 
   const response = await fetch(`http://${urls.testUrl}/user/Balance`, {
@@ -287,10 +283,10 @@ const getBalance = async (address) => {
         //alert('unable to update balance')
     })
     
- 
-
-
-  return response
+    
+    
+    return response
+    */
 
   
   
@@ -299,8 +295,38 @@ const getBalance = async (address) => {
   };
 
   const getEthBalance = async (address) =>{
-    const token = await AsyncStorageLib.getItem('token')
+    try{
 
+      if(address){
+        
+        const provider = ethers.getDefaultProvider('goerli');
+        const EthBalance = await provider.getBalance(address);
+        const balanceInEth = ethers.utils.formatEther(EthBalance)
+        
+        console.log(balanceInEth)
+        AsyncStorage.setItem('EthBalance', balanceInEth);
+        
+        return {
+          status: "success",
+          message: "Eth Balance fetched",
+          EthBalance: balanceInEth
+        };
+      }else{
+        return {
+          status: "success",
+          message: "Eth Balance fetched",
+          EthBalance: 0
+        }; 
+      }
+    }catch(error){
+      return {
+        status: "error",
+        message: "failed to fetch balance",
+        EthBalance: 0
+      }; 
+    }
+      /* const token = await AsyncStorageLib.getItem('token')
+      
     const response = await fetch(`http://${urls.testUrl}/user/getEthBalance`, {
     method: 'POST',
     headers: {
@@ -350,7 +376,7 @@ const getBalance = async (address) => {
 
   return response
 
-  
+  */
 
   }
   
@@ -464,7 +490,7 @@ if(wallets[0].name!==undefined){
     
 }
 
-    const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545'); 
+    const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC); 
     let privateKey = privatekey;
     //"0x8bf620dcb1b55ebddbc16f347c642438cad00d2b647cd6d272bed27bf5d75067";
     let walletWithProvider = new ethers.Wallet(privateKey, provider);
@@ -489,7 +515,7 @@ if(wallets[0].name!==undefined){
   }
   
   async function CheckWallets(privatekey){
-    const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545'); 
+    const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC); 
   let privateKey = privatekey;
   //"0x8bf620dcb1b55ebddbc16f347c642438cad00d2b647cd6d272bed27bf5d75067";
   let walletWithProvider = new ethers.Wallet(privateKey, provider);
@@ -533,7 +559,7 @@ async function setCurrentWallet(address, name, privateKey, classicAddress){
  
 
    
-  AsyncStorage.setItem("Wallet", JSON.stringify(wallet))
+  AsyncStorage.setItem("wallet", JSON.stringify(wallet))
   return{
     status:'success',
     message: "Wallet Selection successful",
@@ -543,7 +569,7 @@ async function setCurrentWallet(address, name, privateKey, classicAddress){
 
 
 async function importAllWallets(accounts, emailId){
-  const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545'); 
+  const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC); 
   
   let allWallets=[]
   console.log(accounts)
@@ -623,7 +649,7 @@ async function ImportUsingFile(wallets,user){
   console.log(wallets.allWallets)
  
   
-  const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545'); 
+  const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC); 
   let privateKey = wallets.privateKey;
   //"0x8bf620dcb1b55ebddbc16waf347c642438cad00d2b647cd6d272bed27bf5d75067";
   let walletWithProvider = new ethers.Wallet(privateKey, provider);
@@ -693,8 +719,35 @@ return{
 }
 
 const getMaticBalance = async (address) =>{
+  try{
 
-  const token = await AsyncStorageLib.getItem('token')
+    if(address){
+      
+      const provider = new ethers.providers.JsonRpcProvider(RPC.MATICRPC);
+      const MaticBalance = await provider.getBalance(address);
+      const balanceInEth = ethers.utils.formatEther(MaticBalance)
+      AsyncStorage.setItem('MaticBalance', balanceInEth);
+      
+      return {
+        status: "success",
+        message: "Matic Balance fetched",
+        MaticBalance: balance.toFixed(3)
+      };
+    }else{
+      return {
+        status: "error",
+        message: "Matic Balance fetch  failed",
+        MaticBalance: 0
+      }; 
+    }
+  }catch(error){
+    return {
+      status: "error",
+      message: "Matic Balance fetch  failed",
+      MaticBalance: 0
+    }; 
+  }
+ /* const token = await AsyncStorageLib.getItem('token')
   const response = await fetch(`http://${urls.testUrl}/user/getMaticBalance`, {
     method: 'POST',
     headers: {
@@ -744,11 +797,43 @@ const getMaticBalance = async (address) =>{
 
   return response
 
-  
+  */
 
   }
   const getXrpBalance = async (address) =>{
-    const token = await AsyncStorageLib.getItem('token')
+    try{
+
+      if(address){
+        
+        const client = new xrpl.Client(WSS.XRPWSS)
+        await client.connect()
+        const my_balance = (await client.getXrpBalance(address))  
+        console.log(my_balance)
+        //sEdTYTnQENSBnjLSaVBtMtC4P5ViaFZ
+        //rP7n7Z4Hu4DziJbMJaCGfZhwd94aHzoN9b     
+        client.disconnect()
+        AsyncStorage.setItem('XrpBalance', my_balance);
+        
+        return {
+          status: "success",
+          message: "Xrp Balance fetched",
+          XrpBalance: my_balance
+        };
+      }else{
+        return {
+          status: "error",
+          message: "Xrp Balance fetch failed",
+          XrpBalance: 0
+        }; 
+      }
+    }catch(error){
+      return {
+        status: "error",
+        message: "Xrp Balance fetch failed",
+        XrpBalance: 0
+      };
+    }
+  /*  const token = await AsyncStorageLib.getItem('token')
     const response = await fetch(`http://${urls.testUrl}/user/getXrpBalance`, {
     method: 'POST',
     headers: {
@@ -797,7 +882,7 @@ const getMaticBalance = async (address) =>{
 
 
   return response
-
+*/
   
 
   }

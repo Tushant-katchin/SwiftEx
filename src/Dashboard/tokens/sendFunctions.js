@@ -2,9 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {  utils } from "ethers"
 import { Network, Alchemy } from 'alchemy-sdk';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
-import { EthereumSecret, PolygonSecret } from '../constants';
+import { EthereumSecret, PolygonSecret, WSS } from '../constants';
 import { getNonce, getGasPrice } from '../../utilities/utilities';
 import { useNavigation } from "@react-navigation/native";
+import { RPC } from "../constants";
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 var ethers = require('ethers');
@@ -55,11 +56,11 @@ const sendEth = async (privateKey,amount,addressTo,addressFrom, navigation) =>{
 }
 
 const sendBNB = async (privateKey,amount,addressTo,addressFrom, navigation) =>{
- let provider = new ethers.providers.JsonRpcProvider('https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/testnet/')
+ let provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC2)
  //console.log(provider)
  console.log(addressFrom,addressTo,privateKey)
   const  walletPrivateKey = new ethers.Wallet(privateKey,provider)
-const nonce = await getNonce(addressFrom)
+const nonce = await provider.getTransactionCount(addressFrom)//getNonce(addressFrom)
 console.log(nonce)
 
 const gasPrice = await provider.getGasPrice(addressFrom)
@@ -133,7 +134,7 @@ const sendXRP = async (privateKey,amount,addressTo, navigation) =>{
   console.log(privateKey)
   const Wallet = xrpl.Wallet.fromSecret(privateKey)
   console.log("hi"+Wallet)
-  const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233")
+  const client = new xrpl.Client(WSS.XRPWSS)
  await client.connect()
 const wallet = await AsyncStorageLib.getItem('wallet')
 console.log(JSON.parse(wallet).classicAddress)
@@ -172,7 +173,7 @@ const SendCrypto = async (recieverAddress, amount, decrypt, balance, setLoading,
    // const walletType = await AsyncStorage.getItem('walletType')
     console.log(walletType)
     if(walletType=='BSC'){
-      provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
+      provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
     }
       setLoading(true)
 

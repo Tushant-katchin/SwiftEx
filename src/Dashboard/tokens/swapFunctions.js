@@ -13,6 +13,7 @@ import fetch from 'node-fetch'
 import { ChainId, Token, Fetcher, Route, TradeType, TokenAmount, Trade, WETH } from '@uniswap/sdk'
 import "react-native-get-random-values"
 import "@ethersproject/shims"
+import { RPC } from '../constants'
 const {Percent} = require("@uniswap/sdk");
 var ethers = require('ethers');
 const UNISWAP = require("@uniswap/sdk")
@@ -175,7 +176,7 @@ function toHex(Amount) {
 const getETHtoTokenPrice = async (tokenaddress,amount)=>{
     try {
       //console.log(coin1,coin2)
-        const provider = new ethers.providers.JsonRpcProvider('https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG')
+        const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC)
         const chainId = ChainId.GÖRLI;
        const UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
        const UNISWAP_ROUTER_ABI = [
@@ -226,7 +227,7 @@ const getETHtoTokenPrice = async (tokenaddress,amount)=>{
     const getTokentoEthPrice = async (tokenaddress,amount)=>{
     try {
       //console.log(coin1,coin2)
-        const provider = new ethers.providers.JsonRpcProvider('https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG')
+        const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC)
         const chainId = ChainId.GÖRLI;
        const UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
        const UNISWAP_ROUTER_ABI = [
@@ -278,7 +279,7 @@ const getETHtoTokenPrice = async (tokenaddress,amount)=>{
     const swapTokensforEth = async (privateKey,address,tokenaddress,amount) =>{
       try{
 
-        const provider = new ethers.providers.JsonRpcProvider('https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG')
+        const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC)
         const chainId = ChainId.GÖRLI;
         const gas = await provider.getGasPrice();
        const UNISWAP_ROUTER_ABI = [
@@ -369,7 +370,7 @@ const getETHtoTokenPrice = async (tokenaddress,amount)=>{
 
       try{
 
-        const provider = new ethers.providers.JsonRpcProvider('https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG')
+        const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC)
         const chainId = ChainId.GÖRLI;
         const gas = await provider.getGasPrice();
        const UNISWAP_ROUTER_ABI = [
