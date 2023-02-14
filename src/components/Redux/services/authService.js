@@ -10,76 +10,47 @@ const xrpl = require("xrpl")
 const logIn = async (user) => {
   console.log("user info", user)
   let response
-  const { username, password } = user;
+  const { username } = user;
+  const token = await AsyncStorageLib.getItem(`${username}-token`)
   try{
+   let response = await AsyncStorageLib.getItem(`${username}-wallets`)
+    .then((wallets)=>{
 
-  
-  response = await fetch(`http://${urls.testUrl}/user/login`, {
-    method: 'POST',
-    headers: {
-             Accept: 'application/json',
-             'Content-Type': 'application/json'
-    },
-   body: JSON.stringify({
-             emailId: username,
-             password: password})
-   }).then((response) => response.json())
-   .then(async (responseJson) => {
-    console.log(responseJson)
-   
-    if (responseJson.responseCode===200) {
-      AsyncStorage.setItem("user", JSON.stringify(responseJson.responseData.user));
-      AsyncStorage.setItem("emailId", JSON.stringify(username));
-      return {
-        status: "success",
-        message: "You are redirecting to home page",
-        emailId: username,
-        user:responseJson.responseData.user,
-        token:responseJson.responseData.token
-      };
-    }
-   else{
-    if (responseJson.responseCode===400) {
-      return {
-        status: "Not Found",
-        message: "user not found ",
-        emailId: null
-      };
-    }
-    if (responseJson.responseCode===401) {
-      return {
-        status: "verifyotp",
-        message: "please verify your account first ",
-        emailId: null
-      };
-    }
-    if (responseJson.responseCode===405) {
-      return {
-        status: "invalid",
-        message: "please provide valid credentials ",
-        emailId: null
-      };
-    }
-   }
-    
-  
-  }).catch((error)=>{
-    alert(error)
-  })
-}catch(e){
-  console.log(e)
-  alert(e)
-}
+      console.log(JSON.parse(wallets))
+      if(!JSON.parse(wallets)){
+        return {
+          status: "Not Found",
+          message: "user not found ",
+          user: null
+        };
+      }else{
+        return {
+          status: "success",
+          message: "You are redirecting to home page",
+          user: username
+        };
+      }
+    })
   console.log(response)
   return response
+  }catch(e){
+    return {
+         status: "Not Found",
+          message: "user not found ",
+          user: null
+    };
+  }
+ 
+  
 
   
 };
 
 const setToken = async(token) =>{
+ const user = await AsyncStorageLib.getItem('user')
 if(token)
 {
-  AsyncStorage.setItem("token", token);
+  AsyncStorage.setItem(`${user}-token`, token);
       return {
         status: "success",
         message: "token saved",
@@ -313,7 +284,7 @@ const getBalance = async (address) => {
         };
       }else{
         return {
-          status: "success",
+          status: "error",
           message: "Eth Balance fetched",
           EthBalance: 0
         }; 

@@ -96,8 +96,45 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
     const dispatch = useDispatch();
 
     const SaveTransaction = async (type,hash,walletType,chainType) => {
-      const user = await state.user
-      const token = await AsyncStorageLib.getItem('token')
+     const user = await state.user
+     let userTransactions = []
+  
+  await AsyncStorageLib.getItem(`${user}-transactions`)
+   .then(async (transactions)=>{
+    console.log(JSON.parse(transactions))
+    const data = JSON.parse(transactions)
+    if(data){
+      data.map((item)=>{
+
+        userTransactions.push(item)
+      })
+      console.log(userTransactions)
+      let txBody ={
+        hash,
+        type,
+        walletType,
+        chainType
+      }
+     userTransactions.push(txBody)
+     await AsyncStorageLib.setItem(`${user}-transactions`,JSON.stringify(userTransactions))
+     return userTransactions
+    }else{
+      let transactions =[]
+      let txBody ={
+        hash,
+        type,
+        walletType,
+        chainType
+      }
+      transactions.push(txBody)
+      await AsyncStorageLib.setItem(`${user}-transactions`,JSON.stringify(transactions))
+      return transactions
+      }
+   })
+   
+  
+  
+     /* const token = await AsyncStorageLib.getItem('token')
 
               try {
           const response= await fetch(`http://${urls.testUrl}/user/saveTx`, {
@@ -134,7 +171,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
             console.error(error);
           }
        
-      
+      */
         
       };
     const Balance = async () => {
@@ -152,6 +189,8 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
             
             console.log('success')
             
+          }else{
+            console.log('error')
           }
         })
         .catch((error) => {
@@ -654,13 +693,14 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
         }
       }else if(walletType==='BSC'){
 
-        console.log(coin0.address,coin1.address)
+       
         let amountIn = (await ethers).utils.parseUnits(amount, "ether")
         let type
         if(coin0.symbol==="BNB"){
            type ='BNBTOTOKEN'
            await getSwapPrice(amountIn,coin0.address,coin1.address,type)
         .then((response)=>{
+          console.log(response)
           const trade ={
             slippageTolerance:1,
             minimumAmountOut:response.token1totoken2
@@ -787,11 +827,12 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
              type ='BNBTOTOKEN'
              await getSwapPrice(amountIn,coin0.address,coin1.address,type)
           .then((response)=>{
+            console.log(response)
             const trade ={
               slippageTolerance:1,
               minimumAmountOut:response.token1totoken2
             }
-            console.log(response.token1totoken2)
+            console.log(response)
             setTradePrice(response.token1totoken2)
             setTrade(trade)
             setTradeVisible(true)

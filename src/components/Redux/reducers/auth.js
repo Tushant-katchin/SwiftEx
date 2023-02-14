@@ -9,7 +9,7 @@ const OTP = AsyncStorage.getItem("OTP");
 const wallets= AsyncStorage.getItem(`${user}-wallets`);
 const walletsData = AsyncStorage.getItem(`${user}-walletsData`)
 const directoryUri = AsyncStorage.getItem("directoryUri")
-const token = AsyncStorage.getItem("token")
+const token = AsyncStorage.getItem(`${user}-token`)
 const provider = AsyncStorage.getItem("provider")
 const walletType = AsyncStorage.getItem("walletType")
 const EthBalance = AsyncStorage.getItem("EthBalance")
@@ -17,7 +17,7 @@ const MaticBalance = AsyncStorage.getItem("MaticBalance")
 const XrpBalance = AsyncStorage.getItem("XrpBalance")
 const platform = AsyncStorage.getItem("platform")
 const initialState = user
-  ? { isLoggedIn: true, emailId:emailId ,user, wallet, walletBalance, extended:true, otp:OTP , wallets:wallets, walletsData:null, directoryUri:directoryUri, token:token, provider:provider, walletType:walletType, EthBalance:EthBalance, MaticBalance:MaticBalance, XrpBalance:XrpBalance, platform:platform}
+  ? { isLoggedIn: true, user:user, wallet, walletBalance, extended:true, otp:OTP , wallets:wallets, walletsData:null, directoryUri:directoryUri, token:token, provider:provider, walletType:walletType, EthBalance:EthBalance, MaticBalance:MaticBalance, XrpBalance:XrpBalance, platform:platform}
   : { isLoggedIn: false, user: null , wallet:null, otp:null, wallets:null, walletsData:null, directoryUri:null, token:null, provider:null, walletType:null, EthBalance:null, MaticBalance:null, XrpBalance:null, platform:null};
 export default auth = (state = initialState, action) => {
   const { type, payload } = action;
@@ -26,7 +26,7 @@ switch (type) {
       return {
         ...state,
         isLoggedIn: true,
-        emailId: payload.emailId,
+        user: payload.user,
       };
   case LOGOUT:
       return {

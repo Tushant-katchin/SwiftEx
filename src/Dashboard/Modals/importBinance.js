@@ -244,7 +244,7 @@ async function saveUserDetails(address){
                         address:accountFromMnemonic.address,
                         privateKey:privateKey
                     }
-                    const response = saveUserDetails(wallet.address).then(async (response)=>{
+                   /* const response = saveUserDetails(wallet.address).then(async (response)=>{
                      
       
                       if(response===400){
@@ -253,6 +253,15 @@ async function saveUserDetails(address){
                      else if(response===401){
                         return 
                       }
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+                      setWalletVisible(false)
+                      setVisible(false)
+                      setModalVisible(false)
+
+
+                    })*/
                       let wallets=[]
                       const data = await AsyncStorageLib.getItem(`${user}-wallets`).then((response)=>{
                         console.log( response )
@@ -288,15 +297,7 @@ async function saveUserDetails(address){
                            setVisible(false)
                            setModalVisible(false)
                            navigation.navigate("AllWallets")
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })
+                   
                     
                     
                      
@@ -326,13 +327,23 @@ async function saveUserDetails(address){
                         address:walletPrivateKey.address,
                         privateKey:privatekey
                     }
-                    const response = saveUserDetails(wallet.address).then(async (response)=>{
+                    /*const response = saveUserDetails(wallet.address).then(async (response)=>{
                       if(response===400){
                         return 
                       }
                      else if(response===401){
                         return 
                       }
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+                      setWalletVisible(false)
+                      setVisible(false)
+                      setModalVisible(false)
+
+
+                    })*/
+                    
                       const accounts ={
                         address:wallet.address,
                         privateKey:wallet.privateKey,
@@ -373,15 +384,6 @@ async function saveUserDetails(address){
                            setVisible(false)
                            setModalVisible(false)
                            navigation.navigate("AllWallets")
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })
                     
                     
                 }catch(e){
@@ -390,83 +392,92 @@ async function saveUserDetails(address){
                     return alert(e)
                 }
                 }else{
-                  const user = await AsyncStorageLib.getItem('user')
- 
-   ethers.Wallet.fromEncryptedJson(json, jsonKey).then((wallet) =>{
+                  try{
+
+                    const user = await AsyncStorageLib.getItem('user')
+                    
+                    ethers.Wallet.fromEncryptedJson(json, jsonKey).then(async (wallet) =>{
     console.log("Address: " + wallet.address);
     const Wallet = {
       address:wallet.address,
       privateKey:wallet.privateKey
-     }
-     const response = saveUserDetails(wallet.address).then(async (response)=>{
-     
+    }
+    /*const response = saveUserDetails(wallet.address).then(async (response)=>{
+      
       if(response===400){
         return 
       }
-     else if(response===401){
+      else if(response===401){
         return 
       }
-      const accounts ={
-        address:wallet.address,
-        privateKey:wallet.privateKey,
-        name:accountName,
-      }
-      let wallets=[]
-                      const data = await AsyncStorageLib.getItem(`${user}-wallets`).then((response)=>{
-                        console.log( response )
-                        JSON.parse(response).map((item)=>{
-
-                            wallets.push(item) 
-                        })
-                       }).catch((e)=>{
-                           setWalletVisible(false)
-                           setVisible(false)
-                           setModalVisible(false)
-                        console.log(e)
-                       })
-
-                      //wallets.push(accounts)
-                      const allWallets =[{
-                          address:wallet.address,
-                          privateKey:wallet.privateKey,
-                          name:accountName,
-                          walletType:'BSC',
-                          wallets:wallets
-                        }]
-                     // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
-                      
-                      dispatch(AddToAllWallets(allWallets,user))
-                      // dispatch(getBalance(wallet.address))
-                      //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-      
-                      let result = []
-                     
-                            setLoading(false)
-                           setWalletVisible(false)
-                           setVisible(false)
-                           setModalVisible(false)
-                           navigation.navigate("AllWallets")
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })
-                    
-                    
+    }).catch((e)=>{
+      console.log(e)
+      setLoading(false)
+      setWalletVisible(false)
+      setVisible(false)
+      setModalVisible(false)
+      return  alert(e)
+    })*/
+    const accounts ={
+      address:wallet.address,
+      privateKey:wallet.privateKey,
+      name:accountName,
+    }
+    let wallets=[]
+    const data = await AsyncStorageLib.getItem(`${user}-wallets`).then((response)=>{
+      console.log( response )
+      JSON.parse(response).map((item)=>{
+        
+        wallets.push(item) 
+      })
+    }).catch((e)=>{
+      setWalletVisible(false)
+      setVisible(false)
+      setModalVisible(false)
+      console.log(e)
+    })
+    
+    //wallets.push(accounts)
+    const allWallets =[{
+      address:wallet.address,
+      privateKey:wallet.privateKey,
+      name:accountName,
+      walletType:'BSC',
+      wallets:wallets
+    }]
+    // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
+    
+    dispatch(AddToAllWallets(allWallets,user))
+    // dispatch(getBalance(wallet.address))
+    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+    
+    let result = []
+    
+    setLoading(false)
+    setWalletVisible(false)
+    setVisible(false)
+    setModalVisible(false)
+    navigation.navigate("AllWallets")
+  }).catch((e)=>{
+    console.log(e)
+    setLoading(false)
+    setWalletVisible(false)
+    setVisible(false)
+    setModalVisible(false)
     
     
-}).catch((e)=>{
-  console.log(e)
+  })
+}catch(e){
   setLoading(false)
-  setWalletVisible(false)
-  setVisible(false)
-  setModalVisible(false)
- return  alert(e)
-            })
+    setWalletVisible(false)
+    setVisible(false)
+    setModalVisible(false)
+}
+                    
+                    
+    
+    
+
            
             }
             

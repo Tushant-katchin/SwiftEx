@@ -14,6 +14,7 @@ import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers"
+import { genUsrToken } from './Auth/jwtHandler';
 const ImportBscWallet = (props) => {
     
     
@@ -199,7 +200,8 @@ async function saveUserDetails(address){
       
       {loading? <ActivityIndicator size="large" color="green" />:<Text> </Text>}
       <View style={{width:wp(95), margin:10}}>
-<Button title={'Import'}  color={'blue'} onPress={()=>{
+<Button title={'Import'}  color={'blue'} onPress={async()=>{
+   const pin = await AsyncStorageLib.getItem('pin')
    if(!accountName){
     return alert('please enter an accountName to proceed')
 
@@ -222,7 +224,7 @@ async function saveUserDetails(address){
                         address:accountFromMnemonic.address,
                         privateKey:privateKey
                     }
-                    const response = saveUserDetails(wallet.address).then((response)=>{
+                  /*  const response = saveUserDetails(wallet.address).then((response)=>{
                       if(response.code===400){
                         setLoading(false)
 
@@ -233,7 +235,19 @@ async function saveUserDetails(address){
 
                         return alert(response.message)
                       }
-                        const token =`${response.token}`
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+
+                    })*/
+                     
+                    console.log(pin)
+                    const body ={
+                      accountName:accountName,
+                      pin:JSON.parse(pin)
+    
+                    }
+                        const token = genUsrToken(body)
                         console.log(token)
     
       
@@ -271,12 +285,7 @@ async function saveUserDetails(address){
                       setLoading(false)
                        props.navigation.navigate('HomeScreen')
                    
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-
-                    })
-                     
+                    
                     //setVisible(!visible)
                 }catch(e){
                     console.log(e)
@@ -301,7 +310,7 @@ async function saveUserDetails(address){
                         address:walletPrivateKey.address,
                         privateKey:privatekey
                     }
-                    const response = saveUserDetails(wallet.address).then((response)=>{
+                  /*  const response = saveUserDetails(wallet.address).then((response)=>{
                       if(response.code===400){
                         setLoading(false)
                         return alert(response.message)
@@ -311,8 +320,19 @@ async function saveUserDetails(address){
 
                         return alert(response.message)
                       }
-                        const token =`${response.token}`
-                        console.log(token)
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+
+                    })*/
+                      console.log(pin)
+                      const body ={
+                        accountName:accountName,
+                        pin:JSON.parse(pin)
+      
+                      }
+                          const token = genUsrToken(body)
+                          console.log(token)
     
       
                       const accounts ={
@@ -348,11 +368,7 @@ async function saveUserDetails(address){
                       setLoading(false)
                        props.navigation.navigate('HomeScreen')
                    
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-
-                    })
+                   
                     
                     
                 }catch(e){
@@ -368,7 +384,7 @@ async function saveUserDetails(address){
       address:wallet.address,
       privateKey:wallet.privateKey
      }
-     const response = saveUserDetails(wallet.address).then((response)=>{
+    /* const response = saveUserDetails(wallet.address).then((response)=>{
       if(response.code===400){
         setLoading(false)
 
@@ -379,8 +395,20 @@ async function saveUserDetails(address){
 
         return alert(response.message)
       }
-        const token =`${response.token}`
-        console.log(token)
+    }).catch((e)=>{
+      console.log(e)
+      setLoading(false)
+
+    })*/
+    
+      console.log(pin)
+      const body ={
+        accountName:accountName,
+        pin:JSON.parse(pin)
+
+      }
+          const token = genUsrToken(body)
+          console.log(token)
 
       const accounts ={
         address:wallet.address,
@@ -415,11 +443,6 @@ async function saveUserDetails(address){
       setLoading(false)
        props.navigation.navigate('HomeScreen')
    
-    }).catch((e)=>{
-      console.log(e)
-      setLoading(false)
-
-    })
     
     
 }).catch((e)=>{

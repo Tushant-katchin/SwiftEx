@@ -83,7 +83,7 @@ const SendTokens = (props) => {
        })
        .catch((error) => {
          console.log(error)
-         alert(error)
+         
          
        });
      }

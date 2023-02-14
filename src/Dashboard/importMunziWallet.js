@@ -14,6 +14,7 @@ import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers"
+import { genrateAuthToken, genUsrToken } from './Auth/jwtHandler';
 const ImportMunziWallet = (props) => {
     
     
@@ -126,7 +127,8 @@ async function saveUserDetails(address){
       <Text style={{margin:5}}>Secret Phrases are typically 12(sometimes 16) words long.They are also called mnemonic phrase. </Text>
       {loading? <ActivityIndicator size="large" color="green" />:<Text> </Text>}
       <View style={{width:wp(95), margin:10}}>
-<Button title={'Import'}  color={'blue'} onPress={()=>{
+<Button title={'Import'}  color={'blue'} onPress={async()=>{
+  const pin = await AsyncStorageLib.getItem('pin')
    if(!accountName){
     return alert('please enter an accountName to proceed')
 
@@ -149,15 +151,27 @@ async function saveUserDetails(address){
                 address:accountFromMnemonic.address,
                 privateKey:privateKey
               }
-              const response = saveUserDetails(accountFromMnemonic.address).then((response)=>{
+             /* const response = saveUserDetails(accountFromMnemonic.address).then((response)=>{
                 if(response.code===400){
                   return alert(response.message)
                 }
                 else if(response.code===401){
                   return alert(response.message)
                 }
-                  const token =`${response.token}`
-                  console.log(token)
+              }).catch((e)=>{
+                setLoading(false)
+
+                console.log(e)
+              })*/
+                console.log(pin)
+                const body ={
+                  accountName:accountName,
+                  pin:JSON.parse(pin)
+          
+                }
+                    const token = genUsrToken(body)
+                    console.log(token)
+          
 
                 
                 const accounts ={
@@ -192,11 +206,7 @@ async function saveUserDetails(address){
 
                 props.navigation.navigate('HomeScreen')
                 
-              }).catch((e)=>{
-                setLoading(false)
-
-                console.log(e)
-              })
+             
             }catch(e){
               alert(e)
               setLoading(false)

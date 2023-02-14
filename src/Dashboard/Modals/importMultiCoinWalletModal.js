@@ -174,13 +174,22 @@ async function saveUserDetails(address){
                 address:accountFromMnemonic.address,
                 privateKey:privateKey
               }
-              const response = saveUserDetails(accountFromMnemonic.address).then(async (response)=>{
+             /* const response = saveUserDetails(accountFromMnemonic.address).then(async (response)=>{
                 if(response===400){
                   return 
                 }
                else if(response===401){
                   return 
                 }
+              }).catch((e)=>{
+                console.log(e)
+                setLoading(false)
+                setWalletVisible(false)
+                setVisible(false)
+                setModalVisible(false)
+
+
+              })*/
                 const accounts ={
                   address:wallet.address,
                   privateKey:wallet.privateKey,
@@ -222,15 +231,7 @@ async function saveUserDetails(address){
                            setVisible(false)
                            setModalVisible(false)
                            navigation.navigate("AllWallets")
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })
+                   
                     
             }catch(e){
               alert(e)

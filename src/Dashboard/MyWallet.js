@@ -105,11 +105,10 @@ if(address){
   .then(async(e)=>{
     const Eth = await e.EthBalance
     let bal = await AsyncStorageLib.getItem('EthBalance')
-    console.log("hi"+ Eth)
-    console.log(bal)
+    
     if(Eth){
       
-      setEthBalance(Number(Eth).toFixed(1))
+      setEthBalance(Number(Eth))
     }else{
       console.log('coudnt get balance')
     }
@@ -166,7 +165,7 @@ return (
 <Card.Title titleStyle={{ color: "black", fontSize:15, marginBottom:23 }}  title={'BNB Coin'}  left={LeftContent} />
 <Card.Content style={{display:'flex',flexDirection:'row',color:'black'}}>
 <Title style={{color:'black'}} ></Title>
-<Paragraph style={{color:'black', marginLeft:wp('50'), fontWeight:'bold',top:-50, left:50}}>{ bnbBalance?bnbBalance.toFixed(2):0} BNB</Paragraph>
+<Paragraph style={{color:'black', marginLeft:wp('50'), fontWeight:'bold',top:-50, left:50}}>{ bnbBalance?bnbBalance:0} BNB</Paragraph>
 <Paragraph style={{color:'grey', position:'absolute',marginLeft:wp('20'), fontWeight:'bold',top:-39}}>{bnbPrice?bnbPrice.toFixed(1):0}</Paragraph>
 
 
@@ -181,7 +180,7 @@ return (
 <Card.Content style={{display:'flex',flexDirection:'row',color:'black'}}>
 <Title style={{color:'black'}} ></Title>
 <Paragraph style={{color:'black', marginLeft:wp('50'), fontWeight:'bold',top:-50, left:50}}>{ ethBalance?ethBalance:0}  ETH</Paragraph>
-<Paragraph style={{color:'grey', position:'absolute',marginLeft:wp('20'), fontWeight:'bold',top:-39,}}>{ethPrice?ethPrice.toFixed(1):0}</Paragraph>
+<Paragraph style={{color:'grey', position:'absolute',marginLeft:wp('20'), fontWeight:'bold',top:-39,}}>{ethPrice?ethPrice:0}</Paragraph>
 
 
 

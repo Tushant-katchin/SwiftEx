@@ -1,7 +1,7 @@
 import * as FileSystem from 'expo-file-system';
 import { StorageAccessFramework } from 'expo-file-system';
 import { Alert } from 'react-native';
-import { urls } from '../Dashboard/constants';
+import { RPC, tokenAddresses, urls } from '../Dashboard/constants';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import {  utils } from "ethers"
@@ -48,7 +48,13 @@ export async function SendTransaction(signedTx, Token){
 
 }
 export async function getNonce(address){
-  let response
+  console.log(address)
+    const provider =  new ethers.providers.JsonRpcProvider(process.env.BSCRPC); // TESTNET
+    const nonce = await provider.getTransactionCount(address)
+    console.log(nonce)
+
+    return {nonce}
+  /*let response
   const token = await AsyncStorageLib.getItem('token')
   try{
 
@@ -75,12 +81,17 @@ export async function getNonce(address){
   }catch(e){
     console.log(e)
     alert(e)
-  }
-  return response
+  }*/
+  
 }
 
 export async function getGasPrice(){
-  let response
+
+  const provider = new ethers.providers.JsonRpcProvider(process.env.BSCRPC) // TESTNET
+  const gasPrice = await provider.getGasPrice()
+  console.log(gasPrice)
+  return { gasPrice }
+  /* let response
   let data
   try{
 
@@ -90,7 +101,7 @@ export async function getGasPrice(){
     console.log(e)
     alert(e)
   }
-  return data.gasPrice
+  return data.gasPrice*/
 }
 
 
@@ -699,7 +710,59 @@ export async function checkWalletValidity(name, emailId){
 }
 
 export async function getAmountsOut(amountIn,inToken,outToken,type){
-  const token = await AsyncStorageLib.getItem('token')
+  try{
+
+    const factory = "0x182859893230dC89b114d6e2D547BFFE30474a21"
+    const routerAddress = "0xD99D1c33F9fC3444f8101754aBC46c52416550D1"
+   // const {amountIn, inToken,outToken,type} = input
+    
+    const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
+    
+    const router = new ethers.Contract(
+        routerAddress,
+        [
+            'function getAmountsOut(uint amountIn, address[] memory path) public view returns(uint[] memory amounts)',
+        ],
+        provider
+        );
+        let amounts
+        let amountsOutMin
+        
+        if(type==='BNBTOTOKEN'){
+            
+            amounts = await router.getAmountsOut(amountIn, [tokenAddresses.WBNB, outToken]);
+            amountsOutMin = amounts[1].sub(amounts[1].div(10));
+
+        }
+        else if(type==='TOKENTOBNB'){
+            
+            amounts = await router.getAmountsOut(amountIn, [inToken,tokenAddresses.WBNB]);
+            amountsOutMin = amounts[1].sub(amounts[1].div(10));
+
+        }
+        else{
+            amounts = await router.getAmountsOut(amountIn, [inToken, outToken]);
+            amountsOutMin = amounts[1].sub(amounts[1].div(10));
+
+            
+        }
+        if(amountsOutMin){
+
+            return amountsOutMin//mapper.responseMappingWithData(usrConst.CODE.Success,usrConst.MESSAGE.Success,amountsOutMin)
+        }
+        else{
+            return null//mapper.responseMapping(usrConst.CODE.BadRequest,usrConst.MESSAGE.TransactionFailure)
+
+        }
+
+        
+    }catch(e){
+        console.log(e)
+        return null//mapper.responseMapping(usrConst.CODE.BadRequest,usrConst.MESSAGE.internalServerError)
+
+    }
+
+ /* const token = await AsyncStorageLib.getItem('token')
   const response = await fetch(`http://${urls.testUrl}/user/getAmountsOut`, {
     method: 'POST',
     headers: {
@@ -720,7 +783,7 @@ export async function getAmountsOut(amountIn,inToken,outToken,type){
 
     
   });
-  return response
+  return response*/
 }
 
 export async function sendSwapTx(signedTx,TOKEN_ADD,amount,USER_ADD,token){
@@ -785,9 +848,47 @@ export async function approveSwap(tokenAdd,amount,PRIVATE_KEY,token){
 
 }
 
-export const SaveTransaction = async (type,hash,emailid,Token,walletType,chainType) => {
+export const SaveTransaction = async (type,hash,user,Token,walletType,chainType) => {
+
+  let userTransactions = []
   
-  const token = await AsyncStorageLib.getItem('token')
+  await AsyncStorageLib.getItem(`${user}-transactions`)
+   .then(async (transactions)=>{
+    console.log(JSON.parse(transactions))
+    const data = JSON.parse(transactions)
+    if(data){
+      data.map((item)=>{
+
+        userTransactions.push(item)
+      })
+      console.log(userTransactions)
+      let txBody ={
+        hash,
+        type,
+        walletType,
+        chainType
+      }
+     userTransactions.push(txBody)
+     await AsyncStorageLib.setItem(`${user}-transactions`,JSON.stringify(userTransactions))
+     return userTransactions
+    }else{
+      let transactions =[]
+      let txBody ={
+        hash,
+        type,
+        walletType,
+        chainType
+      }
+      transactions.push(txBody)
+      await AsyncStorageLib.setItem(`${user}-transactions`,JSON.stringify(transactions))
+      return transactions
+      }
+   })
+   
+  
+  
+
+  /*const token = await AsyncStorageLib.getItem('token')
 
           try {
       const response= await fetch(`http://${urls.testUrl}/user/saveTx`, {
@@ -825,7 +926,7 @@ export const SaveTransaction = async (type,hash,emailid,Token,walletType,chainTy
         console.error(error);
       }
    
-  
+  */
     
   };
 

@@ -4,7 +4,7 @@ const loginReducer = (state=defaultState, action) => {
   switch(action.type) {
     case "LOGIN":
       return Object.assign({}, state, {
-        emailId: action.payload.emailId,
+        user: action.payload.user,
         loginSuccess: true,
     });
     case "LOGOUT":

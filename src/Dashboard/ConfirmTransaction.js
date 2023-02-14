@@ -9,22 +9,18 @@ import { SaveTransaction } from '../utilities/utilities';
 import { useNavigation } from '@react-navigation/native';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
+import TransactionPinModal from './Modals/transactionPinModal';
 var ethers = require('ethers');
 const ConfirmTransaction = (props) => {
-  const navigation = useNavigation();
   const state = useSelector((state) => state);
     const[Cost, setCost] = useState()
     const [disable, setDisable] = useState(false)
     const[Loading, setLoading]=useState(false)
     const[walletType, setWalletType] = useState('')
+    const[pinViewVisible,setPinViewVisible] = useState(false)
     const fadeAnim = useRef(new Animated.Value(0)).current
-    const dispatch = useDispatch();
 
-    const Spin =  new Animated.Value ( 0 )
-    const SpinValue =  Spin.interpolate ({
-                inputRange :  [ 0, 1 ],
-                outputRange :  [ '0deg', '360deg' ]
-} )
+    
 
 
 
@@ -73,15 +69,20 @@ const ConfirmTransaction = (props) => {
       
     {Loading? <View style={{marginBottom:hp('-4')}}><ActivityIndicator size="small" color="white" /></View>:<Text> </Text>}
     <View style={style.Button}>
-    <Button title='confirm' color={'green'} disabled={disable?true:false} onPress={async ()=>{
+    <Button title='confirm' color={'green'} disabled={disable?true:false} onPress={()=>{
       //setVisible(!visible)
       const type = props.route.params.info.type
       console.log(type)
+      setPinViewVisible(true)
       setLoading(true)
       setDisable(true)
-
+/*
       const emailid = await state.user
       const token = await state.token
+      const valid = pinView()
+      if(valid){
+
+      
       if(type === 'Eth'){
 
         const provider = props.route.params.info.provider
@@ -195,11 +196,14 @@ const ConfirmTransaction = (props) => {
           alert('please try again')
         }
         }
-        
+      }else{
+        alert('invalid pin. Please try again')
+      }
+        */
       }} ></Button>
     </View>
-    
     </View>
+    <TransactionPinModal setPinViewVisible={setPinViewVisible} pinViewVisible={pinViewVisible} provider={ props.route.params.info.provider} type={props.route.params.info.type} rawTransaction={props.route.params.info.rawTransaction} walletType={walletType} SaveTransaction={SaveTransaction} setLoading={setLoading} setDisable={setDisable}/>
         </Animated.View>
   )
 }

@@ -305,11 +305,13 @@ var transaction = {
             setBalance(res.walletBalance)
             console.log('success')
             
+          }else{
+            setBalance(0)
           }
         })
         .catch((error) => {
           console.log(error)
-          alert(error)
+         
           
         });
       }

@@ -8,7 +8,7 @@ import RecieveModal from './Modals/RecieveModal';
 import { useNavigation } from '@react-navigation/native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useDispatch, useSelector } from "react-redux";
-import { Extend, Collapse, getEthBalance, getMaticBalance, getBalance } from "../components/Redux/actions/auth";
+import { Extend, Collapse, getEthBalance, getMaticBalance, getBalance, getXrpBalance } from "../components/Redux/actions/auth";
 import { Animated } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -172,7 +172,7 @@ console.log(state.wallets)
         }else if(JSON.parse(type)=='Matic'){
           await dispatch(getMaticBalance(address))
           .then(async(res)=>{
-            console.log("hi poly"+res.MaticBalance)
+            
             
             let bal = await AsyncStorageLib.getItem('MaticBalance')
             console.log(bal)
@@ -194,12 +194,11 @@ console.log(state.wallets)
           .then(async(e)=>{
             const Eth = await e.EthBalance
             let bal = await AsyncStorageLib.getItem('EthBalance')
-            console.log("hi"+ Eth)
-            console.log(bal)
+           
             if(Eth){
               
               setType('Eth')
-              GetBalance(bal)
+              GetBalance(Eth)
             }else{
               console.log('coudnt get balance')
             }
@@ -219,10 +218,10 @@ console.log(state.wallets)
         }else if(JSON.parse(type)=='Xrp'){
             await AsyncStorageLib.getItem('wallet').then(async(wallet)=>{
 
-              console.log(JSON.parse(wallet).classicAddress)
+              
               if(wallet){
                 
-                const resp = await getXrpBal(JSON.parse(wallet).classicAddress)
+                const resp =  dispatch(getXrpBalance(JSON.parse(wallet).classicAddress))
                 console.log(resp)
                 setType('Xrp')
               }
@@ -279,14 +278,14 @@ console.log(state.wallets)
         }
         else{
           const wallet = await state.wallet.address
-            console.log('hello'+wallet)
+            
             if(wallet){
 
               await dispatch(getBalance(state.wallet.address))
               .then(async()=>{
 
                const bal = await state.walletBalance
-               console.log("My"+bal)
+               
                if(bal){
 
                  GetBalance(bal)
@@ -316,7 +315,7 @@ console.log(state.wallets)
         delay: 0.1,
         useNativeDriver: true,
       }).start();
-      try{
+      /*try{
         const user= await AsyncStorageLib.getItem('user')
     const wallets = await AsyncStorageLib.getItem(`${user}-wallets`)
     if(wallets){
@@ -326,7 +325,7 @@ console.log(state.wallets)
       }catch(error){
         console.log(error)
         alert('no wallets found. Make sure you have the file with private keys saved in your device')
-      }
+      }*/
       // console.log(wallet)
     }, [state2, wallet])
     
@@ -397,7 +396,7 @@ console.log(state.wallets)
                 console.log(JSON.parse(wallet).classicAddress)
                 if(wallet){
                   
-                  const resp = await getXrpBal(JSON.parse(wallet).classicAddress)
+                  const resp = dispatch(getXrpBalance(JSON.parse(wallet).classicAddress))
                   console.log(resp)
                   setType('Xrp')
                 }

@@ -14,7 +14,7 @@ import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers"
-import { genrateAuthToken } from './Auth/jwtHandler';
+import { genrateAuthToken, genUsrToken } from './Auth/jwtHandler';
 
 
 const CheckMnemonic = (props) => {
@@ -129,7 +129,7 @@ async function saveUserDetails(){
       <View style={{width:wp(95), margin:10}}>
 <Button title={'Import'}  color={'blue'} onPress={async()=>{
            setLoading(true)
-           
+           const pin = await AsyncStorageLib.getItem('pin')
             
              if(mnemonic===props.route.params.wallet.mnemonic){
                /* const response = await saveUserDetails().then((response)=>{
@@ -145,14 +145,14 @@ async function saveUserDetails(){
                   //return alert('failed to create account. please try again')
                 })*/
 
-                const pin = await AsyncStorageLib.getItem('pin')
+                
                 console.log(pin)
                 const body ={
                   accountName:props.route.params.wallet.accountName,
-                  pin:pin
+                  pin:JSON.parse(pin)
 
                 }
-                    const token = genrateAuthToken(body)
+                    const token = genUsrToken(body)
                     console.log(token)
 
                     const accounts ={
@@ -175,7 +175,7 @@ async function saveUserDetails(){
                     AsyncStorageLib.setItem(`${props.route.params.wallet.accountName}-wallets`,JSON.stringify(allWallets))
                     AsyncStorageLib.setItem("user",props.route.params.wallet.accountName)
                     AsyncStorageLib.setItem("currentWallet",props.route.params.wallet.accountName)
-                    AsyncStorageLib.setItem("token",token)
+                    AsyncStorageLib.setItem(`${props.route.params.wallet.accountName}-token`,token)
 
 
                     dispatch(setUser(props.route.params.wallet.accountName))

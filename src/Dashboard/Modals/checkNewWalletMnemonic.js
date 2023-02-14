@@ -140,65 +140,75 @@ async function saveUserDetails(){
       <View style={{width:wp(90), margin:10}}>
 <Button title={'Import'}  color={'blue'} onPress={async()=>{
            setLoading(true)
-           
-           const user = await AsyncStorageLib.getItem('user')
+           try{
 
+             const user = await AsyncStorageLib.getItem('user')
+             
              if(mnemonic===Wallet.mnemonic){
-                const response = await saveUserDetails().then(async (response)=>{
-                  if(response===400){
+               /*const response = await saveUserDetails().then(async (response)=>{
+                 if(response===400){
+                   return 
+                  }
+                  else if(response===401){
                     return 
                   }
-                 else if(response===401){
-                    return 
-                  }
-                   
-                    let wallets=[]
-                    const data = await AsyncStorageLib.getItem(`${user}-wallets`).then((response)=>{
-                      console.log( response )
-                      JSON.parse(response).map((item)=>{
-
-                          wallets.push(item) 
-                      })
-                     }).catch((e)=>{
-                         setWalletVisible(false)
-                         setVisible(false)
-                         setModalVisible(false)
-                      console.log(e)
-                     })
-
-                    //wallets.push(accounts)
-                    const allWallets =[{
-                        address:Wallet.address,
-                        privateKey:Wallet.privateKey,
-                        name:Wallet.accountName,
-                        walletType:'Multi-coin',
-                        wallets:wallets
-                      }]
-                   // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
+                }).catch((e)=>{
+                  console.log(e)
+                  setLoading(false)
+                  SetVisible(false)
+                  setModalVisible(false)
+                  
+                  
+                })*/
+                
+                let wallets=[]
+                const data = await AsyncStorageLib.getItem(`${user}-wallets`).then((response)=>{
+                  console.log( response )
+                  JSON.parse(response).map((item)=>{
                     
-                    dispatch(AddToAllWallets(allWallets,user))
-                    // dispatch(getBalance(wallet.address))
-                    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-    
-                    let result = []
-                   
-                          setLoading(false)
-                          SetVisible(false)
-                          navigation.navigate("AllWallets")
-                         setModalVisible(false)
-                         setPrivateKeyVisible(false)
-                         setNewWalletVisible(false)
-                  }).catch((e)=>{
-                    console.log(e)
-                    setLoading(false)
-                    SetVisible(false)
-                    setModalVisible(false)
-
-
+                    wallets.push(item) 
                   })
+                }).catch((e)=>{
+                  setWalletVisible(false)
+                  setVisible(false)
+                  setModalVisible(false)
+                  console.log(e)
+                })
+                
+                //wallets.push(accounts)
+                const allWallets =[{
+                  address:Wallet.address,
+                  privateKey:Wallet.privateKey,
+                  name:Wallet.accountName,
+                  walletType:'Multi-coin',
+                  wallets:wallets
+                }]
+                // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
+                
+                dispatch(AddToAllWallets(allWallets,user))
+                // dispatch(getBalance(wallet.address))
+                //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                
+                let result = []
+                
+                setLoading(false)
+                SetVisible(false)
+                setModalVisible(false)
+                setPrivateKeyVisible(false)
+                setNewWalletVisible(false)
+                navigation.navigate("AllWallets")
+              }
+                 
                   
                   
                    
+             }catch(e){
+              setLoading(false)
+                SetVisible(false)
+                setModalVisible(false)
+                setPrivateKeyVisible(false)
+                setNewWalletVisible(false)
+                alert('Failed to import wallet. Please try again')
              }
            
               

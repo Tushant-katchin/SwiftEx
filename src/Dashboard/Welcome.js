@@ -64,8 +64,17 @@ const Welcome = (props) => {
          I already have a wallet
         </Text>
     </TouchableOpacity>
+    <TouchableOpacity onPress={()=>{
+      setLoginVisible(true)
+    }}>
+
+       <Text style={style.Text}>
+         Already have an account?Log back in
+        </Text>
+    </TouchableOpacity>
     
     </View>
+    <LoginModal loginVisible={loginVisible} setLoginVisible={setLoginVisible}/>
         </Animated.View>
   )
 }

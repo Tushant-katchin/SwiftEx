@@ -10,13 +10,22 @@ import Etherimage from '../../assets/ethereum.png'
 import Xrpimage from '../../assets/xrp.png'
 import Maticimage from '../../assets/matic.png'
 import title_icon from '../../assets/title_icon.png'
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
  const Transactions = (props)=>{
 
     const[transactions, setTransactions] = useState('')
     const state = useSelector((state) => state);
 
     const getTransactions = async ()=>{
-        const token = await state.token
+      const user = await AsyncStorageLib.getItem('user')
+      await AsyncStorageLib.getItem(`${user}-transactions`)
+      .then((transactions)=>{
+        const data = JSON.parse(transactions)
+        if(data){
+          setTransactions(data)
+        }
+      })
+      /*  const token = await state.token
         const user = await state.user
         
 try{
@@ -47,6 +56,7 @@ try{
   console.log(e)
   alert(e)
 }
+*/
     }
     let LeftContent = props => <Avatar.Image {...props} source={  title_icon } />
     let multiCoinLeftContent = props => <Avatar.Image {...props} source={  title_icon } />

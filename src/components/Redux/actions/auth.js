@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGOUT, WALLET_SUCCESS , IMPORT_SUCCESS, BALANCE_SUCCESS, EXTENDED, CONFIRMOTP,COLLAPSE, IMPORTALLWALLETS, SETCURRENTWALLET, ADDTOALLWALLETS, CHECKWALLETS, GETWALLETSDATA, IMPORTUSINGFILE, GETDIRECTORYURI, SETTOKEN, NEWWALLET, SETUSER, SETPROVIDER, SETWALLETTYPE, ETHBALANCESUCCESS, MATICBALANCESUCCESS, XRPBALANCESUCCESS, SETPLATFORM} from "./type";
+import { LOGIN_SUCCESS, LOGOUT, WALLET_SUCCESS , IMPORT_SUCCESS, BALANCE_SUCCESS, EXTENDED, CONFIRMOTP,COLLAPSE, IMPORTALLWALLETS, SETCURRENTWALLET, ADDTOALLWALLETS, CHECKWALLETS, GETWALLETSDATA, IMPORTUSINGFILE, GETDIRECTORYURI, SETTOKEN, NEWWALLET, SETUSER, SETPROVIDER, SETWALLETTYPE, ETHBALANCESUCCESS, MATICBALANCESUCCESS, XRPBALANCESUCCESS, SETPLATFORM, BALANCEERROR} from "./type";
 import AuthService from "../services/authService";
 export const login = (user) => (dispatch) => {
   return AuthService.logIn(user).then(
@@ -64,6 +64,8 @@ export const logout = () => (dispatch) => {
     }
   });
 };
+
+
 
 export const Extend = () => (dispatch) => {
   
@@ -199,6 +201,14 @@ export const getBalance =  (user) => (dispatch) => {
       Promise.resolve();
         return response;
       }
+      else{
+        dispatch({
+          type: BALANCE_SUCCESS,
+          payload: { walletBalance: 0 },
+        });
+      }
+      Promise.resolve();
+      return response;
     },
     (error) => {
       const message = error.toString();
@@ -347,6 +357,13 @@ export const getEthBalance =  (address) => (dispatch) => {
         });
       Promise.resolve();
         return response;
+      }else{
+        dispatch({
+          type: ETHBALANCESUCCESS,
+          payload: { EthBalance: 0 },
+        });
+      Promise.resolve();
+        return response;
       }
     },
     (error) => {
@@ -370,6 +387,14 @@ export const getMaticBalance =  (address) => (dispatch) => {
       Promise.resolve();
         return response;
       }
+      else{
+        dispatch({
+          type: MATICBALANCESUCCESS,
+          payload: { MaticBalance: 0 },
+        });
+      Promise.resolve();
+        return response;
+      }
     },
     (error) => {
       const message = error.toString();
@@ -388,6 +413,13 @@ export const getXrpBalance =  (address) => (dispatch) => {
         dispatch({
           type: XRPBALANCESUCCESS,
           payload: { XrpBalance: response.XrpBalance },
+        });
+      Promise.resolve();
+        return response;
+      }else{
+        dispatch({
+          type: XRPBALANCESUCCESS,
+          payload: { XrpBalance: 0 },
         });
       Promise.resolve();
         return response;

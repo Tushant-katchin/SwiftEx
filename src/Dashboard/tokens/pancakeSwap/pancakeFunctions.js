@@ -1,14 +1,15 @@
 import "@ethersproject/shims"
 import { ethers } from "ethers"
-import {RPC} from '../../constants'
+import {RPC, tokenAddresses} from '../../constants'
 //import { getAmountsOut } from "../../../utilities/utilities"
-async function getAmountsOut(input){
+async function getAmountsOut(amountIn, inToken,outToken,type){
+    console.log('hi getting amounts out')
   try{
   
       const factory = "0x182859893230dC89b114d6e2D547BFFE30474a21"
       const routerAddress = "0xD99D1c33F9fC3444f8101754aBC46c52416550D1"
-      const {amountIn, inToken,outToken,type} = input
-      
+      //const {amountIn, inToken,outToken,type} = input
+     // console.log(amountIn, inToken,outToken,type)
       const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
       
       const router = new ethers.Contract(
@@ -23,13 +24,13 @@ async function getAmountsOut(input){
           
           if(type==='BNBTOTOKEN'){
               
-              amounts = await router.getAmountsOut(amountIn, [usrConst.ADDRESSES.WBNB, outToken]);
+              amounts = await router.getAmountsOut(amountIn, [tokenAddresses.WBNB, outToken]);
               amountsOutMin = amounts[1].sub(amounts[1].div(10));
   
           }
           else if(type==='TOKENTOBNB'){
               
-              amounts = await router.getAmountsOut(amountIn, [inToken,usrConst.ADDRESSES.WBNB]);
+              amounts = await router.getAmountsOut(amountIn, [inToken,tokenAddresses.WBNB]);
               amountsOutMin = amounts[1].sub(amounts[1].div(10));
   
           }

@@ -202,13 +202,22 @@ async function saveUserDetails(address){
                         address:accountFromMnemonic.publicKey,
                         privateKey:privateKey
                     }
-                    const response = await saveUserDetails(wallet.address).then(async (response)=>{
+                   /* const response = await saveUserDetails(wallet.address).then(async (response)=>{
                       if(response===400){
                         return 
                       }
                      else if(response===401){
                         return 
                       }
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+                      setWalletVisible(false)
+                      setVisible(false)
+                      setModalVisible(false)
+
+
+                    })*/
                       const accounts ={
                         classicAddress:wallet.classicAddress,
                         address:wallet.address,
@@ -252,15 +261,7 @@ async function saveUserDetails(address){
                            setVisible(false)
                            setModalVisible(false)
                            navigation.navigate("AllWallets")
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
 
-
-                    })
                     
                 }catch(e){
                     console.log(e)
@@ -283,7 +284,7 @@ async function saveUserDetails(address){
                         privateKey:privatekey,
                         classicAddress:walletPrivateKey.classicAddress
                     }
-                    const response = await saveUserDetails(wallet.address).then(async (response)=>{
+                   /* const response = await saveUserDetails(wallet.address).then(async (response)=>{
                       
                       if(response===400){
                         return 
@@ -291,6 +292,15 @@ async function saveUserDetails(address){
                      else if(response===401){
                         return 
                       }
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+                      setWalletVisible(false)
+                      setVisible(false)
+                      setModalVisible(false)
+
+
+                    })*/
                       const accounts ={
                         classicAddress:wallet.classicAddress,
                         address:wallet.address,
@@ -334,15 +344,7 @@ async function saveUserDetails(address){
                            setVisible(false)
                            setModalVisible(false)
                            navigation.navigate("AllWallets")
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })
+                    
                     
                     
                     

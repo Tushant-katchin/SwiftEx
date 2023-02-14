@@ -10,40 +10,29 @@ import { login, setCurrentWallet, setToken, setUser } from "../../components/Red
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import Modal from "react-native-modal";
+import PinViewModal from "./pinViewModal";
 export  const LoginModal = ({ loginVisible, setLoginVisible }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [text, setText] = useState('');
   const[loading, setLoading]= useState(false)
-  const [passwordVisible, setPasswordVisible] = useState(true);
-  const navigation = useNavigation()
-  function ValidateEmail(mail) 
-  
-  {
-    setLoading(true)
-   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
-    {
-      
-      return (true)
-    }
-    
-      alert("You have entered an invalid email address!")
-      return (false)
-  }
+  const [pinViewVisible, setPinViewVisible] = useState(false);
+  const[pinMatch,setPinMatch] = useState(false)
 
+  const navigation = useNavigation()
+  
     const dispatch = useDispatch();
   const onLogin =  () => {
     setLoading(true)
-    if(!username||!password){
+    if(!username){
       setLoading(false)
       return alert('all fields are necessarry')
     }
       let user = {
-        username: username,
-        password: password,
+        username: username
       };
-      const valid=ValidateEmail(user.username)
-      if(valid) {
+     // const valid=ValidateEmail(user.username)
+      if(username) {
 
         dispatch(login(user))
         .then(async (response) => {
@@ -54,39 +43,44 @@ export  const LoginModal = ({ loginVisible, setLoginVisible }) => {
           if(response){
             if (response.status == 'Not Found') {
            
-              alert('Please create an account first')
-              setLoading(false)
+               setLoginVisible(false)
+                
+                navigation.replace("Import")
             }
-          if (response.status == 'verifyotp') {
-           
-            alert('please verify your account first')
-          }
-          if (response.status == "invalid") {
-           
-            alert('invalid credentials')
-          }
           if (response.status == "success") {
              
               await AsyncStorageLib.getItem(`${username}-wallets`)
-             .then((resp)=>{
+             .then(async (resp)=>{
               const wallets = JSON.parse(resp)
               console.log(wallets)
               if(!wallets){
                 setLoginVisible(false)
                 console.log(wallets)
-                navigation.replace("Import",{
-                  emailId:username
-                });
+                navigation.replace("Import")
 
               }else{
-                AsyncStorageLib.setItem('emailId',username)
-                AsyncStorageLib.setItem("currentWallet",response.user)
-                dispatch(setToken(response.token))
-                dispatch(setUser(username))
-                dispatch(setCurrentWallet(wallets[0].address,wallets[0].name,wallets[0].privateKey))
-                setLoginVisible(false)
-                navigation.replace("HomeScreen");
-                return response.token
+                setPinViewVisible(true)
+               /* if(pinMatch){
+
+                  const token = await AsyncStorageLib.getItem(`${username}-token`)
+                  if(token){
+
+                    AsyncStorageLib.setItem('user',username)
+                    AsyncStorageLib.setItem("currentWallet",response.user)
+                    //dispatch(setToken(response.token))
+                    dispatch(setUser(username))
+                    dispatch(setCurrentWallet(wallets[0].address,wallets[0].name,wallets[0].privateKey))
+                    setLoginVisible(false)
+                    navigation.replace("HomeScreen");
+                  }else{
+                    setLoginVisible(false)
+                console.log(wallets)
+                navigation.replace("Import")
+                  }
+                }else{
+                  alert('invalid pin. Please try again')
+                }
+                */
               }
              })
             
@@ -156,45 +150,20 @@ export  const LoginModal = ({ loginVisible, setLoginVisible }) => {
         size={20}
         color="#FFF"
         />
-       <Text style={{color:'#FFF', marginLeft:5}}>Email</Text>
+       <Text style={{color:'#FFF', marginLeft:5}}>Username</Text>
        </View>
        
       <TextInput
         style={styles.input}
         theme={{colors: {text: 'white' }}}
         value={username}
-        placeholder={"Enter your email here"}
+        placeholder={"Enter your username here"}
         onChangeText={(text) => setUsername(text)}
         autoCapitalize={"none"}
         placeholderTextColor="#FFF"
         />
       </View>
-      <View style={styles.inp}>
-      <View style={styles.icon}>
-      <Icon name="lock"
-        size={25}
-        color="#FFF"
-        />
-       <Text style={{color:'#FFF', marginLeft:5}}>Password</Text>
-    
       
-      </View>
-      <TextInput
-      style={styles.input}
-      theme={{colors: {text: 'white' }}}
-      value={password}
-      placeholder={"Password"}
-      secureTextEntry={passwordVisible}
-      right={<TextInput.Icon name={passwordVisible ? "eye" : "eye-off"}  onPress={() => setPasswordVisible(!passwordVisible)} />}
-      onChangeText={(text) => setPassword(text)}
-      placeholderTextColor="#FFF"
-      autoCapitalize={"none"}
-      />
-      </View>
-      <View  style={styles.icon2}>
-      
-        <Text style={{color:'#FFF'}}>Forgot Password?</Text>
-        </View>
         {loading? <ActivityIndicator size="large" color="white" />:<Text> </Text>}
 
       <View  style={styles.btn}>
@@ -209,10 +178,7 @@ export  const LoginModal = ({ loginVisible, setLoginVisible }) => {
       setTimeout(() => {
           
           const token = onLogin()
-          if(token){
-              // dispatch(setToken(token))
-              console.log(token)
-            }
+          
         }, 1);
       }}>
           <Text style={styles.buttonText}>Login</Text>
@@ -221,19 +187,9 @@ export  const LoginModal = ({ loginVisible, setLoginVisible }) => {
      
       </LinearGradient>
       </View>
-      <View style={styles.lowerbox}>
-      <TouchableOpacity onPress={()=>{
-          const wallet ='visible'
-          navigation.navigate('RegisterScreen',{
-            wallet:wallet
-          })
-          setLoginVisible(false)
-      }}>
-      <Text style={styles.lowerboxtext}><Text style={{color:'#78909c'}}>Don't have an account?</Text> Register now</Text>
-      </TouchableOpacity>
       </View>
       </View>
-      </View>
+      <PinViewModal pinViewVisible={pinViewVisible} setPinViewVisible={setPinViewVisible} setLoginVisible={setLoginVisible} username={username}/>
 </Modal>
     </>
   );

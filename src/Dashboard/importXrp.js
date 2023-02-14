@@ -15,6 +15,7 @@ import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers"
+import {  genUsrToken } from './Auth/jwtHandler';
 const ImportXrp = (props) => {
     
     
@@ -161,7 +162,8 @@ async function saveUserDetails(address){
       
       {loading? <ActivityIndicator size="large" color="green" />:<Text> </Text>}
       <View style={{width:wp(95), margin:10}}>
-<Button title={'Import'}  color={'blue'} onPress={()=>{
+<Button title={'Import'}  color={'blue'} onPress={async ()=>{
+  const pin = await AsyncStorageLib.getItem('pin')
    if(!accountName){
     return alert('please enter an accountName to proceed')
 
@@ -185,15 +187,27 @@ async function saveUserDetails(address){
                         address:accountFromMnemonic.publicKey,
                         privateKey:privateKey
                     }
-                    const response = await saveUserDetails(wallet.address).then((response)=>{
+                    /*const response = await saveUserDetails(wallet.address).then((response)=>{
                       if(response.code===400){
                         return alert(response.message)
                       }
                       else if(response.code===401){
                         return alert(response.message)
                       }
-                        const token =`${response.token}`
-                        console.log(token)
+                      console.log(pin)
+                      }).catch((e)=>{
+                        console.log(e)
+                        setLoading(false)
+                        alert(e)
+  
+                      })*/
+                      const body ={
+                        accountName:accountName,
+                        pin:JSON.parse(pin)
+                
+                      }
+                          const token = genUsrToken(body)
+                          console.log(token)
       
                       const accounts ={
                         classicAddress:wallet.classicAddress,
@@ -230,12 +244,7 @@ async function saveUserDetails(address){
 
                        props.navigation.navigate('HomeScreen')
                    
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      alert(e)
-
-                    })
+                    
                     
                     
                 }catch(e){
@@ -256,15 +265,26 @@ async function saveUserDetails(address){
                         privateKey:privatekey,
                         classicAddress:walletPrivateKey.classicAddress
                     }
-                    const response = await saveUserDetails(wallet.address).then((response)=>{
+                    /*const response = await saveUserDetails(wallet.address).then((response)=>{
                       if(response.code===400){
                         return alert(response.message)
                       }
                       else if(response.code===401){
                         return alert(response.message)
                       }
-                        const token =`${response.token}`
-                        console.log(token)
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+
+                      return alert('failed to create account. please try again')
+                    })*/
+                      const body ={
+                        accountName:accountName,
+                        pin:JSON.parse(pin)
+                
+                      }
+                          const token = genUsrToken(body)
+                          console.log(token)
       
                       const accounts ={
                         classicAddress:wallet.classicAddress,
@@ -302,12 +322,7 @@ async function saveUserDetails(address){
 
                        props.navigation.navigate('HomeScreen')
                    
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-
-                      return alert('failed to create account. please try again')
-                    })
+                    
                     
                     
                 }catch(e){

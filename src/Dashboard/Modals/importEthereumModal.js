@@ -242,7 +242,7 @@ async function saveUserDetails(address){
                   address:accountFromMnemonic.address,
                   privateKey:privateKey
                  }
-                 const response = saveUserDetails(accountFromMnemonic.address).then(async(response)=>{
+                 /*const response = saveUserDetails(accountFromMnemonic.address).then(async(response)=>{
                 
                   if(response===400){
                     return 
@@ -250,6 +250,16 @@ async function saveUserDetails(address){
                  else if(response===401){
                     return 
                   }
+                })
+                .catch((e)=>{
+                    console.log(e)
+                    setLoading(false)
+                    setWalletVisible(false)
+                    setVisible(false)
+                    setModalVisible(false)
+
+
+                  })*/
                   const accounts ={
                     address:wallet.address,
                     privateKey:wallet.privateKey,
@@ -293,16 +303,7 @@ async function saveUserDetails(address){
                            setModalVisible(false)
                            
                            navigation.navigate("AllWallets")
-                    })
-                  .catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })
+                    
                      
   
               }else if(label==='privateKey'){
@@ -321,14 +322,25 @@ async function saveUserDetails(address){
                   address:walletPrivateKey.address,
                   privateKey:privatekey
                  }
-                 const response = saveUserDetails(wallet.address).then(async (response)=>{
+                /* const response = saveUserDetails(wallet.address).then(async (response)=>{
                   if(response===400){
                     return 
                   }
                  else if(response===401){
                     return 
                   }
+                })
+                .catch((e)=>{
                  
+               
+                  console.log(e)
+                  setLoading(false)
+                  setModalVisible(false)
+                  setWalletVisible(false)
+                  setVisible(false)
+
+
+                })*/
                   
                   let wallets=[]
                       const data = await AsyncStorageLib.getItem(`${user}-wallets`).then((response)=>{
@@ -367,24 +379,13 @@ async function saveUserDetails(address){
                       setLoading(false)
                       navigation.navigate("AllWallets")
                       
-                    })
-                    .catch((e)=>{
-                     
-                   
-                      console.log(e)
-                      setLoading(false)
-                      setModalVisible(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-
-
-                    })
+                    
               }else{
                 try{
 
                   const user = await AsyncStorageLib.getItem('user')
                   
-                  ethers.Wallet.fromEncryptedJson(json, jsonKey).then((wallet) =>{
+                  ethers.Wallet.fromEncryptedJson(json, jsonKey).then(async(wallet) =>{
                     console.log("Address: " + wallet.address);
                     const Wallet = {
                       address:wallet.address,
@@ -392,13 +393,22 @@ async function saveUserDetails(address){
                     }
                     setWallet(wallet)
                     
-                    const response = saveUserDetails(wallet.address).then(async(response)=>{
+                    /*const response = saveUserDetails(wallet.address).then(async(response)=>{
                       if(response===400){
                         return 
                       }
                      else if(response===401){
                         return 
                       }
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+                      setWalletVisible(false)
+                      setVisible(false)
+                      setModalVisible(false)
+
+
+                    })*/
                       let wallets=[]
                       const data = await AsyncStorageLib.getItem(`${user}-wallets`).then((response)=>{
                         console.log( response )
@@ -435,15 +445,7 @@ async function saveUserDetails(address){
                            setVisible(false)
                            setModalVisible(false)
                            navigation.navigate("AllWallets")
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })
+                    
                     
                   }).catch((e)=>{
                     console.log(e)
