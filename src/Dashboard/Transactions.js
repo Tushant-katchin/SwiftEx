@@ -22,7 +22,7 @@ import AsyncStorageLib from '@react-native-async-storage/async-storage';
       .then((transactions)=>{
         const data = JSON.parse(transactions)
         if(data){
-          setTransactions(data)
+          setTransactions(data.reverse())
         }
       })
       /*  const token = await state.token
@@ -74,12 +74,10 @@ return(
   <View
     style={{
       height: hp(100),
-      marginTop: 'auto',
       backgroundColor:'white',
      
     }}>
     <View style={styles.footer}>
-      <Text style={styles.headerText}>Transactions</Text>
       <View elevation={5} style={{height:hp(100)}}>
       <ScrollView
      alwaysBounceVertical={true} 

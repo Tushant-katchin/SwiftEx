@@ -49,11 +49,11 @@ export async function SendTransaction(signedTx, Token){
 }
 export async function getNonce(address){
   console.log(address)
-    const provider =  new ethers.providers.JsonRpcProvider(process.env.BSCRPC); // TESTNET
+    const provider =  new ethers.providers.JsonRpcProvider(RPC.BSCRPC); // TESTNET
     const nonce = await provider.getTransactionCount(address)
     console.log(nonce)
 
-    return {nonce}
+    return nonce
   /*let response
   const token = await AsyncStorageLib.getItem('token')
   try{
@@ -87,10 +87,10 @@ export async function getNonce(address){
 
 export async function getGasPrice(){
 
-  const provider = new ethers.providers.JsonRpcProvider(process.env.BSCRPC) // TESTNET
+  const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC) // TESTNET
   const gasPrice = await provider.getGasPrice()
   console.log(gasPrice)
-  return { gasPrice }
+  return  gasPrice 
   /* let response
   let data
   try{
@@ -716,7 +716,7 @@ export async function getAmountsOut(amountIn,inToken,outToken,type){
     const routerAddress = "0xD99D1c33F9fC3444f8101754aBC46c52416550D1"
    // const {amountIn, inToken,outToken,type} = input
     
-    const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
+    const provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC2)
     
     const router = new ethers.Contract(
         routerAddress,
@@ -787,8 +787,34 @@ export async function getAmountsOut(amountIn,inToken,outToken,type){
 }
 
 export async function sendSwapTx(signedTx,TOKEN_ADD,amount,USER_ADD,token){
+ // const {signedTx,TOKEN_ADD,amount,USER_ADD} = input
+  const provider = new ethers.providers.JsonRpcBatchProvider(RPC.BSCRPC2)
 
-  const response = await fetch(`http://${urls.testUrl}/user/approveSwap`, {
+  const ROUTER_ADD = '0xD99D1c33F9fC3444f8101754aBC46c52416550D1'
+const erc20ABI = [
+  'function allowance(address owner,address spender) public virtual view returns (uint256)',
+]
+const erc20Contact = new ethers.Contract(TOKEN_ADD, erc20ABI, provider)
+
+const tx = await provider.sendTransaction(signedTx)
+await tx.wait()
+
+console.log(tx)
+// Check the allowance
+let routerAllowance = await erc20Contact.allowance(USER_ADD, ROUTER_ADD)
+if (!routerAllowance.gte(amount)) {
+  // wait for three sec
+  await sleep(3000)
+
+  routerAllowance = await erc20Contact.allowance(USER_ADD, ROUTER_ADD)
+  if (!routerAllowance.gte(amount)) return 'Error in trasaction'
+}
+
+console.log(routerAllowance.toString())
+
+return routerAllowance.toString()//mapper.responseMappingWithData(usrConst.CODE.Success,usrConst.MESSAGE.Success,routerAllowance.toString())
+
+  /*const response = await fetch(`http://${urls.testUrl}/user/approveSwap`, {
     method: 'POST',
     headers: {
              Accept: 'application/json',
@@ -808,13 +834,13 @@ export async function sendSwapTx(signedTx,TOKEN_ADD,amount,USER_ADD,token){
 
     
   });
-  return response
+  return response*/
 
 
 }
 
 export async function approveSwap(tokenAdd,amount,PRIVATE_KEY,token){
-
+  console.log('starting approve')
   const wallet = new ethers.Wallet(PRIVATE_KEY)
   const ROUTER_ADD = '0xD99D1c33F9fC3444f8101754aBC46c52416550D1'
 

@@ -14,6 +14,7 @@ import Modal from "react-native-modal";
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { decodeUserToken } from '../Auth/jwtHandler';
+import { SendLoadingComponent } from '../../utilities/loadingComponent';
 const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,rawTransaction, walletType,SaveTransaction, setLoading, setDisable}) => {
     const state = useSelector((state)=>state)
     const[pin, setPin] = useState()
@@ -21,6 +22,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
     const [showRemoveButton, setShowRemoveButton] = useState(false)
     const [enteredPin, setEnteredPin] = useState("")
     const [showCompletedButton, setShowCompletedButton] = useState(false)
+    const[loader, setLoader] = useState(false)
     const pinView = useRef(null)
     const fadeAnim = useRef(new Animated.Value(0)).current
     const dispatch = useDispatch()
@@ -106,7 +108,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
     <Text style={style.welcomeText}> Hi,</Text>
     <Text style={style.welcomeText}> {status=='verify'?"please re enter pin" :status==='pinset'?"please enter your pin": "Please create a pin"}</Text>
     <View style={{marginTop:hp(10)}}>  
-
+     {loader?<SendLoadingComponent/>:<View></View>}
 <ReactNativePinView
             inputSize={32}
             ref={pinView}
@@ -143,7 +145,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
                  
 
                   const Pin = await AsyncStorage.getItem('pin')
-                  
+                  setLoader(true)
                   if(JSON.parse(Pin)===enteredPin){
                     
                     const emailid = await state.user
@@ -168,6 +170,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
             console.log(saveTransaction)
             alert(`Transaction success :https://goerli.etherscan.io/tx/${txx.hash}`)
             setLoading(false)
+            setLoader(false)
             setDisable(false)
             setPinViewVisible(false)
 
@@ -175,7 +178,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
           }catch(e){
             setLoading(false)
             setDisable(false)
-            
+            setLoader(false)
             setPinViewVisible(false)
             console.log(e)
             alert(e)
@@ -197,6 +200,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
             console.log(saveTransaction)
             alert(`Transaction success https://mumbai.polygonscan.com/tx/${txx.hash}`)
             setLoading(false)
+            setLoader(false)
             setDisable(false)
             setPinViewVisible(false)
             navigation.navigate('Transactions')
@@ -204,6 +208,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
 
           }catch(e){
             setDisable(false)
+            setLoader(false)
             setPinViewVisible(false)
             setLoading(false)
             console.log(e)
@@ -226,6 +231,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
              console.log(saveTransaction)
              alert(`Transaction success :https://testnet.bscscan.com/tx/${txx.hash}`)
              setLoading(false)
+             setLoader(false)
              setDisable(false)
              setPinViewVisible(false)
              navigation.navigate('Transactions')
@@ -234,6 +240,7 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
            }catch(e){
             setDisable(false)
             setPinViewVisible(false)
+            setLoader(false)
              setLoading(false)
              console.log(e)
              alert(e)
@@ -255,13 +262,15 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
           setLoading(false)
           setDisable(false)
           console.log(tx)
-          setLoading(false)
+          setLoader(false)
           setPinViewVisible(false)
           navigation.navigate('Transactions')
 
         }catch(e){
           setDisable(false)
           setPinViewVisible(false)
+          setLoader(false)
+          setLoading(false)
           console.log(e)
           alert('please try again')
         }
@@ -270,6 +279,10 @@ const TransactionPinModal = ({pinViewVisible,setPinViewVisible,provider,type,raw
 
                   }
                   else{
+                    setLoading(false)
+                    setLoader(false)
+                    setDisable(false)
+
                     alert('invalid pin.please try again!')
                   }
 

@@ -7,7 +7,7 @@ import { ethers } from "ethers"
 import { getBalance } from "../../components/Redux/actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from '@react-navigation/native';
-import { urls } from '../constants';
+import { RPC, urls } from '../constants';
 import { getNonce, getGasPrice, sendSignedTx, getAmountsOut, SendTransaction, approveSwap } from '../../utilities/utilities';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Icon from "react-native-vector-icons/Ionicons"
@@ -22,6 +22,7 @@ import chooseSwap from '../tokens/chooseSwap.json'
 import { getSwapPrice } from '../tokens/pancakeSwap/pancakeFunctions';
 import SelectSwap from './SelectSwap';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import SwapPinModal from './swapPinModal';
 const UNISWAP = require("@uniswap/sdk")
 const { Token, WETH, Fetcher, Route, Trade, TokenAmount, TradeType, Percent} = require("@uniswap/sdk");
 
@@ -41,6 +42,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
     const[label2, setLabel2] = useState('')
     const[trade,setTrade] = useState()
     const[walletType, setWalletType] = useState('')
+    const[pinViewVisible,setPinViewVisible] = useState(false)
     const state = useSelector((state) => state);
     const[coin0, setCoin0] = useState({
       name:'Token1',
@@ -131,48 +133,6 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
       return transactions
       }
    })
-   
-  
-  
-     /* const token = await AsyncStorageLib.getItem('token')
-
-              try {
-          const response= await fetch(`http://${urls.testUrl}/user/saveTx`, {
-            method: 'POST',
-            headers: {
-                     Accept: 'application/json',
-                     'Content-Type': 'application/json'
-            },
-           body: JSON.stringify({
-            token:token,
-            user: user,
-            type:type,
-            hash:hash,
-            walletType:walletType,
-            chainType:chainType
-
-    
-          })  
-           }).then((response) => response.json())
-        .then((json) => {
-          
-        })
-        .catch((error) => {
-          setLoading(false)
-          alert(error)
-          console.error(error);
-        });
-    
-    
-          } catch (error) {
-
-            setLoading(false)
-            alert(error)
-            console.error(error);
-          }
-       
-      */
-        
       };
     const Balance = async () => {
        
@@ -256,7 +216,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
       console.log(address2)
       const PRIVATE_KEY = decrypt
           
-      const provider =  new ethers.providers.JsonRpcProvider('https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/testnet/')
+      const provider =  new ethers.providers.JsonRpcProvider(RPC.BSCRPC2)
           const wallet = new ethers.Wallet(PRIVATE_KEY,provider);
           console.log(wallet)
               const gasPrice= await provider.getGasPrice()
@@ -987,7 +947,8 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
       disabled={loading===true?true:false}
       style={styles.addButton3}
       onPress={async () => {
-        try{
+        setPinViewVisible(true)
+       /* try{
           setLoading(true)
           const walletType = await AsyncStorage.getItem('walletType')
           console.log(JSON.parse(walletType))
@@ -1351,7 +1312,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
         setTradeVisible(false);
         
         console.log(e)
-      }
+      }*/
     }}>
       <Text style={styles.addButtonText}>{loading? <ActivityIndicator size="small" color="white" />:"Confirm"}
 </Text>
@@ -1364,6 +1325,7 @@ const SwapModal = ({modalVisible,setModalVisible}) => {
   </View>
 </Modal2>
         </Modal>
+        <SwapPinModal pinViewVisible={pinViewVisible} setPinViewVisible={setPinViewVisible} setModalVisible={setModalVisible} setTradeVisible={setTradeVisible} pancakeSwap={pancakeSwap} coin0={coin0} coin1={coin1} SaveTransaction={SaveTransaction} swapType={swapType}  setLoading={setLoading}/>
 </View>
   )
 }
@@ -1518,330 +1480,3 @@ elevation: 24,
       
 
 })
-
-/*
-const wbnb = new ethers.Contract(
-              addresses.WBNB,
-              ['function approve(address spender, uint amount) public returns(bool)'],
-              account
-          )
-            const approveTx = await wbnb.approve(addresses.router, ethers.utils.parseUnits('1'), gas);
-            console.log(approveTx)
-            const approveRecipt = await approveTx.wait();
-            console.log(approveRecipt.transactionHash);
-            const amounts = await router.getAmountsOut(amountIn, [address1, address2]);
-            const amountOutMin = amounts[1].sub(amounts[1].div(10)); 
-            
-            const swapTx = await router.swapExactETHForTokens(
-              amountOutMin, // Degen ape don't give a fuxk about slippage
-              [addresses.WBNB, address2],
-              wallet.address,
-              Math.floor(Date.now() / 1000) + 60 * 20, // 10 minutes from now
-              {
-                  gas,
-                  value: amountIn
-              }
-          );
-
-          const swapReceipt = await swapTx.wait();
-          console.log(swapReceipt);
-          console.log("Swap success!!");
-*/
-
-/* const approveTx = await Contract.approve(addresses.router, ethers.utils.parseUnits('1'), gas);
-            console.log(approveTx)
-            const approveRecipt = await approveTx.wait();
-            console.log(approveRecipt.transactionHash);
-           // const amounts = await router.getAmountsOut(amountIn, [address1, address2]);
-            const amountOutMin = await getAmountsOut(amountIn,address1,address2,type);//amounts[1].sub(amounts[1].div(10)); 
-            
-            
-            const swapTx = await router.swapExactTokensForTokens(
-              amountIn, 
-              amountOutMin, 
-              [address1, address2], 
-              wallet.address,
-              Date.now() + 1000 * 60 * 10,
-              gas 
-              );
-              
-              const swapReceipt = await swapTx.wait();
-              console.log(swapReceipt);
-              console.log("Swap success!!");
-              if(swapReceipt.transactionHash){
-                try{
-
-                  const type = 'Swap'
-                  const saveTransaction = await SaveTransaction(type,swapReceipt.transactionHash)
-                  console.log(saveTransaction)
-                  alert(`Swap Successful. Tx Hash : ${swapReceipt.transactionHash} `)
-                  setLoading(false)
-                  await getCustomBalance()
-                 }catch(e){
-                   alert(e)
-                   console.log(e)
-                 }
-               
-                
-              }
-              else{
-                setLoading(false)
-                return alert('swap Failed')
-                
-              }*/
-
-              /*
-              
-              const check2 = async (decrypt)=>{
-
-  setLoading(true)
-  setVisible(false)
-  const token = await state.token
-
-  const Wallet = await state.wallet.address
-  if(!Wallet){
-    return alert('please select a wallet first')
-  }
-  if(!amount||!coin0.address||!coin1.address){
-    setLoading(false)
-    return alert('All places are mandatory')
-  }
-
-  /*if(balance<=0){
-    setLoading(false)
-    console.log(balance)
-    return alert('You do not have enough balance to make this transaction')
-  }
-
-  if(amount>=balance){
-    setLoading(false)
-    console.log(balance)
-    return alert('You do not have enough balance to make this transaction')
-  }
-
-  
-  if(token1===token2){
-    setLoading(false)
-    return alert('Same tokens cannot be swaped')
-  }*/
-
-
-  /*const addresses = {
-    WBNB: "0xae13d989dac2f0debff460ac112a837c89baa7cd",
-    bnb : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-    BUSD: "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee",
-    USDT:'0x337610d27c682E347C9cD60BD4b3b107C9d34dDd',
-    DAI:'0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
-    ETH:"0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378", 
-    factory: "0x182859893230dC89b114d6e2D547BFFE30474a21",
-    router: "0xD99D1c33F9fC3444f8101754aBC46c52416550D1",
-}
-
-
-let address1=coin0.address
-let address2=coin1.address
-console.log(address1)
-
-console.log(address2)
-const PRIVATE_KEY = decrypt
-    
-const provider =  new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
-    const wallet = new ethers.Wallet(PRIVATE_KEY,provider);
-    console.log(wallet)
-        const gasPrice= await provider.getGasPrice()
-    
-       // const amountIn = (await ethers).utils.parseUnits(input.amount, "ether");
-        const gas = {
-            gasPrice: gasPrice,
-            gasLimit: '500000'
-        };
-    
-        const amountIn = (await ethers).utils.parseUnits(amount, "ether");
-
-    
-       // console.log(Contract)
-        try{
-          if(coin0.symbol=='BNB'){
-            const type ='BNBTOTOKEN'
-
-            console.log('starting')
-            const RouterABI = [
-              'function swapExactETHForTokens( uint256 amountOutMin, address[] calldata path, address to, uint256 deadline ) external payable virtual returns (uint256[] memory amounts)',
-              'function swapExactETHForTokensSupportingFeeOnTransferTokens( uint256 amountOutMin, address[] calldata path, address to, uint256 deadline ) external payable virtual',
-            ]
-   
-            const pancakeRouterContract = new ethers.Contract(addresses.router, RouterABI)
-           // const amounts = await router.getAmountsOut(amountIn, [addresses.WBNB, address2]);
-            const amountOutMin = await getAmountsOut(amountIn,address1,address2,type)
-            
-
-          
-            const  nonce  = await provider.getTransactionCount(wallet.address) // get from '/getNonce' route
-            const gasLimit = 500000
-            const deadline = Math.floor(Date.now() / 1000) + 60 * 10
-
-            
-            const unsignedTx = await pancakeRouterContract.populateTransaction.swapExactETHForTokens(
-              amountOutMin,
-              [addresses.WBNB, address2],
-              wallet.address,
-              deadline,
-              {
-                nonce,
-                gasPrice,
-                gasLimit,
-                value: amountIn
-              },
-            )
-          
-          
-            const signedTx = await wallet.signTransaction(unsignedTx)
-           console.log(signedTx)
-           const tx = await provider.sendTransaction(signedTx)//SendTransaction(signedTx,token)
-          // const txx = await tx.wait()
-           console.log(tx)
-           if(tx.hash){
-             
-             
-
-             const type ='Swap'
-             try{
-
-               const saveTransaction = await SaveTransaction(type,tx.hash,walletType)
-               console.log(saveTransaction)
-              // await getCustomBalance()
-               alert("Your Tx Hash : "+tx.hash)
-                navigation.navigate('Transactions')
-              }catch(e){
-                alert(e)
-                console.log(e)
-              }
-
-           }else{
-            alert('transaction failed')
-           }
-          
-          }
-          else if(coin1.symbol==='BNB'){
-            const type ='TOKENTOBNB'
-            const approve = await approveSwap(address1,amountIn,decrypt,token)
-             console.log(approve)
-            console.log('starting swap to bnb')
-              const wallet = new ethers.Wallet(PRIVATE_KEY)
-            
-              const RouterABI = [
-                'function swapExactTokensForETH( uint256 amountIn, uint256 amountOutMin, address[] calldata path, address to, uint256 deadline ) external virtual returns (uint256[] memory amounts)',
-                'function swapExactTokensForETHSupportingFeeOnTransferTokens( uint256 amountIn, uint256 amountOutMin, address[] calldata path, address to, uint256 deadline) external virtual',
-              ]
-            
-              const pancakeRouterContract = new ethers.Contract(addresses.router, RouterABI)
-              
-             
-              
-
-                const amountsOutMin = await getAmountsOut(amountIn,address1,address2,type)
-                
-                
-                const  nonce  = await provider.getTransactionCount(wallet.address) // get from '/getNonce' route
-                // get from '/getNonce' route
-                const  gasPrice  = provider.getGasPrice() // get from '/getGasPrice' route
-                const gasLimit = 500000
-                const DEADLINE = Math.floor(Date.now() / 1000) + 60 * 10
-                
-                const unsignedTx = await pancakeRouterContract.populateTransaction.swapExactTokensForETH(
-                  amountIn,
-                  amountsOutMin,
-                  [address1, addresses.WBNB],
-                  wallet.address,
-                  DEADLINE,
-                  {
-                    nonce,
-                    gasPrice,
-                    gasLimit,
-                  },
-                  )
-                  
-                  const signedTx = await wallet.signTransaction(unsignedTx)
-                  console.log(signedTx)
-                  const Tx = await provider.sendTransaction(signedTx)//SendTransaction(signedTx,token)
-                  //const tx = await sendSignedTx.wait()
-                 // console.log(tx.Hash)
-                 if(Tx.hash){
-
-                  const type = 'Swap'
-                  const saveTransaction = await SaveTransaction(type,Tx.hash,walletType)
-                  console.log(saveTransaction)
-                  //await getCustomBalance()
-                  alert("Your Tx Hash : "+Tx.hash)
-                  navigation.navigate('Transactions')                  }
-                  else{
-                    alert('Swap failed')
-                  }
-                  
-                }
-                else{
-
-              
-                  const type ='TOKENTOTOKEN'
-
-           
-const approve = await approveSwap(address1,amountIn,decrypt,token)
-console.log(approve)
-
-  const RouterABI = [
-    'function swapExactTokensForTokens( uint256 amountIn, uint256 amountOutMin, address[] calldata path, address to, uint256 deadline) external virtual returns (uint256[] memory amounts)',
-    'function swapExactTokensForTokensSupportingFeeOnTransferTokens( uint256 amountIn, uint256 amountOutMin, address[] calldata path, address to, uint256 deadline) external virtual returns (uint256[] memory amounts)',
-  ]
-
-  const pancakeRouterContract = new ethers.Contract(addresses.router, RouterABI)
-  const amountsOutMin = getAmountsOut(amountIn,address1,address2,type)
-
-  const  nonce  = await provider.getTransactionCount(wallet.address) // get from '/getNonce' route
-                // get from '/getNonce' route
-                const  gasPrice  = provider.getGasPrice()
-                const gasLimit = 500000
-  const DEADLINE = Math.floor(Date.now() / 1000) + 60 * 10
-
-  const unsignedTx = await pancakeRouterContract.populateTransaction.swapExactTokensForTokens(
-    amountIn,
-    amountsOutMin,
-    [address1, address2],
-    wallet.address,
-    DEADLINE,
-    {
-      nonce,
-      gasPrice,
-      gasLimit,
-    },
-  )
-
-  const signedTx = await wallet.signTransaction(unsignedTx)
-  console.log(signedTx)
-  const Tx =   await provider.sendTransaction(signedTx)//SendTransaction(signedTx,token)
-  console.log(Tx.hash)
-  if(Tx.hash){
-
-    const type = 'Swap'
-    const saveTransaction = await SaveTransaction(type,Tx.hash,walletType)
-    console.log(saveTransaction)
-    //await getCustomBalance()
-    alert("Your Tx Hash : "+Tx.hash)
-    navigation.navigate('Transactions')    }
-    else{
-      alert('Swap failed')
-    }
-
-  
-            }
-          }catch(e){
-            
-            console.log(e)
-            setLoading(false)
-            alert(e)
-          }
-          setLoading(false)
-        
-}*/
-
-
-              

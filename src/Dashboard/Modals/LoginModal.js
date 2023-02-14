@@ -42,10 +42,10 @@ export  const LoginModal = ({ loginVisible, setLoginVisible }) => {
           
           if(response){
             if (response.status == 'Not Found') {
-           
+              navigation.replace("Import")
+              setPinViewVisible(false)
                setLoginVisible(false)
                 
-                navigation.replace("Import")
             }
           if (response.status == "success") {
              
@@ -54,9 +54,10 @@ export  const LoginModal = ({ loginVisible, setLoginVisible }) => {
               const wallets = JSON.parse(resp)
               console.log(wallets)
               if(!wallets){
+                navigation.replace("Import")
+                setPinViewVisible(false)
                 setLoginVisible(false)
                 console.log(wallets)
-                navigation.replace("Import")
 
               }else{
                 setPinViewVisible(true)

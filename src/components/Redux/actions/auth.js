@@ -19,6 +19,9 @@ Promise.resolve();
       if(response.status==='invalid'){
         return response;
       }
+      if(response.status==='Not Found'){
+        return response;
+      }
 
     },
     (error) => {
