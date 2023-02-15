@@ -43,7 +43,7 @@ const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
   
-  <NavigationContainer>
+  <NavigationContainer theme={{ colors: { background: '#000C66' }}}>
     <Stack.Navigator initialRouteName="Passcode" mode='modal' 
     screenOptions={{
       animation: "slide_from_right",

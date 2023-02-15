@@ -114,7 +114,7 @@ const TokenList = ({setVisible, setCoin0, setCoin1,data, coinType, walletType,se
             return(
   <TouchableOpacity key={item.address}  style={{
     height: hp('15%'),
-        width:wp('80'),
+        width:wp('70'),
         fontSize:20,
         fontWeight:'200',
         color:'white',

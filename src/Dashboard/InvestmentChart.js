@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar,  Card, Title, Paragraph, CardItem, WebView } from 'react-native-paper';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { LineChart } from 'react-native-svg-charts';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Etherimage from '../../assets/ethereum.png'
 import { Animated, LayoutAnimation, Platform, UIManager } from 'react-native';
 

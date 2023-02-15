@@ -2,22 +2,21 @@ import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, Text, View, Image, TextInput, FlatList, TouchableOpacity, Alert, LayoutAnimation, Platform, UIManager  } from 'react-native';
 import { Button } from 'react-native-paper';
 import Icons from 'react-native-vector-icons/FontAwesome'
-import Profile from '../../assets/profile.jpg'
 import SendModal from './Modals/SendModal'
 import RecieveModal from './Modals/RecieveModal';
 import { useNavigation } from '@react-navigation/native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useDispatch, useSelector } from "react-redux";
-import { Extend, Collapse, getEthBalance, getMaticBalance, getBalance, getXrpBalance } from "../components/Redux/actions/auth";
+import { getEthBalance, getMaticBalance, getBalance, getXrpBalance } from "../components/Redux/actions/auth";
 import { Animated } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import SwapModal from './Modals/SwapModal';
-import { setCurrentWallet } from '../components/Redux/actions/auth';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
-import { urls } from './constants';
-import Modal from 'react-native-modal'
-import SelectSwap from './Modals/SelectSwap';
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 const MyHeader2 =  ({title, changeState, state,  extended, setExtended}) => {
    state =  useSelector( (state) =>  state)
   const state2 =  useSelector((state) =>  state.walletBalance)
@@ -40,61 +39,7 @@ console.log(state.wallets)
   const [wallet, getWallet] = useState(walletState?walletState:[])
   const[change, setChange] = useState()
   const[Type, setType] = useState("")
-  let wallets = []
-  var WalletData=[]
-  const getWallets =async ()=>{
-  
-   
-   wallets.push(state.wallets)
-   try{
-    let data =[]
-    const user= await AsyncStorageLib.getItem('user')
-    const wallets = await AsyncStorageLib.getItem(`${user}-wallets`)
-    console.log(wallets)
-    //console.log(user)    
-
-     if(wallets[0]){
-      
-      data.push(wallets)
-        console.log(JSON.parse(data))
-        wallets?JSON.parse(data).map( (item)=>{
-          return(
-            console.log(item.name),
-            WalletData.push({label: item.name, value: item.address, privateKey: item.privateKey}),
-            console.log(WalletData),
-            setData(WalletData)
-            )
-            
-            
-          }):JSON.parse(data).map( (item)=>{
-            return(
-              console.log(item.name),
-              WalletData.push({label: item.name, value: item.address, privateKey: item.privateKey}),
-              console.log(WalletData),
-              setData(WalletData)
-              )
-              
-              
-            })
-        
-        }
-    }catch(error){
-      console.log(error)
-    }
-  }
- 
-  
-  const renderLabel = () => {
-    if (!value || !isFocus) {
-      return (
-        <Text style={[styles.label, !isFocus && { color: 'blue' }]}>
-          My wallets
-        </Text>
-      );
-    }
-    
-    return null;
-  };
+  const fadeAnim = useRef(new Animated.Value(0)).current
 
 
     if (Platform.OS === 'android') {
@@ -110,53 +55,7 @@ console.log(state.wallets)
     new Animated.Value(0)
   ).current;
 
-  
-
-  const getXrpBal = async (address)=>{
-    try{
-
-      const response = await fetch(`http://${urls.testUrl}/user/getXrpBalance`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          address:address})
-        }).then((response) => response.json())
-        .then( (responseJson) => {
-          console.log(responseJson)
-          if(responseJson){
-
-            GetBalance(responseJson.responseData)
-            setType('Xrp')
-          }
-          else{
-            GetBalance(0)
-            setType('Xrp')
-
-          }
-          
-          
-          
-        }).catch((e)=>{
-          console.log(e)
-          //alert('unable to update balance')
-        })
-        
-        
-        
-        
-        return response
-        
-        
-        
-      }catch(e){
-        console.log(e)
-      }
-  }
-  
-  useEffect(async () => {
+  const getAllBalance = async () =>{
     try{
       const wallet = await AsyncStorageLib.getItem('wallet')
       const address =  await state.wallet.address?await state.wallet.address:JSON.parse(wallet).classicAddress
@@ -307,257 +206,66 @@ console.log(state.wallets)
     }catch(e){
       console.log(e)
     }
+    
+  }
+
+  
+  useEffect(async () => {
       
-      
+      getAllBalance()
       
       Animated.timing(translation, {
         toValue: 1,
         delay: 0.1,
         useNativeDriver: true,
       }).start();
-      /*try{
-        const user= await AsyncStorageLib.getItem('user')
-    const wallets = await AsyncStorageLib.getItem(`${user}-wallets`)
-    if(wallets){
-
-      await getWallets()
-    }
-      }catch(error){
-        console.log(error)
-        alert('no wallets found. Make sure you have the file with private keys saved in your device')
-      }*/
-      // console.log(wallet)
+      
     }, [state2, wallet])
     
     useEffect(async ()=>{
 
-      try{
-        const wallet = await AsyncStorageLib.getItem('wallet')
-        const address =  await state.wallet.address?await state.wallet.address:JSON.parse(wallet).classicAddress
-        const wType = await type
-       
-        AsyncStorageLib.getItem('walletType').then(async(type)=>{
-          
-          console.log("hi"+JSON.parse(type))
-          if(!state.wallet.address){
-            GetBalance(0.00)
-            setType('')
-            
-          }else if(JSON.parse(type)=='Matic'){
-            await dispatch(getMaticBalance(address))
-            .then(async(res)=>{
-              console.log("hi poly"+res.MaticBalance)
-              
-              let bal = await AsyncStorageLib.getItem('MaticBalance')
-              console.log(bal)
-              if(res){
-                
-                setType('Mat')
-                GetBalance(bal)
-              }else{
-                console.log('coudnt get balance')
-              }
-            }).catch((e)=>{
-              console.log(e)
-            })
-            
-            
-          }
-          else if(JSON.parse(type)=='Ethereum'){
-            dispatch(getEthBalance(address))
-            .then(async(e)=>{
-              const Eth = await e.EthBalance
-              let bal = await AsyncStorageLib.getItem('EthBalance')
-              console.log("hi"+ Eth)
-              console.log(bal)
-              if(Eth){
-                
-                setType('Eth')
-                GetBalance(bal)
-              }else{
-                console.log('coudnt get balance')
-              }
-              
-            }).catch((e)=>{
-              console.log(e)
-            })
-            
-            
-          }else if(JSON.parse(type)=='BSC'){
-            
-            const balance = await state.walletBalance
-            if(balance){
-              GetBalance(balance)
-              setType('BNB')
-            }
-          }else if(JSON.parse(type)=='Xrp'){
-              await AsyncStorageLib.getItem('wallet').then(async(wallet)=>{
-  
-                console.log(JSON.parse(wallet).classicAddress)
-                if(wallet){
-                  
-                  const resp = dispatch(getXrpBalance(JSON.parse(wallet).classicAddress))
-                  console.log(resp)
-                  setType('Xrp')
-                }
-                
-              }).catch((e)=>{
-                console.log(e)
-              })
-              
-                
-          }else{
-            const wallet = await state.wallet.address
-              console.log('hello'+wallet)
-              if(wallet){
-  
-                await dispatch(getBalance(state.wallet.address))
-                .then(async()=>{
-  
-                 const bal = await state.walletBalance
-                 console.log("My"+bal)
-                 if(bal){
-  
-                   GetBalance(bal)
-                 }else{
-                  GetBalance(0)
-                 }
-                }).catch((e)=>{
-            console.log(e)
-          })
-          
-              }
-         
-          }
-          
-          
-      }) 
-      }catch(e){
-        console.log(e)
-      }
-    },[state.wallet.address])
-    
-    
-    useEffect(async ()=>{
+      getAllBalance()
 
-      try{
-        const wallet = await AsyncStorageLib.getItem('wallet')
-        const address =  await state.wallet.address?await state.wallet.address:JSON.parse(wallet).classicAddress
-        const wType = await type
-       
-        AsyncStorageLib.getItem('walletType').then(async(type)=>{
-          
-          console.log("hi"+JSON.parse(type))
-          if(!state.wallet.address){
-            GetBalance(0.00)
-            setType('')
-            
-          }else if(JSON.parse(type)=='Matic'){
-            await dispatch(getMaticBalance(address))
-            .then(async(res)=>{
-              console.log("hi poly"+res.MaticBalance)
-              
-              let bal = await AsyncStorageLib.getItem('MaticBalance')
-              console.log(bal)
-              if(res){
-                
-                setType('Mat')
-                GetBalance(bal)
-              }else{
-                console.log('coudnt get balance')
-              }
-            }).catch((e)=>{
-              console.log(e)
-            })
-            
-            
-          }
-          else if(JSON.parse(type)=='Ethereum'){
-            dispatch(getEthBalance(address))
-            .then(async(e)=>{
-              const Eth = await e.EthBalance
-              let bal = await AsyncStorageLib.getItem('EthBalance')
-              console.log("hi"+ Eth)
-              console.log(bal)
-              if(Eth){
-                
-                setType('Eth')
-                GetBalance(bal)
-              }else{
-                console.log('coudnt get balance')
-              }
-              
-            }).catch((e)=>{
-              console.log(e)
-            })
-            
-            
-          }else if(JSON.parse(type)=='BSC'){
-            
-            const balance = await state.walletBalance
-            if(balance){
-              GetBalance(balance)
-              setType('BNB')
-            }
-          }else if(JSON.parse(type)=='Xrp'){
-              await AsyncStorageLib.getItem('wallet').then(async(wallet)=>{
-  
-                console.log(JSON.parse(wallet).classicAddress)
-                if(wallet){
-                  
-                  const resp = await getXrpBal(JSON.parse(wallet).classicAddress)
-                  console.log(resp)
-                  setType('Xrp')
-                }
-                
-              }).catch((e)=>{
-                console.log(e)
-              })
-              
-                
-          }else{
-            const wallet = await state.wallet.address
-              console.log('hello'+wallet)
-              if(wallet){
-  
-                await dispatch(getBalance(state.wallet.address))
-                .then(async()=>{
-  
-                 const bal = await state.walletBalance
-                 console.log("My"+bal)
-                 if(bal){
-  
-                   GetBalance(bal)
-                 }else{
-                  GetBalance(0)
-                 }
-                }).catch((e)=>{
-            console.log(e)
-          })
-          
-              }
-         
-          }
-          
-          
-      }) 
-      }catch(e){
-        console.log(e)
-      }
-    },[])
+        },[])
     
   
     const openExtended =()=>{
 
       changeState()
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      
-      
-       
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); 
       }
+      useEffect(async() => {
+        Animated.timing(
+            fadeAnim,
+            {
+              toValue: 1,
+              duration: 1000,
+            }
+          ).start();
+    
+        Animated.timing(translation, {
+            toValue: 1,
+            delay: 0.1,
+            useNativeDriver: true,
+          }).start(); 
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    
+    
+    }, [])
+    useEffect(() => {
+      Animated.timing(
+        fadeAnim,
+        {
+          toValue: 1,
+          duration: 1000,
+        }
+      ).start();
+
+     
+    }, [fadeAnim])
   return (
     <Animated.View style={{height:hp('35'),
-    backgroundColor:'#131E3A', width:wp('100'),}} 
+    backgroundColor:'#131E3A', width:wp('100')}} 
     
     
     >

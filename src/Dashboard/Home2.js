@@ -1,27 +1,18 @@
 import React,{useEffect, useState, useRef} from 'react'
 import { StyleSheet, Text, View, AppState  } from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
-import { logout, setUser, setWalletType } from "../components/Redux/actions/auth";
-import { Avatar,  Card, Title, Paragraph, CardItem, WebView } from 'react-native-paper';
+import {  setUser, setWalletType } from "../components/Redux/actions/auth";
+import { Avatar } from 'react-native-paper';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import InvestmentChart from './InvestmentChart';
-import { urls } from './constants';
 import Nfts from './Nfts';
-import { Animated, LayoutAnimation, Platform, UIManager } from 'react-native';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import { Extend } from "../components/Redux/actions/auth";
-import {  Collapse } from "../components/Redux/actions/auth";
+import { Animated, Platform, UIManager } from 'react-native';
 import store from "../components/Redux/Store";
-import MyHeader from "./MyHeader";
-import MyHeader2 from "./MyHeader2";
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import { setCurrentWallet } from '../components/Redux/actions/auth';
 import {  useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar, TabBarIndicator } from 'react-native-tab-view';
-import { useNavigation } from '@react-navigation/native';
-const LeftContents = props => <Avatar.Image {...props} source={{ uri: 'https://static.alchemyapi.io/images/assets/825.png' }} />
 const Home2 = ({navigation}) => {
-  let statee = useSelector((state) => state)
     const state = useSelector((state) => state);
     const dispatch = useDispatch();
   const currentState = useRef(AppState.currentState);
@@ -32,13 +23,7 @@ const Home2 = ({navigation}) => {
     { key: 'first', title: 'Tokens' },
     { key: 'second', title: 'NFTs' },
   ]);
-    const data = [150, 130, 140, 135, 149, 158, 125, 105,155, 153, 153,144, 150, 160, 80]
-    const updateState=(()=>{
-      let data = store.getState()
-      return setState(data)
-    })
-
-  
+   
     
     if (Platform.OS === 'android') {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
