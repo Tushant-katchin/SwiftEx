@@ -1,6 +1,7 @@
-import React,{useState} from "react";
+import React,{useState,useEffect,useRef} from "react";
+import { AppState } from "react-native";
 import "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import store from "../components/Redux/Store";
 import Dashboard from "../Dashboard/Home";
@@ -36,6 +37,7 @@ import AllWallets from "../Dashboard/Wallets/allWallets";
 import ExchangeRoutes from "../Dashboard/exchange/crypto-exchange-front-end-main/src/exchangeRoutes";
 import { ExchangeLogin } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
 import { ExchangeRegister } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/signup";
+import LockApp from "../Dashboard/lockApp";
 const Stack = createNativeStackNavigator();
 
 
@@ -359,6 +361,17 @@ const AuthStack = () => (
           },
          }}
       />
+      <Stack.Screen
+        name="appLock"
+        component={LockApp}
+        options={{ headerShown: false,
+          headerStyle:{backgroundColor:'#000C66'},
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+         }}
+      />
 
 
     </Stack.Navigator>
@@ -368,7 +381,7 @@ const NavigationProvider = () => {
   let statee = useSelector((state) => state)
   const[extended, setExtended]=useState(false)
   const[state, setState]=useState(statee)
-
+ 
   const updateState=(()=>{
     let data = store.getState()
     return setState(data)

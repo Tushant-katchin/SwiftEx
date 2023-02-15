@@ -912,7 +912,7 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
    })
    
   
-  
+   
 
   /*const token = await AsyncStorageLib.getItem('token')
 
@@ -956,4 +956,26 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
     
   };
 
+  export const getEtherBnbPrice = async (address,address2) => {
+    const token = await AsyncStorageLib.getItem('token')
+   const result = await fetch(`http://${urls.testUrl}/user/getEtherTokenPrice`, {
+  method: 'POST',
+  headers: {
+           Accept: 'application/json',
+           'Content-Type': 'application/json'
+  },
+ body: JSON.stringify({
+          token:token,
+           Ethaddress:address,
+           Bnbaddress:address2
+          })
+ })
+ .then((response)=>response.json())
+ .then((response) => {
+  console.log(response)
+  return response.responseData
   
+ })
+ 
+ return result
+  };

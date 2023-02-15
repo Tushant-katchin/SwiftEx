@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Button, Modal,  FlatList, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button,AppState, ActivityIndicator } from 'react-native';
 import MyHeader from './MyHeader';
 import MyHeader2 from './MyHeader2'
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import {tokenAddresses,urls} from './constants'
 import Etherimage from '../../assets/ethereum.png'
 import { Avatar,  Card, Title, Paragraph, CardItem, WebView } from 'react-native-paper';
 import {getEthBalance, getMaticBalance, getBalance } from "../components/Redux/actions/auth";
+import { getEtherBnbPrice } from '../utilities/utilities';
 const { StorageAccessFramework } = FileSystem;
 
 
@@ -31,29 +32,7 @@ const MyWallet = (props) => {
     let LeftContent = props => <Avatar.Image {...props}  source={{ uri: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850' }} />
     let LeftContent2 = props => <Avatar.Image {...props}  source={  Etherimage}  />
  
-    const getPrice = async (address,address2) => {
-      const token = await AsyncStorageLib.getItem('token')
-     const result = await fetch(`http://${urls.testUrl}/user/getEtherTokenPrice`, {
-    method: 'POST',
-    headers: {
-             Accept: 'application/json',
-             'Content-Type': 'application/json'
-    },
-   body: JSON.stringify({
-            token:token,
-             Ethaddress:address,
-             Bnbaddress:address2
-            })
-   })
-   .then((response)=>response.json())
-   .then((response) => {
-    console.log(response)
-    return response.responseData
     
-   })
-   
-   return result
-    };
 const getBalanceInUsd = (ethBalance,bnbBalance) =>{
   const ethInUsd = ethBalance*ethPrice
   const bnbInUsd = bnbBalance*bnbPrice
@@ -88,7 +67,7 @@ useEffect(async()=>{
 
     const user =await AsyncStorageLib.getItem('user')
     setUser(user)
-    await getPrice(tokenAddresses.ETH,tokenAddresses.BNB)
+    await getEtherBnbPrice(tokenAddresses.ETH,tokenAddresses.BNB)
     .then((resp)=>{
       console.log(resp)
   setEthPrice(resp.Ethprice)

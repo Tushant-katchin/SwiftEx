@@ -557,7 +557,7 @@ console.log(state.wallets)
       }
   return (
     <Animated.View style={{height:hp('35'),
-    backgroundColor:'#131E3A',position:'relative', width:wp('100'),}} 
+    backgroundColor:'#131E3A', width:wp('100'),}} 
     
     
     >
@@ -569,7 +569,6 @@ console.log(state.wallets)
               height: hp('35'),
               backgroundColor:'#000C66',
               color:'#FFFFFF',
-              position:'relative'
               
             }}>
             
@@ -682,10 +681,11 @@ marginLeft:wp('3')
             marginLeft:wp('4')
               },
   buttons:{
+    height:hp(100),
     display:'flex',
     flexDirection:'row',
     justifyContent:'space-evenly',
-    bottom:hp('16')
+    bottom:hp(15)
   },
   addButton: {
     display:'flex',

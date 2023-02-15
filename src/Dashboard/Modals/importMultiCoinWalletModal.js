@@ -228,9 +228,9 @@ async function saveUserDetails(address){
                      
                             setLoading(false)
                            setWalletVisible(false)
+                           navigation.navigate("AllWallets")
                            setVisible(false)
                            setModalVisible(false)
-                           navigation.navigate("AllWallets")
                    
                     
             }catch(e){

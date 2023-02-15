@@ -192,11 +192,11 @@ async function saveUserDetails(){
                 let result = []
                 
                 setLoading(false)
+                navigation.navigate("AllWallets")
                 SetVisible(false)
                 setModalVisible(false)
                 setPrivateKeyVisible(false)
                 setNewWalletVisible(false)
-                navigation.navigate("AllWallets")
               }
                  
                   
