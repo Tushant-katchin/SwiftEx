@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "883312291340",
+    "project_id": "crypto-exchange-poc",
+    "storage_bucket": "crypto-exchange-poc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883312291340:android:72b426e0b66af90aa74829",
+        "android_client_info": {
+          "package_name": "com.simpleapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883312291340-2rp3jraheskso5bu8rrk042l7c326pi1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIVOnU7jHijSJLDUKRSrXRtvYOS2CAzXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883312291340-2rp3jraheskso5bu8rrk042l7c326pi1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

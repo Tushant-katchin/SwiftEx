@@ -79,28 +79,33 @@ export const isWalletConnected = () => window.isWeb3Connected
 export const getWeb3Provider = () =>
   window.isWeb3Connected ? window.web3 : null
 
-export const transfer = (tokenName, receiver, amount) => {
+export const transfer = (tokenName, receiver, amount, sender) => {
   const web3 = new Web3('https://eth-goerli.g.alchemy.com/v2/_i0W-PX5wH9bEjGnf7_ir4V6w4ZPyyfP')
 
-  if (tokenName === 'ETH') return _transferEth(receiver, amount, web3)
+  if (tokenName === 'ETH') return _transferEth(receiver, amount, web3,sender)
 
   const tokenAddress = ETH_ERC20_ADDRESSES[tokenName.toUpperCase()]
   if (!tokenAddress) throw new Error(`Invalid token name: ${tokenName}`)
 
-  return _transferEthToken(tokenAddress, receiver, amount, web3)
+  return _transferEthToken(tokenAddress, receiver, amount, web3,sender)
 }
 
 // <------------------------------< Helpers >------------------------------>
 
-const _transferEth = async (reciever, amount, web3) => {
+const _transferEth = async (reciever, amount, web3,sender) => {
+  
   try {
+    const blockNumber = await web3.eth.getBlockNumber()
+     const block = await web3.eth.getBlock(blockNumber)
+     const txGasLimit = +block.gasLimit/block.transactions.length
+
     const rawTx = {
       to: reciever,
       value: web3.utils.toWei(amount, 'ether'),
-      gas: '5419012',
+      gasLimit: Math.floor(txGasLimit),
     }
 
-    const signedTx = await web3.eth.accounts.signTransaction(rawTx, PRIVATE_KEY)
+    const signedTx = await web3.eth.accounts.signTransaction(rawTx, sender)
     console.log(signedTx)
 
     return { signedTx }
@@ -110,7 +115,7 @@ const _transferEth = async (reciever, amount, web3) => {
   }
 }
 
-const _transferEthToken = async (tokenAddress, receiver, amount, web3) => {
+const _transferEthToken = async (tokenAddress, receiver, amount, web3,sender) => {
   try {
 
     const token = new web3.eth.Contract(
@@ -127,15 +132,19 @@ const _transferEthToken = async (tokenAddress, receiver, amount, web3) => {
       .transfer(receiver, amountInWei)
       .encodeABI()
 
+     const blockNumber = await web3.eth.getBlockNumber()
+     const block = await web3.eth.getBlock(blockNumber)
+     const txGasLimit = +block.gasLimit/block.transactions.length
+
     // Create raw tx
     const rawTx = {
       to: tokenAddress,
       data: txData,
-      gas: '5419012',
+      gasLimit: Math.floor(txGasLimit),
     }
 
     // Sign tx
-    const signedTx = await web3.eth.accounts.signTransaction(rawTx, PRIVATE_KEY)
+    const signedTx = await web3.eth.accounts.signTransaction(rawTx, sender)
 
     return { signedTx }
   } catch (err) {

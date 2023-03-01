@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useRef} from "react";
-import { AppState } from "react-native";
+import { AppState , View} from "react-native";
 import "react-native-gesture-handler";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -40,10 +40,10 @@ import { ExchangeRegister } from "../Dashboard/exchange/crypto-exchange-front-en
 import LockApp from "../Dashboard/lockApp";
 const Stack = createNativeStackNavigator();
 
-
 const AuthStack = () => (
+
   
-  <NavigationContainer theme={{ colors: { background: '#000C66' }}}>
+  <NavigationContainer theme={{ colors: { background: '#000C66' }}} >
     <Stack.Navigator initialRouteName="Passcode" mode='modal' 
     screenOptions={{
       animation: "slide_from_right",
@@ -381,7 +381,9 @@ const NavigationProvider = () => {
   let statee = useSelector((state) => state)
   const[extended, setExtended]=useState(false)
   const[state, setState]=useState(statee)
- 
+  
+  
+  
   const updateState=(()=>{
     let data = store.getState()
     return setState(data)
@@ -444,6 +446,8 @@ const NavigationProvider = () => {
     return <MyHeader2 title={title}  state={state} changeState={collapseState} extended={extended} setExtended={setExtended}/>
   
   }
+
+  
   
   const dispatch = useDispatch();
 

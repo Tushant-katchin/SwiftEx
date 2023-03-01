@@ -3,20 +3,25 @@ import AsyncStorageLib from '@react-native-async-storage/async-storage'
 import { REACT_APP_HOST, REACT_APP_GOOGLE_VPID_KEY, REACT_APP_LOCAL_TOKEN, REACT_APP_FCM_TOKEN_KEY} from './ExchangeConstants'
 const SERVER_URL = REACT_APP_HOST
 const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN
-let TOKEN 
+let TOKEN =''
 const HEADERS = { 'Content-type': 'application/json' }
 
 // Getting Authority status
-export const getAuth = () => {
+export const getAuth = async () => {
   if (!TOKEN) {
-    TOKEN = AsyncStorageLib.getItem(LOCAL_TOKEN)
+    TOKEN = await AsyncStorageLib.getItem(LOCAL_TOKEN)
   }
   return TOKEN
 }
 
 // Getting Refreshed Tokens
 const getToken = async () => {
-  return TOKEN || AsyncStorageLib.getItem(LOCAL_TOKEN)
+  const token = await AsyncStorageLib.getItem(LOCAL_TOKEN)
+  if(token){
+
+    return token 
+  }
+  return TOKEN
 }
 
 const saveToken = (token) => {

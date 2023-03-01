@@ -1,8 +1,7 @@
-import { LoadingButton } from '@mui/lab'
 import { useState } from 'react'
 import { authRequest, POST } from '../api'
 import { APP_FEE_PERCENTAGE } from '../utils/constants'
-import { isWalletConnected, transfer } from '../web3'
+import {  transfer } from '../web3'
 import { StyleSheet, Text, View,  Button, TouchableOpacity, ScrollView, ActivityIndicator} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Modal from "react-native-modal";
@@ -10,7 +9,7 @@ import {DropDown} from './dropDown'
 import { TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
-export const NewOfferModal = ({ user, open,setOpen }) => {
+export const NewOfferModal = ({ user, open,setOpen, getOffersData }) => {
   const state =  useSelector( (state) =>  state)
   const navigation = useNavigation()
   const [modalMessage, setModalMessage] = useState('')
@@ -73,12 +72,14 @@ export const NewOfferModal = ({ user, open,setOpen }) => {
     if (!state.wallet.address) {
       throw new Error('You are not connected to a wallet')
     }
+   const sender = await state.wallet.privateKey 
    const receiver = '0x70200Cf83DB1a2d7c18F089E86a6faA98bFbADAE'//await state.wallet.address
     // Get signed transfer
     const { signedTx, err } = await transfer(
       newOffer.assetName,
       receiver,
       newOffer.amount,
+      sender
     )
 
     return { signedTx, err }
@@ -104,6 +105,7 @@ export const NewOfferModal = ({ user, open,setOpen }) => {
       console.log(err)
       setModalMessage(err.message || 'transaction failed')
     } finally {
+      getOffersData()
       setIsSubmitting(false)
       setLoading(false)
       setOpen(false)

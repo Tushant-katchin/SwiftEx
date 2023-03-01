@@ -227,5 +227,11 @@ export const ETH_ERC20_ADDRESSES = {
   DAI: '0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464',
 }
 
+export const NOTIFICATION_TYPES = {
+  BID_ACCEPTED: 'BID_ACCEPTED',
+  BID_ADDED: 'BID_ADDED',
+  OFFER_FINALIZED: 'OFFER_FINALIZED',
+};
+
 export const GOERLI_ETHERSCAN = 'https://goerli.etherscan.io'
 export const APP_FEE_PERCENTAGE = 0.005

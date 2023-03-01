@@ -1,194 +1,217 @@
-import React,{useEffect, useState, useRef} from 'react'
-import { StyleSheet, Text, View, AppState  } from 'react-native';
+import React, { useEffect, useState, useRef } from "react";
+import { StyleSheet, Text, View, AppState } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {  setUser, setWalletType } from "../components/Redux/actions/auth";
-import { Avatar } from 'react-native-paper';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import InvestmentChart from './InvestmentChart';
-import Nfts from './Nfts';
-import { Animated, Platform, UIManager } from 'react-native';
-import store from "../components/Redux/Store";
-import AsyncStorageLib from '@react-native-async-storage/async-storage';
-import { setCurrentWallet } from '../components/Redux/actions/auth';
-import {  useWindowDimensions } from 'react-native';
-import { TabView, SceneMap, TabBar, TabBarIndicator } from 'react-native-tab-view';
-const Home2 = ({navigation}) => {
-    const state = useSelector((state) => state);
-    const dispatch = useDispatch();
-  const currentState = useRef(AppState.currentState);
-  const [appState, setState] = useState(currentState.current);
+import { setUser, setWalletType } from "../components/Redux/actions/auth";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import InvestmentChart from "./InvestmentChart";
+import Nfts from "./Nfts";
+import { Animated, Platform, UIManager } from "react-native";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { setCurrentWallet } from "../components/Redux/actions/auth";
+import { useWindowDimensions } from "react-native";
+import * as Notifications from "expo-notifications";
+import {
+  TabView,
+  SceneMap,
+  TabBar,
+  TabBarIndicator,
+} from "react-native-tab-view";
+import {
+  useNavigation,
+  useRoute,
+  useNavigationState,
+  getFocusedRouteNameFromRoute,
+} from "@react-navigation/native";
+import PushNotification from "react-native-push-notification";
+import PushNotifications from "./notifications/pushController";
+import { LocalNotification } from "./notifications/pushController";
+const Home2 = ({ navigation }) => {
+  const route = useRoute();
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
   const [index, setIndex] = useState(0);
   const layout = useWindowDimensions();
+  const currentState = useRef(AppState.currentState);
+  const [appState, setAppState] = useState(currentState.current);
   const [routes] = useState([
-    { key: 'first', title: 'Tokens' },
-    { key: 'second', title: 'NFTs' },
+    { key: "first", title: "Tokens" },
+    { key: "second", title: "NFTs" },
   ]);
-   
-    
-    if (Platform.OS === 'android') {
-      if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);}
+  const Navigation = useNavigation();
+
+  if (Platform.OS === "android") {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
   }
-  const fadeAnim = useRef(new Animated.Value(0)).current
-  
-  const translation = useRef(
-      new Animated.Value(0)
-    ).current;
-  
-  const SetCurrentWallet =async ()=>{
-    let user = await AsyncStorageLib.getItem('currentWallet')
-    let mainUser = await AsyncStorageLib.getItem('user')
-    console.log('hi',mainUser)
-    console.log(user)
-    let walletType = await AsyncStorageLib.getItem('walletType')
-    let wallet =  await AsyncStorageLib.getItem(`Wallet`).then((wallet)=>{
-      console.log(JSON.parse(wallet))
-      dispatch(setCurrentWallet(JSON.parse(wallet).address,user,JSON.parse(wallet).privateKey))
-      dispatch(setWalletType(JSON.parse(walletType)))
-      dispatch(setUser(JSON.parse(mainUser)))
-    })
-    
-    
-    
-    return wallet
-  }
-  const renderTabBar = props => (
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const translation = useRef(new Animated.Value(0)).current;
+
+  const SetCurrentWallet = async () => {
+    let user = await AsyncStorageLib.getItem("currentWallet");
+    let mainUser = await AsyncStorageLib.getItem("user");
+    console.log("hi", mainUser);
+    console.log(user);
+    let walletType = await AsyncStorageLib.getItem("walletType");
+    let wallet = await AsyncStorageLib.getItem(`Wallet`).then((wallet) => {
+      console.log(JSON.parse(wallet));
+      dispatch(
+        setCurrentWallet(
+          JSON.parse(wallet).address,
+          user,
+          JSON.parse(wallet).privateKey
+        )
+      );
+      dispatch(setWalletType(JSON.parse(walletType)));
+      dispatch(setUser(JSON.parse(mainUser)));
+    });
+
+    return wallet;
+  };
+  const renderTabBar = (props) => (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: 'blue' }}
-      style={{ backgroundColor: '#189AB4'}}
-      activeColor={'red'}
-      inactiveColor={'white'}
-      pressColor={'black'}
-      
+      indicatorStyle={{ backgroundColor: "blue" }}
+      style={{ backgroundColor: "#189AB4" }}
+      activeColor={"blue"}
+      inactiveColor={"white"}
+      pressColor={"black"}
     />
   );
-  
 
   const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: 'white' }} >
-             <InvestmentChart/>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <InvestmentChart />
     </View>
   );
-  
+
   const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: 'white' }} >
-                      <Nfts/>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <Nfts />
     </View>
   );
-  
+
   const renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
   });
-  
 
-   
+  async function registerForPushNotificationsAsync() {
+    let token;
+
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log("Notifications Token",token);
     
 
-    useEffect(async() => {
-     // getWallets(state.user, readData,dispatch, importAllWallets)
-     Animated.timing(
-      fadeAnim,
-      {
-        toValue: 1,
-        duration: 1000,
-      }
-    ).start();
-    useEffect(() => {
-      const handleChange = AppState.addEventListener("change", changedState => {
-    
-        currentState.current = changedState;
-        setState(currentState.current);
-        console.log(currentState.current)
-        if(currentState.current==='background'){
-          navigation.navigate('appLock')
-        }
-        
-      });
-      
-     
-    }, [appState]);
-  
+    return token;
+}
 
-  Animated.timing(translation, {
+  useEffect(async () => {
+    // getWallets(state.user, readData,dispatch, importAllWallets)
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+    }).start();
+
+    Animated.timing(translation, {
       toValue: 1,
       delay: 0.1,
       useNativeDriver: true,
-    }).start(); 
-    if(!state.wallet.address){
-
-       await SetCurrentWallet()
-
-    
+    }).start();
+    if (!state.wallet.address) {
+      await SetCurrentWallet();
     }
-   
-    }, [])
-    useEffect(async ()=>{
+  }, []);
+  useEffect(async () => {
+    await SetCurrentWallet();
+  }, []);
 
-      await SetCurrentWallet()
-    },[])
-    
-    
-    
+  useEffect(async ()=>{
+    //await registerForPushNotificationsAsync();
+  },[])
 
+  useEffect(() => {
+    AppState.addEventListener("change", (changedState) => {
+      currentState.current = changedState;
+      setAppState(currentState.current);
+      console.log(currentState.current);
+      if (currentState.current === "background") {
+        console.log(currentState.current);
+        navigation.navigate("appLock");
+        /* if(routeName.name!=='exchangeLogin'){
+            
+          }*/
+      }
+    });
+  }, []);
 
   return (
-    
-      <Animated.View style={{backgroundColor:'#000C66'}}>
-    <View style={Styles.container}>
-    <TabView
-      navigationState={{ index, routes }}
-      renderTabBar={renderTabBar}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-      style={{  borderTopRightRadius:20,
-      borderTopLeftRadius:20 }}
-    />
+    <Animated.View style={{ backgroundColor: "#000C66" }}>
+      <View style={Styles.container}>
+        <TabView
+          swipeEnabled={true}
+          navigationState={{ index, routes }}
+          renderTabBar={renderTabBar}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+          style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
+        />
       </View>
-     </Animated.View> 
-  )
-}
+    </Animated.View>
+  );
+};
 
-export default Home2
+export default Home2;
 const Styles = StyleSheet.create({
-    container: {
-     display:'flex',
-      backgroundColor:'white',
-      height:hp('100'),
-      width:wp('100'),
-      borderTopRightRadius:20,
-      borderTopLeftRadius:20,
-      
-     
-    },
-   content:{
-    display:'flex',
-    flexDirection:'row',
-    marginTop:0,
-    color:'white',
-    width:wp(100), 
-
-   },
-   text:{
-    color:'grey',
-    fontWeight:'bold'
-   },
-   text2:{
-    color:'grey',
-    fontWeight:'bold'
-   },
-   priceUp: {
-   
-    color: 'rgba(0,153,51,0.6)',
+  container: {
+    display: "flex",
+    backgroundColor: "white",
+    height: hp("100"),
+    width: wp("100"),
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    zIndex: 100,
+  },
+  content: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 0,
+    color: "white",
+    width: wp(100),
+    zIndex: 100,
+  },
+  text: {
+    color: "grey",
+    fontWeight: "bold",
+  },
+  text2: {
+    color: "grey",
+    fontWeight: "bold",
+  },
+  priceUp: {
+    color: "rgba(0,153,51,0.6)",
   },
   priceDown: {
-    
-    color: 'rgba(204,51,51,0.6)',
-  }
-  });
-  /*<View style={{marginTop:10}}>
+    color: "rgba(204,51,51,0.6)",
+  },
+});
+/*<View style={{marginTop:10}}>
 <Button title='logout'  onPress={onLogout}/>
 </View> 
 

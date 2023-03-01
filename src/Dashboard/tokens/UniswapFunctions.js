@@ -1,13 +1,13 @@
-import { ChainId, UniswapPair, ETH } from 'simple-uniswap-sdk';
-import "react-native-get-random-values"
-import "@ethersproject/shims"
-var ethers = require('ethers');
+import { ChainId, UniswapPair, ETH } from "simple-uniswap-sdk";
+import "react-native-get-random-values";
+import "@ethersproject/shims";
+var ethers = require("ethers");
 
-const UniSwap = async (privateKey,walletAddress,token2,amount) => {
-  console.log(walletAddress, amount)
+const UniSwap = async (privateKey, walletAddress, token2, amount) => {
+  console.log(walletAddress, amount);
   const uniswapPair = new UniswapPair({
     // the contract address of the token you want to convert FROM
-    fromTokenContractAddress: token2,//
+    fromTokenContractAddress: token2, //
     // the contract address of the token you want to convert TO
     toTokenContractAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     // the ethereum address of the user using this part of the dApp
@@ -18,7 +18,7 @@ const UniSwap = async (privateKey,walletAddress,token2,amount) => {
     // ethereumProvider: YOUR_WEB3_ETHERS_OR_CUSTOM_ETHEREUM_PROVIDER,
     chainId: ChainId.GÖRLI,
   });
-  console.log(uniswapPair)
+  console.log(uniswapPair);
 
   // this example shows erc20 > erc20 but its a simple change for eth > erc20
   // or erc20 > eth example below by using `ETH.MAINNET().contractAddress`
@@ -57,15 +57,15 @@ const UniSwap = async (privateKey,walletAddress,token2,amount) => {
   // you should probably check this before they confirm the swap again
   // this is just so its simple to read
   if (!trade.fromBalance.hasEnough) {
-    console.log(trade)
-    throw new Error('You do not have enough from balance to execute this swap');
+    console.log(trade);
+    throw new Error("You do not have enough from balance to execute this swap");
   }
 
   // subscribe to quote changes this is just in example so your dont miss it
   trade.quoteChanged$.subscribe((TradeContext) => {
     // value will hold the same info as below but obviously with
     // the new trade info.
-   // console.log(TradeContext)
+    // console.log(TradeContext)
   });
 
   // obviously dont create your provider + wallet everytime again and again!
@@ -74,7 +74,7 @@ const UniSwap = async (privateKey,walletAddress,token2,amount) => {
     uniswapPairFactory.providerUrl
   );
   const wallet = new ethers.Wallet(privateKey, provider);
- // console.log(wallet)
+  // console.log(wallet)
 
   // Please note when you do your trade if `approvalTransaction` is defined the user does not have enough allowance to perform this trade
   // aka the router can not move their erc20 tokens on their behalf of the user.
@@ -88,27 +88,34 @@ const UniSwap = async (privateKey,walletAddress,token2,amount) => {
   // On `eth` > `erc20` the `approvalTransaction` will always be undefined as you only need to do this when moving `erc20 > eth` and `erc20 > erc20`.
   if (trade.approvalTransaction) {
     const approved = await wallet.sendTransaction(trade.approvalTransaction);
-    console.log('approved txHash', approved.hash);
+    console.log("approved txHash", approved.hash);
     const approvedReceipt = await approved.wait();
-    console.log('approved receipt', approvedReceipt);
+    console.log("approved receipt", approvedReceipt);
   }
 
-  const tradeTransaction = await (await wallet.sendTransaction(trade.transaction))
-  console.log('trade txHash', tradeTransaction.hash);
+  const tradeTransaction = await await wallet.sendTransaction(
+    trade.transaction
+  );
+  console.log("trade txHash", tradeTransaction.hash);
   const tradeReceipt = await tradeTransaction.wait();
-  console.log('trade receipt', tradeReceipt);
+  console.log("trade receipt", tradeReceipt);
 
   // once done with trade aka they have sent it and you don't need it anymore call
   trade.destroy();
-  return {code:401,tx:tradeReceipt.transactionHash}
+  return { code: 401, tx: tradeReceipt.transactionHash };
 };
 
-
-const SwapTokensToTokens = async (privateKey,walletAddress,token1,token2,amount) => {
-  console.log(walletAddress)
+const SwapTokensToTokens = async (
+  privateKey,
+  walletAddress,
+  token1,
+  token2,
+  amount
+) => {
+  console.log(walletAddress);
   const uniswapPair = new UniswapPair({
     // the contract address of the token you want to convert FROM
-    fromTokenContractAddress: token1,//
+    fromTokenContractAddress: token1, //
     // the contract address of the token you want to convert TO
     toTokenContractAddress: token2,
     // the ethereum address of the user using this part of the dApp
@@ -119,7 +126,7 @@ const SwapTokensToTokens = async (privateKey,walletAddress,token1,token2,amount)
     // ethereumProvider: YOUR_WEB3_ETHERS_OR_CUSTOM_ETHEREUM_PROVIDER,
     chainId: ChainId.GÖRLI,
   });
-  console.log(uniswapPair)
+  console.log(uniswapPair);
 
   // this example shows erc20 > erc20 but its a simple change for eth > erc20
   // or erc20 > eth example below by using `ETH.MAINNET().contractAddress`
@@ -158,15 +165,15 @@ const SwapTokensToTokens = async (privateKey,walletAddress,token1,token2,amount)
   // you should probably check this before they confirm the swap again
   // this is just so its simple to read
   if (!trade.fromBalance.hasEnough) {
-    console.log(trade)
-    throw new Error('You do not have enough from balance to execute this swap');
+    console.log(trade);
+    throw new Error("You do not have enough from balance to execute this swap");
   }
 
   // subscribe to quote changes this is just in example so your dont miss it
   trade.quoteChanged$.subscribe((TradeContext) => {
     // value will hold the same info as below but obviously with
     // the new trade info.
-   // console.log(TradeContext)
+    // console.log(TradeContext)
   });
 
   // obviously dont create your provider + wallet everytime again and again!
@@ -175,7 +182,7 @@ const SwapTokensToTokens = async (privateKey,walletAddress,token1,token2,amount)
     uniswapPairFactory.providerUrl
   );
   const wallet = new ethers.Wallet(privateKey, provider);
- // console.log(wallet)
+  // console.log(wallet)
 
   // Please note when you do your trade if `approvalTransaction` is defined the user does not have enough allowance to perform this trade
   // aka the router can not move their erc20 tokens on their behalf of the user.
@@ -189,26 +196,28 @@ const SwapTokensToTokens = async (privateKey,walletAddress,token1,token2,amount)
   // On `eth` > `erc20` the `approvalTransaction` will always be undefined as you only need to do this when moving `erc20 > eth` and `erc20 > erc20`.
   if (trade.approvalTransaction) {
     const approved = await wallet.sendTransaction(trade.approvalTransaction);
-    console.log('approved txHash', approved.hash);
+    console.log("approved txHash", approved.hash);
     const approvedReceipt = await approved.wait();
-    console.log('approved receipt', approvedReceipt);
+    console.log("approved receipt", approvedReceipt);
   }
 
-  const tradeTransaction = await (await wallet.sendTransaction(trade.transaction))
-  console.log('trade txHash', tradeTransaction.hash);
+  const tradeTransaction = await await wallet.sendTransaction(
+    trade.transaction
+  );
+  console.log("trade txHash", tradeTransaction.hash);
   const tradeReceipt = await tradeTransaction.wait();
-  console.log('trade receipt', tradeReceipt);
+  console.log("trade receipt", tradeReceipt);
 
   // once done with trade aka they have sent it and you don't need it anymore call
   trade.destroy();
-  
-  return { code:401,tx:tradeReceipt.transactionHash}
+
+  return { code: 401, tx: tradeReceipt.transactionHash };
 };
- const  tokenTotokenPrice = async (walletAddress,token1,token2,amount) =>{
- // console.log(walletAddress)
+const tokenTotokenPrice = async (walletAddress, token1, token2, amount) => {
+  // console.log(walletAddress)
   const uniswapPair = new UniswapPair({
     // the contract address of the token you want to convert FROM
-    fromTokenContractAddress: token1,//
+    fromTokenContractAddress: token1, //
     // the contract address of the token you want to convert TO
     toTokenContractAddress: token2,
     // the ethereum address of the user using this part of the dApp
@@ -258,42 +267,31 @@ const SwapTokensToTokens = async (privateKey,walletAddress,token1,token2,amount)
   // you should probably check this before they confirm the swap again
   // this is just so its simple to read
   if (!trade.fromBalance.hasEnough) {
-    console.log(trade)
-    throw new Error('You do not have enough from balance to execute this swap');
+    console.log(trade);
+    throw new Error("You do not have enough from balance to execute this swap");
   }
 
   // subscribe to quote changes this is just in example so your dont miss it
   trade.quoteChanged$.subscribe((TradeContext) => {
     // value will hold the same info as below but obviously with
     // the new trade info.
-   // console.log(TradeContext)
+    // console.log(TradeContext)
   });
-  console.log(trade)
-  if(trade){
+  console.log(trade);
+  if (trade) {
+    const tradeDetails = {
+      slippageTolerance: trade.liquidityProviderFeePercent,
+      minimumAmountOut: trade.minAmountConvertQuote,
+    };
 
-    const tradeDetails ={
-      slippageTolerance:trade.liquidityProviderFeePercent,
-      minimumAmountOut:trade.minAmountConvertQuote,
-    }
-    
     return {
-      token1totoken2:trade.minAmountConvertQuote,
-      token2totoken1:amount,
-      trade:tradeDetails
-    }
+      token1totoken2: trade.minAmountConvertQuote,
+      token2totoken1: amount,
+      trade: tradeDetails,
+    };
+  } else {
+    return 404;
   }
-  else{
-    return 404
-  }
-  
+};
 
- }
-
-
-  export{
-   UniSwap,
-
-   SwapTokensToTokens,
-
-   tokenTotokenPrice
-  }
+export { UniSwap, SwapTokensToTokens, tokenTotokenPrice };

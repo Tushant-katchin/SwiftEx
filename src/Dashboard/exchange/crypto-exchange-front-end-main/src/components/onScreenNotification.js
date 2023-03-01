@@ -1,21 +1,57 @@
-import { Button } from '@mui/material'
+import { Button, View } from 'react-native'
 
-export const OnScreenNotification = ({ notification, setNotification }) => {
+const BidAccepted = ({ notification, setNotification }) => {
   const onProceed = () => {
     window.open(notification.paymentUrl, '_blank', 'noreferrer')
     return setNotification(null)
   }
+}
 
+const BidAdded = ({ notification, setNotification }) => {
+  const onProceed = () => {
+    window.location = '/'
+    return setNotification(null)
+  }
   return (
-    notification && (
-      <div className="container border border-success m-2 p-3 text-center">
-        <h3>Your Bid is Accepted!</h3>
-        <p>
-          Your bid for {notification.amount} {notification.assetName} at{' '}
-          {notification.pricePerUnit} price per unit is accepted.
-        </p>
-        <Button onClick={onProceed}>Proceed Payment</Button>
-      </div>
-    )
+    <View >
+      <Text>New Bid Added!</Text>
+      <Text>{notification.message}</Text>
+      <Button title='See Your Offers' onPress={onProceed}/>
+    </View>
   )
+}
+
+const OfferFinalized = ({ notification, setNotification }) => {
+  const onProceed = () => {
+    window.location = '/'
+    return setNotification(null)
+  }
+  return (
+    <View >
+      <Text>Offer Finalised!</Text>
+      <Text>{notification.message}</Text>
+      <Button onPress={onProceed}>See Your Offers</Button>
+    </View>
+  )
+}
+export const OnScreenNotification = ({ notification, setNotification }) => {
+  const { type } = notification
+  if (type === NOTIFICATION_TYPES.BID_ACCEPTED)
+    return (
+      <BidAccepted
+        notification={notification}
+        setNotification={setNotification}
+      />
+    )
+  if (type === NOTIFICATION_TYPES.BID_ADDED)
+    return (
+      <BidAdded notification={notification} setNotification={setNotification} />
+    )
+  if (type === NOTIFICATION_TYPES.OFFER_FINALIZED)
+    return (
+      <OfferFinalized
+        notification={notification}
+        setNotification={setNotification}
+      />
+    )
 }

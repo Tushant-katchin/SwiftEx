@@ -1,22 +1,11 @@
-import { getAuth} from "./api";
-import { StyleSheet, Text, View} from "react-native";
+import { getAuth } from "./api";
 import ExchangeRoutes from "./exchangeRoutes";
 
+const ExchangeApp = () => {
+  const isAuth = getAuth();
 
-
-const ExchangeApp = () =>{
-    const isAuth = getAuth()
-
-    if(isAuth){
-        return(
-            <ExchangeRoutes/>
-        )
-       
-    }
-            return(
-                <ExchangeLogin/>
-            )
-        
-
-}
-
+  if (isAuth) {
+    return <ExchangeRoutes />;
+  }
+  return <ExchangeLogin />;
+};

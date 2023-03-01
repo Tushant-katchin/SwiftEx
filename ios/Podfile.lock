@@ -241,6 +241,10 @@ PODS:
     - React-Core
   - react-native-image-base64 (0.1.4):
     - React
+  - react-native-otp-auto-fill (0.1.17):
+    - React-Core
+  - react-native-otp-verify (1.1.4):
+    - React-Core
   - react-native-pager-view (5.4.9):
     - React-Core
   - react-native-pure-jwt (3.0.1):
@@ -316,6 +320,8 @@ PODS:
     - React-cxxreact (= 0.64.3)
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
+  - ReactNativeART (1.2.0):
+    - React
   - RNCAsyncStorage (1.15.17):
     - React-Core
   - RNGestureHandler (1.10.3):
@@ -369,6 +375,8 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
+  - react-native-otp-auto-fill (from `../node_modules/react-native-otp-auto-fill`)
+  - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-pure-jwt (from `../node_modules/react-native-pure-jwt`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
@@ -386,6 +394,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNOS (from `../node_modules/react-native-os`)
@@ -465,6 +474,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-get-random-values"
   react-native-image-base64:
     :path: "../node_modules/react-native-image-base64"
+  react-native-otp-auto-fill:
+    :path: "../node_modules/react-native-otp-auto-fill"
+  react-native-otp-verify:
+    :path: "../node_modules/react-native-otp-verify"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-pure-jwt:
@@ -499,6 +512,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeART:
+    :path: "../node_modules/@react-native-community/art"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNGestureHandler:
@@ -553,6 +568,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
   react-native-get-random-values: 30b3f74ca34e30e2e480de48e4add2706a40ac8f
   react-native-image-base64: 2ff9ac788639c87a91361ab6652cc95e871b1e54
+  react-native-otp-auto-fill: 722b3b99ddad3a2e92b6dacafdad6ab533e6ae2a
+  react-native-otp-verify: d30202ea73a15bfc85026320498b20cadf041110
   react-native-pager-view: 3ee7d4c7697fb3ef788346e834a60cca97ed8540
   react-native-pure-jwt: 94a3662655c6d677acb7b16048ed69b88b93073d
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
@@ -570,6 +587,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: c7f845861e79eae13dc1e8217a3cf47a3945b504
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
+  ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
   RNCAsyncStorage: 6bd5a7ba3dde1c3facba418aa273f449bdc5437a
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
@@ -580,6 +598,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 3184c93ecc290bd422c6e344badc89b601e9c29b
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
 
-PODFILE CHECKSUM: 9e0f0fb73474188942d60f0da57253b175ce213a
+PODFILE CHECKSUM: 8dc046a86c407546d31f6b17a4c6cf378e9b060a
 
 COCOAPODS: 1.11.3

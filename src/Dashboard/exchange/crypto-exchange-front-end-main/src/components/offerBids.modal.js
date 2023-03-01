@@ -1,8 +1,5 @@
-import { LoadingButton } from '@mui/lab'
-import {  Box, Modal } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { authRequest, GET, POST } from '../api'
-import { modalStyle } from './style.modal'
 import { StyleSheet, Text, View,  Button, TouchableOpacity, ScrollView} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Modal2 from "react-native-modal";
@@ -24,6 +21,9 @@ export const OfferBidsView = ({ offer, self = false }) => {
   useEffect(() => {
     getOfferDetails()
   }, [])
+  useEffect(() => {
+    getOfferDetails()
+  }, [open])
 
   const getOfferDetails = async () => {
     try {
@@ -31,7 +31,7 @@ export const OfferBidsView = ({ offer, self = false }) => {
         `/offers/getOfferDetails/${offer._id}`,
         GET,
       )
-      if (err) return setModalMessage(`${err.status}: ${err.message}`)
+      if (err) return setModalMessage(`${err.message}`)
       setBids(res.offerBids)
     } catch (err) {
       console.log(err)
@@ -49,7 +49,7 @@ export const OfferBidsView = ({ offer, self = false }) => {
       if (err){
         alert(`${err.message}`)
         setLoading(false)
-        return setModalMessage(`${err.status}: ${err.message}`)
+        return setModalMessage(`${err.message}`)
       } 
       setModalMessage('success')
       setLoading(false)

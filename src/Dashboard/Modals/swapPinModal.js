@@ -1,623 +1,719 @@
-import React,{useRef, useEffect, useState} from 'react'
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity} from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { Animated} from 'react-native';
-import title_icon from '../../../assets/title_icon.png'
-import ReactNativePinView from "react-native-pin-view"
-import Icon from "react-native-vector-icons/Ionicons"
+import React, { useRef, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { Animated } from "react-native";
+import title_icon from "../../../assets/title_icon.png";
+import ReactNativePinView from "react-native-pin-view";
+import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { Platform } from 'react-native';
-import { setPlatform, setWalletType } from '../../components/Redux/actions/auth';
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { Platform } from "react-native";
+import {
+  setPlatform,
+  setWalletType,
+} from "../../components/Redux/actions/auth";
 import Modal from "react-native-modal";
-import { useNavigation } from '@react-navigation/native';
-import { SwapEthForTokens } from '../tokens/swapFunctions';
-import { SwapTokensToTokens,  UniSwap } from '../tokens/UniswapFunctions';
-import { SwapLoadingComponent } from '../../utilities/loadingComponent';
-const SwapPinModal = ({pinViewVisible,setPinViewVisible,setModalVisible,setTradeVisible,pancakeSwap,coin0,coin1,swapType,SaveTransaction, setLoading}) => {
-    const state = useSelector((state)=>state)
-    const[pin, setPin] = useState()
-    const[status,setStatus]=useState('pinset')
-    const [showRemoveButton, setShowRemoveButton] = useState(false)
-    const [enteredPin, setEnteredPin] = useState("")
-    const [showCompletedButton, setShowCompletedButton] = useState(false)
-    const[loader,setLoader] = useState(false)
-    const pinView = useRef(null)
-    const fadeAnim = useRef(new Animated.Value(0)).current
-    const dispatch = useDispatch()
+import { useNavigation } from "@react-navigation/native";
+import { SwapEthForTokens } from "../tokens/swapFunctions";
+import { SwapTokensToTokens, UniSwap } from "../tokens/UniswapFunctions";
+import { SwapLoadingComponent } from "../../utilities/loadingComponent";
+const SwapPinModal = ({
+  pinViewVisible,
+  setPinViewVisible,
+  setModalVisible,
+  setTradeVisible,
+  pancakeSwap,
+  coin0,
+  coin1,
+  swapType,
+  SaveTransaction,
+  setLoading,
+}) => {
+  const state = useSelector((state) => state);
+  const [pin, setPin] = useState();
+  const [status, setStatus] = useState("pinset");
+  const [showRemoveButton, setShowRemoveButton] = useState(false);
+  const [enteredPin, setEnteredPin] = useState("");
+  const [showCompletedButton, setShowCompletedButton] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const pinView = useRef(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const dispatch = useDispatch();
 
-    const navigation = useNavigation()
-    
-    const Spin =  new Animated.Value ( 0 )
-    const SpinValue =  Spin.interpolate ({
-                inputRange :  [ 0, 1 ],
-                outputRange :  [ '0deg', '360deg' ]
-} )
+  const navigation = useNavigation();
 
+  const Spin = new Animated.Value(0);
+  const SpinValue = Spin.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
 
-    useEffect(async () => {
-      const Check = await AsyncStorage.getItem(`pin`)
-    console.log(Check)
-    if(Check){
-      setStatus('pinset')
+  useEffect(async () => {
+    const Check = await AsyncStorage.getItem(`pin`);
+    console.log(Check);
+    if (Check) {
+      setStatus("pinset");
     }
-    console.log(Platform.OS)
-      if(Platform.OS==='ios'){
-        const platform = 'ios'
-        dispatch(setPlatform(platform))
-        .then((response)=>{
-          console.log(response)
-        })
-      }
-        Animated.timing(
-          fadeAnim,
-          {
-            toValue: 1,
-            duration: 1000,
-          }
-        ).start();
+    console.log(Platform.OS);
+    if (Platform.OS === "ios") {
+      const platform = "ios";
+      dispatch(setPlatform(platform)).then((response) => {
+        console.log(response);
+      });
+    }
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+    }).start();
 
-        Animated.timing(Spin,{
-            toValue:1,
-            duration:1500,
-            useNativeDriver:true
-        }).start()
+    Animated.timing(Spin, {
+      toValue: 1,
+      duration: 1500,
+      useNativeDriver: true,
+    }).start();
 
-        if (enteredPin.length > 0) {
-          setShowRemoveButton(true)
-        } else {
-          setShowRemoveButton(false)
-        }
-        if (enteredPin.length === 4) {
-          setShowCompletedButton(true)
-        } else {
-          setShowCompletedButton(false)
-        }
-      }, [fadeAnim,  enteredPin])
-    
+    if (enteredPin.length > 0) {
+      setShowRemoveButton(true);
+    } else {
+      setShowRemoveButton(false);
+    }
+    if (enteredPin.length === 4) {
+      setShowCompletedButton(true);
+    } else {
+      setShowCompletedButton(false);
+    }
+  }, [fadeAnim, enteredPin]);
 
   return (
     <Modal
-  animationIn="fadeInUpBig"
-  animationOut="fadeOutDownBig"
-  animationInTiming={500}
-  animationOutTiming={650}
-  isVisible={pinViewVisible}
-  useNativeDriver={true}
-  statusBarTranslucent={true}
-  onBackdropPress={()=>setPinViewVisible(false)}
-
-  onBackButtonPress={() => {
-    setPinViewVisible(false);
-    }}
+      animationIn="fadeInUpBig"
+      animationOut="fadeOutDownBig"
+      animationInTiming={500}
+      animationOutTiming={650}
+      isVisible={pinViewVisible}
+      useNativeDriver={true}
+      statusBarTranslucent={true}
+      onBackdropPress={() => setPinViewVisible(false)}
+      onBackButtonPress={() => {
+        setPinViewVisible(false);
+      }}
     >
-    <Animated.View                 // Special animatable View
-      style={{opacity:fadeAnim}}
-    >
-      <View style={style.Body}>
+      <Animated.View // Special animatable View
+        style={{ opacity: fadeAnim }}
+      >
+        <View style={style.Body}>
+          <Animated.Image
+            style={{
+              width: wp("5"),
+              height: hp("5"),
+              padding: 30,
+              marginTop: hp(2),
+              transform: [{ rotate: SpinValue }],
+            }}
+            source={title_icon}
+          />
+          <Text style={style.welcomeText}> Hi,</Text>
+          <Text style={style.welcomeText}>
+            {" "}
+            {status == "verify"
+              ? "please re enter pin"
+              : status === "pinset"
+              ? "please enter your pin"
+              : "Please create a pin"}
+          </Text>
+          <View style={{ marginTop: hp(10) }}>
+            {loader ? <SwapLoadingComponent /> : <View></View>}
+            <ReactNativePinView
+              inputSize={32}
+              ref={pinView}
+              pinLength={4}
+              buttonSize={60}
+              onValueChange={(value) => setEnteredPin(value)}
+              buttonAreaStyle={{
+                marginTop: 24,
+              }}
+              inputAreaStyle={{
+                marginBottom: 24,
+              }}
+              inputViewEmptyStyle={{
+                backgroundColor: "transparent",
+                borderWidth: 1,
+                borderColor: "#FFF",
+              }}
+              inputViewFilledStyle={{
+                backgroundColor: "#FFF",
+              }}
+              buttonViewStyle={{
+                borderWidth: 1,
+                borderColor: "#FFF",
+              }}
+              buttonTextStyle={{
+                color: "#FFF",
+              }}
+              onButtonPress={async (key) => {
+                if (key === "custom_left") {
+                  pinView.current.clear();
+                }
+                if (key === "custom_right") {
+                  const Pin = await AsyncStorage.getItem("pin");
 
-      < Animated.Image
-    style={{width: wp('5'),
-    height: hp('5'),
-    padding:30,
-    marginTop:hp(2),
-    transform:[{rotate:SpinValue}]}}
-    source={title_icon}
-  />
-    <Text style={style.welcomeText}> Hi,</Text>
-    <Text style={style.welcomeText}> {status=='verify'?"please re enter pin" :status==='pinset'?"please enter your pin": "Please create a pin"}</Text>
-    <View style={{marginTop:hp(10)}}>  
-      {loader?<SwapLoadingComponent/>:<View></View>}
-<ReactNativePinView
-            inputSize={32}
-            ref={pinView}
-            pinLength={4}
-            buttonSize={60}
-            onValueChange={value => setEnteredPin(value)}
-            buttonAreaStyle={{
-              marginTop: 24,
-            }}
-            inputAreaStyle={{
-              marginBottom: 24,
-            }}
-            inputViewEmptyStyle={{
-              backgroundColor: "transparent",
-              borderWidth: 1,
-              borderColor: "#FFF",
-            }}
-            inputViewFilledStyle={{
-              backgroundColor: "#FFF",
-            }}
-            buttonViewStyle={{
-              borderWidth: 1,
-              borderColor: "#FFF",
-            }}
-            buttonTextStyle={{
-              color: "#FFF",
-            }}
-            onButtonPress={async key => {
-                
-              if (key === "custom_left") {
-                pinView.current.clear()
-              }
-              if (key === "custom_right") {
-                 
-
-                  const Pin = await AsyncStorage.getItem('pin')
-                  
-                  if(JSON.parse(Pin)===enteredPin){
-                    
-                    try{
-                        setLoader(true)
-                        setLoading(true)
-                        const walletType = await AsyncStorage.getItem('walletType')
-                        console.log(JSON.parse(walletType))
-                        const Wallet =await state.wallet
-                        console.log(Wallet)
-                        if(JSON.parse(walletType)==='Ethereum'){
-                          
-                          if(Wallet){
-                            if(coin0.symbol==='WETH'){
-                              
-                              
-                              await SwapEthForTokens(Wallet.privateKey,Wallet.address,coin1.address,amount)
-                              .then(async (response)=>{
-                                console.log(response)
-                                if(response){
-                                  if(response.code===400){
-                                    return alert('server error please try again')
-                                  }
-                                  else if(response.code===401){
-                                    console.log(response)
-                                    const type ='Swap'
-                                    const wallettype = JSON.parse( walletType )
-                                    const chainType = 'Eth'
-                                    await SaveTransaction(type,response.tx.transactionHash,wallettype,chainType)
-                                    .then((resp)=>{
-                                      setLoader(false)
-                                      setLoading(false)
-                                      setTradeVisible(false)
-                                      setModalVisible(false)
-                                      setPinViewVisible(false)
-                                      alert("Your Tx Hash : "+response.tx.transactionHash)
-                                      navigation.navigate('Transactions')
-                                    })
-                                    .catch((e)=>{
-                                      setLoading(false)
-                                      setLoader(false)
-                                      setPinViewVisible(false)
-                                      console.log(e)
-                                    })
-                                    
-                                  }else if(response.code===404){
-                                    setLoading(false)
-                                    setLoader(false)
+                  if (JSON.parse(Pin) === enteredPin) {
+                    try {
+                      setLoader(true);
+                      setLoading(true);
+                      const walletType = await AsyncStorage.getItem(
+                        "walletType"
+                      );
+                      console.log(JSON.parse(walletType));
+                      const Wallet = await state.wallet;
+                      console.log(Wallet);
+                      if (JSON.parse(walletType) === "Ethereum") {
+                        if (Wallet) {
+                          if (coin0.symbol === "WETH") {
+                            await SwapEthForTokens(
+                              Wallet.privateKey,
+                              Wallet.address,
+                              coin1.address,
+                              amount
+                            )
+                              .then(async (response) => {
+                                console.log(response);
+                                if (response) {
+                                  if (response.code === 400) {
+                                    return alert(
+                                      "server error please try again"
+                                    );
+                                  } else if (response.code === 401) {
+                                    console.log(response);
+                                    const type = "Swap";
+                                    const wallettype = JSON.parse(walletType);
+                                    const chainType = "Eth";
+                                    await SaveTransaction(
+                                      type,
+                                      response.tx.transactionHash,
+                                      wallettype,
+                                      chainType
+                                    )
+                                      .then((resp) => {
+                                        setLoader(false);
+                                        setLoading(false);
+                                        setTradeVisible(false);
+                                        setModalVisible(false);
+                                        setPinViewVisible(false);
+                                        alert(
+                                          "Your Tx Hash : " +
+                                            response.tx.transactionHash
+                                        );
+                                        navigation.navigate("Transactions");
+                                      })
+                                      .catch((e) => {
+                                        setLoading(false);
+                                        setLoader(false);
+                                        setPinViewVisible(false);
+                                        console.log(e);
+                                      });
+                                  } else if (response.code === 404) {
+                                    setLoading(false);
+                                    setLoader(false);
                                     setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert('pair not found')
-                                  }else{
-                                    setLoading(false)
-                                    setLoader(false)
+                                    setPinViewVisible(false);
+                                    return alert("pair not found");
+                                  } else {
+                                    setLoading(false);
+                                    setLoader(false);
                                     setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert(response)
+                                    setPinViewVisible(false);
+                                    return alert(response);
                                   }
-                                }else{
-                                  setLoading(false)
-                                  setLoader(false)
+                                } else {
+                                  setLoading(false);
+                                  setLoader(false);
                                   setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert('server error')
+                                  setPinViewVisible(false);
+                                  return alert("server error");
                                 }
-                              }).catch((e)=>{
-                                setLoading(false)
-                                setLoader(false)
-                                setTradeVisible(false);
-                                setPinViewVisible(false)
-                                console.log(e)
                               })
-                            }else if(coin1.symbol==="WETH"){
-                              await UniSwap(Wallet.privateKey,Wallet.address,coin0.address,amount)
-                              .then(async(response)=>{
-                                console.log(response)
-                                if(response){
-                                  if(response.code===401){
-                                    console.log("Your Tx Hash : "+response.tx)
-                                    const type ='Swap'
-                                    const wallettype = JSON.parse( walletType )
-                                  const chainType = 'Eth'
-                                  await SaveTransaction(type,response.tx,wallettype,chainType)
-                                  .then((resp)=>{
-                                    
-                                    setLoading(false)
-                                    setLoader(false)
-                                    setTradeVisible(false);
-                                    setModalVisible(false)
-                                    setPinViewVisible(false)
-                                    alert("Your Tx Hash : "+response.tx)
-                                    navigation.navigate('Transactions')
-                                    
-                                  })
-                                  .catch((e)=>{
-                                    setLoading(false)
-                                    setLoader(false)
-                                    setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    console.log(e)
-                                  })
-                                  
-                                }else if(response.code===400){
-                                    setPinViewVisible(false)
-                                    setLoader(false)
-                                  return alert('error while swapping. please try again')
-                                }
-                                
-                                else if(response===404){
-                                  setLoading(false)
-                                  setLoader(false)
-                                  setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert('pair not found')
-                                }else{
-                                  setLoading(false)
-                                  setLoader(false)
-                                  setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert(response)
-                                }
-                              }else{
-                                setLoading(false)
-                                setLoader(false)
+                              .catch((e) => {
+                                setLoading(false);
+                                setLoader(false);
                                 setTradeVisible(false);
-                                setPinViewVisible(false)
-                                return alert('server error')
-                              }
-                            }).catch((e)=>{
-                              setLoading(false)
-                              setLoader(false)
-                              setTradeVisible(false);
-                              setPinViewVisible(false)
-                              console.log(e)
-                            })
-                          }
-                          else{
-                            await SwapTokensToTokens (Wallet.privateKey,Wallet.address,coin0.address,coin1.address,amount)
-                            .then(async (response)=>{
-                              console.log(response)
-                              if(response){
-                                if(response.code==401){
-                                  console.log(response)
-                                  const type ='Swap'
-                                  const wallettype = JSON.parse( walletType )
-                                  const chainType = 'Eth'
-                                  const saveTransaction = await SaveTransaction(type,response.tx,wallettype,chainType)
-                                  .then((resp)=>{
-                                    setLoading(false)
-                                    setLoader(false)
+                                setPinViewVisible(false);
+                                console.log(e);
+                              });
+                          } else if (coin1.symbol === "WETH") {
+                            await UniSwap(
+                              Wallet.privateKey,
+                              Wallet.address,
+                              coin0.address,
+                              amount
+                            )
+                              .then(async (response) => {
+                                console.log(response);
+                                if (response) {
+                                  if (response.code === 401) {
+                                    console.log(
+                                      "Your Tx Hash : " + response.tx
+                                    );
+                                    const type = "Swap";
+                                    const wallettype = JSON.parse(walletType);
+                                    const chainType = "Eth";
+                                    await SaveTransaction(
+                                      type,
+                                      response.tx,
+                                      wallettype,
+                                      chainType
+                                    )
+                                      .then((resp) => {
+                                        setLoading(false);
+                                        setLoader(false);
+                                        setTradeVisible(false);
+                                        setModalVisible(false);
+                                        setPinViewVisible(false);
+                                        alert("Your Tx Hash : " + response.tx);
+                                        navigation.navigate("Transactions");
+                                      })
+                                      .catch((e) => {
+                                        setLoading(false);
+                                        setLoader(false);
+                                        setTradeVisible(false);
+                                        setPinViewVisible(false);
+                                        console.log(e);
+                                      });
+                                  } else if (response.code === 400) {
+                                    setPinViewVisible(false);
+                                    setLoader(false);
+                                    return alert(
+                                      "error while swapping. please try again"
+                                    );
+                                  } else if (response === 404) {
+                                    setLoading(false);
+                                    setLoader(false);
                                     setTradeVisible(false);
-                                    setModalVisible(false)
-                                    setPinViewVisible(false)
-                                    alert("Your Tx Hash : "+response.tx)
-                                    navigation.navigate('Transactions')
-                                  })
-                                  .catch((e)=>{
-                                    setLoading(false)
-                                    setLoader(false)
+                                    setPinViewVisible(false);
+                                    return alert("pair not found");
+                                  } else {
+                                    setLoading(false);
+                                    setLoader(false);
                                     setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    console.log(e)
-                                  })
-                                }else if(response===404){
-                                  setLoading(false)
-                                  setLoader(false)
+                                    setPinViewVisible(false);
+                                    return alert(response);
+                                  }
+                                } else {
+                                  setLoading(false);
+                                  setLoader(false);
                                   setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert('pair not found')
-                                }else{
-                                  setLoading(false)
-                                  setLoader(false)
-                                  setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert(response)
+                                  setPinViewVisible(false);
+                                  return alert("server error");
                                 }
-                              }else{
-                                setLoading(false)
-                                setLoader(false)
+                              })
+                              .catch((e) => {
+                                setLoading(false);
+                                setLoader(false);
                                 setTradeVisible(false);
-                                setPinViewVisible(false)
-                                return alert('server error')
-                              }
-                            }).catch((e)=>{
-                              setLoader(false)
-                              setLoading(false)
-                              setTradeVisible(false);
-                              setPinViewVisible(false)
-                              console.log(e)
-                            })
+                                setPinViewVisible(false);
+                                console.log(e);
+                              });
+                          } else {
+                            await SwapTokensToTokens(
+                              Wallet.privateKey,
+                              Wallet.address,
+                              coin0.address,
+                              coin1.address,
+                              amount
+                            )
+                              .then(async (response) => {
+                                console.log(response);
+                                if (response) {
+                                  if (response.code == 401) {
+                                    console.log(response);
+                                    const type = "Swap";
+                                    const wallettype = JSON.parse(walletType);
+                                    const chainType = "Eth";
+                                    const saveTransaction =
+                                      await SaveTransaction(
+                                        type,
+                                        response.tx,
+                                        wallettype,
+                                        chainType
+                                      )
+                                        .then((resp) => {
+                                          setLoading(false);
+                                          setLoader(false);
+                                          setTradeVisible(false);
+                                          setModalVisible(false);
+                                          setPinViewVisible(false);
+                                          alert(
+                                            "Your Tx Hash : " + response.tx
+                                          );
+                                          navigation.navigate("Transactions");
+                                        })
+                                        .catch((e) => {
+                                          setLoading(false);
+                                          setLoader(false);
+                                          setTradeVisible(false);
+                                          setPinViewVisible(false);
+                                          console.log(e);
+                                        });
+                                  } else if (response === 404) {
+                                    setLoading(false);
+                                    setLoader(false);
+                                    setTradeVisible(false);
+                                    setPinViewVisible(false);
+                                    return alert("pair not found");
+                                  } else {
+                                    setLoading(false);
+                                    setLoader(false);
+                                    setTradeVisible(false);
+                                    setPinViewVisible(false);
+                                    return alert(response);
+                                  }
+                                } else {
+                                  setLoading(false);
+                                  setLoader(false);
+                                  setTradeVisible(false);
+                                  setPinViewVisible(false);
+                                  return alert("server error");
+                                }
+                              })
+                              .catch((e) => {
+                                setLoader(false);
+                                setLoading(false);
+                                setTradeVisible(false);
+                                setPinViewVisible(false);
+                                console.log(e);
+                              });
                           }
+                        } else {
+                          setLoading(false);
+                          setLoader(false);
+                          setPinViewVisible(false);
+                          alert("no wallets found");
                         }
-                        else{
-                          setLoading(false)
-                          setLoader(false)
-                          setPinViewVisible(false)
-                          alert('no wallets found')
-                        }
-                      }else if(JSON.parse(walletType)==='BSC'){
-                        const swap = await pancakeSwap(Wallet.privateKey)
-                        setLoading(false)
-                        setLoader(false)
-                        setModalVisible(false)
+                      } else if (JSON.parse(walletType) === "BSC") {
+                        const swap = await pancakeSwap(Wallet.privateKey);
+                        setLoading(false);
+                        setLoader(false);
+                        setModalVisible(false);
                         setTradeVisible(false);
-                        setPinViewVisible(false)
-                        
-                      }
-                      else if(JSON.parse(walletType)==='Multi-coin'){
-                        if(swapType==='ETH'){
-                          
-                          if(Wallet){
-                            if(coin0.symbol==='WETH'){
-                              
-                              
-                              await SwapEthForTokens(Wallet.privateKey,Wallet.address,coin1.address,amount)
-                              .then(async (response)=>{
-                                console.log(response)
-                                if(response){
-                                  if(response.code===400){
-                                    setPinViewVisible(false)
-                                    return alert('server error please try again')
-                                  }
-                                  else if(response.code===401){
-                                    console.log(response)
-                                    const type ='Swap'
-                                    const wallettype = JSON.parse( walletType )
-                                    const chainType = 'Eth'
-                                    await SaveTransaction(type,response.tx.transactionHash,wallettype,chainType)
-                                    .then((resp)=>{
-                                      setLoading(false)
-                                      setLoader(false)
-                                      setTradeVisible(false)
-                                      setModalVisible(false)
-                                      setPinViewVisible(false)
-                                      alert("Your Tx Hash : "+response.tx.transactionHash)
-                                      navigation.navigate('Transactions')
-                                    })
-                                    .catch((e)=>{
-                                      setLoading(false)
-                                      setLoader(false)
-                                      setPinViewVisible(false)
-                                      console.log(e)
-                                    })
-                                    
-                                  }else if(response.code===404){
-                                    setLoading(false)
-                                    setLoader(false)
-                                    setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert('pair not found')
-                                  }else{
-                                    setLoading(false)
-                                    setLoader(false)
-                                    setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert(response)
-                                  }
-                                }else{
-                                  setLoading(false)
-                                  setLoader(false)
-                                  setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert('server error')
-                                }
-                              }).catch((e)=>{
-                                setLoading(false)
-                                setLoader(false)
-                                setTradeVisible(false);
-                                setPinViewVisible(false)
-                                console.log(e)
-                              })
-                            }else if(coin1.symbol==="WETH"){
-                              await UniSwap(Wallet.privateKey,Wallet.address,coin0.address,amount)
-                              .then(async(response)=>{
-                                console.log(response)
-                                if(response){
-                                  if(response.code===401){
-                                    console.log("Your Tx Hash : "+response.tx)
-                                    const type ='Swap'
-                                    const wallettype = JSON.parse( walletType )
-                                    const chainType = 'Eth'
-                                    await SaveTransaction(type,response.tx,wallettype,chainType)
-                                    .then((resp)=>{
-                                      
-                                      setLoading(false)
+                        setPinViewVisible(false);
+                      } else if (JSON.parse(walletType) === "Multi-coin") {
+                        if (swapType === "ETH") {
+                          if (Wallet) {
+                            if (coin0.symbol === "WETH") {
+                              await SwapEthForTokens(
+                                Wallet.privateKey,
+                                Wallet.address,
+                                coin1.address,
+                                amount
+                              )
+                                .then(async (response) => {
+                                  console.log(response);
+                                  if (response) {
+                                    if (response.code === 400) {
+                                      setPinViewVisible(false);
+                                      return alert(
+                                        "server error please try again"
+                                      );
+                                    } else if (response.code === 401) {
+                                      console.log(response);
+                                      const type = "Swap";
+                                      const wallettype = JSON.parse(walletType);
+                                      const chainType = "Eth";
+                                      await SaveTransaction(
+                                        type,
+                                        response.tx.transactionHash,
+                                        wallettype,
+                                        chainType
+                                      )
+                                        .then((resp) => {
+                                          setLoading(false);
+                                          setLoader(false);
+                                          setTradeVisible(false);
+                                          setModalVisible(false);
+                                          setPinViewVisible(false);
+                                          alert(
+                                            "Your Tx Hash : " +
+                                              response.tx.transactionHash
+                                          );
+                                          navigation.navigate("Transactions");
+                                        })
+                                        .catch((e) => {
+                                          setLoading(false);
+                                          setLoader(false);
+                                          setPinViewVisible(false);
+                                          console.log(e);
+                                        });
+                                    } else if (response.code === 404) {
+                                      setLoading(false);
+                                      setLoader(false);
                                       setTradeVisible(false);
-                                      setModalVisible(false)
-                                      setPinViewVisible(false)
-                                      setLoader(false)
-                                      alert("Your Tx Hash : "+response.tx)
-                                      navigation.navigate('Transactions')
-                                      
-                                    })
-                                    .catch((e)=>{
-                                      setLoading(false)
-                                      setLoader(false)
+                                      setPinViewVisible(false);
+                                      return alert("pair not found");
+                                    } else {
+                                      setLoading(false);
+                                      setLoader(false);
                                       setTradeVisible(false);
-                                      setPinViewVisible(false)
-                                      console.log(e)
-                                    })
-                                    
-                                  }else if(response.code===400){
-                                    setPinViewVisible(false)
-                                    setLoader(false)
-                                    return alert('error while swapping. please try again')
-                                  }
-                                  
-                                  else if(response===404){
-                                    setLoading(false)
-                                    setLoader(false)
+                                      setPinViewVisible(false);
+                                      return alert(response);
+                                    }
+                                  } else {
+                                    setLoading(false);
+                                    setLoader(false);
                                     setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert('pair not found')
-                                  }else{
-                                    setLoading(false)
-                                    setLoader(false)
-                                    setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert(response)
+                                    setPinViewVisible(false);
+                                    return alert("server error");
                                   }
-                                }else{
-                                  setLoading(false)
-                                  setLoader(false)
+                                })
+                                .catch((e) => {
+                                  setLoading(false);
+                                  setLoader(false);
                                   setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert('server error')
-                                }
-                              }).catch((e)=>{
-                                setLoading(false)
-                                setLoader(false)
-                                setTradeVisible(false);
-                                setPinViewVisible(false)
-                                console.log(e)
-                              })
+                                  setPinViewVisible(false);
+                                  console.log(e);
+                                });
+                            } else if (coin1.symbol === "WETH") {
+                              await UniSwap(
+                                Wallet.privateKey,
+                                Wallet.address,
+                                coin0.address,
+                                amount
+                              )
+                                .then(async (response) => {
+                                  console.log(response);
+                                  if (response) {
+                                    if (response.code === 401) {
+                                      console.log(
+                                        "Your Tx Hash : " + response.tx
+                                      );
+                                      const type = "Swap";
+                                      const wallettype = JSON.parse(walletType);
+                                      const chainType = "Eth";
+                                      await SaveTransaction(
+                                        type,
+                                        response.tx,
+                                        wallettype,
+                                        chainType
+                                      )
+                                        .then((resp) => {
+                                          setLoading(false);
+                                          setTradeVisible(false);
+                                          setModalVisible(false);
+                                          setPinViewVisible(false);
+                                          setLoader(false);
+                                          alert(
+                                            "Your Tx Hash : " + response.tx
+                                          );
+                                          navigation.navigate("Transactions");
+                                        })
+                                        .catch((e) => {
+                                          setLoading(false);
+                                          setLoader(false);
+                                          setTradeVisible(false);
+                                          setPinViewVisible(false);
+                                          console.log(e);
+                                        });
+                                    } else if (response.code === 400) {
+                                      setPinViewVisible(false);
+                                      setLoader(false);
+                                      return alert(
+                                        "error while swapping. please try again"
+                                      );
+                                    } else if (response === 404) {
+                                      setLoading(false);
+                                      setLoader(false);
+                                      setTradeVisible(false);
+                                      setPinViewVisible(false);
+                                      return alert("pair not found");
+                                    } else {
+                                      setLoading(false);
+                                      setLoader(false);
+                                      setTradeVisible(false);
+                                      setPinViewVisible(false);
+                                      return alert(response);
+                                    }
+                                  } else {
+                                    setLoading(false);
+                                    setLoader(false);
+                                    setTradeVisible(false);
+                                    setPinViewVisible(false);
+                                    return alert("server error");
+                                  }
+                                })
+                                .catch((e) => {
+                                  setLoading(false);
+                                  setLoader(false);
+                                  setTradeVisible(false);
+                                  setPinViewVisible(false);
+                                  console.log(e);
+                                });
+                            } else {
+                              await SwapTokensToTokens(
+                                Wallet.privateKey,
+                                Wallet.address,
+                                coin0.address,
+                                coin1.address,
+                                amount
+                              )
+                                .then(async (response) => {
+                                  console.log(response);
+                                  if (response) {
+                                    if (response.code == 401) {
+                                      console.log(response);
+                                      const type = "Swap";
+                                      const wallettype = JSON.parse(walletType);
+                                      const chainType = "Eth";
+                                      const saveTransaction =
+                                        await SaveTransaction(
+                                          type,
+                                          response.tx,
+                                          wallettype,
+                                          chainType
+                                        )
+                                          .then((resp) => {
+                                            setLoading(false);
+                                            setLoader(false);
+                                            setTradeVisible(false);
+                                            setModalVisible(false);
+                                            setPinViewVisible(false);
+                                            alert(
+                                              "Your Tx Hash : " + response.tx
+                                            );
+                                            navigation.navigate("Transactions");
+                                          })
+                                          .catch((e) => {
+                                            setLoading(false);
+                                            setLoader(false);
+                                            setTradeVisible(false);
+                                            setPinViewVisible(false);
+                                            console.log(e);
+                                          });
+                                    } else if (response === 404) {
+                                      setLoading(false);
+                                      setLoader(false);
+                                      setTradeVisible(false);
+                                      setPinViewVisible(false);
+                                      return alert("pair not found");
+                                    } else {
+                                      setLoading(false);
+                                      setLoader(false);
+                                      setTradeVisible(false);
+                                      setPinViewVisible(false);
+                                      return alert(response);
+                                    }
+                                  } else {
+                                    setLoading(false);
+                                    setLoader(false);
+                                    setTradeVisible(false);
+                                    setPinViewVisible(false);
+                                    return alert("server error");
+                                  }
+                                })
+                                .catch((e) => {
+                                  setLoading(false);
+                                  setLoader(false);
+                                  setTradeVisible(false);
+                                  setPinViewVisible(false);
+                                  console.log(e);
+                                });
                             }
-                            else{
-                              await SwapTokensToTokens (Wallet.privateKey,Wallet.address,coin0.address,coin1.address,amount)
-                              .then(async (response)=>{
-                                console.log(response)
-                                if(response){
-                                  if(response.code==401){
-                                    console.log(response)
-                                    const type ='Swap'
-                                    const wallettype = JSON.parse( walletType )
-                                    const chainType = 'Eth'
-                                    const saveTransaction = await SaveTransaction(type,response.tx,wallettype,chainType)
-                                    .then((resp)=>{
-                                      setLoading(false)
-                                      setLoader(false)
-                                      setTradeVisible(false);
-                                      setModalVisible(false)
-                                      setPinViewVisible(false)
-                                      alert("Your Tx Hash : "+response.tx)
-                                      navigation.navigate('Transactions')
-                                    })
-                                    .catch((e)=>{
-                                      setLoading(false)
-                                      setLoader(false)
-                                      setTradeVisible(false);
-                                      setPinViewVisible(false)
-                                      console.log(e)
-                                    })
-                                  }else if(response===404){
-                                    setLoading(false)
-                                    setLoader(false)
-                                    setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert('pair not found')
-                                  }else{
-                                    setLoading(false)
-                                    setLoader(false)
-                                    setTradeVisible(false);
-                                    setPinViewVisible(false)
-                                    return alert(response)
-                                  }
-                                }else{
-                                  setLoading(false)
-                                  setLoader(false)
-                                  setTradeVisible(false);
-                                  setPinViewVisible(false)
-                                  return alert('server error')
-                                }
-                              }).catch((e)=>{
-                                setLoading(false)
-                                setLoader(false)
-                                setTradeVisible(false);
-                                setPinViewVisible(false)
-                                console.log(e)
-                              })
-                            }
+                          } else {
+                            setLoading(false);
+                            setLoader(false);
+                            setPinViewVisible(false);
+                            alert("no wallets found");
                           }
-                          else{
-                            setLoading(false)
-                            setLoader(false)
-                            setPinViewVisible(false)
-                            alert('no wallets found')
-                          }
-                        }else if(swapType==='BSC'){
-                          const swap = await pancakeSwap(Wallet.privateKey)
-                          setLoading(false)
-                          setLoader(false)
-                          setModalVisible(false)
+                        } else if (swapType === "BSC") {
+                          const swap = await pancakeSwap(Wallet.privateKey);
+                          setLoading(false);
+                          setLoader(false);
+                          setModalVisible(false);
                           setTradeVisible(false);
-                          setPinViewVisible(false)
+                          setPinViewVisible(false);
                         }
-                        
                       }
-                    }catch(e){
-                      setLoading(false)
-                      setLoader(false)
+                    } catch (e) {
+                      setLoading(false);
+                      setLoader(false);
                       setTradeVisible(false);
-                      setPinViewVisible(false)
-                      console.log(e)
+                      setPinViewVisible(false);
+                      console.log(e);
                     }
+                  } else {
+                    setLoader(false);
+                    setLoading(false);
+                    alert("invalid pin.please try again!");
                   }
-                  else{
-                    setLoader(false)
-                    setLoading(false)
-                    alert('invalid pin.please try again!')
-                  }
-                 
+                }
+              }}
+              customLeftButton={
+                showRemoveButton ? (
+                  <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
+                ) : undefined
               }
-             
-            }}
-            customLeftButton={showRemoveButton ? <Icon name={"ios-backspace"} size={36} color={"#FFF"} /> : undefined}
-            customRightButton={showCompletedButton ? <Icon name={"ios-chevron-forward-circle"} size={36} color={"#FFF"} /> : undefined}
+              customRightButton={
+                showCompletedButton ? (
+                  <Icon
+                    name={"ios-chevron-forward-circle"}
+                    size={36}
+                    color={"#FFF"}
+                  />
+                ) : undefined
+              }
             />
-  
+          </View>
+        </View>
+      </Animated.View>
+    </Modal>
+  );
+};
 
-    
-            </View>
-    </View>
-        </Animated.View>
-        </Modal>
-  )
-}
-
-export default SwapPinModal
+export default SwapPinModal;
 
 const style = StyleSheet.create({
-    Body:{
-        display:'flex',
-        backgroundColor:'#131E3A',
-        height:hp(95),
-        width:wp(90),
-        alignItems:'center',
-        textAlign:'center',
-    },
-    welcomeText:{
-        fontSize:20,
-        fontWeight:'200',
-        color:'white',
-        marginTop:hp(5)
-    },
-    welcomeText2:{
-        fontSize:20,
-        fontWeight:'200',
-        color:'white',
-        marginTop:hp(10)
-    },
-    Button:{
-        marginTop:hp(20)
-    },
-    tinyLogo: {
-        width: wp('5'),
-        height: hp('5'),
-        padding:30,
-        marginTop:hp(10)
-      },
-      Text:{
-        marginTop:hp(5),
-        fontSize:15,
-        fontWeight:'200',
-        color:'white',
-      }
-})
+  Body: {
+    display: "flex",
+    backgroundColor: "#131E3A",
+    height: hp(95),
+    width: wp(90),
+    alignItems: "center",
+    textAlign: "center",
+  },
+  welcomeText: {
+    fontSize: 20,
+    fontWeight: "200",
+    color: "white",
+    marginTop: hp(5),
+  },
+  welcomeText2: {
+    fontSize: 20,
+    fontWeight: "200",
+    color: "white",
+    marginTop: hp(10),
+  },
+  Button: {
+    marginTop: hp(20),
+  },
+  tinyLogo: {
+    width: wp("5"),
+    height: hp("5"),
+    padding: 30,
+    marginTop: hp(10),
+  },
+  Text: {
+    marginTop: hp(5),
+    fontSize: 15,
+    fontWeight: "200",
+    color: "white",
+  },
+});

@@ -47,7 +47,8 @@ export const NewBidModal = ({ offer }) => {
       const { err, res } = await authRequest('/bids/addNewBid', POST, newBid)
       if (err) {
         setLoading(false)
-        return setModalMessage(`${err.status}: ${err.message}`)
+        console.log(err)
+        return setModalMessage(`${err.message}`)
       }
       if(res){
         console.log(res)
@@ -71,7 +72,7 @@ export const NewBidModal = ({ offer }) => {
 
   const handleSubmit = async () => {
     setLoading(true)
-    const fcmRegTokens = "FCM.NOTIFICATION.TOKEN"//getRegistrationToken()
+    const fcmRegTokens = 'FCM.NOTIFICATION.TOKEN'//await getRegistrationToken()
     console.log(fcmRegTokens)
     // data validation
     if (!newBid.pricePerUnit) return setModalMessage('All fields are required')
