@@ -15,6 +15,7 @@ import { Animated } from "react-native";
 import title_icon from "../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import { Generate_Wallet2 } from "../components/Redux/actions/auth";
+
 import {
   AddToAllWallets,
   getBalance,

@@ -7,8 +7,11 @@ import { getAuth } from "./api";
 import { AccountView } from "./pages/account";
 import { TransactionView } from "./pages/transaction";
 import { NativeRouter, Route, Link, Routes } from "react-router-native";
-import { requestFirebaseNotificationPermission } from "./utils/fcmHandler";
-
+import { OnScreenNotification } from './components/onScreenNotification'
+import {
+  onMessageListener,
+  requestFirebaseNotificationPermission,
+} from './utils/fcmHandler'
 const Home = () => {
   return (
     <View>
@@ -111,8 +114,21 @@ const ExchangeRoutes = () => {
     requestFirebaseNotificationPermission();
   }, []);
 
+  onMessageListener()
+  .then((payload) => {
+    console.log('Notification', payload) //test...
+    setNotification(payload.data)
+  })
+  .catch((err) => console.log('recieve failed: ', err))
+
   return (
     <View style={{ backgroundColor: "white" }}>
+      {notification && (
+        <OnScreenNotification
+          notification={notification}
+          setNotification={setNotification}
+        />
+      )}
       <Exchange pressed={pressed} setPressed={setPressed} />
     </View>
   );

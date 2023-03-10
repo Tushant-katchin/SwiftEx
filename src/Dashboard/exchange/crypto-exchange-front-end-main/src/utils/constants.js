@@ -233,5 +233,13 @@ export const NOTIFICATION_TYPES = {
   OFFER_FINALIZED: 'OFFER_FINALIZED',
 };
 
+export const OFFER_STATUS_ENUM = {
+  ACTIVE: 'ACTIVE',
+  MATCHED: 'MATCHED',
+  CANCELED: 'CANCELED',
+  FINALIZIED: 'FINALIZIED',
+};
+
+
 export const GOERLI_ETHERSCAN = 'https://goerli.etherscan.io'
 export const APP_FEE_PERCENTAGE = 0.005

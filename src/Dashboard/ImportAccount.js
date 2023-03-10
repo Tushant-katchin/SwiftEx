@@ -92,9 +92,7 @@ const ImportAccount = (props) => {
         <TouchableOpacity
           style={style.Box}
           onPress={() => {
-            props.navigation.navigate("Import Multi-Coin Wallet", {
-              emailId: props.route.params.emailId,
-            });
+            props.navigation.navigate("Import Multi-Coin Wallet");
           }}
         >
           <Card

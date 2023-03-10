@@ -30,7 +30,7 @@ const OfferFinalized = ({ notification, setNotification }) => {
     <View >
       <Text>Offer Finalised!</Text>
       <Text>{notification.message}</Text>
-      <Button onPress={onProceed}>See Your Offers</Button>
+      <Button title='See Your Offers' onPress={onProceed}>See Your Offers</Button>
     </View>
   )
 }

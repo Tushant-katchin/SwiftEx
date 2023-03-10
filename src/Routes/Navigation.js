@@ -382,8 +382,7 @@ const NavigationProvider = () => {
   const[extended, setExtended]=useState(false)
   const[state, setState]=useState(statee)
   
-  
-  
+
   const updateState=(()=>{
     let data = store.getState()
     return setState(data)

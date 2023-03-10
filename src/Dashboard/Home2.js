@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, Text, View, AppState } from "react-native";
+import { StyleSheet, Text, View, AppState, BackHandler, Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setWalletType } from "../components/Redux/actions/auth";
 import {
@@ -12,7 +12,6 @@ import { Animated, Platform, UIManager } from "react-native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { setCurrentWallet } from "../components/Redux/actions/auth";
 import { useWindowDimensions } from "react-native";
-import * as Notifications from "expo-notifications";
 import {
   TabView,
   SceneMap,
@@ -20,14 +19,10 @@ import {
   TabBarIndicator,
 } from "react-native-tab-view";
 import {
-  useNavigation,
-  useRoute,
-  useNavigationState,
-  getFocusedRouteNameFromRoute,
+  useRoute
 } from "@react-navigation/native";
-import PushNotification from "react-native-push-notification";
-import PushNotifications from "./notifications/pushController";
-import { LocalNotification } from "./notifications/pushController";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import useFirebaseCloudMessaging from "./notifications/firebaseNotifications"; 
 const Home2 = ({ navigation }) => {
   const route = useRoute();
   const state = useSelector((state) => state);
@@ -41,6 +36,11 @@ const Home2 = ({ navigation }) => {
     { key: "second", title: "NFTs" },
   ]);
   const Navigation = useNavigation();
+
+  const {
+    getToken,
+    requestUserPermission
+  } = useFirebaseCloudMessaging()
 
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -100,26 +100,6 @@ const Home2 = ({ navigation }) => {
     second: SecondRoute,
   });
 
-  async function registerForPushNotificationsAsync() {
-    let token;
-
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log("Notifications Token",token);
-    
-
-    return token;
-}
 
   useEffect(async () => {
     // getWallets(state.user, readData,dispatch, importAllWallets)
@@ -141,9 +121,7 @@ const Home2 = ({ navigation }) => {
     await SetCurrentWallet();
   }, []);
 
-  useEffect(async ()=>{
-    //await registerForPushNotificationsAsync();
-  },[])
+ 
 
   useEffect(() => {
     AppState.addEventListener("change", (changedState) => {
@@ -159,6 +137,31 @@ const Home2 = ({ navigation }) => {
       }
     });
   }, []);
+  
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        Alert.alert("Hold on!", "Are you sure you want to exit?", [
+          { text: "Cancel" },
+          { text: "Yes", onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => backHandler.remove();
+    }, [])
+  );
+
+  useEffect(() => {
+    requestUserPermission()
+    getToken()
+  }, [])
 
   return (
     <Animated.View style={{ backgroundColor: "#000C66" }}>

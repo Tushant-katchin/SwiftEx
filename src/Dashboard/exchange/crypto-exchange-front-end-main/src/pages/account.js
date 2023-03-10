@@ -29,8 +29,14 @@ const ExternalAccountsListView = ({ externalAccounts }) => {
         </DataTable.Header>
         {externalAccounts.length ? (
           <>
-            {externalAccounts.map((account) => (
-              <DataTable.Row key={account.id}>
+            {externalAccounts.map((accounts) => {
+             let account = JSON.parse(JSON.stringify(accounts))
+              return(
+                <View style={{ width: wp(100),
+                  height: hp(80),
+                  color: "black"}}>
+
+                <DataTable.Row key={account.id}>
                 <DataTable.Cell>{account.bank_name}</DataTable.Cell>
                 <DataTable.Cell>{account.account_holder_name}</DataTable.Cell>
                 <DataTable.Cell>
@@ -39,7 +45,9 @@ const ExternalAccountsListView = ({ externalAccounts }) => {
                 <DataTable.Cell>{account.country}</DataTable.Cell>
                 <DataTable.Cell>{account.currency}</DataTable.Cell>
               </DataTable.Row>
-            ))}
+                </View>
+                )
+})}
           </>
         ) : (
           <DataTable.Row>
@@ -200,8 +208,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
-    width: wp(95),
-    padding: 10,
+    width: wp(100),
     height: hp(100),
   },
   scrollView: {

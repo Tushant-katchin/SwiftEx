@@ -21,6 +21,7 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
+import { useNavigation } from "@react-navigation/native";
 
 const ImportXrpWalletModal = ({
   props,
@@ -37,7 +38,7 @@ const ImportXrpWalletModal = ({
   const [privateKey, setPrivateKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
-
+  const navigation = useNavigation()
   const dispatch = useDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -195,6 +196,7 @@ const ImportXrpWalletModal = ({
                 setLoading(true);
                 if (label === "mnemonic") {
                   try {
+                    console.log('mnemonic'+ mnemonic)
                     /*Wallet {
   "classicAddress": "rBF6yd1gkfBQ4DbgjjFb8eG2QNPHYGgyZH",
   "privateKey": "ED3C6A54C6B61A02CF1739FAA2E1D7CD2384CFB23ABE5B8C6C94E13552E196FA5C",
@@ -285,6 +287,7 @@ const ImportXrpWalletModal = ({
                   }
                 } else {
                   try {
+                    console.log("hi"+privateKey)
                     const walletPrivateKey = xrpl.Wallet.fromSecret(privateKey);
                     console.log(walletPrivateKey);
                     const privatekey = walletPrivateKey.seed;

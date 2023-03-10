@@ -13,7 +13,9 @@ import {
 } from "react-native-responsive-screen";
 
 import { getRegistrationToken } from "../utils/fcmHandler";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 export const HomeView = (props) => {
   const state = useSelector((state) => state);
   const [open, setOpen] = useState(false);
@@ -27,6 +29,7 @@ export const HomeView = (props) => {
     isEmailVerified: true,
   });
   const [offers, setOffers] = useState();
+  const[change, setChange] = useState(false)
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
   useEffect(() => {
@@ -34,7 +37,12 @@ export const HomeView = (props) => {
     getOffersData();
    // syncDevice()
   }, []);
-
+  useEffect(() => {
+    fetchProfileData();
+    getOffersData();
+   // syncDevice()
+  }, [change]);
+   const navigation = useNavigation()
   const syncDevice = async () => {
     const token = await getRegistrationToken();
     console.log("hi", token);
@@ -126,6 +134,21 @@ export const HomeView = (props) => {
                     color={"green"}
                     onPress={() => setOpen(true)}
                   ></Button>
+                  <View 
+                  style={{marginTop:10}}
+                  >
+
+                  <Button
+                  
+                  title="logout"
+                  color='red'
+                  onPress={()=>{
+                    const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+                    AsyncStorage.removeItem(LOCAL_TOKEN);
+                    navigation.navigate("Settings");
+                  }}
+                  ></Button>
+                  </View>
                   <NewOfferModal
                     user={profile}
                     open={open}
@@ -142,7 +165,7 @@ export const HomeView = (props) => {
         <View style={styles.container}>
           <Text>Your Offers</Text>
 
-          <OfferListView self={true} profile={profile} offers={offers} />
+          <OfferListView self={true} profile={profile} offers={offers} setChange={setChange}/>
         </View>
         <View style={{ marginTop: offers ? hp(36) : 0 }}>
           <Text>Your Bids</Text>

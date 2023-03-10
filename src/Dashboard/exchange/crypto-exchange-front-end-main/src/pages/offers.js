@@ -19,7 +19,7 @@ import {
 } from "react-native-responsive-screen";
 import { Provider as PaperProvider } from "react-native-paper";
 
-export const OfferListView = ({ self = false, offers, profile }) => {
+export const OfferListView = ({ self = false, offers, profile, setChange }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -56,7 +56,7 @@ export const OfferListView = ({ self = false, offers, profile }) => {
                             <DataTable.Cell>{offer.status}</DataTable.Cell>
                           </DataTable.Row>
                         </ScrollView>
-                        <OfferBidsView offer={offer} self={self} />
+                        <OfferBidsView offer={offer} self={self} setChange={setChange} />
                       </View>
                     </>
                   )
@@ -75,7 +75,7 @@ export const OfferListView = ({ self = false, offers, profile }) => {
                       </DataTable.Row>
                       <View style={{ display: "flex", flexDirection: "row" }}>
                         <View style={{ marginLeft: 10 }}>
-                          <OfferBidsView offer={offer} />
+                          <OfferBidsView offer={offer} setChange={setChange} />
                         </View>
                         <View style={{ marginLeft: 10 }}>
                           <NewBidModal offer={offer} />
@@ -98,6 +98,7 @@ export const OfferListView = ({ self = false, offers, profile }) => {
 export const OfferView = (props) => {
   const [message, setMessage] = useState();
   const [offers, setOffers] = useState();
+  const[change,setChange] = useState(false)
   const [profile, setProfile] = useState({
     isVerified: false,
     firstName: "tushant",
@@ -115,6 +116,11 @@ export const OfferView = (props) => {
     getOffersData();
     fetchProfileData();
   }, []);
+
+  useEffect(() => {
+    getOffersData();
+    fetchProfileData();
+  }, [change]);
 
   useEffect(() => {
     if (searchParams) {
@@ -193,6 +199,7 @@ export const OfferView = (props) => {
             offers={offers}
             profile={profile}
             setMessage={setMessage}
+            setChange={setChange}
           />
         </View>
       </View>

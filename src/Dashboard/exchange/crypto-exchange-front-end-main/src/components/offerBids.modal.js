@@ -4,12 +4,15 @@ import { StyleSheet, Text, View,  Button, TouchableOpacity, ScrollView} from "re
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Modal2 from "react-native-modal";
 import { ActivityIndicator, DataTable } from 'react-native-paper'
-
-export const OfferBidsView = ({ offer, self = false }) => {
+import { OFFER_STATUS_ENUM } from '../utils/constants'
+import { PATCH } from '../api';
+export const OfferBidsView = ({ offer, self = false , setChange}) => {
   const [modalMessage, setModalMessage] = useState('')
   const [bids, setBids] = useState()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCancelling, setIsCancelling] = useState(false)
   const[loading,setLoading] = useState(false)
+
   const[open,setOpen] = useState(false)
   const handleOpen = () => {
     setOpen(true)
@@ -23,7 +26,7 @@ export const OfferBidsView = ({ offer, self = false }) => {
   }, [])
   useEffect(() => {
     getOfferDetails()
-  }, [open])
+  }, [open,loading,isSubmitting,isCancelling])
 
   const getOfferDetails = async () => {
     try {
@@ -40,6 +43,7 @@ export const OfferBidsView = ({ offer, self = false }) => {
   }
 
   const acceptBid = async (bid) => {
+    setChange(true)
     try {
       setIsSubmitting(true)
       const { err } = await authRequest(`/offers/acceptABid`, POST, {
@@ -51,9 +55,11 @@ export const OfferBidsView = ({ offer, self = false }) => {
         setLoading(false)
         return setModalMessage(`${err.message}`)
       } 
+      getOfferDetails()
       setModalMessage('success')
       setLoading(false)
       setOpen(false)
+      setChange(false)
       return alert('Bid Accepted Successfully')
     } catch (err) {
       console.log(err)
@@ -63,6 +69,33 @@ export const OfferBidsView = ({ offer, self = false }) => {
     } finally {
       setLoading(false)
       setIsSubmitting(false)
+      getOfferDetails()
+    }
+  }
+
+  const cancelBid = async () => {
+    try {
+      setChange(true)
+      setIsCancelling(true)
+      const { err } = await authRequest(
+        `/offers/cancelMatchedBid/${offer._id}`,
+        PATCH
+      )
+      if (err) return setModalMessage(`${err.message}`)
+      getOfferDetails()
+      setModalMessage('success')
+      setLoading(false)
+      setOpen(false)
+      return alert('Bid Cancelled Successfully')
+    } catch (err) {
+      console.log(err)
+      setModalMessage(err.message || 'Something went wrong')
+      setLoading(false)
+      setChange(false)
+    } finally {
+      setIsCancelling(false)
+      setLoading(false)
+      getOfferDetails()
     }
   }
 
@@ -122,34 +155,60 @@ export const OfferBidsView = ({ offer, self = false }) => {
                           {bid.user.firstName} {bid.user.lastName}
                         </DataTable.Cell >
                         <DataTable.Cell >{bid.status}</DataTable.Cell >
-                        {self&&(
+                        {self&& !offer.winnerBid ? (
 
                           
                           <View>
                           
                           <Button
-                            title='Accept Bid'
+                            title={'Accept bid'}
                             
                             //loading={isSubmitting}
                             color={'blue'}
-                            onPress={() => {
+                            onPress={async () => {
                               setLoading(true)
                               acceptBid(bid)
+                              
                             }}
                             >
                             </Button>
                               </View>
+                        ): bid._id === offer.winnerBid && self &&
+                              offer.status === OFFER_STATUS_ENUM.MATCHED ? (
+                                <View>
+                                <Button
+                                title={'Cancel bid'}
+                                color={'red'}
+                                  //loading={isCancelling}
+                                  onPress={async () =>{
+                                    setLoading(true)
+                                    cancelBid()
+                                    
+                                  }
+                                  }
+                                >
+                                  Cancel Bid
+                                </Button>
+                                </View>
+                            ) : (
+                              <View>
+
+                                <Button title='No actions'
+                                color={'blue'}>No Actions</Button>
+                                </View>
+                            
                             )
                             }
                             
                             </DataTable.Row >
                     </>
                   ))
-                  ) : (
+                  ) :  (
                     <DataTable.Row>
                     <DataTable.Cell >No bids found</DataTable.Cell >
                   </DataTable.Row>
                 )}
+                {loading?<ActivityIndicator size={'large'} color={'blue'} />:<View></View>}
             </DataTable>
           ) : (
             <Text>Loading...</Text>
