@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tokenmunzi.munzi"
-    },
+        },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -27,7 +27,7 @@
       },
       "package": "com.tokenmunzi.munzi",
       "softwareKeyboardLayoutMode": "pan"
-      
+       
     },
     "web": {
       "favicon": "./assets/favicon.png"
