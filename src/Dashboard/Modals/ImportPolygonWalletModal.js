@@ -30,6 +30,7 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
+import ModalHeader from "../reusables/ModalHeader";
 
 const ImportPolygonWalletModal = ({
   props,
@@ -48,6 +49,10 @@ const ImportPolygonWalletModal = ({
   const [jsonKey, setJsonKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
+  const [message,setMessage] = useState(false)
+  const [disable, setDisable] = useState(true)
+  
+  const[text,setText] = useState('')
 
   const navigation = useNavigation();
 
@@ -102,6 +107,10 @@ const ImportPolygonWalletModal = ({
     return response;
   }
 
+  const closeModal = ()=>{
+    setWalletVisible(false)
+  }
+  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -115,6 +124,42 @@ const ImportPolygonWalletModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
+  useEffect(()=>{
+    if(accountName && (privateKey || mnemonic || json))
+    {
+      let valid
+      if(label==='mnemonic'){
+        const phrase = mnemonic.trimStart();
+        const trimmedPhrase = phrase.trimEnd();
+        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
+        
+      }else if(label==='privateKey'){
+        valid = ethers.utils.isHexString(privateKey, 32);
+        if(!valid){
+          setMessage('Please enter a valid private key')
+        }
+        else{
+          setMessage('')
+        }
+      }
+      
+      if(accountName && (mnemonic || privateKey || json) && valid){
+        setDisable(false)
+      }else{
+        setDisable(true)
+      }
+    }else{
+      setMessage('')
+    }
+    },[mnemonic,privateKey,json])
+
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -126,6 +171,9 @@ const ImportPolygonWalletModal = ({
         animationOutTiming={650}
         isVisible={Visible}
         useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         statusBarTranslucent={true}
         onBackdropPress={() => setWalletVisible(false)}
         onBackButtonPress={() => {
@@ -133,24 +181,36 @@ const ImportPolygonWalletModal = ({
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal} name={'Matic'}/>
           <View style={style.Button}>
-            <View style={{ margin: 2, width: wp(32) }}>
+            <View style={{ margin: 2, width: wp(30) }}>
               <Button
                 title={"privateKey"}
                 color={label == "privateKey" ? "green" : "grey"}
                 onPress={() => {
                   setOptionVisible(false);
                   setLabel("privateKey");
+                  if(text){
+
+                    setPrivateKey(text)
+                  }
                 }}
               ></Button>
             </View>
-            <View style={{ margin: 2, width: wp(32) }}>
+            <View style={{ margin: 2, width: wp(30) }}>
               <Button
                 title={"Mnemonic"}
                 color={label == "mnemonic" ? "green" : "grey"}
                 onPress={() => {
                   setOptionVisible(false);
                   setLabel("mnemonic");
+                  if(text){
+
+                    setMnemonic(text)
+                  }
+                  
+                  
+                  
                 }}
               ></Button>
             </View>
@@ -161,6 +221,10 @@ const ImportPolygonWalletModal = ({
                 onPress={() => {
                   setLabel("JSON");
                   setOptionVisible(true);
+                  if(text){
+
+                    setJson(text)
+                  }
                 }}
               ></Button>
             </View>
@@ -185,10 +249,13 @@ const ImportPolygonWalletModal = ({
             style={style.textInput}
             onChangeText={(text) => {
               if (label === "privateKey") {
+                setText(text)
                 setPrivateKey(text);
               } else if (label === "mnemonic") {
+                setText(text)
                 setMnemonic(text);
               } else if (label === "JSON") {
+                setText(text)
                 setJson(text);
               } else {
                 return alert(`please input ${label} to proceed `);
@@ -237,10 +304,14 @@ const ImportPolygonWalletModal = ({
           ) : (
             <Text> </Text>
           )}
-          <View style={{ width: wp(90), margin: 10 }}>
+          <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
+        <Text style={{color:'red'}}>{message}</Text>
+        </View>
+          <View style={{ display:'flex',alignSelf:'center',width: wp(30), margin: 10 }}>
             <Button
               title={"Import"}
               color={"blue"}
+              disabled={disable}
               onPress={async () => {
                 const user = await AsyncStorageLib.getItem("user");
 
@@ -250,11 +321,16 @@ const ImportPolygonWalletModal = ({
                 setLoading(true);
                 if (label === "mnemonic") {
                   try {
+                    if(label==='mnemonic'){
+                      setMnemonic(text)
+                    }
                     const phrase = mnemonic.trimStart();
                     const trimmedPhrase = phrase.trimEnd();
                     const check = ethers.utils.isValidMnemonic(trimmedPhrase);
+                    console.log(trimmedPhrase)
                     if (!check) {
                       setLoading(false);
+                      setMnemonic('')
                       return alert(
                         "Incorrect Mnemonic. Please provide a valid Mnemonic"
                       );
@@ -268,23 +344,7 @@ const ImportPolygonWalletModal = ({
                       address: accountFromMnemonic.address,
                       privateKey: privateKey,
                     };
-                    /* const response = saveUserDetails(wallet.address).then(async (response)=>{
-                      
-                      if(response===400){
-                        return 
-                      }
-                     else if(response===401){
-                        return 
-                      }
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
-
-
-                    })*/
+           
                     const accounts = {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
@@ -320,28 +380,53 @@ const ImportPolygonWalletModal = ({
                     ];
                     // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                    dispatch(AddToAllWallets(allWallets, user));
+                    dispatch(AddToAllWallets(allWallets, user))
+                    .then(
+                      (response) => {
+                        if (response) {
+                          if (response.status === "Already Exists") {
+                            alert("Account with same name already exists");
+                            setLoading(false);
+                            return;
+                          } else if (response.status === "success") {
+                            setTimeout(() => {
+                      
+                              setLoading(false);
+                              setWalletVisible(false);
+                              setVisible(false);
+                              setModalVisible(false);
+                              navigation.navigate("AllWallets");
+                            }, 0);
+                          } else {
+                            alert("failed please try again");
+                            return;
+                          }
+                        }
+                      }
+                    );
+                    
                     // dispatch(getBalance(wallet.address))
-                    dispatch(setToken(token));
+                    //dispatch(setToken(token));
                     //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
 
-                    let result = [];
+                    
 
-                    setLoading(false);
-                    setWalletVisible(false);
-                    setVisible(false);
-                    setModalVisible(false);
-                    navigation.navigate("AllWallets");
+                    
                   } catch (e) {
                     console.log(e);
                     setLoading(false);
+                    setMnemonic('')
                     alert(e);
                   }
                 } else if (label === "privateKey") {
                   try {
+                    if(label==='privateKey'){
+                      setPrivateKey(text)
+                    }
                     const check = ethers.utils.isHexString(privateKey, 32);
                     if (!check) {
                       setLoading(false);
+                      setPrivateKey('')
                       return alert(
                         "Incorrect PrivateKey. Please provide a valid privatekey"
                       );
@@ -406,21 +491,39 @@ const ImportPolygonWalletModal = ({
                     ];
                     // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                    dispatch(AddToAllWallets(allWallets, user));
+                    dispatch(AddToAllWallets(allWallets, user))
+                    .then(
+                      (response) => {
+                        if (response) {
+                          if (response.status === "Already Exists") {
+                            alert("Account with same name already exists");
+                            setLoading(false);
+                            return;
+                          } else if (response.status === "success") {
+                            setTimeout(() => {
+                      
+                              setLoading(false);
+                              setWalletVisible(false);
+                              setVisible(false);
+                              setModalVisible(false);
+                              navigation.navigate("AllWallets");
+                            }, 0);
+                          } else {
+                            alert("failed please try again");
+                            return;
+                          }
+                        }
+                      }
+                    );
+                    
                     //  dispatch(getBalance(wallet.address))
 
                     //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
 
-                    let result = [];
-
-                    setLoading(false);
-                    setWalletVisible(false);
-                    setVisible(false);
-                    setModalVisible(false);
-                    navigation.navigate("AllWallets");
                   } catch (e) {
                     console.log(e);
                     setLoading(false);
+                    setPrivateKey('')
                     alert(e);
                   }
                 } else {
@@ -484,18 +587,35 @@ const ImportPolygonWalletModal = ({
                       ];
                       // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                      dispatch(AddToAllWallets(allWallets, user));
+                      dispatch(AddToAllWallets(allWallets, user))
+                      .then(
+                        (response) => {
+                          if (response) {
+                            if (response.status === "Already Exists") {
+                              alert("Account with same name already exists");
+                              setLoading(false);
+                              return;
+                            } else if (response.status === "success") {
+                              setTimeout(() => {
+                        
+                                setLoading(false);
+                                setWalletVisible(false);
+                                setVisible(false);
+                                setModalVisible(false);
+                                navigation.navigate("AllWallets");
+                              }, 0);
+                            } else {
+                              alert("failed please try again");
+                              return;
+                            }
+                          }
+                        }
+                      );
+                      
                       // dispatch(getBalance(wallet.address))
 
                       //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
 
-                      let result = [];
-
-                      setLoading(false);
-                      setWalletVisible(false);
-                      setVisible(false);
-                      setModalVisible(false);
-                      navigation.navigate("AllWallets");
                     })
                     .catch((e) => {
                       console.log(e);
@@ -526,7 +646,7 @@ const style = StyleSheet.create({
     display: "flex",
     backgroundColor: "white",
     height: hp(90),
-    width: wp(100),
+    width: wp(90),
     textAlign: "center",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
@@ -567,7 +687,7 @@ const style = StyleSheet.create({
     marginBottom: hp("2"),
     color: "black",
     marginTop: hp("2"),
-    width: wp("90"),
+    width: wp("85"),
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
@@ -575,7 +695,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     height: hp(20),
-    width: wp(90),
+    width: wp(85),
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",
@@ -592,7 +712,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     height: hp(5),
-    width: wp(90),
+    width: wp(85),
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",
@@ -602,6 +722,7 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
+    backgroundColor:'white',
 
     elevation: 24,
   },

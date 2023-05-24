@@ -15,7 +15,7 @@ import {
 import { Animated } from "react-native";
 import title_icon from "../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { Generate_Wallet2 } from "../components/Redux/actions/auth";
+import { Generate_Wallet2, getXrpBalance } from "../components/Redux/actions/auth";
 import {
   AddToAllWallets,
   getBalance,
@@ -31,8 +31,9 @@ import { urls } from "./constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
-import { ethers } from "ethers";
 import { genUsrToken } from "./Auth/jwtHandler";
+import {  utils } from "xrpl-accountlib"
+import { ethers } from "ethers";
 const ImportXrp = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -43,6 +44,10 @@ const ImportXrp = (props) => {
   const [privateKey, setPrivateKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
+  const [disable, setDisable] = useState(true)
+  const [ message, setMessage] = useState('')
+ 
+  const[text,setText] = useState('')
 
   const dispatch = useDispatch();
 
@@ -50,54 +55,7 @@ const ImportXrp = (props) => {
 
   const Spin = new Animated.Value(0);
 
-  async function saveUserDetails(address) {
-    let response;
-    try {
-      response = await fetch(`http://${urls.testUrl}/user/createUser`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          walletAddress: address,
-          user: accountName,
-        }),
-      })
-        .then((response) => response.json())
-        .then(async (responseJson) => {
-          console.log(responseJson);
-          console.log(responseJson);
-          if (responseJson.responseCode === 200) {
-            alert("success");
-          } else if (responseJson.responseCode === 400) {
-            return {
-              code: responseJson.responseCode,
-              message:
-                "account with same name already exists. Please use a different name",
-            };
-          } else {
-            return {
-              code: 401,
-              message: "Unable to create account. Please try again",
-            };
-          }
-          return {
-            code: responseJson.responseCode,
-            token: responseJson.responseData,
-          };
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    } catch (e) {
-      console.log(e);
-      alert(e);
-    }
-    console.log(response);
-    return response;
-  }
-
+  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -110,6 +68,46 @@ const ImportXrp = (props) => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
+
+  useEffect(()=>{
+    if(accountName && (mnemonic ||  privateKey)){
+      let valid
+      if(label==='mnemonic'){
+        const phrase = mnemonic.trimStart();
+        const trimmedPhrase = phrase.trimEnd();
+        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
+        
+      }else if(label==='privateKey'){
+      
+       valid = utils.isValidSeed(privateKey)
+       if(!valid){
+         setMessage('Please enter a valid private key')
+        }
+        else{
+          setMessage('')
+        }
+      console.log(valid)
+      }else{
+        setMessage('')
+      }
+      
+      if( accountName && (mnemonic || privateKey) && valid)
+      {
+        setDisable(false)
+      }
+      else{
+        setDisable(true)
+      }
+    }else{
+      setMessage('')
+    }
+  },[mnemonic,privateKey])
 
   return (
     <Animated.View // Special animatable View
@@ -124,6 +122,9 @@ const ImportXrp = (props) => {
               onPress={() => {
                 setOptionVisible(false);
                 setLabel("mnemonic");
+                if(text){
+                  setMnemonic(text)
+                }
               }}
             ></Button>
           </View>
@@ -134,6 +135,9 @@ const ImportXrp = (props) => {
               onPress={() => {
                 setLabel("privateKey");
                 setOptionVisible(true);
+                if(text){
+                  setPrivateKey(text)
+                }
               }}
             ></Button>
           </View>
@@ -159,8 +163,12 @@ const ImportXrp = (props) => {
           onChangeText={(text) => {
             if (label === "mnemonic") {
               setMnemonic(text);
+              setText(text)
+
             } else if (label === "privateKey") {
               setPrivateKey(text);
+              setText(text)
+
             } else {
               return alert(`please input ${label} to proceed `);
             }
@@ -179,10 +187,15 @@ const ImportXrp = (props) => {
         ) : (
           <Text> </Text>
         )}
+        <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
+        <Text style={{color:'red'}}>{message}</Text>
+        </View>
+        
         <View style={{ width: wp(95), margin: 10 }}>
           <Button
             title={"Import"}
             color={"blue"}
+            disabled={disable}
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
               if (!accountName) {
@@ -205,7 +218,7 @@ const ImportXrp = (props) => {
                     const privateKey = accountFromMnemonic.seed;
                     const wallet = {
                       classicAddress: accountFromMnemonic.classicAddress,
-                      address: accountFromMnemonic.publicKey,
+                      address: accountFromMnemonic.classicAddress,
                       privateKey: privateKey,
                     };
                     /*const response = await saveUserDetails(wallet.address).then((response)=>{
@@ -231,7 +244,7 @@ const ImportXrp = (props) => {
 
                     const accounts = {
                       classicAddress: wallet.classicAddress,
-                      address: wallet.address,
+                      address: wallet.classicAddress,
                       privateKey: privateKey,
                       name: accountName,
                       walletType: "Xrp",
@@ -242,7 +255,7 @@ const ImportXrp = (props) => {
                     const allWallets = [
                       {
                         classicAddress: wallet.classicAddress,
-                        address: wallet.address,
+                        address: wallet.classicAddress,
                         privateKey: privateKey,
                         name: accountName,
                         walletType: "Xrp",
@@ -262,14 +275,15 @@ const ImportXrp = (props) => {
                     dispatch(setUser(accountName));
                     dispatch(
                       setCurrentWallet(
-                        wallet.address,
+                        wallet.classicAddress,
                         accountName,
                         privateKey,
                         wallet.classicAddress
                       )
                     );
+                    
                     dispatch(AddToAllWallets(wallets, accountName));
-                    dispatch(getBalance(wallet.address));
+                    dispatch(getXrpBalance(wallet.address));
                     dispatch(setToken(token));
                     //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
                     dispatch(setWalletType("Xrp"));
@@ -287,7 +301,7 @@ const ImportXrp = (props) => {
                     console.log(walletPrivateKey);
                     const privatekey = walletPrivateKey.seed;
                     const wallet = {
-                      address: walletPrivateKey.publicKey,
+                      address: walletPrivateKey.classicAddress,
                       privateKey: privatekey,
                       classicAddress: walletPrivateKey.classicAddress,
                     };
@@ -313,7 +327,7 @@ const ImportXrp = (props) => {
 
                     const accounts = {
                       classicAddress: wallet.classicAddress,
-                      address: wallet.address,
+                      address: wallet.classicAddress,
                       privateKey: privateKey,
                       name: accountName,
                       walletType: "Xrp",
@@ -324,7 +338,7 @@ const ImportXrp = (props) => {
                     const allWallets = [
                       {
                         classicAddress: wallet.classicAddress,
-                        address: wallet.address,
+                        address: wallet.classicAddress,
                         privateKey: privateKey,
                         name: accountName,
                         walletType: "Xrp",

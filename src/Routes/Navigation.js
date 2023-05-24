@@ -38,12 +38,15 @@ import ExchangeRoutes from "../Dashboard/exchange/crypto-exchange-front-end-main
 import { ExchangeLogin } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
 import { ExchangeRegister } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/signup";
 import LockApp from "../Dashboard/lockApp";
+import { navigationRef } from "../utilities/utilities";
+import { ExchangeNavigation } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/Navigation";
+import BiometricPage from "../Dashboard/BiometricPage";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
 
   
-  <NavigationContainer theme={{ colors: { background: '#000C66' }}} >
+  <NavigationContainer theme={{ colors: { background: '#000C66' }}} ref={navigationRef} >
     <Stack.Navigator initialRouteName="Passcode" mode='modal' 
     screenOptions={{
       animation: "slide_from_right",
@@ -318,7 +321,7 @@ const AuthStack = () => (
 <Stack.Screen
         name="AllWallets"
         component={AllWallets}
-        options={{ headerShown: false,
+        options={{ headerShown: true,
           headerStyle:{backgroundColor:'#000C66'},
           headerTintColor: 'white',
           headerTitleStyle: {
@@ -326,11 +329,22 @@ const AuthStack = () => (
           },
          }}
       />
-
+<Stack.Screen
+        name="Biometric"
+        component={BiometricPage}
+        options={{ headerShown: true,
+          headerStyle:{backgroundColor:'#000C66'},
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+         }}
+      />
 <Stack.Screen
         name="exchangeLogin"
         component={ExchangeLogin}
-        options={{ headerShown: false,
+        
+        options={{ headerShown: true,
           headerStyle:{backgroundColor:'#000C66'},
           headerTintColor: 'white',
           headerTitleStyle: {
@@ -341,7 +355,7 @@ const AuthStack = () => (
 <Stack.Screen
         name="exchangeRegister"
         component={ExchangeRegister}
-        options={{ headerShown: false,
+        options={{ headerShown: true,
           headerStyle:{backgroundColor:'#000C66'},
           headerTintColor: 'white',
           headerTitleStyle: {
@@ -352,8 +366,9 @@ const AuthStack = () => (
 
 <Stack.Screen
         name="exchange"
-        component={ExchangeRoutes}
-        options={{ headerShown: false,
+        component={ExchangeNavigation}
+        options={{ headerShown: true,
+          
           headerStyle:{backgroundColor:'#000C66'},
           headerTintColor: 'white',
           headerTitleStyle: {
@@ -364,6 +379,7 @@ const AuthStack = () => (
       <Stack.Screen
         name="appLock"
         component={LockApp}
+        
         options={{ headerShown: false,
           headerStyle:{backgroundColor:'#000C66'},
           headerTintColor: 'white',

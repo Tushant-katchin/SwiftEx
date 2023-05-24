@@ -64,6 +64,7 @@ export const CoinDetails = (props) => {
         console.log(e);
       });
   }
+  
   useEffect(() => {
     getchart(props.route.params.data.symbol);
   }, []);
@@ -101,19 +102,20 @@ export const CoinDetails = (props) => {
             name={props.route.params.data.symbol}
           />
         </Card.Content>
+        
         <Card.Content>
           <Paragraph
             style={{
               color: color,
               marginLeft: wp("1"),
-              marginTop: hp("13"),
+              marginTop: hp(25),
               fontWeight: "bold",
             }}
           >
             Last 24h: {props.route.params.data.price_change_percentage_24h}%
           </Paragraph>
           <Paragraph
-            style={{ color: "#fff", marginTop: hp("3"), fontWeight: "bold" }}
+            style={{ color: "#fff", marginTop: hp("1"), fontWeight: "bold" }}
           >
             {" "}
             $ {props.route.params.data.current_price}

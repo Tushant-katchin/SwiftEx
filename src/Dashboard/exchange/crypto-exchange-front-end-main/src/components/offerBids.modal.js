@@ -119,6 +119,9 @@ export const OfferBidsView = ({ offer, self = false , setChange}) => {
         animationOutTiming={200}
         isVisible={open}
         useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         onBackdropPress={()=>{
           setOpen(false)
         }}
@@ -128,9 +131,10 @@ export const OfferBidsView = ({ offer, self = false , setChange}) => {
         }}
         >
           <View style={{
+            
       height: hp(50),
       width:wp(80),
-      backgroundColor:'white',
+      backgroundColor:'#E2808A',
       borderTopRightRadius:10,
       borderTopLeftRadius:10}} >
         <View style={{alignItems:'center'}}>
@@ -147,7 +151,7 @@ export const OfferBidsView = ({ offer, self = false , setChange}) => {
                   {self && <DataTable.Title></DataTable.Title>}
               </DataTable.Header>
                 {bids.length ? (
-                  bids.map((bid) => (
+                  bids.map((bid, index) => (
                     <>
                       <DataTable.Row  key={bid._id}>
                         <DataTable.Cell >{bid.pricePerUnit}</DataTable.Cell >
@@ -173,7 +177,7 @@ export const OfferBidsView = ({ offer, self = false , setChange}) => {
                             >
                             </Button>
                               </View>
-                        ): bid._id === offer.winnerBid && self &&
+                        ): self && bid._id === offer.winnerBid &&
                               offer.status === OFFER_STATUS_ENUM.MATCHED ? (
                                 <View>
                                 <Button
@@ -225,6 +229,7 @@ const styles = StyleSheet.create({
   container: {
     width:wp(80),
     height:hp(70),
+    color:'black'
   },
   scrollView:{
     width:wp(90),
@@ -238,6 +243,7 @@ const styles = StyleSheet.create({
       alignContent:'center',
       alignItems:'center',
       textAlign:'center',
+      color:'black'
     
   },
   content:{
@@ -245,7 +251,8 @@ const styles = StyleSheet.create({
     alignContent:'center',
     alignItems:'center',
     textAlign:'center',
-    height:hp(100)
+    height:hp(100),
+    color:'black'
   },
   
 })

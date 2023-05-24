@@ -12,6 +12,7 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import axios from "axios";
 import {
@@ -28,6 +29,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const Market = (props) => {
   const [data, setData] = useState();
@@ -37,7 +39,7 @@ const Market = (props) => {
   const [percent, setPercent] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-
+  const navigation = useNavigation()
   const fetchKline = async (
     setData,
     setLoading,
@@ -104,6 +106,10 @@ const Market = (props) => {
   let logo = "https://static.alchemyapi.io/images/assets/3408.png";
   let LeftContent;
 
+  
+
+
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ height: hp(75) }}>
@@ -161,7 +167,7 @@ const Market = (props) => {
                             fontWeight: "bold",
                           }}
                         >
-                          Last 24h: {item.price_change_percentage_24h}%
+                          Last 24h: {item.price_change_percentage_24h?item.price_change_percentage_24h.toFixed(1):'0'}%
                         </Paragraph>
                         <Paragraph
                           style={{
@@ -171,7 +177,7 @@ const Market = (props) => {
                           }}
                         >
                           {" "}
-                          $ {item.current_price}
+                          $ {item.current_price?item.current_price.toFixed(2):'0'}
                         </Paragraph>
                       </Card.Content>
                     </Card>

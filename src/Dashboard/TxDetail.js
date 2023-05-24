@@ -1,24 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect,  useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  Button,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-  ScrollView,
 } from "react-native";
-import { Avatar, Card, Title, Paragraph, CardItem } from "react-native-paper";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import { urls } from "./constants";
 import { WebView } from "react-native-webview";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 
 export const TxDetail = (props) => {
@@ -42,10 +28,14 @@ export const TxDetail = (props) => {
       } else if (JSON.parse(Type) == "Multi-coin") {
         if (props.route.params.data.chainType === "Eth") {
           setWalletType("Ethereum");
+        }else if (props.route.params.data.chainType === "eth") {
+          setWalletType("Ethereum");
         } else if (props.route.params.data.chainType === "BSC") {
           setWalletType("BSC");
         } else if (props.route.params.data.chainType === "Matic") {
           setWalletType("Matic");
+        } else if (props.route.params.data.chainType === "Xrp") {
+          setWalletType("Xrp");
         } else {
           return alert(
             "no chainType found in multi-coin transaction. Error 404"
@@ -65,6 +55,8 @@ export const TxDetail = (props) => {
               ? MaticUrl
               : walletType == "Xrp"
               ? XrpUrl
+              :walletType=='BSC'
+              ?url
               : url,
         }}
       />

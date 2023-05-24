@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { Platform } from "react-native";
 import { setPlatform } from "../components/Redux/actions/auth";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useBiometricsForAppLock } from "../biometrics/biometric";
 const LockApp = (props) => {
   const [pin, setPin] = useState();
   const [status, setStatus] = useState("pinset");
@@ -42,6 +43,8 @@ const LockApp = (props) => {
   const exitApp = () => {
     BackHandler.exitApp();
   };
+
+  
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -60,6 +63,20 @@ const LockApp = (props) => {
       return () => backHandler.remove();
     }, [])
   );
+
+  useFocusEffect(
+    React.useCallback(()=>{
+      const checkBioMetric = async()=>{
+
+        const biometric = await AsyncStorage.getItem('Biometric')
+        if(biometric==='SET'){
+          useBiometricsForAppLock(navigation)
+          
+        }
+      }
+      checkBioMetric()
+    },[])
+  )
 
   useEffect(async () => {
     Animated.timing(fadeAnim, {
@@ -87,6 +104,8 @@ const LockApp = (props) => {
         navigation.goBack();
       } else {
         alert("invalid pin");
+        pinView.current.clearAll();
+
       }
     } else {
       setShowCompletedButton(false);

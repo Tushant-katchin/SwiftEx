@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, Text, View, AppState, BackHandler, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  AppState,
+  BackHandler,
+  Alert,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setWalletType } from "../components/Redux/actions/auth";
 import {
@@ -18,11 +25,17 @@ import {
   TabBar,
   TabBarIndicator,
 } from "react-native-tab-view";
-import {
-  useRoute
-} from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import useFirebaseCloudMessaging from "./notifications/firebaseNotifications"; 
+import useFirebaseCloudMessaging from "./notifications/firebaseNotifications";
+import {
+  getEthBalance,
+  getMaticBalance,
+  getBalance,
+  getXrpBalance,
+} from "../components/Redux/actions/auth";
+import { useBiometrics } from "../biometrics/biometric";
+
 const Home2 = ({ navigation }) => {
   const route = useRoute();
   const state = useSelector((state) => state);
@@ -31,16 +44,14 @@ const Home2 = ({ navigation }) => {
   const layout = useWindowDimensions();
   const currentState = useRef(AppState.currentState);
   const [appState, setAppState] = useState(currentState.current);
+  const [transactions, setTransactions] = useState();
   const [routes] = useState([
     { key: "first", title: "Tokens" },
     { key: "second", title: "NFTs" },
   ]);
   const Navigation = useNavigation();
 
-  const {
-    getToken,
-    requestUserPermission
-  } = useFirebaseCloudMessaging()
+  const { getToken, requestUserPermission } = useFirebaseCloudMessaging();
 
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -51,6 +62,133 @@ const Home2 = ({ navigation }) => {
 
   const translation = useRef(new Animated.Value(0)).current;
 
+  const getAllBalance = async () => {
+    try {
+      const wallet = await AsyncStorageLib.getItem("wallet");
+      const address = (await state.wallet.address)
+        ? await state.wallet.address
+        : "";
+
+      AsyncStorageLib.getItem("walletType").then(async (type) => {
+        console.log("hi" + JSON.parse(type));
+        if (!state.wallet.address) {
+          console.log(res);
+        } else if (JSON.parse(type) == "Matic") {
+          await dispatch(getMaticBalance(address))
+            .then(async (res) => {
+              let bal = await AsyncStorageLib.getItem("MaticBalance");
+              console.log(bal);
+              if (res) {
+                console.log(res);
+              } else {
+                console.log("coudnt get balance");
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        } else if (JSON.parse(type) == "Ethereum") {
+          dispatch(getEthBalance(address))
+            .then(async (e) => {
+              const Eth = await e.EthBalance;
+              let bal = await AsyncStorageLib.getItem("EthBalance");
+
+              if (Eth) {
+                console.log(res);
+              } else {
+                console.log("coudnt get balance");
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        } else if (JSON.parse(type) == "BSC") {
+          const balance = await state.walletBalance;
+          if (balance) {
+            console.log(res);
+          }
+        } else if (JSON.parse(type) == "Xrp") {
+          console.log("entering xrp balance");
+          try {
+            const resp = dispatch(getXrpBalance(address))
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          } catch (e) {
+            console.log(e);
+          }
+          //await getXrpBal(address)
+          /* await getXrpBal(address)
+          .catch((e)=>{
+            console.log(e)
+          })*/
+        } else if (JSON.parse(type) == "Multi-coin") {
+          await dispatch(getMaticBalance(address))
+            .then(async (res) => {
+              console.log("hi poly" + res.MaticBalance);
+
+              let bal = await AsyncStorageLib.getItem("MaticBalance");
+              console.log(bal);
+              if (res) {
+                console.log(res);
+              } else {
+                console.log("coudnt get balance");
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+
+          dispatch(getEthBalance(address))
+            .then(async (e) => {
+              const Eth = await e.EthBalance;
+              let bal = await AsyncStorageLib.getItem("EthBalance");
+              console.log("hi" + Eth);
+              console.log(bal);
+              if (Eth) {
+                console.log(res);
+              } else {
+                console.log("coudnt get balance");
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+
+          const balance = await state.walletBalance;
+          if (balance) {
+            console.log(res);
+          }
+        } else {
+          setType("");
+          /*const wallet = await state.wallet.address;
+
+          if (wallet) {
+            await dispatch(getBalance(wallet))
+              .then(async () => {
+                const bal = await state.walletBalance;
+
+                if (bal) {
+                  GetBalance(bal);
+                } else {
+                  GetBalance(0);
+                }
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          }*/
+          //alert('No wallet selected')
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const SetCurrentWallet = async () => {
     let user = await AsyncStorageLib.getItem("currentWallet");
     let mainUser = await AsyncStorageLib.getItem("user");
@@ -59,15 +197,36 @@ const Home2 = ({ navigation }) => {
     let walletType = await AsyncStorageLib.getItem("walletType");
     let wallet = await AsyncStorageLib.getItem(`Wallet`).then((wallet) => {
       console.log(JSON.parse(wallet));
-      dispatch(
-        setCurrentWallet(
-          JSON.parse(wallet).address,
-          user,
-          JSON.parse(wallet).privateKey
-        )
-      );
+      if (JSON.parse(wallet).xrp) {
+        dispatch(
+          setCurrentWallet(
+            JSON.parse(wallet).address,
+            user,
+            JSON.parse(wallet).privateKey,
+            JSON.parse(wallet).xrp.address
+              ? JSON.parse(wallet).xrp.address
+              : "",
+            JSON.parse(wallet).xrp.privateKey
+              ? JSON.parse(wallet).xrp.privateKey
+              : "",
+            (walletType = "Multi-coin")
+          )
+        );
+      } else {
+        dispatch(
+          setCurrentWallet(
+            JSON.parse(wallet).address,
+            user,
+            JSON.parse(wallet).privateKey
+          )
+        );
+      }
+      console.log(mainUser);
       dispatch(setWalletType(JSON.parse(walletType)));
-      dispatch(setUser(JSON.parse(mainUser)));
+      dispatch(setUser(mainUser));
+      getAllBalance().catch((e) => {
+        console.log(e);
+      });
     });
 
     return wallet;
@@ -100,7 +259,6 @@ const Home2 = ({ navigation }) => {
     second: SecondRoute,
   });
 
-
   useEffect(async () => {
     // getWallets(state.user, readData,dispatch, importAllWallets)
     Animated.timing(fadeAnim, {
@@ -113,15 +271,25 @@ const Home2 = ({ navigation }) => {
       delay: 0.1,
       useNativeDriver: true,
     }).start();
-    if (!state.wallet.address) {
-      await SetCurrentWallet();
+   /* if (!state.wallet.address) {
+      try {
+        await SetCurrentWallet().catch((e) => {
+          console.log(e);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  */  }, []);
+  useEffect(async () => {
+    try {
+      await SetCurrentWallet().catch((e) => {
+        console.log(e);
+      });
+    } catch (e) {
+      console.log(e);
     }
   }, []);
-  useEffect(async () => {
-    await SetCurrentWallet();
-  }, []);
-
- 
 
   useEffect(() => {
     AppState.addEventListener("change", (changedState) => {
@@ -130,6 +298,7 @@ const Home2 = ({ navigation }) => {
       console.log(currentState.current);
       if (currentState.current === "background") {
         console.log(currentState.current);
+
         navigation.navigate("appLock");
         /* if(routeName.name!=='exchangeLogin'){
             
@@ -137,7 +306,6 @@ const Home2 = ({ navigation }) => {
       }
     });
   }, []);
-  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -159,9 +327,23 @@ const Home2 = ({ navigation }) => {
   );
 
   useEffect(() => {
-    requestUserPermission()
-    getToken()
-  }, [])
+    requestUserPermission();
+    getToken();
+  }, []);
+
+  /*useFocusEffect(
+    React.useCallback(() => {
+      try{
+
+        getTransactions().then((res) => {
+          console.log(res);
+          checkIncomingTx(res);
+        });
+      }catch(e){
+        console.log(e)
+      }
+    }, [])
+  );*/
 
   return (
     <Animated.View style={{ backgroundColor: "#000C66" }}>

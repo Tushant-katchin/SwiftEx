@@ -22,6 +22,7 @@ import SelectWallet from "./SelectWallet";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import NewWalletModal from "./newWallet";
+import ModalHeader from "../reusables/ModalHeader";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 
@@ -43,6 +44,9 @@ const CreateWallet = ({ modalVisible, setModalVisible }) => {
     }).start();
   }, [fadeAnim]);
 
+  const closeModal = () =>{
+    setModalVisible(false)
+  }
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}

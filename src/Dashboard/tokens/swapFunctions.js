@@ -26,7 +26,6 @@ import { RPC } from "../constants";
 const { Percent } = require("@uniswap/sdk");
 var ethers = require("ethers");
 const UNISWAP = require("@uniswap/sdk");
-
 const axios = require("axios");
 
 const getTokens = async () => {
@@ -247,6 +246,8 @@ const getETHtoTokenPrice = async (tokenaddress, amount) => {
     );
     const slippageTolerance = new Percent("1", "100");
     console.log(trade.minimumAmountOut(slippageTolerance).toSignificant(6));
+    console.log(trade2.minimumAmountOut(slippageTolerance).toSignificant(6));
+
     const tradeDetails = {
       slippageTolerance: slippageTolerance.toSignificant(1),
       minimumAmountOut: trade
@@ -255,8 +256,8 @@ const getETHtoTokenPrice = async (tokenaddress, amount) => {
     };
 
     return {
-      token1totoken2: route.midPrice.toSignificant(6),
-      token2totoken1: route2.midPrice.toSignificant(6),
+      token1totoken2: trade.minimumAmountOut(slippageTolerance).toSignificant(6),
+      token2totoken1: trade2.minimumAmountOut(slippageTolerance).toSignificant(6),
       trade: tradeDetails,
     };
   } catch (err) {
@@ -325,8 +326,8 @@ const getTokentoEthPrice = async (tokenaddress, amount) => {
     };
 
     return {
-      token1totoken2: route2.midPrice.toSignificant(6),
-      token2totoken1: route.midPrice.toSignificant(6),
+      token1totoken2: trade2.minimumAmountOut(slippageTolerance).toSignificant(6),
+      token2totoken1: trade.minimumAmountOut(slippageTolerance).toSignificant(6),
       trade: tradeDetails,
     };
   } catch (err) {
@@ -424,7 +425,7 @@ const swapTokensforEth = async (privateKey, address, tokenaddress, amount) => {
 const SwapEthForTokens = async (privateKey, address, tokenaddress, amount) => {
   try {
     const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC);
-    const chainId = ChainId.GÖRLI;
+    const chainId = ChainId.MAINNET;
     const gas = await provider.getGasPrice();
     const UNISWAP_ROUTER_ABI = [
       "function getAmountsOut(uint amountIn, address[] memory path) public view returns (uint[] memory amounts)",

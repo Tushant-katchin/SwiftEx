@@ -21,6 +21,11 @@ import { useNavigation } from "@react-navigation/native";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import TransactionPinModal from "./Modals/transactionPinModal";
+import { useBiometricsForSendTransaction } from "../biometrics/biometric";
+import { useToast } from 'native-base';
+import { ShowToast } from "./reusables/Toasts";
+import { CommonActions } from "@react-navigation/native";
+
 var ethers = require("ethers");
 const ConfirmTransaction = (props) => {
   const state = useSelector((state) => state);
@@ -30,6 +35,170 @@ const ConfirmTransaction = (props) => {
   const [walletType, setWalletType] = useState("");
   const [pinViewVisible, setPinViewVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+ const navigation = useNavigation()
+ const toast = useToast()
+
+ const Navigate = () => {
+  navigation.dispatch((state) => {
+    // Remove the home route from the stack
+    const routes = state.routes.filter((r) => r.name !== "Confirm Tx");
+
+    return CommonActions.reset({
+      ...state,
+      routes,
+      index: routes.length - 1,
+    });
+  });
+};
+
+ async function sendTx(){
+ let provider=props.route.params.info.provider
+ let type=props.route.params.info.type
+ let rawTransaction=props.route.params.info.rawTransaction
+ const emailid = await state.user;
+ const token = await state.token;
+ setLoading(true);
+ setDisable(true);
+
+ if (type === "Eth") {
+   let txx = await provider.core
+     .sendTransaction(rawTransaction)
+     .catch((e) => {
+       console.log(e);
+       setLoading(false);
+     });
+   const tx = txx.wait();
+   console.log("Sent transaction", await tx);
+
+   if (txx.hash) {
+     try {
+       const type = "Send";
+       const chainType = "Eth";
+       const saveTransaction = await SaveTransaction(
+         type,
+         txx.hash,
+         emailid,
+         token,
+         walletType,
+         chainType
+       );
+
+       console.log(saveTransaction);
+       ShowToast(toast,"Transaction Successful")
+      
+       setLoading(false);
+       setDisable(false);
+       Navigate();
+       navigation.navigate("Transactions");
+     } catch (e) {
+       setLoading(false);
+       setDisable(false);
+       console.log(e);
+       alert(e);
+     }
+   }
+ } else if (type === "Matic") {
+   let alchemy = provider;
+   let txx = await alchemy.core.sendTransaction(
+     rawTransaction
+   );
+   console.log("Sent transaction", txx.hash);
+   if (txx.hash) {
+     try {
+       const type = "Send";
+       const chainType = "Matic";
+
+       const saveTransaction = await SaveTransaction(
+         type,
+         txx.hash,
+         emailid,
+         token,
+         walletType
+       );
+
+       console.log(saveTransaction);
+       ShowToast(toast,"Transaction Successful")
+
+       setLoading(false);
+       setDisable(false);
+       setPinViewVisible(false);
+       Navigate();
+       navigation.navigate("Transactions");
+     } catch (e) {
+       setDisable(false);
+       setLoading(false);
+       console.log(e);
+       alert(e);
+     }
+   }
+ } else if (type === "BSC") {
+   const txx = await provider
+     .sendTransaction(rawTransaction)
+     .catch((e) => {
+       return alert(e);
+     }); //SendTransaction(signer, token)
+   if (txx.hash) {
+     try {
+       const type = "Send";
+       const chainType = "BSC";
+
+       const saveTransaction = await SaveTransaction(
+         type,
+         txx.hash,
+         emailid,
+         token,
+         walletType,
+         chainType
+       );
+
+       console.log(saveTransaction);
+       ShowToast(toast,"Transaction Successful")
+
+       setLoading(false);
+       setDisable(false);
+       Navigate()
+       navigation.navigate("Transactions");
+     } catch (e) {
+       setDisable(false);
+       setLoading(false);
+       console.log(e);
+       alert(e);
+     }
+   }
+ } else {
+   try {
+     const client = provider;
+     const signed = rawTransaction;
+     const tx = await client.submitAndWait(signed.tx_blob);
+     const type = "Send";
+     const chainType = "Xrp";
+
+     const saveTransaction = await SaveTransaction(
+       type,
+       signed.hash,
+       emailid,
+       token,
+       walletType,
+       chainType
+     );
+
+     console.log(saveTransaction);
+     ShowToast(toast,"Transaction Successful")
+
+     setLoading(false);
+     setDisable(false);
+     console.log(tx);
+     Navigate()
+     navigation.navigate("Transactions");
+   } catch (e) {
+     setDisable(false);
+     setLoading(false);
+     console.log(e);
+     alert("please try again");
+   }
+ }
+}
+
 
   useEffect(async () => {
     const user = await state.user;
@@ -74,6 +243,9 @@ const ConfirmTransaction = (props) => {
         <Text style={style.welcomeText2}>
           Fee: {Cost ? Cost : "evaluating fees"} {props.route.params.info.type}
         </Text>
+        <Text style={style.welcomeText2}>
+          Final Amount (Amount+fee) :  {props.route.params.info.finalAmount}
+        </Text>
 
         {Loading ? (
           <View style={{ marginBottom: hp("-4") }}>
@@ -87,137 +259,23 @@ const ConfirmTransaction = (props) => {
             title="confirm"
             color={"green"}
             disabled={disable ? true : false}
-            onPress={() => {
+            onPress={async() => {
               //setVisible(!visible)
+              
+
+                const biometric = await AsyncStorageLib.getItem('Biometric')
+                if(biometric==='SET'){
+                  useBiometricsForSendTransaction(sendTx)
+                  return
+                }
+              
+              //checkBioMetric()
               const type = props.route.params.info.type;
               console.log(type);
               setPinViewVisible(true);
               setLoading(true);
               setDisable(true);
-              /*
-      const emailid = await state.user
-      const token = await state.token
-      const valid = pinView()
-      if(valid){
-
-      
-      if(type === 'Eth'){
-
-        const provider = props.route.params.info.provider
-        let txx = await provider.core.sendTransaction(props.route.params.info.rawTransaction).catch((e)=>{
-          console.log(e)
-          setLoading(false)
-        });
-        const tx = txx.wait()
-        console.log("Sent transaction", await tx);
-        
-        if(txx.hash){
-          try{
-            const type ='Send'
-            const chainType ="Eth"
-            const saveTransaction = await SaveTransaction(type,txx.hash, emailid,token,walletType,chainType)
-            
-            console.log(saveTransaction)
-            alert(`Transaction success :https://goerli.etherscan.io/tx/${txx.hash}`)
-            setLoading(false)
-            setDisable(false)
-            navigation.navigate('Transactions')
-          }catch(e){
-            setLoading(false)
-            setDisable(false)
-            
-            
-            console.log(e)
-            alert(e)
-          }
-          
-          
-        }
-      }else if (type ==="Matic"){
-        let alchemy = props.route.params.info.provider
-        let txx = await alchemy.core.sendTransaction(props.route.params.info.rawTransaction);
-        console.log("Sent transaction", txx.hash);
-        if(txx.hash){
-          try{
-            const type ='Send'
-            const chainType ="Matic"
-
-            const saveTransaction = await SaveTransaction(type,txx.hash, emailid,token,walletType)
-            
-            console.log(saveTransaction)
-            alert(`Transaction success https://mumbai.polygonscan.com/tx/${txx.hash}`)
-            setLoading(false)
-            setDisable(false)
-            navigation.navigate('Transactions')
-
-
-          }catch(e){
-            setDisable(false)
-
-            setLoading(false)
-            console.log(e)
-            alert(e)
-          }
-        }
-
-      }else if (type ==="BSC"){
-        const provider = props.route.params.info.provider
-        const txx = await provider.sendTransaction(props.route.params.info.rawTransaction).catch((e)=>{
-          return alert(e)
-
-         })//SendTransaction(signer, token)
-         if(txx.hash){
-           try{
-             const type ='Send'
-             const chainType ="BSC"
-
-             const saveTransaction = await SaveTransaction(type,txx.hash, emailid,token,walletType, chainType)
              
-             console.log(saveTransaction)
-             alert(`Transaction success :https://testnet.bscscan.com/tx/${txx.hash}`)
-             setLoading(false)
-             setDisable(false)
-             navigation.navigate('Transactions')
-
-
-           }catch(e){
-            setDisable(false)
-
-             setLoading(false)
-             console.log(e)
-             alert(e)
-           }
-         }
-      }else{
-        try{
-
-          const client = props.route.params.info.provider
-          const signed =props.route.params.info.rawTransaction
-          const tx = await client.submitAndWait(signed.tx_blob)
-          const type ='Send'
-          const chainType ="Xrp"
-
-          const saveTransaction = await SaveTransaction(type,signed.hash, emailid,token,walletType,chainType)
-          
-          console.log(saveTransaction)
-          alert(`Transaction success :https://test.bithomp.com/explorer/${signed.hash}`)
-          setLoading(false)
-          setDisable(false)
-          console.log(tx)
-          setLoading(false)
-          navigation.navigate('Transactions')
-
-        }catch(e){
-          setDisable(false)
-
-          console.log(e)
-          alert('please try again')
-        }
-        }
-      }else{
-        alert('invalid pin. Please try again')
-      }
-        */
             }}
           ></Button>
         </View>

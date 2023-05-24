@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import PushNotification ,{PushNotificationIOS}from 'react-native-push-notification'
+import PushNotification from 'react-native-push-notification'
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 
 const getToken = async () => {
@@ -16,7 +17,56 @@ const getToken = async () => {
       })
   }
 }
+export const pushNotificationIos = ()=>{
+  const [permissions, setPermissions] = useState({});
+
+  useEffect(() => {
+    const type = 'notification';
+    PushNotificationIOS.addEventListener(type, onRemoteNotification);
+    return () => {
+      PushNotificationIOS.removeEventListener(type);
+    };
+  });
+
+  const onRemoteNotification = (notification) => {
+    const isClicked = notification.getData().userInteraction === 1;
+
+    if (isClicked) {
+      // Navigate user to another screen
+    } else {
+      // Do something else with push notification
+    }
+    // Use the appropriate result based on what you needed to do for this notification
+    const result = PushNotificationIOS.FetchResult.NoData;
+    console.log(result)
+    notification.finish(result);
+  };
+}
+
+const onRemoteNotificationIOS = (notification) => {
+  const isClicked = notification.getData().userInteraction === 1;
+
+  if (isClicked) {
+    // Navigate user to another screen
+  } else {
+    // Do something else with push notification
+  }
+  // Use the appropriate result based on what you needed to do for this notification
+  const result = PushNotificationIOS.FetchResult.NoData;
+  console.log(result)
+  notification.finish(result);
+};
+
+
 export const RemotePushController = () => {
+  useEffect(() => {
+    const type = 'notification';
+    PushNotificationIOS.addEventListener(type, onRemoteNotificationIOS);
+    return () => {
+      PushNotificationIOS.removeEventListener(type);
+    };
+  });
+
   useEffect(() => {
     getToken()
     PushNotification.configure({
@@ -30,7 +80,7 @@ export const RemotePushController = () => {
         console.log('REMOTE NOTIFICATION ==>', notification)
 
         // process the notification here
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
+        //notification.finish(PushNotificationIOS.FetchResult.NoData);
 
       },
       // Android only: GCM or FCM Sender ID

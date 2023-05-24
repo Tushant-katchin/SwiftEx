@@ -9,6 +9,10 @@ export const PolygonSecret = {
 export const MORALIS_API_KEY = {
   apiKey: "6OGkB8C9zkRjsb1ZsueIDU08enKylQFMKYQ4iWKiB45MYCd1iVnT6z23GkoqJFV8",
 };
+
+export const API_KEYS ={
+  MORALIS:'KRXC1pBilfY526QDwlrM1pINBUFgtZ2cLcSB8KYQyvlq3vHbrdknIZlfTK5DL1D0'
+}
 export const EthereumSecret = {
   apiKey: "nVTR_gZ2GAO_KlSuvS2kCj7NyD0WxzNg",
 };
@@ -32,10 +36,12 @@ export const RPC = {
     "https://polygon-mumbai.g.alchemy.com/v2/WUJnVsFyDvgwlbSdNrpr-lMg0-NKaNLH",
   ETHRPC:
     "https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG",
+    ETHRPC2:"https://eth-goerli.g.alchemy.com/v2/kXUtx7JDweb570vdSTAU3yFOR_cPiL9L",
+  XRPRPC:"https://s.altnet.rippletest.net:51234"
 };
 
 export const WSS = {
-  XRPWSS: '"wss://s.altnet.rippletest.net:51233"',
+  XRPWSS: "wss://s.altnet.rippletest.net:51233",
 };
 //172.20.10.6:2000
 
@@ -43,3 +49,16 @@ export const WSS = {
     source={{uri:`${GOERLI_ETHERSCAN}/tx/${tx.cryptoTxHash}`}}  
      
    />*/
+/*
+ export const RPC = {
+  BSCRPC: "https://bsc-dataseed.binance.org/",
+  BSCRPC2:
+    "https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/mainnet/",
+  MATICRPC:
+    "https://polygon-mainnet.g.alchemy.com/v2/Ov8ecXk1QVrctaY0I14Za7MJp6sd1Ae8",
+  ETHRPC:
+    "https://eth-mainnet.g.alchemy.com/v2/rb6DMgwaFbF-uUOR8ztN4ndwaulUfiF4",
+  XRPRPC:"https://s.altnet.rippletest.net:51234"
+};
+cghn-lslj-ynvq-huuv-djqn
+ */

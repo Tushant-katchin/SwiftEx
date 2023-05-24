@@ -24,8 +24,11 @@ import {
 import Bnbimage from "../../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../../assets/ethereum.png";
 import maticImage from "../../../assets/matic.png";
+import xrpImage  from "../../../assets/xrp.png"
 import Modal from "react-native-modal";
 import RecieveAddress from "./ReceiveAddress";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import ModalHeader from "../reusables/ModalHeader";
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const RecieveModal = ({ modalVisible, setModalVisible }) => {
   const [visible, setVisible] = useState(false);
@@ -40,10 +43,15 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
     <Avatar.Image {...props} source={maticImage} />
   );
 
+  let xrpLeftContent = (props) => <Avatar.Image {...props} source={xrpImage} />;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const Spin = new Animated.Value(0);
-
+ 
+  const closeModal =()=>{
+    setModalVisible(false)
+  }
+  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -62,6 +70,9 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
         animationOutTiming={650}
         isVisible={modalVisible}
         useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         onModalHide={() => setModalVisible(false)}
         onBackdropPress={() => setModalVisible(false)}
         onBackButtonPress={() => {
@@ -69,14 +80,22 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal} name={'Receive'}/>
           <TouchableOpacity
             style={style.Box3}
-            onPress={() => {
-              setTimeout(() => {
-                setVisible(true);
-              }, 0);
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem('walletType')
+              if(JSON.parse(walletType)==="BSC" || JSON.parse(walletType)==="Multi-coin"){
 
-              setIconType("BNB");
+                
+                setTimeout(() => {
+                  setVisible(true);
+                }, 0);
+                
+                setIconType("BNB");
+              }else{
+                alert('Please select BNB wallet to recieve BNB')
+              }
             }}
           >
             <Card
@@ -101,11 +120,16 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={style.Box2}
-            onPress={() => {
+            onPress={async() => {
+              const walletType = await AsyncStorageLib.getItem('walletType')
+              if(JSON.parse(walletType)==="Ethereum"|| JSON.parse(walletType)==="eth" || JSON.parse(walletType)==="Multi-coin"){
               setTimeout(() => {
                 setVisible(true);
-              }, 1);
+              }, 0);
               setIconType("ETH");
+            }else{
+              alert('please select ETH wallet to recieve ETH tokens')
+            }
             }}
           >
             <Card
@@ -131,11 +155,16 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
           <TouchableOpacity
             style={style.Box2}
-            onPress={() => {
+            onPress={async() => {
+              const walletType = await AsyncStorageLib.getItem('walletType')
+              if(JSON.parse(walletType)==="Matic" || JSON.parse(walletType)==="Multi-coin"){
               setTimeout(() => {
                 setVisible(true);
-              }, 1);
+              }, 0);
               setIconType("Matic");
+            }else{
+              alert('please select a polygon wallet to recieve matic')
+            }
             }}
           >
             <Card
@@ -150,6 +179,40 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
                 titleStyle={{ color: "black" }}
                 title={"Matic"}
                 left={maticLeftContent}
+              />
+              <Card.Content
+                style={{ display: "flex", flexDirection: "row", color: "#fff" }}
+              >
+                <Title style={{ color: "#fff" }}></Title>
+              </Card.Content>
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={style.Box2}
+            onPress={async() => {
+              const walletType = await AsyncStorageLib.getItem('walletType')
+              if(JSON.parse(walletType)==="Xrp" || JSON.parse(walletType)==='Multi-coin'){
+              setTimeout(() => {
+                setVisible(true);
+              }, 0);
+              setIconType("Xrp");
+            }else{
+              alert('please select an xrp wallet to recieve xrp')
+            }
+            }}
+          >
+            <Card
+              style={{
+                width: wp(90),
+                height: hp(10),
+                backgroundColor: "white",
+                borderRadius: 10,
+              }}
+            >
+              <Card.Title
+                titleStyle={{ color: "black" }}
+                title={"XRP"}
+                left={xrpLeftContent}
               />
               <Card.Content
                 style={{ display: "flex", flexDirection: "row", color: "#fff" }}

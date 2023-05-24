@@ -39,9 +39,9 @@ const SwapPinModal = ({
   swapType,
   SaveTransaction,
   setLoading,
+  amount
 }) => {
   const state = useSelector((state) => state);
-  const [pin, setPin] = useState();
   const [status, setStatus] = useState("pinset");
   const [showRemoveButton, setShowRemoveButton] = useState(false);
   const [enteredPin, setEnteredPin] = useState("");
@@ -170,6 +170,7 @@ const SwapPinModal = ({
 
                   if (JSON.parse(Pin) === enteredPin) {
                     try {
+                      setPinViewVisible(false)
                       setLoader(true);
                       setLoading(true);
                       const walletType = await AsyncStorage.getItem(

@@ -25,10 +25,13 @@ import {
 } from "../../components/Redux/actions/auth";
 import Modal from "react-native-modal";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import { CommonActions } from "@react-navigation/native";
+import { useToast } from 'native-base';
+import { ShowToast } from "../reusables/Toasts";
+
 const TransactionPinModal = ({
   pinViewVisible,
   setPinViewVisible,
@@ -50,7 +53,7 @@ const TransactionPinModal = ({
   const pinView = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
-
+  const toast = useToast()
   const Navigate = () => {
     navigation.dispatch((state) => {
       // Remove the home route from the stack
@@ -70,6 +73,8 @@ const TransactionPinModal = ({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
+
+
 
   useEffect(async () => {
     const Check = await AsyncStorage.getItem(`pin`);
@@ -116,9 +121,15 @@ const TransactionPinModal = ({
       isVisible={pinViewVisible}
       useNativeDriver={true}
       statusBarTranslucent={true}
-      onBackdropPress={() => setPinViewVisible(false)}
+      onBackdropPress={() => {
+        setPinViewVisible(false)
+        setLoading(false)
+        setDisable(false)
+      }}
       onBackButtonPress={() => {
-        //setPinViewVisible(false);
+        setPinViewVisible(false);
+        setLoading(false)
+        setDisable(false)
       }}
     >
       <Animated.View // Special animatable View
@@ -179,6 +190,7 @@ const TransactionPinModal = ({
                 }
                 if (key === "custom_right") {
                   const Pin = await AsyncStorage.getItem("pin");
+                  setPinViewVisible(false)
                   setLoader(true);
                   if (JSON.parse(Pin) === enteredPin) {
                     const emailid = await state.user;
@@ -208,9 +220,8 @@ const TransactionPinModal = ({
                           );
 
                           console.log(saveTransaction);
-                          alert(
-                            `Transaction success :https://goerli.etherscan.io/tx/${txx.hash}`
-                          );
+                          ShowToast(toast,"Transaction Successful")
+                          
                           setLoading(false);
                           setLoader(false);
                           setDisable(false);
@@ -246,9 +257,8 @@ const TransactionPinModal = ({
                           );
 
                           console.log(saveTransaction);
-                          alert(
-                            `Transaction success https://mumbai.polygonscan.com/tx/${txx.hash}`
-                          );
+                          ShowToast(toast,"Transaction Successful")
+
                           setLoading(false);
                           setLoader(false);
                           setDisable(false);
@@ -285,9 +295,8 @@ const TransactionPinModal = ({
                           );
 
                           console.log(saveTransaction);
-                          alert(
-                            `Transaction success :https://testnet.bscscan.com/tx/${txx.hash}`
-                          );
+                          ShowToast(toast,"Transaction Successful")
+
                           setLoading(false);
                           setLoader(false);
                           setDisable(false);
@@ -321,9 +330,8 @@ const TransactionPinModal = ({
                         );
 
                         console.log(saveTransaction);
-                        alert(
-                          `Transaction success :https://test.bithomp.com/explorer/${signed.hash}`
-                        );
+                        ShowToast(toast,"Transaction Successful")
+
                         setLoading(false);
                         setDisable(false);
                         console.log(tx);
@@ -341,10 +349,11 @@ const TransactionPinModal = ({
                       }
                     }
                   } else {
+                    setPinViewVisible(false)
                     setLoading(false);
                     setLoader(false);
                     setDisable(false);
-
+                    pinView.current.clearAll();
                     alert("invalid pin.please try again!");
                   }
                 }

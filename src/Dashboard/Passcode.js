@@ -19,6 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { Platform } from "react-native";
 import { setPlatform } from "../components/Redux/actions/auth";
+import { useBiometrics } from "../biometrics/biometric";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Passcode = (props) => {
   const [pin, setPin] = useState();
@@ -39,8 +41,27 @@ const Passcode = (props) => {
     return <View></View>;
   };
 
+  useFocusEffect(
+    React.useCallback(()=>{
+      const checkBioMetric = async()=>{
+
+        const biometric = await AsyncStorage.getItem('Biometric')
+        if(biometric==='SET'){
+          useBiometrics(props.navigation)
+          return
+        }
+      }
+      checkBioMetric()
+    },[])
+  )
   useEffect(async () => {
     const Check = await AsyncStorage.getItem("pin");
+    const biometric = await AsyncStorage.getItem('Biometric')
+      if(biometric==='SET'){
+        useBiometrics(props.navigation)
+        
+      }
+
     console.log(Check);
     if (Check) {
       setStatus("pinset");
@@ -75,19 +96,21 @@ const Passcode = (props) => {
         const Pin = await AsyncStorage.getItem("pin");
         const user = await AsyncStorage.getItem("user");
         const wallets = await AsyncStorage.getItem(`${user}-wallets`);
-
         if (JSON.parse(Pin) === enteredPin) {
           console.log(Pin);
           console.log(user);
           console.log(wallets);
           if (user) {
             props.navigation.navigate("HomeScreen");
+            
           } else {
             props.navigation.navigate("Welcome");
           }
         } else {
           alert("invalid pin");
+          pinView.current.clearAll();
         }
+        pinView.current.clearAll();
         setShowCompletedButton(true);
       }
     } else {

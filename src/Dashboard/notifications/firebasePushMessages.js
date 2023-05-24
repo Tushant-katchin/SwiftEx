@@ -1,6 +1,8 @@
-import PushNotification,{PushNotificationIOS} from "react-native-push-notification";
+import PushNotification from "react-native-push-notification";
 import { useNavigation } from '@react-navigation/native'
-PushNotification.getChannels(function (channel_ids) {
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+
+/*PushNotification.getChannels(function (channel_ids) {
     console.log(channel_ids); // ['channel_id_1']
   });
 
@@ -26,7 +28,7 @@ PushNotification.getChannels(function (channel_ids) {
     },
     (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
   );
-
+*/
 export default function PushNotifications(){
     const navigation = useNavigation()
         PushNotification.configure({
@@ -36,6 +38,8 @@ export default function PushNotifications(){
             },
           
             // (required) Called when a remote or local notification is opened or received
+
+            
             onNotification: function(notification) {
               console.log("NOTIFICATION:", notification);
               navigation.navigate('exchange')
@@ -67,8 +71,7 @@ export default function PushNotifications(){
     PushNotification.localNotification({
         channelId: "1",
       autoCancel: true,
-      bigText:
-        submessage,
+      bigText:submessage,
       subText: appName,
       title: title,
       message: message,
@@ -76,6 +79,7 @@ export default function PushNotifications(){
       vibration: 300,
       playSound: true,
       soundName: 'default',
-      actions: '["Yes", "No"]'
+      actions: ["Yes", "No"],
+      invokeApp:false
     })
   }

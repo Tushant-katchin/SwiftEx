@@ -31,13 +31,17 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
+const xrpl = require("xrpl");
+
 const ImportMunziWallet = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
   const [mnemonic, setMnemonic] = useState("");
   const [visible, setVisible] = useState(false);
   const [Wallet, setWallet] = useState();
-
+  const [disable, setDisable] = useState(true)
+  const [ message, setMessage] = useState('')
+  
   const dispatch = useDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -48,54 +52,7 @@ const ImportMunziWallet = (props) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  async function saveUserDetails(address) {
-    let response;
-    try {
-      response = await fetch(`http://${urls.testUrl}/user/setUser`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          walletAddress: address,
-          user: accountName,
-        }),
-      })
-        .then((response) => response.json())
-        .then(async (responseJson) => {
-          console.log(responseJson);
-          console.log(responseJson);
-          if (responseJson.responseCode === 200) {
-            alert("success");
-          } else if (responseJson.responseCode === 400) {
-            return {
-              code: responseJson.responseCode,
-              message:
-                "account with same name already exists. Please use a different name",
-            };
-          } else {
-            return {
-              code: 401,
-              message: "Unable to create account. Please try again",
-            };
-          }
-          return {
-            code: responseJson.responseCode,
-            token: responseJson.responseData,
-          };
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    } catch (e) {
-      console.log(e);
-      alert(e);
-    }
-    console.log(response);
-    return response;
-  }
-
+  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -108,6 +65,31 @@ const ImportMunziWallet = (props) => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
+
+  useEffect(()=>{
+    if(accountName &&  mnemonic )
+    {
+      let valid
+        const phrase = mnemonic.trimStart();
+        const trimmedPhrase = phrase.trimEnd();
+        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
+
+      if(accountName && mnemonic  && valid){
+        setDisable(false)
+      }else{
+        setDisable(true)
+      }
+    }else{
+      setMessage('')
+    }
+    },[mnemonic])
+  
 
   return (
     <Animated.View // Special animatable View
@@ -143,10 +125,15 @@ const ImportMunziWallet = (props) => {
         ) : (
           <Text> </Text>
         )}
+        <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
+        <Text style={{color:'red'}}>{message}</Text>
+        </View>
+        
         <View style={{ width: wp(95), margin: 10 }}>
           <Button
             title={"Import"}
             color={"blue"}
+            disabled={disable}
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
               if (!accountName) {
@@ -165,6 +152,17 @@ const ImportMunziWallet = (props) => {
                     );
                   }
 
+                  const xrpWalletFromM = xrpl.Wallet.fromMnemonic(trimmedPhrase);
+                    const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
+                    console.log(
+                      "\t===> seed Created from mnemonic",
+                      entropy.split("x")[1]
+                    );
+                    const xrpWallet = xrpl.Wallet.fromEntropy(
+                      entropy.split("x")[1]
+                    ); // This is suggested because we will get seeds also
+                    console.log(xrpWallet); // Produces different addresses
+
                   const accountFromMnemonic =
                     ethers.Wallet.fromMnemonic(trimmedPhrase);
                   const Keys = accountFromMnemonic._signingKey();
@@ -172,6 +170,10 @@ const ImportMunziWallet = (props) => {
                   const wallet = {
                     address: accountFromMnemonic.address,
                     privateKey: privateKey,
+                    xrp:{
+                      address:xrpWallet.classicAddress,
+                      privateKey:xrpWallet.seed
+                    }
                   };
                   /* const response = saveUserDetails(accountFromMnemonic.address).then((response)=>{
                 if(response.code===400){
@@ -197,6 +199,10 @@ const ImportMunziWallet = (props) => {
                     address: wallet.address,
                     privateKey: wallet.privateKey,
                     name: accountName,
+                    xrp:{
+                      address:xrpWallet.classicAddress,
+                      privateKey:xrpWallet.seed
+                    },
                     walletType: "Multi-coin",
                     wallets: [],
                   };
@@ -207,6 +213,10 @@ const ImportMunziWallet = (props) => {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
                       name: accountName,
+                      xrp:{
+                        address:xrpWallet.classicAddress,
+                        privateKey:xrpWallet.seed
+                      },
                       walletType: "Multi-coin",
                     },
                   ];
@@ -227,7 +237,11 @@ const ImportMunziWallet = (props) => {
                     setCurrentWallet(
                       wallet.address,
                       accountName,
-                      wallet.privateKey
+                      wallet.privateKey,
+                      xrpWallet.classicAddress,
+                      xrpWallet.seed,
+                      walletType='Multi-coin'
+                      
                     )
                   );
                   dispatch(AddToAllWallets(wallets, accountName));

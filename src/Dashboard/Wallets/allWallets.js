@@ -37,13 +37,18 @@ import {
   getEthBalance,
   getXrpBalance,
   getMaticBalance,
-  getBalance,
 } from "../../components/Redux/actions/auth";
 import { urls } from "../constants";
+import { useNavigation } from "@react-navigation/native";
+import Header from "../reusables/Header";
+import { RPC, WSS } from "../constants";
+
+const xrpl = require("xrpl");
+
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const AllWallets = (props) => {
   const state = useSelector((state) => state);
-
+  const navigation = useNavigation();
   console.log(state.walletType);
   const [Wallets, setAllWallets] = useState([]);
   let wallet = [];
@@ -71,6 +76,8 @@ const AllWallets = (props) => {
     return JSON.parse(data);
   };
   const getXrpBal = async (address) => {
+    console.log(address);
+
     try {
       const response = await fetch(
         `http://${urls.testUrl}/user/getXrpBalance`,
@@ -110,12 +117,12 @@ const AllWallets = (props) => {
       const wallet = await AsyncStorageLib.getItem("wallet");
       const address = (await state.wallet.address)
         ? await state.wallet.address
-        : JSON.parse(wallet).classicAddress;
+        : JSON.parse(wallet).address;
 
       AsyncStorageLib.getItem("walletType").then(async (type) => {
         console.log("hi" + JSON.parse(type));
         if (!state.wallet.address) {
-          alert("no wallet selected");
+          // alert("no wallet selected");
         } else if (JSON.parse(type) == "Matic") {
           await dispatch(getMaticBalance(address))
             .then(async (res) => {
@@ -154,12 +161,18 @@ const AllWallets = (props) => {
             console.log("My bsc balance" + balance);
           }
         } else if (JSON.parse(type) == "Xrp") {
-          await AsyncStorageLib.getItem("wallet")
-            .then(async (wallet) => {
-              console.log(JSON.parse(wallet).classicAddress);
+          const resp = await getXrpBal(address)
+          .catch((e)=>{
+            console.log(e)
+          })
+          AsyncStorageLib.getItem("Wallet")
+            .then((wallet) => {
+
+              console.log("classic address" + JSON.parse(wallet).address);
               if (wallet) {
-                const resp = await getXrpBal(JSON.parse(wallet).classicAddress);
-                console.log(resp);
+
+                //const resp =  dispatch(getXrpBalance(await state.wallet.address));
+                //console.log(resp);
               }
             })
             .catch((e) => {
@@ -207,7 +220,7 @@ const AllWallets = (props) => {
         } else {
           const wallet = await state.wallet.address;
           console.log("hello" + wallet);
-          if (wallet) {
+          /* if (wallet) {
             await dispatch(getBalance(state.wallet.address))
               .then(async () => {
                 const bal = await state.walletBalance;
@@ -216,7 +229,7 @@ const AllWallets = (props) => {
               .catch((e) => {
                 console.log(e);
               });
-          }
+          }*/
         }
       });
     } catch (e) {
@@ -230,6 +243,10 @@ const AllWallets = (props) => {
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
+
+  const headerFunction = () => {
+    return navigation.canGoBack();
+  };
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -252,8 +269,9 @@ const AllWallets = (props) => {
   return (
     <View style={style.Body}>
       <Text>Main Wallet</Text>
-
-      <ScrollView style={{ height: hp(1), width: wp(90) }}>
+      <ScrollView
+        style={{ height: hp(1), width: wp(90), marginBottom: hp(10) }}
+      >
         {Wallets[0] ? (
           Wallets[0].map((item) => {
             if (item.walletType === "BSC") {
@@ -270,6 +288,7 @@ const AllWallets = (props) => {
               LeftContent = multiCoinLeftContent;
             }
             return (
+              
               <View>
                 <TouchableOpacity
                   key={item.name}
@@ -278,34 +297,106 @@ const AllWallets = (props) => {
                     // props.navigation.navigate('Import Multi-Coin Wallet')
                     if (item.walletType) {
                       AsyncStorageLib.setItem("currentWallet", item.name);
-                      dispatch(
-                        setCurrentWallet(
-                          item.address,
-                          item.name,
-                          item.privateKey
-                        )
-                      ).then((response) => {
-                        console.log(response);
-                        if (response) {
-                          if (response.status == "success") {
-                            AsyncStorageLib.setItem(
-                              "walletType",
-                              JSON.stringify(item.walletType)
-                            );
-                            dispatch(setWalletType(item.walletType));
-                            getBalance(state);
-                            alert("Wallet Selected " + item.name);
+                      if(item.xrp){
+                        dispatch(
+                          setCurrentWallet(
+                            item.address,
+                            item.name,
+                            item.privateKey,
+                            item.xrp.address?item.xrp.address:'',
+                            item.xrp.privateKey?item.xrp.privateKey:'',
+                            walletType='Multi-coin'
+                          )
+                        ).then((response) => {
+                          console.log(response);
+                          if (response) {
+                            if (response.status == "success") {
+                              AsyncStorageLib.setItem(
+                                "walletType",
+                                JSON.stringify(item.walletType)
+                              );
+                              dispatch(setWalletType(item.walletType));
+                              //getBalance(state);
+                              alert("Wallet Selected " + item.name);
+                            } else {
+                              alert(
+                                "error while selecting wallet. please try again"
+                              );
+                            }
                           } else {
                             alert(
                               "error while selecting wallet. please try again"
                             );
                           }
-                        } else {
-                          alert(
-                            "error while selecting wallet. please try again"
-                          );
-                        }
-                      });
+                        });
+                      
+                      }
+                      else if (item.walletType == "Xrp") {
+                        dispatch(
+                          setCurrentWallet(
+                            item.classicAddress,
+                            item.name,
+                            item.privateKey
+                          )
+                        ).then(async (response) => {
+                          console.log(response)
+                          if (response) {
+                            console.log(item.walletType);
+                            console.log("resp =", response);
+                             
+                             dispatch(setWalletType(item.walletType));
+                             await getXrpBal(item.classicAddress)
+                             .catch((e)=>{
+                              console.log(e)
+                             })
+                             //dispatch(getXrpBalance(item.classicAddress));
+                             await AsyncStorageLib.setItem(
+                              "walletType",
+                              JSON.stringify(item.walletType)
+                            );
+                 
+                            /*  await getXrpBal(item.classicAddress)
+                            .then((response)=>{
+                              console.log(response)
+                            })*/
+                            //dispatch(getXrpBalance(item.classicAddress))
+                            alert(`Wallet selected : ${item.name}`);
+                          } else {
+                            alert(
+                              "error while selecting wallet. please try again"
+                            );
+                          }
+                        });
+                      } else {
+                        dispatch(
+                          setCurrentWallet(
+                            item.address,
+                            item.name,
+                            item.privateKey
+                          )
+                        ).then((response) => {
+                          console.log(response);
+                          if (response) {
+                            if (response.status == "success") {
+                              AsyncStorageLib.setItem(
+                                "walletType",
+                                JSON.stringify(item.walletType)
+                              );
+                              dispatch(setWalletType(item.walletType));
+                              //getBalance(state);
+                              alert("Wallet Selected " + item.name);
+                            } else {
+                              alert(
+                                "error while selecting wallet. please try again"
+                              );
+                            }
+                          } else {
+                            alert(
+                              "error while selecting wallet. please try again"
+                            );
+                          }
+                        });
+                      }
                     } else {
                       alert(
                         "wallet not supported. Please try selecting a different wallet"

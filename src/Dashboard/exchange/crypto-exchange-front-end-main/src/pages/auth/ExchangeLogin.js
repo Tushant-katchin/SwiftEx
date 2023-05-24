@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Text,
   DeviceEventEmitter,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import {
@@ -19,7 +21,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
 import PhoneInput from "react-native-phone-number-input";
 import { login, verifyLoginOtp } from "../../api";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import RNOtpVerify from "react-native-otp-verify";
 
 export const ExchangeLogin = (props) => {
@@ -32,7 +34,6 @@ export const ExchangeLogin = (props) => {
   const [Message, setMessage] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState();
-
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -99,11 +100,37 @@ export const ExchangeLogin = (props) => {
     }
   };
 
+  const HideKeyboard = ({ children }) => (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss()}>
+      {children}
+    </TouchableWithoutFeedback>
+  );
+
+  useFocusEffect(() => {
+    console.log("focus changed");
+    try {
+      if (props.route.params) {
+        if (props.route.params.phoneNumber) {
+          console.log(props.route.params.phoneNumber);
+          setIsOtpSent(true);
+          const phoneNumber = props.route.params.phoneNumber;
+          if (phoneNumber) {
+            setFormattedValue(phoneNumber);
+            setIsOtpSent(true);
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
   useEffect(() => {
     try {
       if (props.route.params) {
         if (props.route.params.phoneNumber) {
           console.log(props.route.params.phoneNumber);
+          setIsOtpSent(true);
           const phoneNumber = props.route.params.phoneNumber;
           if (phoneNumber) {
             setFormattedValue(phoneNumber);
@@ -136,7 +163,10 @@ export const ExchangeLogin = (props) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        onStartShouldSetResponder={() => Keyboard.dismiss()}
+      >
         {isOtpSent === false ? (
           <View style={styles.content}>
             <View>
@@ -153,6 +183,7 @@ export const ExchangeLogin = (props) => {
                 defaultValue={value}
                 defaultCode="IN"
                 layout="first"
+                autoFocus={false}
                 onChangeText={(text) => {
                   setValue(text);
                 }}
@@ -161,10 +192,8 @@ export const ExchangeLogin = (props) => {
                 }}
                 withDarkTheme
                 withShadow
-                autoFocus
               />
             </View>
-
             <View style={{ marginTop: 10 }}>
               {showMessage ? (
                 <Text style={{ color: "white" }}>{Message}</Text>
@@ -174,7 +203,9 @@ export const ExchangeLogin = (props) => {
             </View>
 
             {loading ? (
-              <ActivityIndicator size="large" color="white" />
+              <View style={{ marginTop: 10 }}>
+                <ActivityIndicator size="large" color="white" />
+              </View>
             ) : (
               <Text> </Text>
             )}
@@ -190,7 +221,7 @@ export const ExchangeLogin = (props) => {
                   onPress={() => {
                     setLoading(true);
                     const checkValid = phoneInput.current?.isValidNumber(value);
-                    setLoading(false);
+                    console.log(checkValid)
                     if (checkValid) {
                       try {
                         setMessage("Your number is valid");
@@ -198,12 +229,16 @@ export const ExchangeLogin = (props) => {
                       } catch (e) {
                         console.log(e);
                         alert(e);
+
                       }
                     } else {
                       setMessage("Your number is invalid");
+                      setLoading(false)
+
                     }
                     setShowMessage(true);
                     setValid(checkValid ? checkValid : false);
+
                     console.log(checkValid);
                   }}
                 >
@@ -402,147 +437,3 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
-
-/*import { LoadingButton } from '@mui/lab'
-import { TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/style.css'
-import { useSearchParams } from 'react-router-dom'
-import { login, verifyLoginOtp } from '../../api'
-
-export const ExchangeLogin = (props) => {
-  const [formContent, setFormContent] = useState({ phoneNumber: '', otp: '' })
-  const [isOtpSent, setIsOtpSent] = useState(false)
-  const [searchParams] = useSearchParams()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [message, setMessage] = useState('')
-
-  useEffect(() => {
-    if (searchParams) {
-      const phoneNumber = searchParams.get('phone')
-      if (phoneNumber) {
-        setFormContent({ ...formContent, phoneNumber: phoneNumber.trim() })
-        setIsOtpSent(true)
-      }
-    }
-  }, [searchParams])
-
-  const handleChange = (event, phone = null) => {
-    const newState = { ...formContent }
-    newState[event.target.name] = phone || event.target.value
-    setFormContent(newState)
-  }
-
-  const submitPhoneNumber = async () => {
-    try {
-      const { phoneNumber } = formContent
-      if (!phoneNumber) throw new Error('Phone number is required')
-
-      setIsSubmitting(true)
-      console.log(phoneNumber)
-      const { err } = await login({ phoneNumber: `+${phoneNumber}` })
-      if (err) throw new Error(`${err.status}: ${err.message}`)
-
-      setMessage('OTP is sent')
-      setIsOtpSent(true)
-    } catch (err) {
-      setMessage(err.message)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const submitOtp = async () => {
-    try {
-      setIsSubmitting(true)
-      const { phoneNumber, otp } = formContent
-      if (!phoneNumber) throw new Error('Phone number is required')
-      if (!otp) throw new Error('OTP is required')
-      console.log(formContent)
-
-      const { err } = await verifyLoginOtp({
-        phoneNumber: `+${phoneNumber}`,
-        otp,
-      })
-      if (err) throw new Error(`${err.status}: ${err.message}`)
-
-      window.location = '/'
-    } catch (err) {
-      setMessage(err.message)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  return (
-    <div className="mt-5 text-center">
-      <h1>Login Here</h1>
-      <hr></hr>
-      <p>{message}</p>
-      <div className="g-2 my-4 text-center justify-content-center row row-cols-1 ">
-        {isOtpSent ? (
-          <>
-            <div className="col">
-              {' '}
-              Your phone number: {formContent.phoneNumber}
-            </div>
-            <div className="col">
-              <TextField
-                id="outlined-basic"
-                label="OTP Here"
-                variant="outlined"
-                name="otp"
-                onChange={handleChange}
-                value={formContent.otp}
-                type="number"
-              />
-            </div>
-            <div className="col">
-              <LoadingButton
-                onClick={submitOtp}
-                variant="contained"
-                loading={isSubmitting}
-              >
-                Submit OTP
-              </LoadingButton>
-            </div>
-            <div className="col">
-              <LoadingButton onClick={submitPhoneNumber} loading={isSubmitting}>
-                Resend OTP
-              </LoadingButton>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="col-auto">
-              <PhoneInput
-                country={'us'}
-                inputProps={{ name: 'phoneNumber' }}
-                countryCodeEditable={true}
-                value={formContent.phoneNumber}
-                onChange={(phone, data, event) => handleChange(event, phone)}
-                placeholder="Enter your phone number"
-                disabled={false}
-              />
-            </div>
-            <div className="col">
-              {}
-              <LoadingButton
-                onClick={submitPhoneNumber}
-                variant="contained"
-                loading={isSubmitting}
-              >
-                Get OTP
-              </LoadingButton>
-            </div>
-          </>
-        )}
-      </div>
-      <div className="form-text">
-        If you don't have an account <a href="/signup">sign up here</a>
-      </div>
-    </div>
-  )
-}
-*/

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Keyboard,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import "@ethersproject/shims";
@@ -25,6 +26,8 @@ import {
   getAmountsOut,
   SendTransaction,
   approveSwap,
+  isFloat,
+  isInteger,
 } from "../../utilities/utilities";
 import {
   widthPercentageToDP as wp,
@@ -38,26 +41,17 @@ import {
   getETHtoTokenPrice,
   getTokentoEthPrice,
 } from "../tokens/swapFunctions";
-import {
-  tokenTotokenPrice,
-} from "../tokens/UniswapFunctions";
+import { tokenTotokenPrice } from "../tokens/UniswapFunctions";
 import tokenList from "../tokens/tokenList.json";
 import PancakeList from "../tokens/pancakeSwap/PancakeList.json";
 import chooseSwap from "../tokens/chooseSwap.json";
 import { getSwapPrice } from "../tokens/pancakeSwap/pancakeFunctions";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import SwapPinModal from "./swapPinModal";
-const UNISWAP = require("@uniswap/sdk");
-const {
-  Token,
-  WETH,
-  Fetcher,
-  Route,
-  Trade,
-  TokenAmount,
-  TradeType,
-  Percent,
-} = require("@uniswap/sdk");
+import {
+  getBnbTokenBalance,
+  getEthTokenBalance,
+} from "../../utilities/web3utilities";
 
 const SwapModal = ({ modalVisible, setModalVisible }) => {
   const [loading, setLoading] = useState(false);
@@ -77,6 +71,8 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
   const [walletType, setWalletType] = useState("");
   const [pinViewVisible, setPinViewVisible] = useState(false);
   const state = useSelector((state) => state);
+  const [disable, setDisable] = useState(true);
+  const[message, setMessage] = useState('')
   const [coin0, setCoin0] = useState({
     name: "Token1",
     address: "",
@@ -97,28 +93,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
   const [coinType, setCoinType] = useState();
   const navigation = useNavigation();
   console.log(state.wallet);
-
-  const getCustomBalance = async () => {
-    const response = await fetch(`http://${urls.testUrl}/user/getbalance`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        token: label,
-        walletAddress: state.wallet.address ? state.wallet.address : "",
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        setBalance(json.responseData);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
   const dispatch = useDispatch();
 
@@ -164,25 +138,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
         }
       }
     );
-  };
-  const Balance = async () => {
-    if (state.wallet.address) {
-      await dispatch(getBalance(state.wallet.address))
-        .then((response) => {
-          console.log(response);
-          const res = response;
-          if (res.status == "success") {
-            console.log(res);
-
-            console.log("success");
-          } else {
-            console.log("error");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
   };
 
   const pancakeSwap = async (decrypt) => {
@@ -462,7 +417,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
         setData(data);
       } else if (Type === "BSC") {
         const data = PancakeList;
-        console.log(data);
+        // console.log(data);
         setChooseChain(data);
         setData(data);
       }
@@ -474,7 +429,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
         setTradePrice(response)
 
        })*/
-    Balance();
   }, []);
 
   useEffect(async () => {
@@ -505,7 +459,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
         setTradePrice(response)
 
        })*/
-    Balance();
   }, [state.wallet]);
 
   useEffect(async () => {
@@ -519,14 +472,117 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
       //  console.log(data)
       setData(data);
     }
-  }, [coin0]);
+  }, [coin0.name]);
+
+  useEffect(async () => {
+    const walletType = await AsyncStorageLib.getItem("walletType");
+
+    const address = await state.wallet.address;
+    console.log(coin0.address);
+    console.log(walletType);
+    if (JSON.parse(walletType) === "Ethereum") {
+      if (coin0.symbol === "WETH") {
+        console.log(await state.EthBalance);
+        setBalance(await state.EthBalance);
+        return;
+      } else if (coin0.ChainId === 1 || coin0.ChainId === 5) {
+        await getEthTokenBalance(address, coin0.address).then((balance) => {
+          console.log("My Token Balance", balance);
+          setBalance(balance);
+        });
+      } else {
+        setBalance(0);
+      }
+    } else if (JSON.parse(walletType) === "BSC") {
+      if (coin0.symbol === "BNB") {
+        console.log(await state.walletBalance);
+        setBalance(await state.walletBalance);
+        return;
+      } else if (coin0.ChainId === 56) {
+        await getBnbTokenBalance(address, coin0.address).then((balance) => {
+          console.log(balance);
+          setBalance(balance);
+        });
+      } else {
+        setBalance(0);
+      }
+    } else if (JSON.parse(walletType) === "Multi-coin") {
+      if (coin0.ChainId === 56) {
+        if (coin0.symbol === "BNB") {
+          console.log(await state.walletBalance);
+          setBalance(await state.walletBalance);
+          return;
+        }
+        await getBnbTokenBalance(address, coin0.address).then((balance) => {
+          console.log(balance);
+          setBalance(balance);
+        });
+      } else if (coin0.ChainId === 1 || coin0.ChainId === 5) {
+        if (coin0.symbol === "WETH") {
+          console.log(await state.EthBalance);
+          setBalance(await state.EthBalance);
+          return;
+        }
+        await getEthTokenBalance(address, coin0.address).then((balance) => {
+          console.log("My Token Balance", balance);
+          setBalance(balance);
+        });
+      }
+    }
+  }, [coin0.address]);
+
+  useEffect(() => {
+    let inputValidation;
+    let inputValidation1;
+    inputValidation = isFloat(amount);
+    inputValidation1 = isInteger(amount);
+
+    if (coin1.address && coin0.address && amount!=0 && (inputValidation || inputValidation1)) {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+  }, [coin0, coin1, amount]);
+
+  useEffect(()=>{
+    let inputValidation;
+    let inputValidation1;
+    inputValidation = isFloat(amount);
+    inputValidation1 = isInteger(amount);
+
+    if(amount!=0){
+      console.log(amount>balance)
+      if(amount>balance)
+      {
+        setDisable(true)
+        setMessage('Low Balance')
+      }
+      else if(!inputValidation && !inputValidation1){
+        setMessage("Please enter a valid amount");
+      }
+      else{
+        setMessage('')
+      }
+    }else{
+      setMessage('')
+    }
+  },[amount])
+
+  
 
   return (
-    <View style={{ marginTop: hp(50) }}>
+    <View
+      style={{ marginTop: hp(50) }}
+      onStartShouldSetResponder={() => Keyboard.dismiss()}
+    >
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
+        useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         statusBarTranslucent={true}
         onRequestClose={() => {
           setModalVisible(false);
@@ -551,7 +607,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   }}
                 >
                   <Text style={{ margin: 10, color: "grey" }}>You Pay</Text>
-                  <View style={{ display: "flex", flexDirection: "row" }}>
+                  <View
+                    style={{ display: "flex", flexDirection: "row" }}
+                    onStartShouldSetResponder={() => Keyboard.dismiss()}
+                  >
                     <TextInput
                       style={styles.textInput2}
                       keyboardType="numeric"
@@ -578,7 +637,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                       }}
                       onPress={() => {
                         setCoinType("0");
-
                         setOpenChain(true);
                       }}
                     >
@@ -589,7 +647,9 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                       />
                     </TouchableOpacity>
                   </View>
-                  <Text style={{ margin: 5, color: "grey" }}>Balance:{0}</Text>
+                  <Text style={{ margin: 5, color: "grey" }}>
+                    Balance:{balance ? balance : 0}
+                  </Text>
                 </View>
                 <Icon
                   name={"swap-vertical"}
@@ -609,15 +669,15 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     backgroundColor: "white",
                     marginTop: hp(0.5),
                   }}
+                  onStartShouldSetResponder={() => Keyboard.dismiss()}
                 >
                   <Text style={{ margin: 10, color: "grey" }}>You Get</Text>
                   <View style={{ display: "flex", flexDirection: "row" }}>
                     <TextInput
                       style={styles.textInput2}
+                      disabled={true}
                       keyboardType="numeric"
-                      placeholder={
-                        tradePrice ? `${tradePrice.token1totoken2}` : "0"
-                      }
+                      placeholder={trade ? `${trade.minimumAmountOut}` : `0`}
                       onChangeText={(text) => {
                         setAmount2(text);
                       }}
@@ -640,6 +700,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                       }}
                       onPress={() => {
                         setCoinType("1");
+
                         setVisible(true);
                       }}
                     >
@@ -650,23 +711,35 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                       />
                     </TouchableOpacity>
                   </View>
-                  <Text style={{ margin: 5, color: "grey" }}>Balance:{0}</Text>
                 </View>
               </View>
             </View>
-            <Text style={{ marginLeft: wp(15) }}>
+            <Text style={{ marginLeft: wp(18) }}>
               {" "}
               {amount} {coin0.name} ={" "}
               {tradePrice ? tradePrice.token1totoken2 : ""} {coin1.name}
             </Text>
-            <Text style={{ marginLeft: wp(15) }}>
-              {" "}
-              {amount2} {coin1.name} ={" "}
-              {tradePrice ? tradePrice.token2totoken1 : ""} {coin0.name}
+            <View style={{display:'flex', alignContent:'center', alignItems:'center'}}>
+            <Text style={{ marginTop:20, color:'red' }}>
+              {message}
             </Text>
+            </View>
           </View>
           <TouchableOpacity
-            style={styles.addButton2}
+            style={{
+              position: "absolute",
+              zIndex: 11,
+              left: wp(10),
+              bottom: hp(23),
+              backgroundColor: disable ? "grey" : "#000C66",
+              width: wp(80),
+              height: 70,
+              borderRadius: 5,
+              alignItems: "center",
+              justifyContent: "center",
+              elevation: 8,
+            }}
+            disabled={disable}
             onPress={async () => {
               //setVisible(true)
               setLoading2(true);
@@ -675,6 +748,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
 
               const Wallet = await state.wallet;
               console.log(Wallet);
+              console.log(amount);
               if (walletType === "Ethereum") {
                 if (Wallet) {
                   if (coin0.symbol === "WETH") {
@@ -684,7 +758,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         if (resp) {
                           console.log(resp);
                           setLoading2(false);
-                          setTradePrice(resp);
+                          setTradePrice({
+                            token1totoken2: resp.token1totoken2,
+                            token2totoken1: resp.token2totoken1,
+                          });
                           setTrade(resp.trade);
                           setTradeVisible(true);
                         }
@@ -699,7 +776,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         console.log(resp);
                         if (resp) {
                           console.log(resp);
-                          setTradePrice(resp);
+                          setTradePrice({
+                            token1totoken2: resp.token1totoken2,
+                            token2totoken1: resp.token2totoken1,
+                          });
                           setTrade(resp.trade);
                           setTradeVisible(true);
                           setLoading2(false);
@@ -719,7 +799,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     )
                       .then((response) => {
                         console.log(response);
-                        setTradePrice(response);
+                        setTradePrice({
+                          token1totoken2: response.token1totoken2,
+                          token2totoken1: response.token2totoken1,
+                        });
                         setTrade(response.trade);
                         setTradeVisible(true);
                         setLoading2(false);
@@ -751,7 +834,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         minimumAmountOut: response.token1totoken2,
                       };
                       console.log(response.token1totoken2);
-                      setTradePrice(response.token1totoken2);
+                      setTradePrice({
+                        token1totoken2: response.token1totoken2,
+                        token2totoken1: response.token2totoken1,
+                      });
                       setTrade(trade);
                       setTradeVisible(true);
                       setLoading2(false);
@@ -775,7 +861,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         minimumAmountOut: response.token1totoken2,
                       };
                       console.log(response.token1totoken2);
-                      setTradePrice(response.token1totoken2);
+                      setTradePrice({
+                        token1totoken2: response.token1totoken2,
+                        token2totoken1: response.token2totoken1,
+                      });
                       setTrade(trade);
                       setTradeVisible(true);
                       setLoading2(false);
@@ -805,7 +894,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           minimumAmountOut: response.token1totoken2,
                         };
                         console.log(response.token1totoken2);
-                        setTradePrice(response.token1totoken2);
+                        setTradePrice({
+                          token1totoken2: response.token1totoken2,
+                          token2totoken1: response.token2totoken1,
+                        });
                         setTrade(trade);
                         setTradeVisible(true);
                         setLoading2(false);
@@ -831,7 +923,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           if (resp) {
                             console.log(resp);
                             setLoading2(false);
-                            setTradePrice(resp);
+                            setTradePrice({
+                              token1totoken2: resp.token1totoken2,
+                              token2totoken1: resp.token2totoken1,
+                            });
                             setTrade(resp.trade);
                             setTradeVisible(true);
                           }
@@ -846,7 +941,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           console.log(resp);
                           if (resp) {
                             console.log(resp);
-                            setTradePrice(resp);
+                            setTradePrice({
+                              token1totoken2: resp.token1totoken2,
+                              token2totoken1: resp.token2totoken1,
+                            });
                             setTrade(resp.trade);
                             setTradeVisible(true);
                             setLoading2(false);
@@ -866,7 +964,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                       )
                         .then((response) => {
                           console.log(response);
-                          setTradePrice(response);
+                          setTradePrice({
+                            token1totoken2: response.token1totoken2,
+                            token2totoken1: response.token2totoken1,
+                          });
                           setTrade(response.trade);
                           setTradeVisible(true);
                           setLoading2(false);
@@ -886,6 +987,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     amount,
                     "ether"
                   );
+                  console.log("My amount", amountIn);
                   let type;
                   if (coin0.symbol === "BNB") {
                     type = "BNBTOTOKEN";
@@ -902,7 +1004,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           minimumAmountOut: response.token1totoken2,
                         };
                         console.log(response);
-                        setTradePrice(response.token1totoken2);
+                        setTradePrice({
+                          token1totoken2: response.token1totoken2,
+                          token2totoken1:
+                            Number(amount) / Number(response.token1totoken2),
+                        });
                         setTrade(trade);
                         setTradeVisible(true);
                         setLoading2(false);
@@ -926,7 +1032,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           minimumAmountOut: response.token1totoken2,
                         };
                         console.log(response.token1totoken2);
-                        setTradePrice(response.token1totoken2);
+                        setTradePrice({
+                          token1totoken2: response.token1totoken2,
+                          token2totoken1:
+                            Number(amount) / Number(response.token1totoken2),
+                        });
                         setTrade(trade);
                         setTradeVisible(true);
                         setLoading2(false);
@@ -956,7 +1066,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                             minimumAmountOut: response.token1totoken2,
                           };
                           console.log(response.token1totoken2);
-                          setTradePrice(response.token1totoken2);
+                          setTradePrice({
+                            token1totoken2: response.token1totoken2,
+                            token2totoken1:
+                              Number(amount) / Number(response.token1totoken2),
+                          });
                           setTrade(trade);
                           setTradeVisible(true);
                           setLoading2(false);
@@ -994,6 +1108,9 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           animationOutTiming={200}
           isVisible={openChain}
           useNativeDriver={true}
+          useNativeDriverForBackdrop={true}
+          backdropTransitionOutTiming={0}
+          hideModalContentWhileAnimating
           onBackButtonPress={() => {
             //setShowModal(!showModal);
             setOpenChain(false);
@@ -1028,6 +1145,9 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           animationOutTiming={200}
           isVisible={visible}
           useNativeDriver={true}
+          useNativeDriverForBackdrop={true}
+          backdropTransitionOutTiming={0}
+          hideModalContentWhileAnimating
           onBackButtonPress={() => {
             //setShowModal(!showModal);
             setVisible(false);
@@ -1063,6 +1183,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           animationOutTiming={650}
           isVisible={Tradevisible}
           useNativeDriver={true}
+          useNativeDriverForBackdrop={true}
+          backdropTransitionOutTiming={0}
+          hideModalContentWhileAnimating
+          onBackdropPress={() => setTradeVisible(false)}
           onBackButtonPress={() => {
             setTradeVisible(false);
           }}
@@ -1100,373 +1224,15 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               <TouchableOpacity
                 disabled={loading === true ? true : false}
                 style={styles.addButton3}
-                onPress={async () => {
-                  setPinViewVisible(true);
-                  /* try{
-          setLoading(true)
-          const walletType = await AsyncStorage.getItem('walletType')
-          console.log(JSON.parse(walletType))
-          const Wallet =await state.wallet
-          console.log(Wallet)
-          if(JSON.parse(walletType)==='Ethereum'){
-            
-            if(Wallet){
-              if(coin0.symbol==='WETH'){
-                
-                
-                await SwapEthForTokens(Wallet.privateKey,Wallet.address,coin1.address,amount)
-                .then(async (response)=>{
-                  console.log(response)
-                  if(response){
-                    if(response.code===400){
-                      return alert('server error please try again')
+                onPress={() => {
+                  setTimeout(() => {
+                    if (Number(amount) >= Number(balance)) {
+                      return alert(
+                        "You Don't have enough balance to do this transaction"
+                      );
                     }
-                    else if(response.code===401){
-                      console.log(response)
-                      const type ='Swap'
-                      const wallettype = JSON.parse( walletType )
-                      const chainType = 'Eth'
-                      await SaveTransaction(type,response.tx.transactionHash,wallettype,chainType)
-                      .then((resp)=>{
-                        setLoading(false)
-                        setTradeVisible(false)
-                        setModalVisible(false)
-                        
-                        alert("Your Tx Hash : "+response.tx.transactionHash)
-                        navigation.navigate('Transactions')
-                      })
-                      .catch((e)=>{
-                        setLoading(false)
-                        
-                        console.log(e)
-                      })
-                      
-                    }else if(response.code===404){
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert('pair not found')
-                    }else{
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert(response)
-                    }
-                  }else{
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert('server error')
-                  }
-                }).catch((e)=>{
-                  setLoading(false)
-                  setTradeVisible(false);
-                  
-                  console.log(e)
-                })
-              }else if(coin1.symbol==="WETH"){
-                await UniSwap(Wallet.privateKey,Wallet.address,coin0.address,amount)
-                .then(async(response)=>{
-                  console.log(response)
-                  if(response){
-                    if(response.code===401){
-                      console.log("Your Tx Hash : "+response.tx)
-                      const type ='Swap'
-                      const wallettype = JSON.parse( walletType )
-                    const chainType = 'Eth'
-                    await SaveTransaction(type,response.tx,wallettype,chainType)
-                    .then((resp)=>{
-                      
-                      setLoading(false)
-                      setTradeVisible(false);
-                      setModalVisible(false)
-                      
-                      alert("Your Tx Hash : "+response.tx)
-                      navigation.navigate('Transactions')
-                      
-                    })
-                    .catch((e)=>{
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      console.log(e)
-                    })
-                    
-                  }else if(response.code===400){
-                    
-                    return alert('error while swapping. please try again')
-                  }
-                  
-                  else if(response===404){
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert('pair not found')
-                  }else{
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert(response)
-                  }
-                }else{
-                  setLoading(false)
-                  setTradeVisible(false);
-                  
-                  return alert('server error')
-                }
-              }).catch((e)=>{
-                setLoading(false)
-                setTradeVisible(false);
-                
-                console.log(e)
-              })
-            }
-            else{
-              await SwapTokensToTokens (Wallet.privateKey,Wallet.address,coin0.address,coin1.address,amount)
-              .then(async (response)=>{
-                console.log(response)
-                if(response){
-                  if(response.code==401){
-                    console.log(response)
-                    const type ='Swap'
-                    const wallettype = JSON.parse( walletType )
-                    const chainType = 'Eth'
-                    const saveTransaction = await SaveTransaction(type,response.tx,wallettype,chainType)
-                    .then((resp)=>{
-                      setLoading(false)
-                      setTradeVisible(false);
-                      setModalVisible(false)
-                      
-                      alert("Your Tx Hash : "+response.tx)
-                      navigation.navigate('Transactions')
-                    })
-                    .catch((e)=>{
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      console.log(e)
-                    })
-                  }else if(response===404){
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert('pair not found')
-                  }else{
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert(response)
-                  }
-                }else{
-                  setLoading(false)
-                  setTradeVisible(false);
-                  
-                  return alert('server error')
-                }
-              }).catch((e)=>{
-                setLoading(false)
-                setTradeVisible(false);
-                
-                console.log(e)
-              })
-            }
-          }
-          else{
-            setLoading(false)
-            
-            alert('no wallets found')
-          }
-        }else if(JSON.parse(walletType)==='BSC'){
-          const swap = await pancakeSwap(Wallet.privateKey)
-          setModalVisible(false)
-          setLoading(false)
-          setTradeVisible(false);
-          
-        }
-        else if(JSON.parse(walletType)==='Multi-coin'){
-          if(swapType==='ETH'){
-            
-            if(Wallet){
-              if(coin0.symbol==='WETH'){
-                
-                
-                await SwapEthForTokens(Wallet.privateKey,Wallet.address,coin1.address,amount)
-                .then(async (response)=>{
-                  console.log(response)
-                  if(response){
-                    if(response.code===400){
-                      return alert('server error please try again')
-                    }
-                    else if(response.code===401){
-                      console.log(response)
-                      const type ='Swap'
-                      const wallettype = JSON.parse( walletType )
-                      const chainType = 'Eth'
-                      await SaveTransaction(type,response.tx.transactionHash,wallettype,chainType)
-                      .then((resp)=>{
-                        setLoading(false)
-                        setTradeVisible(false)
-                        setModalVisible(false)
-                        
-                        alert("Your Tx Hash : "+response.tx.transactionHash)
-                        navigation.navigate('Transactions')
-                      })
-                      .catch((e)=>{
-                        setLoading(false)
-                        
-                        console.log(e)
-                      })
-                      
-                    }else if(response.code===404){
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert('pair not found')
-                    }else{
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert(response)
-                    }
-                  }else{
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert('server error')
-                  }
-                }).catch((e)=>{
-                  setLoading(false)
-                  setTradeVisible(false);
-                  
-                  console.log(e)
-                })
-              }else if(coin1.symbol==="WETH"){
-                await UniSwap(Wallet.privateKey,Wallet.address,coin0.address,amount)
-                .then(async(response)=>{
-                  console.log(response)
-                  if(response){
-                    if(response.code===401){
-                      console.log("Your Tx Hash : "+response.tx)
-                      const type ='Swap'
-                      const wallettype = JSON.parse( walletType )
-                      const chainType = 'Eth'
-                      await SaveTransaction(type,response.tx,wallettype,chainType)
-                      .then((resp)=>{
-                        
-                        setLoading(false)
-                        setTradeVisible(false);
-                        setModalVisible(false)
-                        
-                        alert("Your Tx Hash : "+response.tx)
-                        navigation.navigate('Transactions')
-                        
-                      })
-                      .catch((e)=>{
-                        setLoading(false)
-                        setTradeVisible(false);
-                        
-                        console.log(e)
-                      })
-                      
-                    }else if(response.code===400){
-                      
-                      return alert('error while swapping. please try again')
-                    }
-                    
-                    else if(response===404){
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert('pair not found')
-                    }else{
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert(response)
-                    }
-                  }else{
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert('server error')
-                  }
-                }).catch((e)=>{
-                  setLoading(false)
-                  setTradeVisible(false);
-                  
-                  console.log(e)
-                })
-              }
-              else{
-                await SwapTokensToTokens (Wallet.privateKey,Wallet.address,coin0.address,coin1.address,amount)
-                .then(async (response)=>{
-                  console.log(response)
-                  if(response){
-                    if(response.code==401){
-                      console.log(response)
-                      const type ='Swap'
-                      const wallettype = JSON.parse( walletType )
-                      const chainType = 'Eth'
-                      const saveTransaction = await SaveTransaction(type,response.tx,wallettype,chainType)
-                      .then((resp)=>{
-                        setLoading(false)
-                        setTradeVisible(false);
-                        setModalVisible(false)
-                        
-                        alert("Your Tx Hash : "+response.tx)
-                        navigation.navigate('Transactions')
-                      })
-                      .catch((e)=>{
-                        setLoading(false)
-                        setTradeVisible(false);
-                        
-                        console.log(e)
-                      })
-                    }else if(response===404){
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert('pair not found')
-                    }else{
-                      setLoading(false)
-                      setTradeVisible(false);
-                      
-                      return alert(response)
-                    }
-                  }else{
-                    setLoading(false)
-                    setTradeVisible(false);
-                    
-                    return alert('server error')
-                  }
-                }).catch((e)=>{
-                  setLoading(false)
-                  setTradeVisible(false);
-                  
-                  console.log(e)
-                })
-              }
-            }
-            else{
-              setLoading(false)
-              
-              alert('no wallets found')
-            }
-          }else if(swapType==='BSC'){
-            const swap = await pancakeSwap(Wallet.privateKey)
-            setModalVisible(false)
-            setLoading(false)
-            setTradeVisible(false);
-            
-          }
-          
-        }
-      }catch(e){
-        setLoading(false)
-        setTradeVisible(false);
-        
-        console.log(e)
-      }*/
+                    setPinViewVisible(true);
+                  }, 0);
                 }}
               >
                 <Text style={styles.addButtonText}>
@@ -1479,20 +1245,22 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               </TouchableOpacity>
             </View>
           </View>
+
+          <SwapPinModal
+            pinViewVisible={pinViewVisible}
+            setPinViewVisible={setPinViewVisible}
+            setModalVisible={setModalVisible}
+            setTradeVisible={setTradeVisible}
+            pancakeSwap={pancakeSwap}
+            coin0={coin0}
+            coin1={coin1}
+            SaveTransaction={SaveTransaction}
+            swapType={swapType}
+            setLoading={setLoading}
+            amount={amount}
+          />
         </Modal2>
       </Modal>
-      <SwapPinModal
-        pinViewVisible={pinViewVisible}
-        setPinViewVisible={setPinViewVisible}
-        setModalVisible={setModalVisible}
-        setTradeVisible={setTradeVisible}
-        pancakeSwap={pancakeSwap}
-        coin0={coin0}
-        coin1={coin1}
-        SaveTransaction={SaveTransaction}
-        swapType={swapType}
-        setLoading={setLoading}
-      />
     </View>
   );
 };

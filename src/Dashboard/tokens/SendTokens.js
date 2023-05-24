@@ -27,6 +27,9 @@ import {
 import { SendCrypto } from "./sendFunctions";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
+import { urls } from "../constants";
+import { checkAddressValidity } from "../../utilities/web3utilities";
+import { isFloat, isInteger } from "../../utilities/utilities";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -40,7 +43,7 @@ const SendTokens = (props) => {
   const [balance, setBalance] = useState();
   const [walletType, setWallettype] = useState("");
   const [disable, setDisable] = useState(true);
-
+  const [message, setMessage] = useState("");
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
@@ -48,58 +51,138 @@ const SendTokens = (props) => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  const getXrpBal = async (address) => {
+    console.log(address);
+
+    try {
+      const response = await fetch(
+        `http://${urls.testUrl}/user/getXrpBalance`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            address: address,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          if (responseJson) {
+            console.log(responseJson.responseData);
+            setBalance(
+              responseJson.responseData ? responseJson.responseData : 0
+            );
+          } else {
+            console.log(response);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          //alert('unable to update balance')
+        });
+
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const Balance = async (Type) => {
-    const wallet = await AsyncStorageLib.getItem("wallet");
-    const address = (await state.wallet.address)
-      ? await state.wallet.address
-      : JSON.parse(wallet).address;
-    console.log(state.wallet.address);
-    if (!state.wallet.address) {
-      setBalance(0);
-      alert("please select a wallet first");
-    } else {
-      if (Type) {
-        if (Type == "Ethereum") {
-          await dispatch(
-            getEthBalance(state.wallet.address ? state.wallet.address : address)
-          ).then((res) => {
-            console.log(res.EthBalance);
-            setBalance(res.EthBalance);
-          });
-        } else if (Type == "Matic") {
-          await dispatch(
-            getMaticBalance(
-              state.wallet.address ? state.wallet.address : address
-            )
-          ).then((res) => {
-            console.log(res.MaticBalance);
-            setBalance(res.MaticBalance);
-          });
-        } else if (Type == "Xrp") {
-          await AsyncStorageLib.getItem("wallet").then(async (wallet) => {
+    try {
+      const wallet = await AsyncStorageLib.getItem("wallet");
+      const address = (await state.wallet.address)
+        ? await state.wallet.address
+        : JSON.parse(wallet).address;
+      console.log(state.wallet.address);
+      if (!state.wallet.address) {
+        setBalance(0);
+        alert("please select a wallet first");
+      } else {
+        if (Type) {
+          if (Type == "Ethereum") {
             await dispatch(
-              getXrpBalance(JSON.parse(wallet).classicAddress)
+              getEthBalance(
+                state.wallet.address ? state.wallet.address : address
+              )
             ).then((res) => {
-              console.log(res.XrpBalance);
-              setBalance(res.XrpBalance);
+              console.log(res.EthBalance);
+              setBalance(res.EthBalance);
             });
-          });
-        } else if (Type == "BNB") {
-          await dispatch(getBalance(state.wallet.address))
-            .then(async (response) => {
-              console.log(response);
-              const res = await response;
-              if (res.status == "success") {
-                console.log(res);
-                setBalance(res.walletBalance);
-                console.log("success");
-              }
-            })
-            .catch((error) => {
-              console.log(error);
+          } else if (Type == "Matic") {
+            console.log(MaticBalance);
+            await dispatch(
+              getMaticBalance(
+                state.wallet.address ? state.wallet.address : address
+              )
+            ).then(async (res) => {
+              let bal = await AsyncStorageLib.getItem("MaticBalance");
+              console.log(bal);
+              console.log(res.MaticBalance);
+              setBalance(bal);
             });
+          } else if (Type === "Multi-coin-Xrp") {
+            try {
+              await AsyncStorageLib.getItem("wallet")
+                .then(async (wallet) => {
+                  console.log("XrpMulti", JSON.parse(wallet));
+                  await dispatch(getXrpBalance(JSON.parse(wallet).xrp.address))
+                    .then((res) => {
+                      console.log(res.XrpBalance);
+                      setBalance(res.XrpBalance ? res.XrpBalance : 0);
+                    })
+                    .catch((e) => {
+                      console.log(e);
+                    });
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
+            } catch (e) {
+              console.log(e);
+            }
+          } else if (Type == "Xrp") {
+            try {
+              await AsyncStorageLib.getItem("wallet")
+                .then(async (wallet) => {
+                  console.log(JSON.parse(wallet).address);
+                  await dispatch(getXrpBalance(JSON.parse(wallet).address))
+                    .then((res) => {
+                      console.log(res.XrpBalance);
+                      setBalance(res.XrpBalance ? res.XrpBalance : 0);
+                    })
+                    .catch((e) => {
+                      console.log(e);
+                    });
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
+            } catch (e) {
+              console.log(e);
+            }
+          } else if (Type == "BNB") {
+            await dispatch(getBalance(state.wallet.address))
+              .then(async (response) => {
+                console.log(response);
+                const res = await response;
+                if (res.status == "success") {
+                  console.log(res);
+                  setBalance(res.walletBalance);
+                  console.log("success");
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
         }
       }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -108,12 +191,63 @@ const SendTokens = (props) => {
       toValue: 1,
       duration: 1000,
     }).start();
-    console.log(props.route.params.token);
-    const Type = await AsyncStorageLib.getItem("walletType");
-    setWallettype(JSON.parse(Type));
+    try {
+      console.log(props.route.params.token);
+      const Type = await AsyncStorageLib.getItem("walletType");
+      setWallettype(JSON.parse(Type));
 
-    await Balance(props.route.params.token);
-  }, [fadeAnim]);
+      await Balance(props.route.params.token).catch((e) => {
+        console.log(e);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    let inputValidation;
+    let inputValidation1;
+    const valid = checkAddressValidity(address);
+    inputValidation = isFloat(amount);
+    inputValidation1 = isInteger(amount);
+    console.log(inputValidation, inputValidation1);
+    if (
+      amount &&
+      balance &&
+      address &&
+      amount <= balance &&
+      valid &&
+      (inputValidation || inputValidation1)
+    ) {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+
+    if (address) {
+      if (!valid) {
+        setMessage("Please enter a valid address");
+      } else {
+        setMessage("");
+      }
+    }
+  }, [amount, address]);
+  useEffect(() => {
+    let inputValidation;
+    let inputValidation1;
+    if (amount) {
+      inputValidation = isFloat(amount);
+      inputValidation1 = isInteger(amount);
+
+      if (amount > balance) {
+        setMessage("Low Balance");
+      } else if (!inputValidation && !inputValidation1) {
+        setMessage("Please enter a valid amount");
+      } else {
+        setMessage("");
+      }
+    }
+  }, [amount]);
 
   return (
     <Animated.View // Special animatable View
@@ -142,9 +276,10 @@ const SendTokens = (props) => {
         <Text style={{ marginLeft: wp(5), marginTop: hp(10) }}> Amount </Text>
         <TextInput
           style={style.textInput2}
+          value={amount}
           keyboardType="numeric"
           onChangeText={(input) => {
-            if (input && address) {
+            if (amount && address) {
               setDisable(false);
             } else {
               setDisable(true);
@@ -153,6 +288,16 @@ const SendTokens = (props) => {
             setAmount(input);
           }}
         />
+        <View style={{ width: wp(20), margin: 10 }}>
+          <Button
+            color={"blue"}
+            title={"max"}
+            onPress={() => {
+              setAmount(balance);
+              console.log("pressed", amount, balance);
+            }}
+          />
+        </View>
         {Loading ? (
           <View style={{ marginBottom: hp("-4") }}>
             <ActivityIndicator size="small" color="blue" />
@@ -160,7 +305,15 @@ const SendTokens = (props) => {
         ) : (
           <Text> </Text>
         )}
-
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            alignContent: "center",
+          }}
+        >
+          <Text style={{ color: "red" }}>{message}</Text>
+        </View>
         <View style={{ width: wp(30), marginTop: hp(10), marginLeft: wp(33) }}>
           <Button
             disabled={disable}
@@ -168,28 +321,53 @@ const SendTokens = (props) => {
             title="Send"
             onPress={async () => {
               console.log(walletType);
-
+              let privateKey;
               const myAddress = await state.wallet.address;
               const token = props.route.params.token;
               const wallet = await AsyncStorageLib.getItem("Wallet");
               console.log(wallet);
-              const privateKey = (await state.wallet.privateKey)
-                ? await state.wallet.privateKey
-                : JSON.parse(wallet).privateKey;
-              console.log(privateKey);
+              /*  if(amount&&balance&&amount>balance){
+                setLoading(false)
+                console.log(amount,balance)
+                return alert("You don't have enough balance to do this transaction ")
+              } */
 
-              await SendCrypto(
-                address,
-                amount,
-                privateKey,
-                balance,
-                setLoading,
-                walletType,
-                setDisable,
-                myAddress,
-                token,
-                navigation
-              );
+              if (token === "Multi-coin-Xrp") {
+                privateKey = (await state.wallet.xrp.privateKey)
+                  ? await state.wallet.xrp.privateKey
+                  : JSON.parse(wallet).xrp.privateKey;
+              } else {
+                privateKey = (await state.wallet.privateKey)
+                  ? await state.wallet.privateKey
+                  : JSON.parse(wallet).privateKey;
+              }
+              console.log(privateKey);
+              /* if(balance<amount){
+                console.log(balance,amount)
+                return alert('You dont have enough balance to do this transaction')
+              }*/
+
+              if (
+                walletType &&
+                token &&
+                myAddress &&
+                privateKey &&
+                amount &&
+                address
+              ) {
+                await SendCrypto(
+                  address,
+                  amount,
+                  privateKey,
+                  balance,
+                  setLoading,
+                  walletType,
+                  setDisable,
+                  myAddress,
+                  token,
+                  navigation
+                );
+              }
             }}
           ></Button>
         </View>

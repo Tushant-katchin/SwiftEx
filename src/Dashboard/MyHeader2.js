@@ -3,11 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Alert,
   LayoutAnimation,
   Platform,
   UIManager,
@@ -31,6 +26,9 @@ import {
 import { Animated } from "react-native";
 import SwapModal from "./Modals/SwapModal";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { urls } from "./constants";
+import { getEtherBnbPrice, getEthPrice, getBnbPrice } from "../utilities/utilities";
+import { tokenAddresses } from "./constants";
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -41,6 +39,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   state = useSelector((state) => state);
   const state2 = useSelector((state) => state.walletBalance);
   const EthBalance = useSelector((state) => state.EthBalance);
+  const bnbBalance = useSelector((state)=> state.walletBalance)
   const walletState = useSelector((state) => state.wallets);
   const type = useSelector((state) => state.walletType);
 
@@ -50,15 +49,13 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
-  const [selectSwap, setSelectSwap] = useState(false);
   const [swapType, setSwapType] = useState("");
-  const [Data, setData] = useState([]);
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
   const [balance, GetBalance] = useState(0.0);
   const [wallet, getWallet] = useState(walletState ? walletState : []);
-  const [change, setChange] = useState();
   const [Type, setType] = useState("");
+  const [bnbPrice, setBnbPrice] = useState(0);
+  const [ethPrice, setEthPrice] = useState(0);
+  const[balanceUsd, setBalance] = useState(0.0)
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   if (Platform.OS === "android") {
@@ -71,13 +68,52 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     return <Icons name="bitcoin" size={20} color="white" />;
   };
   const translation = useRef(new Animated.Value(0)).current;
+  const getXrpBal = async (address) => {
+    console.log(address);
+   
+    try {
+      const response = await fetch(
+        `http://${urls.testUrl}/user/getXrpBalance`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            address: address,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          if (responseJson) {
+            setType("XRP")
+            console.log(responseJson.responseData);
+            GetBalance(responseJson.responseData?responseJson.responseData:0)
+          } else {
+            console.log(response);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          //alert('unable to update balance')
+        });
+
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
 
   const getAllBalance = async () => {
     try {
       const wallet = await AsyncStorageLib.getItem("wallet");
       const address = (await state.wallet.address)
         ? await state.wallet.address
-        : JSON.parse(wallet).classicAddress;
+        : "";
       const wType = await type;
 
       AsyncStorageLib.getItem("walletType").then(async (type) => {
@@ -123,19 +159,25 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             setType("BNB");
           }
         } else if (JSON.parse(type) == "Xrp") {
-          await AsyncStorageLib.getItem("wallet")
-            .then(async (wallet) => {
-              if (wallet) {
-                const resp = dispatch(
-                  getXrpBalance(JSON.parse(wallet).classicAddress)
-                );
-                console.log(resp);
-                setType("Xrp");
-              }
+          console.log("entering xrp balance");
+          try{
+
+            const resp =  dispatch(getXrpBalance(address))
+            .then((response)=>{
+              console.log(response)
+              setType("XRP")
+              console.log(response.XrpBalance);
+              GetBalance(response.XrpBalance?response.XrpBalance:0)
             })
-            .catch((e) => {
-              console.log(e);
-            });
+            .catch((e)=>{
+              console.log(e)
+            })
+            //await getXrpBal(address)
+            //await getXrpBal(address)
+          }catch(e){
+            console.log(e)
+          }
+          
         } else if (JSON.parse(type) == "Multi-coin") {
           await dispatch(getMaticBalance(address))
             .then(async (res) => {
@@ -177,23 +219,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             setType("BNB");
           }
         } else {
-          const wallet = await state.wallet.address;
-
-          if (wallet) {
-            await dispatch(getBalance(state.wallet.address))
-              .then(async () => {
-                const bal = await state.walletBalance;
-
-                if (bal) {
-                  GetBalance(bal);
-                } else {
-                  GetBalance(0);
-                }
-              })
-              .catch((e) => {
-                console.log(e);
-              });
-          }
+          setType("");
         }
       });
     } catch (e) {
@@ -202,7 +228,15 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   };
 
   useEffect(async () => {
-    getAllBalance();
+    try{
+
+      getAllBalance()
+      .catch((e)=>{
+        console.log(e)
+      });
+    }catch(e){
+      console.log(e)
+    }
 
     Animated.timing(translation, {
       toValue: 1,
@@ -211,14 +245,85 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     }).start();
   }, [state2, wallet]);
 
-  useEffect(async () => {
-    getAllBalance();
-  }, []);
+  useEffect( () => {
+    try{
+
+      getAllBalance()
+      .catch((e)=>{
+        console.log(e)
+      });
+    }catch(e){
+      console.log(e)
+    }
+  }, [state.wallet.address, state.wallet.name, state.walletType]);
 
   const openExtended = () => {
     changeState();
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
+
+  const getBalanceInUsd = (ethBalance, bnbBalance) => {
+    console.log("My wallet Type",Type)
+    console.log(ethBalance,bnbBalance)
+    const ethInUsd = ethBalance * ethPrice;
+    const bnbInUsd = bnbBalance * bnbPrice;
+    console.log("Eth balance",ethInUsd);
+    console.log("BNB balance",bnbInUsd);
+    AsyncStorageLib.getItem('walletType')
+    .then((Type)=>{
+      console.log("Async type",Type)
+      if(JSON.parse(Type)==='Ethereum'){
+        const totalBalance = Number(ethInUsd)
+        setBalance(totalBalance.toFixed(1));
+        return
+      }
+      else if(JSON.parse(Type)==='BSC'){
+        const totalBalance = Number(bnbInUsd)
+        setBalance(totalBalance.toFixed(1));
+        return
+      }
+      else if(Type==='Xrp'){
+        setBalance(0.0)
+        return  
+      }
+      else if(Type==='Matic'){
+        setBalance(0.0)
+        return
+      }
+      else if(JSON.parse(Type)==='Multi-coin'){
+        const totalBalance = Number(ethInUsd) + Number(bnbInUsd);
+        console.log(totalBalance);
+        setBalance(totalBalance.toFixed(1));
+        return  
+      }
+    })
+      return
+    // setLoading(false)
+  };
+ 
+  const getETHBNBPrice = async ()=>{
+   /* await getEtherBnbPrice(tokenAddresses.ETH, tokenAddresses.BNB)
+    .then((resp) => {
+      console.log(resp);
+      setEthPrice(resp.Ethprice);
+      setBnbPrice(resp.Bnbprice);
+    })
+    .catch((e) => {
+      console.log(e);
+    });*/
+    await getEthPrice()
+    .then((response)=>{
+      console.log("eth price = ", response.USD)
+      setEthPrice(response.USD)
+    })
+    await getBnbPrice()
+    .then((response)=>{
+      console.log("BNB price= ", response.USD)
+      setBnbPrice(response.USD)
+    })
+   
+  }
+
   useEffect(async () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -232,6 +337,21 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     }).start();
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, []);
+
+  
+  useEffect(()=>{
+    console.log(balanceUsd)
+    //getEthPrice()
+    getETHBNBPrice()
+    getBalanceInUsd(EthBalance, bnbBalance)
+  },[ethPrice,bnbPrice,EthBalance,bnbBalance,Type])
+
+  useEffect(()=>{
+    console.log(balanceUsd)
+    //getEthPrice()
+    getETHBNBPrice()
+    getBalanceInUsd(EthBalance, bnbBalance)
+  },[])
 
   return (
     <Animated.View
@@ -280,7 +400,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
               marginRight: wp(45),
             }}
           >
-            $ 0.00
+            
+            $ {balanceUsd>=0?balanceUsd: 0.00}
           </Text>
 
           <Text
@@ -347,8 +468,16 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             labelStyle={{ fontSize: 24 }}
             icon="lightning-bolt"
             style={styles.addButton}
-            onPress={() => {
-              setModalVisible3(true);
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem('walletType')
+              console.log(JSON.parse(walletType))
+              if(!JSON.parse( walletType)) return alert('please select a wallet first to swap tokens')
+              if(JSON.parse(walletType)==='BSC' ||JSON.parse(walletType)==='Ethereum' || JSON.parse(walletType)==='Multi-coin'){
+
+                setModalVisible3(true);
+              }else{
+                alert('Swapping is only supported for Ethereum and Binance ')
+              }
             }}
           ></Button>
           <Text style={styles.textDesign4}>Swap</Text>

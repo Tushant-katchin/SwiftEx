@@ -1,11 +1,15 @@
 // import { Transaction } from '@ethereumjs/tx'
 import { useState } from 'react'
 import Web3 from 'web3'
-import { ethers } from 'ethers'
 import { ERC20_ABI, ETH_ERC20_ADDRESSES } from './utils/constants'
 import { Button } from 'react-native'
 import { StyleSheet, Text, View} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { REACT_APP_ETH_RPC_URL } from './ExchangeConstants';
+import { ethers } from 'ethers'
+import { RPC } from '../../../constants';
+import { CHAIN_NATIVE_CURRENCY } from './utils/constants'
+
 
 const PRIVATE_KEY = "0x0cc27a4468a19efa2b727e57eb226c2fc07441228de6681f581c6763b4572bd4"
   //'e35f135a0db8fdee9a7f5ee8fcb9890f16694203372fae3c211949f34a6b9acb'
@@ -30,7 +34,7 @@ export const ConnectToWallet = ({ setMessage }) => {
       if (chain !== ALLOWED_NETWORK_ID) {
         // Todo: request for chain switch
         throw new Error(
-          `Only Goerli Chain Allowed to Connect, connected chain Id: ${chain}`,
+          `Only Goerli Chain Allowed to Connect, connected chain Id: ${chain}`
         )
       }
 
@@ -38,7 +42,7 @@ export const ConnectToWallet = ({ setMessage }) => {
       setIsConnected(true)
     } catch (error) {
       return setMessage(
-        error.message || 'Something went wrong while connecting to wallet',
+        error.message || 'Something went wrong while connecting to wallet'
       )
     }
   }
@@ -79,74 +83,73 @@ export const isWalletConnected = () => window.isWeb3Connected
 export const getWeb3Provider = () =>
   window.isWeb3Connected ? window.web3 : null
 
-export const transfer = (tokenName, receiver, amount, sender) => {
-  const web3 = new Web3('https://eth-goerli.g.alchemy.com/v2/_i0W-PX5wH9bEjGnf7_ir4V6w4ZPyyfP')
+export const transfer = (tokenAddress, receiver, amount, sender, senderAddress,chainId ) => {
+  const provider = CHAIN_ID_TO_PROVIDER[chainId]
 
-  if (tokenName === 'ETH') return _transferEth(receiver, amount, web3,sender)
+  if (tokenAddress === CHAIN_NATIVE_CURRENCY)
+  return _transferEth(receiver, amount, sender, provider)
 
-  const tokenAddress = ETH_ERC20_ADDRESSES[tokenName.toUpperCase()]
-  if (!tokenAddress) throw new Error(`Invalid token name: ${tokenName}`)
-
-  return _transferEthToken(tokenAddress, receiver, amount, web3,sender)
+  
+  return _transferEthToken(tokenAddress, receiver, amount,provider)
 }
 
 // <------------------------------< Helpers >------------------------------>
 
-const _transferEth = async (reciever, amount, web3,sender) => {
+const _transferEth = async (receiver, amount,sender, provider) => {
   
   try {
-    const blockNumber = await web3.eth.getBlockNumber()
-     const block = await web3.eth.getBlock(blockNumber)
-     const txGasLimit = +block.gasLimit/block.transactions.length
+    const wallet = new ethers.Wallet(sender, provider)
+
 
     const rawTx = {
-      to: reciever,
-      value: web3.utils.toWei(amount, 'ether'),
-      gasLimit: Math.floor(txGasLimit),
+      to: receiver,
+      value: ethers.utils.parseEther(amount.toString()),
     }
 
-    const signedTx = await web3.eth.accounts.signTransaction(rawTx, sender)
-    console.log(signedTx)
+    const populatedTx = await wallet.populateTransaction(rawTx)
+    console.log(populatedTx)
 
-    return { signedTx }
-  } catch (err) {
+    const signedTx = await wallet.signTransaction(populatedTx)
+    const parsedSignedTx = await ethers.utils.parseTransaction(signedTx)
+
+    return {
+      signedTx: { rawTransaction: signedTx },
+      txHash: parsedSignedTx.hash,
+    }
+    } catch (err) {
     console.log(err)
     return { err }
   }
 }
 
-const _transferEthToken = async (tokenAddress, receiver, amount, web3,sender) => {
+const _transferEthToken = async (tokenAddress, receiver, amount, provider) => {
   try {
+    
+    const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
+    const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, wallet)
 
-    const token = new web3.eth.Contract(
-      JSON.parse(JSON.stringify(ERC20_ABI)),
-      tokenAddress,
-    )
-
-    const decimals = await token.methods.decimals().call()
-    const amountInWei = _getWeiValue(amount, decimals, web3).toString()
-    console.log(amountInWei)
+    const decimals = await tokenContract.decimals()
+    const amountInWei = ethers.utils.parseUnits(amount, decimals)
 
     // Get tx data
-    const txData = await token.methods
-      .transfer(receiver, amountInWei)
-      .encodeABI()
+    await tokenContract.callStatic.transfer(receiver, amountInWei, {
+      from: '0xc3090cd5160CB689051F0083944cbcEa6a1be19B', // NOTE: Replace the static address with the connected address
+    })
 
-     const blockNumber = await web3.eth.getBlockNumber()
-     const block = await web3.eth.getBlock(blockNumber)
-     const txGasLimit = +block.gasLimit/block.transactions.length
+    const rawTx = await tokenContract.populateTransaction.transfer(
+      receiver,
+      amountInWei
+    )
+    const populatedTx = await wallet.populateTransaction(rawTx)
+    const signedTx = await wallet.signTransaction(populatedTx)
+    const parsedSignedTx = ethers.utils.parseTransaction(signedTx)
+
 
     // Create raw tx
-    const rawTx = {
-      to: tokenAddress,
-      data: txData,
-      gasLimit: Math.floor(txGasLimit),
+    return {
+      signedTx: { rawTransaction: signedTx },
+      txHash: parsedSignedTx.hash,
     }
-
-    // Sign tx
-    const signedTx = await web3.eth.accounts.signTransaction(rawTx, sender)
-
-    return { signedTx }
   } catch (err) {
     console.log(err)
     return { err }
@@ -158,4 +161,28 @@ const _getWeiValue = (amount, decimals, web3) => {
 
   if (Number(amount) < 1) return Math.floor(amount * 10 ** decimals)
   return web3.utils.toBN(amount).mul(web3.utils.toBN(multiple))
+}
+
+export const CHAIN_ID_TO_PROVIDER = {
+  // 1: new ethers.providers.JsonRpcProvider(
+  //   process.env.REACT_APP_ETH_MAINNET_RPC
+  // ),
+  5: new ethers.providers.JsonRpcProvider(RPC.ETHRPC),
+  11155111: new ethers.providers.JsonRpcProvider(
+    process.env.REACT_APP_SEPOLIA_RPC
+  ),
+  97: new ethers.providers.JsonRpcProvider(
+    RPC.BSCRPC
+  ),
+  80001: new ethers.providers.JsonRpcProvider(
+    RPC.MATICRPC
+  ),
+  // Here goes the list of other nets
+}
+
+export const CHAIN_ID_TO_SCANNER = {
+  5: 'https://goerli.etherscan.io',
+  11155111: 'https://sepolia.etherscan.io',
+  97: 'https://testnet.bscscan.com',
+  80001: 'https://mumbai.polygonscan.com',
 }

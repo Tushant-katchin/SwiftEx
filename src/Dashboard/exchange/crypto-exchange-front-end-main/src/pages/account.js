@@ -6,6 +6,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { DataTable } from "react-native-paper";
+import { NewAccountModal } from '../components/newAccount.model'
 
 const ExternalAccountsListView = ({ externalAccounts }) => {
   return (
@@ -27,17 +28,13 @@ const ExternalAccountsListView = ({ externalAccounts }) => {
             Currency
           </DataTable.Title>
         </DataTable.Header>
-        {externalAccounts.length ? (
+        {externalAccounts? (
           <>
-            {externalAccounts.map((accounts) => {
-             let account = JSON.parse(JSON.stringify(accounts))
-              return(
-                <View style={{ width: wp(100),
-                  height: hp(80),
-                  color: "black"}}>
-
-                <DataTable.Row key={account.id}>
-                <DataTable.Cell>{account.bank_name}</DataTable.Cell>
+            {externalAccounts.map((account) => {
+              console.log(account.bank_name)
+              return (
+                <DataTable.Row style={styles.rowHeader} key={account.id}>
+                <DataTable.Cell >{account.bank_name}</DataTable.Cell>
                 <DataTable.Cell>{account.account_holder_name}</DataTable.Cell>
                 <DataTable.Cell>
                   {account.available_payout_methods[0]}
@@ -45,9 +42,11 @@ const ExternalAccountsListView = ({ externalAccounts }) => {
                 <DataTable.Cell>{account.country}</DataTable.Cell>
                 <DataTable.Cell>{account.currency}</DataTable.Cell>
               </DataTable.Row>
-                </View>
-                )
-})}
+            
+            )
+            }
+            )
+            }
           </>
         ) : (
           <DataTable.Row>
@@ -63,13 +62,8 @@ export const AccountView = (props) => {
   const [message, setMessage] = useState();
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
-  const [connectLink, setConnectLink] = useState(null);
-  const [user, setUser] = useState(null);
-  const [hasExternalAccount, setHasExternalAccount] = useState(false);
-
+  
   useEffect(() => {
-    getUserDetails();
     getAccountDetails();
   }, []);
 
@@ -77,7 +71,6 @@ export const AccountView = (props) => {
     try {
       const { res, err } = await authRequest("/users/getStripeAccount", GET);
       if (err) return setMessage(` ${err.message}`);
-      if (res.external_accounts.data.length) setHasExternalAccount(true);
       setAccount(res);
     } catch (err) {
       console.log(err);
@@ -87,19 +80,7 @@ export const AccountView = (props) => {
     }
   };
 
-  const getUserDetails = async () => {
-    try {
-      setIsLoading(true);
-      const { res, err } = await authRequest("/users/getUserDetails", GET);
-      if (err) return setMessage(`${err.message}`);
-      setUser(res);
-    } catch (err) {
-      console.log(err);
-      setMessage(err.message || "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  
 
   const createAccount = async () => {
     try {
@@ -123,30 +104,15 @@ export const AccountView = (props) => {
       <View style={styles.container}>
         <Text>My Account</Text>
         <Text>{message}</Text>
-        {connectLink ? (
-          <View>
-            <Text style={{ color: "black" }}>
-              Congradualtions! account was created successfully please use the
-              link below to connect your bank account to your stripe account
-            </Text>
-            <Text
-              style={{ color: "blue" }}
-              onPress={() => Linking.openURL(connectLink)}
-            >
-              {connectLink}
-            </Text>
-          </View>
-        ) : (
-          <Text></Text>
-        )}
+
         <View>
           {isLoading ? (
             <Text>Loading...</Text>
           ) : (
             <>
               {account ? (
+                
                 <View>
-                  {hasExternalAccount ? (
                     <>
                       <View>
                         <Text>Charges Enabled:</Text>
@@ -158,40 +124,14 @@ export const AccountView = (props) => {
                         externalAccounts={account.external_accounts.data}
                       />
                     </>
-                  ) : (
-                    <>
-                      <View
-                        style={{
-                          marginTop: 10,
-                          display: "flex",
-                          alignContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <View style={{ marginTop: 10 }}>
-                          <Text>
-                            Your account is not connected to an actual bank
-                            account please click below to get a connection link.
-                          </Text>
-                        </View>
-                        <View style={{ marginTop: 10, width: wp(50) }}>
-                          <Button
-                            title="get Connect link"
-                            color={"blue"}
-                            onPress={() => createAccount()}
-                          ></Button>
-                        </View>
-                      </View>
-                    </>
-                  )}
+                 
                 </View>
               ) : (
                 <View>
-                  <Button
-                    title="create account"
-                    color={"blue"}
-                    onPress={() => createAccount()}
-                  ></Button>
+               <Text>
+                Please add an account first
+               </Text>
+               <NewAccountModal getAccountDetails={getAccountDetails}/>
                 </View>
               )}
             </>
@@ -209,13 +149,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     width: wp(100),
+    padding: 10,
     height: hp(100),
+    backgroundColor:'white'
+
   },
   scrollView: {
     width: wp(90),
   },
   tableHeader: {
-    backgroundColor: "#DCDCDC",
+    backgroundColor: "grey",
+    width:wp(100),
+    height:hp(8),
+  },
+  rowHeader: {
+    backgroundColor: "blue",
+    width:wp(100),
+    height:hp(8)
   },
   table: {
     display: "flex",

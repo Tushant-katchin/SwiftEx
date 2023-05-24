@@ -2,49 +2,57 @@ import { useState, useEffect } from "react";
 import { authRequest, GET, POST } from "../api";
 import { NewOfferModal } from "../components/newOffer.modal";
 import { FieldView } from "./profile";
-import { OfferListView } from "./offers";
+import { OfferListView, OfferListViewHome } from "./offers";
 import { ConnectToWallet } from "../web3";
 import { StyleSheet, Text, View, Button } from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useSelector } from "react-redux";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-
 import { getRegistrationToken } from "../utils/fcmHandler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
-export const HomeView = (props) => {
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { BidsListView } from "../components/bidsListView";
+
+export const HomeView = ({setPressed}) => {
   const state = useSelector((state) => state);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState();
+  const [bids, setBids] = useState();
+  const [route, setRoute] = useState("Offers");
   const [profile, setProfile] = useState({
     isVerified: false,
-    firstName: "tushant",
-    lastName: "chakravarty",
-    email: "tushant@gmail.com",
-    phoneNumber: "9340079982",
-    isEmailVerified: true,
+    firstName: "jane",
+    lastName: "doe",
+    email: "xyz@gmail.com",
+    phoneNumber: "93400xxxx",
+    isEmailVerified: false,
   });
   const [offers, setOffers] = useState();
-  const[change, setChange] = useState(false)
+  const [walletType, setWalletType] = useState(null);
+  const [change, setChange] = useState(false);
+ 
+
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
+  const navigation = useNavigation();
+
   useEffect(() => {
     fetchProfileData();
     getOffersData();
-   // syncDevice()
+    getBidsData();
+    syncDevice();
   }, []);
   useEffect(() => {
     fetchProfileData();
     getOffersData();
-   // syncDevice()
+    getBidsData();
+    syncDevice();
   }, [change]);
-   const navigation = useNavigation()
+
   const syncDevice = async () => {
     const token = await getRegistrationToken();
+    console.log(token);
     console.log("hi", token);
     try {
       const { res } = await authRequest(
@@ -69,7 +77,7 @@ export const HomeView = (props) => {
   const fetchProfileData = async () => {
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
-      if (err) return setMessage(` ${err.message}`);
+      if (err) return setMessage(` ${err.message} please log in again!`);
       setProfile(res);
     } catch (err) {
       //console.log(err)
@@ -101,6 +109,24 @@ export const HomeView = (props) => {
     }
   };
 
+  const getBidsData = async () => {
+    try {
+      const { res, err } = await authRequest("/bids", GET);
+      if (err) return setMessage(`${err.status}: ${err.message}`);
+      setBids(res);
+    } catch (err) {
+      console.log(err);
+      setMessage(err.message || "Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    AsyncStorageLib.getItem("walletType").then((walletType) => {
+      console.log(walletType);
+      setWalletType(JSON.parse(walletType));
+    });
+  }, []);
+
   return (
     <>
       <View style={styles.container}>
@@ -114,9 +140,14 @@ export const HomeView = (props) => {
               <Text>{state.wallet.address}</Text>
             </View>
           ) : (
-            <ConnectToWallet setMessage={setMessage} />
+            <Text>Please select a wallet first!</Text>
           )}
         </View>
+        {walletType === "Ethereum" || walletType === "Multi-coin" ? (
+          <Text>{walletType} Wallet Connected</Text>
+          ) : (
+          <Text>Only Ethereum and Multi-coin based wallets are supported.</Text>
+        )}
         <Text style={styles.container}>Actions</Text>
         {profile && (
           <View style={styles.container}>
@@ -132,23 +163,14 @@ export const HomeView = (props) => {
                   <Button
                     title="offer"
                     color={"green"}
-                    onPress={() => setOpen(true)}
+                    onPress={() => {
+                      if (walletType === "Ethereum" || walletType==="Multi-coin" ) {
+                        setOpen(true);
+                      } else {
+                        alert("Only Ethereum wallet are supported");
+                      }
+                    }}
                   ></Button>
-                  <View 
-                  style={{marginTop:10}}
-                  >
-
-                  <Button
-                  
-                  title="logout"
-                  color='red'
-                  onPress={()=>{
-                    const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-                    AsyncStorage.removeItem(LOCAL_TOKEN);
-                    navigation.navigate("Settings");
-                  }}
-                  ></Button>
-                  </View>
                   <NewOfferModal
                     user={profile}
                     open={open}
@@ -162,14 +184,62 @@ export const HomeView = (props) => {
             </View>
           </View>
         )}
-        <View style={styles.container}>
-          <Text>Your Offers</Text>
+        <View style={{ marginTop: 5 }}>
+          <Button
+            title="logout"
+            color="red"
+            onPress={() => {
+              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+              AsyncStorage.removeItem(LOCAL_TOKEN);
+              navigation.navigate("Settings");
+            }}
+          ></Button>
+        </View>
+        <View style={{ marginTop: 5, display: "flex", flexDirection: "row" }}>
+          <View style={{ margin: 2 }}>
+            <Button
+              title={"Bids"}
+              color={route === "Bids" ? "green" : "grey"}
+              onPress={() => {
+                setRoute("Bids");
+              }}
+            ></Button>
+          </View>
+          <View style={{ margin: 2 }}>
+            <Button
+              title={"Offers"}
+              color={route === "Offers" ? "green" : "grey"}
+              onPress={() => {
+                setRoute("Offers");
+              }}
+            ></Button>
+          </View>
+        </View>
 
-          <OfferListView self={true} profile={profile} offers={offers} setChange={setChange}/>
-        </View>
-        <View style={{ marginTop: offers ? hp(36) : 0 }}>
-          <Text>Your Bids</Text>
-        </View>
+        {route === "Offers" ? (
+          <View style={styles.container2}>
+            <Text>Your Offers</Text>
+            <OfferListViewHome
+              self={true}
+              profile={profile}
+              offers={offers}
+              setChange={setChange}
+            />
+          </View>
+        ) : (
+          <View
+            style={{
+              alignContent: "center",
+              alignItems: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <Text>Your Bids</Text>
+            {bids && profile && (
+              <BidsListView bids={bids} getBids={getBidsData}  />
+            )}
+          </View>
+        )}
       </View>
     </>
   );
@@ -180,6 +250,23 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
-    margin: 5,
+    backgroundColor:'white'
+  },
+  container2: {
+    display: "flex",
+    alignContent: "center",
+    alignItems: "center",
+    textAlign: "center",
   },
 });
+/*
+<View style={{position:'absolute', height:hp(30)}}>
+
+                  <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: layout.width }}
+            />
+            </View>
+*/

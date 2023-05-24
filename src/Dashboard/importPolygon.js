@@ -44,6 +44,10 @@ const ImportPolygon = (props) => {
   const [jsonKey, setJsonKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
+  const [disable, setDisable] = useState(true)
+  const [ message, setMessage] = useState('')
+ 
+  const[text,setText] = useState('')
 
   const dispatch = useDispatch();
 
@@ -51,54 +55,7 @@ const ImportPolygon = (props) => {
 
   const Spin = new Animated.Value(0);
 
-  async function saveUserDetails(address) {
-    let response;
-    try {
-      response = await fetch(`http://${urls.testUrl}/user/createUser`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          walletAddress: address,
-          user: accountName,
-        }),
-      })
-        .then((response) => response.json())
-        .then(async (responseJson) => {
-          console.log(responseJson);
-          console.log(responseJson);
-          if (responseJson.responseCode === 200) {
-            alert("success");
-          } else if (responseJson.responseCode === 400) {
-            return {
-              code: responseJson.responseCode,
-              message:
-                "account with same name already exists. Please use a different name",
-            };
-          } else {
-            return {
-              code: 401,
-              message: "Unable to create account. Please try again",
-            };
-          }
-          return {
-            code: responseJson.responseCode,
-            token: responseJson.responseData,
-          };
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    } catch (e) {
-      console.log(e);
-      alert(e);
-    }
-    console.log(response);
-    return response;
-  }
-
+  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -111,6 +68,42 @@ const ImportPolygon = (props) => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
+
+  useEffect(()=>{
+    if(accountName && (privateKey || mnemonic || json))
+    {
+      let valid
+      if(label==='mnemonic'){
+        const phrase = mnemonic.trimStart();
+        const trimmedPhrase = phrase.trimEnd();
+        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
+        
+      }else if(label==='privateKey'){
+        valid = ethers.utils.isHexString(privateKey, 32);
+        if(!valid){
+          setMessage('Please enter a valid private key')
+        }
+        else{
+          setMessage('')
+        }
+      }
+      
+      if(accountName && (mnemonic || privateKey || json) && valid){
+        setDisable(false)
+      }else{
+        setDisable(true)
+      }
+    }else{
+      setMessage('')
+    }
+    },[mnemonic,privateKey,json])
+  
 
   return (
     <Animated.View // Special animatable View
@@ -125,6 +118,9 @@ const ImportPolygon = (props) => {
               onPress={() => {
                 setOptionVisible(false);
                 setLabel("privateKey");
+                if(text){
+                  setPrivateKey(text)
+                }
               }}
             ></Button>
           </View>
@@ -135,6 +131,9 @@ const ImportPolygon = (props) => {
               onPress={() => {
                 setOptionVisible(false);
                 setLabel("mnemonic");
+                if(text){
+                  setMnemonic(text)
+                }
               }}
             ></Button>
           </View>
@@ -145,6 +144,9 @@ const ImportPolygon = (props) => {
               onPress={() => {
                 setLabel("JSON");
                 setOptionVisible(true);
+                if(text){
+                  setJson(text)
+                }
               }}
             ></Button>
           </View>
@@ -170,10 +172,15 @@ const ImportPolygon = (props) => {
           onChangeText={(text) => {
             if (label === "privateKey") {
               setPrivateKey(text);
+              setText(text)
             } else if (label === "mnemonic") {
               setMnemonic(text);
+              setText(text)
+
             } else if (label === "JSON") {
               setJson(text);
+              setText(text)
+
             } else {
               return alert(`please input ${label} to proceed `);
             }
@@ -221,10 +228,15 @@ const ImportPolygon = (props) => {
         ) : (
           <Text> </Text>
         )}
+        <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
+        <Text style={{color:'red'}}>{message}</Text>
+        </View>
+        
         <View style={{ width: wp(95), margin: 10 }}>
           <Button
             title={"Import"}
             color={"blue"}
+            disabled={disable}
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
               if (!accountName) {

@@ -29,6 +29,7 @@ import { encryptFile } from "../../utilities/utilities";
 import { urls } from "../constants";
 import Modal from "react-native-modal";
 import CheckNewWalletMnemonic from "./checkNewWalletMnemonic";
+import ModalHeader from "../reusables/ModalHeader";
 
 const NewWalletPrivateKey = ({
   props,
@@ -95,6 +96,12 @@ const NewWalletPrivateKey = ({
     return response;
   }
 
+
+  const closeModal =()=>{
+    SetVisible(false)
+   
+  }
+
   useEffect(async () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -114,13 +121,20 @@ const NewWalletPrivateKey = ({
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={Visible}
-        useNativeDriver={true}
         statusBarTranslucent={true}
+        useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
+        onBackdropPress={() => {
+          SetVisible(false);
+                }}
         onBackButtonPress={() => {
           SetVisible(false);
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal} name={'Private Key'}/>
           <Animated.Image
             style={{
               width: wp("5"),
@@ -251,7 +265,7 @@ const style = StyleSheet.create({
     display: "flex",
     backgroundColor: "#131E3A",
     height: hp(100),
-    width: wp(100),
+    width: wp(90),
     alignItems: "center",
     textAlign: "center",
   },
@@ -265,7 +279,8 @@ const style = StyleSheet.create({
     fontSize: 20,
     fontWeight: "200",
     color: "white",
-    marginTop: hp(10),
+    marginTop: hp(6),
+
   },
   Button: {
     marginTop: hp(0),

@@ -33,6 +33,7 @@ import ImportEthereumModal from "./importEthereumModal";
 import ImportMultiCoinWalletModal from "./importMultiCoinWalletModal";
 import ImportPolygonWalletModal from "./ImportPolygonWalletModal";
 import ImportXrpWalletModal from "./importXrpWalletModal";
+import ModalHeader from "../reusables/ModalHeader";
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
   const [MultiCoinModal, setMultiCoinMoodal] = useState(false);
@@ -79,6 +80,9 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
     outputRange: ["0deg", "360deg"],
   });
 
+  const closeModal= () =>{
+    setVisible(false)
+  }
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -102,13 +106,17 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={visible}
-        useNativeDriver={true}
         onBackdropPress={() => setVisible(false)}
+        useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         onBackButtonPress={() => {
           setVisible(false);
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal}  name={'Import'}/>
           <TouchableOpacity
             style={style.Box}
             onPress={() => {
@@ -117,7 +125,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           >
             <Card
               style={{
-                width: wp(99),
+                width: wp(90),
                 height: hp(10),
                 backgroundColor: "white",
                 borderRadius: 10,
@@ -144,7 +152,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           >
             <Card
               style={{
-                width: wp(99),
+                width: wp(90),
                 height: hp(10),
                 backgroundColor: "white",
                 borderRadius: 10,
@@ -170,7 +178,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           >
             <Card
               style={{
-                width: wp(99),
+                width: wp(90),
                 height: hp(10),
                 backgroundColor: "white",
                 borderRadius: 10,
@@ -197,7 +205,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           >
             <Card
               style={{
-                width: wp(99),
+                width: wp(90),
                 height: hp(10),
                 backgroundColor: "white",
                 borderRadius: 10,
@@ -223,7 +231,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           >
             <Card
               style={{
-                width: wp(99),
+                width: wp(90),
                 height: hp(10),
                 backgroundColor: "white",
                 borderRadius: 10,
@@ -286,7 +294,7 @@ const style = StyleSheet.create({
     display: "flex",
     backgroundColor: "white",
     height: hp(90),
-    width: wp(100),
+    width: wp(90),
     alignItems: "center",
     textAlign: "center",
     borderTopRightRadius: 10,

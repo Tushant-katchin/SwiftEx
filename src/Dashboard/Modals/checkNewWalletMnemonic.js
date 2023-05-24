@@ -23,13 +23,13 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
+import ModalHeader from "../reusables/ModalHeader";
 const CheckNewWalletMnemonic = ({
-  props,
   Wallet,
   Visible,
   SetVisible,
   setModalVisible,
-  setPrivateKeyVisible,
+  SetPrivateKeyVisible,
   setNewWalletVisible,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -99,6 +99,10 @@ const CheckNewWalletMnemonic = ({
     return response;
   }
 
+  const closeModal=()=>{
+    SetVisible(false)
+  }
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -125,11 +129,13 @@ const CheckNewWalletMnemonic = ({
         animationOutTiming={650}
         isVisible={Visible}
         useNativeDriver={true}
+        onBackdropPress={() => SetVisible(false)}
         onBackButtonPress={() => {
           SetVisible(false);
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal} name={'Check Mnemonic'}/>
           <View style={{ display: "flex", alignContent: "flex-start" }}>
             <Text style={style.welcomeText}>Enter your mnemonic below</Text>
           </View>
@@ -150,7 +156,7 @@ const CheckNewWalletMnemonic = ({
           ) : (
             <Text> </Text>
           )}
-          <View style={{ width: wp(90), margin: 10 }}>
+          <View style={{ display:'flex',alignSelf:'center',width: wp(30), margin: 10 }}>
             <Button
               title={"Import"}
               color={"blue"}
@@ -200,29 +206,56 @@ const CheckNewWalletMnemonic = ({
                         privateKey: Wallet.privateKey,
                         name: Wallet.accountName,
                         walletType: "Multi-coin",
+                        xrp:{
+                          address:Wallet.xrp.address,
+                          privateKey:Wallet.xrp.privateKey
+                        },
                         wallets: wallets,
                       },
                     ];
                     // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                    dispatch(AddToAllWallets(allWallets, user));
+                    dispatch(AddToAllWallets(allWallets, user))
+                    .then((response)=>{
+                      if(response){
+                        if(response.status==='Already Exists'){
+                          alert('Account with same name already exists')
+                          setLoading(false)
+                          return
+                        }
+
+                        else if(response.status==='success'){
+                          setTimeout(() => {
+                      
+                            setLoading(false);
+                            SetVisible(false);
+                            setModalVisible(false);
+                            SetPrivateKeyVisible(false);
+                            setNewWalletVisible(false);
+                            navigation.navigate("AllWallets");
+                          }, 0);
+                          
+                        }
+                        else{
+                          alert('failed please try again')
+                          return
+                        }
+                      }
+                    })
+                    
                     // dispatch(getBalance(wallet.address))
                     //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
 
-                    let result = [];
 
-                    setLoading(false);
-                    navigation.navigate("AllWallets");
-                    SetVisible(false);
-                    setModalVisible(false);
-                    setPrivateKeyVisible(false);
-                    setNewWalletVisible(false);
+                    
+                      
+                    
                   }
                 } catch (e) {
                   setLoading(false);
                   SetVisible(false);
                   setModalVisible(false);
-                  setPrivateKeyVisible(false);
+                  SetPrivateKeyVisible(false);
                   setNewWalletVisible(false);
                   alert("Failed to import wallet. Please try again");
                 }
@@ -242,7 +275,8 @@ const style = StyleSheet.create({
     display: "flex",
     backgroundColor: "white",
     height: hp(90),
-    width: wp(95),
+    width: wp(90),
+    borderRadius:20,
     textAlign: "center",
   },
   welcomeText: {
@@ -281,7 +315,7 @@ const style = StyleSheet.create({
     marginBottom: hp("2"),
     color: "black",
     marginTop: hp("2"),
-    width: wp("90"),
+    width: wp("85"),
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
@@ -289,7 +323,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     height: hp(20),
-    width: wp(90),
+    width: wp(85),
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",

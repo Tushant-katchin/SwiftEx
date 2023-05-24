@@ -105,8 +105,9 @@ const Wallet = ({ navigation }) => {
           >
             <Text style={styles.Text}>I already have a wallet</Text>
           </TouchableOpacity>
+          
         </View>
-
+        </View>
         <SelectWallet
           visible={visible}
           setVisible={setVisible}
@@ -117,7 +118,8 @@ const Wallet = ({ navigation }) => {
           setVisible={setNewWalletModal}
           setModalVisible={setModalVisible}
         />
-      </View>
+
+        
     </Animated.View>
   );
 };

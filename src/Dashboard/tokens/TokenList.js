@@ -106,18 +106,16 @@ const TokenList = ({
     if (data) {
       console.log(data.length);
       setLoading(false);
-      // setData(page===1?data:[...Data,...data])
+      setData([...Data,data])
       setData(data);
       setPage(page + 1);
     }
   };
 
-  const renderHeader = () => <Text style={style.title}>RN News</Text>;
-
   const renderFooter = () => (
     <View style={style.footerText}>
-      {Data && <ActivityIndicator />}
-      {!Data && <Text>No more articles at the moment</Text>}
+      {loading && <ActivityIndicator />}
+      {!Data && <Text>No more data at the moment</Text>}
     </View>
   );
 
@@ -127,12 +125,8 @@ const TokenList = ({
     </View>
   );
 
-  const ListCard = ({ item }) => {
-    const image = item.logoURI;
+  const ListCard = React.memo(({ item, LeftContent }) => {
     //console.log(item.symbol)
-    LeftContent = (props) => {
-      return <Avatar.Image {...props} source={{ uri: image }} />;
-    };
     //console.log(item)
     return (
       <TouchableOpacity
@@ -160,9 +154,11 @@ const TokenList = ({
             } else if (item.symbol === "USDC") {
               address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
             } else if (item.symbol === "DAI") {
-              address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
+              //0xdf1742fe5b0bfc12331d8eaec6b478dfdbd31464
+              address = "0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464";
+              //address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
             } else if (item.symbol === "USDT") {
-              address = "0x7016353707A91BA5c9bd4D3098DBb730236df68c";
+              address = "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49";
             } else if (item.symbol === "WETH") {
               address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
             } else if (item.symbol === "UNI") {
@@ -201,6 +197,8 @@ const TokenList = ({
                 address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
               } else if (item.symbol === "UNI") {
                 address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+              } else if (item.symbol === "ETH") {
+                address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
               } else {
                 address = toChecksumAddress(item.address);
               }
@@ -261,19 +259,25 @@ const TokenList = ({
           <Card.Content
             style={{ display: "flex", flexDirection: "row", color: "#fff" }}
           >
-            <Title style={{ color: "#fff" }}></Title>
+            <Paragraph
+            style={{position:'absolute',marginLeft:wp(73),marginTop:hp(-5)}}
+            >0 {item.symbol}</Paragraph>
+            <Paragraph
+            style={{position:'absolute',marginLeft:wp(20),marginTop:hp(-3)}}
+            >{item.chainId==56?'bnb':"eth"}</Paragraph>
+          
           </Card.Content>
         </Card>
       </TouchableOpacity>
     );
-  };
+  });
 
   useEffect(async () => {
     setData(data);
   }, []);
 
   return (
-    <View // Special animatable View
+    <View 
       style={{ width: wp(100) }}
     >
       <TokenHeader setVisible={setVisible} name={name} />
@@ -294,8 +298,16 @@ const TokenList = ({
             style={{ marginTop: hp(9) }}
             contentContainerStyle={{ flexGrow: 1 }}
             data={Data}
-            renderItem={({ item }) => <ListCard item={item} />}
-            initialNumToRender={50}
+            renderItem={({ item }) => {
+              LeftContent = (props) => {
+                return (
+                  <Avatar.Image {...props} source={{ uri: item.logoURI }} />
+                );
+              };
+
+              return <ListCard item={item} LeftContent={LeftContent} />;
+            }}
+            initialNumToRender={10}
             maxToRenderPerBatch={10}
             keyExtractor={(item) => item.address}
             ListFooterComponent={renderFooter}
@@ -304,13 +316,6 @@ const TokenList = ({
             onEndReached={fetchMoreData}
             pagingEnabled={true}
           />
-        )}
-        {loading === true ? (
-          <View style={{ marginBottom: wp(6), position: "absolute" }}>
-            <ActivityIndicator size="large" color={"black"} />
-          </View>
-        ) : (
-          <View></View>
         )}
       </View>
     </View>

@@ -173,6 +173,7 @@ const EmailView = ({ value, isVerified }) => {
           display: "flex",
           alignContent: "center",
           alignItems: "center",
+          backgroundColor:'white'
         }}
       >
         {type === "email" ? (
@@ -357,8 +358,9 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
-    margin: 20,
     height: hp(100),
+    width:wp(100),
+    backgroundColor:'white'
   },
   fieldView: {
     display: "flex",

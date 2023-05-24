@@ -19,11 +19,14 @@ import {
 import { useWindowDimensions } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import Modal from "react-native-modal";
+import { useNavigation } from "@react-navigation/native";
+import { CHAIN_ID_TO_SCANNER } from '../web3'
 
-const TransactionsListView = ({ transactions, self = false }) => {
+const TransactionsListView = ({ transactions, self = false, fetchTxPageData, setUpdateTx, setPressed}) => {
   const [open, setOpen] = useState(false);
   const [txLink, setTxLink] = useState("");
   const proceedToPayment = (tx) => setOpen(true);
+ const navigation = useNavigation()
   const SeeTransactions = (tx) => {
     console.log(tx.tx);
     return (
@@ -51,7 +54,27 @@ const TransactionsListView = ({ transactions, self = false }) => {
               height: 10,
             }}
           >
-            <WebView source={{ uri: `${tx.tx}` }} />
+            <WebView
+              source={{ uri: `${tx.tx}` }}
+              onNavigationStateChange={(data) => {
+                if (data.url.includes(`offers?session_id`)) {
+                  ///do if payment successfull
+                  setOpen(false)
+                  setUpdateTx(true)
+                  alert('Payment Successful')
+                  navigation.navigate('/offers')
+                  fetchTxPageData()
+                }
+
+                if (data.url.includes("offers?payFailed=true")) {
+                  ///do if payment is cancelled
+                  setOpen(false)
+                  setUpdateTx(true)
+                  alert('Payment failed. Please try again')
+                  fetchTxPageData()
+                }
+              }}
+            />
           </View>
         </Modal>
       </View>
@@ -70,7 +93,7 @@ const TransactionsListView = ({ transactions, self = false }) => {
             <DataTable.Title>Currency</DataTable.Title>
             <DataTable.Title>Status</DataTable.Title>
           </DataTable.Header>
-          <ScrollView>
+          <ScrollView style={{backgroundColor:'#ADD8E6'}}>
             {transactions.length ? (
               <>
                 {transactions.map((tx) => (
@@ -85,6 +108,8 @@ const TransactionsListView = ({ transactions, self = false }) => {
                     )}
 
                     {tx.status === "PAYMENT_PENDING" && (
+                      <View>
+
                       <Button
                         title="Proceed to pay"
                         onPress={() => {
@@ -92,7 +117,8 @@ const TransactionsListView = ({ transactions, self = false }) => {
                           setTxLink(tx.sessionUrl);
                           setOpen(true);
                         }}
-                      ></Button>
+                        ></Button>
+                        </View>
                     )}
 
                     {tx.status === "SUCCEEDED" && (
@@ -101,9 +127,10 @@ const TransactionsListView = ({ transactions, self = false }) => {
                         onPress={() => {
                           console.log(tx.cryptoTxHash);
                           setTxLink(
-                            `${GOERLI_ETHERSCAN}/tx/${tx.cryptoTxHash}`
+                            `${CHAIN_ID_TO_SCANNER[tx.chainId]}/tx/${tx.cryptoTxHash}`
                           );
                           setOpen(true);
+                         
                         }}
                       >
                         See tx
@@ -175,7 +202,7 @@ const OffersListView = ({ transactions, self = false }) => {
             <DataTable.Title>Currency</DataTable.Title>
             <DataTable.Title>Status</DataTable.Title>
           </DataTable.Header>
-          <ScrollView>
+          <ScrollView  style={{backgroundColor:'#ADD8E6'}}>
             {transactions.length ? (
               <>
                 {transactions.map((tx) => (
@@ -219,28 +246,29 @@ const OffersListView = ({ transactions, self = false }) => {
   );
 };
 
-export const TransactionView = (props) => {
+export const TransactionView = () => {
   const [message, setMessage] = useState();
   const [value, setValue] = useState(0);
   const [transactions, setTransactions] = useState();
   const [profile, setProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [searchParams] = useSearchParams();
+ // const [searchParams] = useSearchParams();
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
+  const[updateTx, setUpdateTx] = useState()
   const [routes] = useState([
     { key: "first", title: "Bids Transactions" },
     { key: "second", title: "Offers Transactions" },
   ]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (searchParams) {
       const newTx = searchParams.get("newTx");
       if (newTx) {
         setMessage("You have new transaction payment pending");
       }
     }
-  }, [searchParams]);
+  }, [searchParams]);*/
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -249,6 +277,9 @@ export const TransactionView = (props) => {
   useEffect(() => {
     fetchTxPageData();
   }, []);
+  useEffect(() => {
+    fetchTxPageData();
+  }, [updateTx]);
 
   const fetchTxPageData = async () => {
     await fetchTransactionData();
@@ -288,6 +319,8 @@ export const TransactionView = (props) => {
         transactions={transactions.filter(
           (tx) => tx.customerId === profile._id
         )}
+        fetchTxPageData={fetchTxPageData}
+        setUpdateTx={setUpdateTx}
       />
     </View>
   );
@@ -310,7 +343,7 @@ export const TransactionView = (props) => {
 
   return (
     <>
-      <View style={{ height: hp(100) }}>
+      <View style={{ height: hp(100), backgroundColor:'white' }}>
         <View style={{ display: "flex", alignItems: "center" }}>
           <Text>Your Transactions</Text>
         </View>
@@ -333,6 +366,7 @@ const styles = StyleSheet.create({
   container: {
     width: wp(100),
     height: hp(70),
+    backgroundColor:'white'
   },
   scrollView: {
     width: wp(90),

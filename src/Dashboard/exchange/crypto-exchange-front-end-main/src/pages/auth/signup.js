@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
@@ -55,6 +56,7 @@ export const ExchangeRegister = (props) => {
       phoneNumber: `${formContent.phoneNumber}`,
     });
     setLoading(false);
+    console.log(err)
     if (err) {
       setShowMessage(true);
       return setMessage(err.message);
@@ -74,7 +76,7 @@ export const ExchangeRegister = (props) => {
               alignItems: "center",
               textAlign: "center",
               justifyContent: "space-evenly",
-              marginTop: platform === "ios" ? hp(10) : hp("1"),
+              marginTop: platform === "ios" ? hp(20) : hp("1"),
               color: "white",
             }}
           >
@@ -195,7 +197,7 @@ export const ExchangeRegister = (props) => {
                 >
                   <Text style={styles.buttonText}>
                     {loading ? (
-                      <View>
+                      <View style={{display:'flex', alignContent:'center', alignItems:'center', alignSelf:'center', marginLeft:wp(70)}}>
                         <ActivityIndicator size="small" color="white" />
                       </View>
                     ) : (
@@ -319,6 +321,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   container: {
+    flex: 1,
+    backgroundColor: "#131E3A",
+    height: 10,
+    color: "#fff",
+  },
+  contentIos: {
     flex: 1,
     backgroundColor: "#131E3A",
     height: 10,

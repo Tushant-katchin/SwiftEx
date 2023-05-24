@@ -3,14 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
   Text,
-  ActivityIndicator,
-  KeyboardAvoidingView,
   View,
-  Button,
-  Modal,
-  FlatList,
   TouchableOpacity,
-  Alert,
   ScrollView,
 } from "react-native";
 import {
@@ -18,14 +12,12 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useSelector } from "react-redux";
-import { urls } from "./constants";
 import {
   Avatar,
   Card,
   Title,
   Paragraph,
-  CardItem,
-  WebView,
+
 } from "react-native-paper";
 import Bnbimage from "../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../assets/ethereum.png";
@@ -105,26 +97,32 @@ try{
     >
       <View style={styles.footer}>
         <View elevation={5} style={{ height: hp(100) }}>
-          <ScrollView alwaysBounceVertical={true}>
+          <ScrollView alwaysBounceVertical={true} style={{ marginBottom:hp(10)}}>
             {transactions[0] ? (
               transactions.map((item) => {
                 const hash = item.hash;
-                console.log(hash);
+                console.log(item);
                 let LeftContent;
-                console.log(item.walleType);
+                console.log(item.walletType);
                 if (item.walletType === "Ethereum") {
                   LeftContent = (props) => (
                     <Avatar.Image {...props} source={Etherimage} />
                   );
                 } else if (item.walletType === "BSC") {
                   LeftContent = BnbLeftContent;
-                } else if (item.walletType === "Multi-coin") {
+                }else if (item.walletType == "Xrp") {
+                  LeftContent = XrpLeftContent;
+                }else if (item.walletType == "Matic") {
+                  LeftContent = MaticLeftContent;
+                }  else if (item.walletType === "Multi-coin") {
                   if (item.chainType === "Eth") {
                     LeftContent = EtherLeftContent;
                   } else if (item.chainType === "BSC") {
                     LeftContent = BnbLeftContent;
                   } else if (item.chainType === "Matic") {
                     LeftContent = MaticLeftContent;
+                  } else if (item.chainType === "Xrp") {
+                    LeftContent = XrpLeftContent;
                   } else {
                     LeftContent = multiCoinLeftContent; //props => <Avatar.Image {...props}  source={{ uri: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850' }} />
                   }
@@ -144,7 +142,7 @@ try{
                   <TouchableOpacity
                     key={item.hash}
                     onPress={() => {
-                      if (!item.chainType) {
+                      if (!item.chainType && !item.walletType) {
                         return alert(
                           "Chain not supported for checking In-App transaction details "
                         );

@@ -4,10 +4,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import AsyncStorageLib from '@react-native-async-storage/async-storage';
 
 
-export const DropDown =({Title,dropdownData,setNewOffer, newOffer})=>{
+export const DropDown =({Title,dropdownData,setNewOffer, newOffer, handleChange})=>{
     const state =  useSelector( (state) =>  state)
    const [value, setValue] = useState(null);
    const [value2, setValue2] = useState(null);
@@ -35,7 +34,7 @@ export const DropDown =({Title,dropdownData,setNewOffer, newOffer})=>{
         iconStyle={styles.iconStyle}
         data={dropdownData}
         search
-        maxHeight={200}
+        //maxHeight={200}
         labelField="label"
         valueField="value"
         placeholder={!isFocus ?Title:Title==='Choose Asset'? 'Assets':Title==='Choose Currency'?'Currencies':'Select'}
@@ -48,6 +47,7 @@ export const DropDown =({Title,dropdownData,setNewOffer, newOffer})=>{
           if(Title==='Choose Asset'){
             type ='amount'
            // setNewOffer(newOffer)
+           handleChange(input.value,"assetName")
            const assetName ={
             amount: newOffer.amount,
             assetName: input.value,
@@ -59,6 +59,7 @@ export const DropDown =({Title,dropdownData,setNewOffer, newOffer})=>{
             setValue(input.value)
           }else if(Title ==='Choose Currency'){
             type = 'pricePerUnit'
+            handleChange(input.value,"currencyName")
             const assetName ={
               amount: newOffer.amount,
               assetName: newOffer.assetName? newOffer.assetName:'',

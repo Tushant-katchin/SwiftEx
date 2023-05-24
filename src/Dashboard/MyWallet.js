@@ -31,7 +31,7 @@ import {
   getMaticBalance,
   getBalance,
 } from "../components/Redux/actions/auth";
-import { getEtherBnbPrice } from "../utilities/utilities";
+import { getBnbPrice, getEtherBnbPrice, getEthPrice } from "../utilities/utilities";
 const { StorageAccessFramework } = FileSystem;
 
 const MyWallet = (props) => {
@@ -64,85 +64,93 @@ const MyWallet = (props) => {
     const totalBalance = ethInUsd + bnbInUsd;
     console.log(totalBalance);
     setBalance(totalBalance.toFixed(1));
+    setLoading(false)
   };
 
-  useEffect(async () => {
+  const getEthBnbBalance = async()=>{
     const address = await state.wallet.address;
-    await fetch(`http://${urls.testUrl}/user/getLatestTransactions`, {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        address: address,
-      }),
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
-
-  useEffect(async () => {
-    try {
-      const user = await AsyncStorageLib.getItem("user");
-      setUser(user);
-      await getEtherBnbPrice(tokenAddresses.ETH, tokenAddresses.BNB)
-        .then((resp) => {
-          console.log(resp);
-          setEthPrice(resp.Ethprice);
-          setBnbPrice(resp.Bnbprice);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-      const address = await state.wallet.address;
       console.log(address);
       if (address) {
+        //setLoading(true)
         dispatch(getEthBalance(address))
           .then(async (e) => {
             const Eth = await e.EthBalance;
             let bal = await AsyncStorageLib.getItem("EthBalance");
 
             if (Eth) {
-              setEthBalance(Number(Eth));
+              setEthBalance(Number(Eth).toFixed(4));
+              setLoading(false)
             } else {
               console.log("coudnt get balance");
+              setLoading(false)
+
             }
           })
           .catch((e) => {
             console.log(e);
+            //setLoading(false)
+
           });
         dispatch(getBalance(address))
           .then(async () => {
             const bal = await state.walletBalance;
             console.log("My" + bal);
             if (bal) {
-              setBnbBalance(bal);
+              setBnbBalance(Number(bal).toFixed(4));
+              setLoading(false)
             } else {
               setBnbBalance(0);
+              setLoading(false)
+
             }
           })
           .catch((e) => {
             console.log(e);
+            setLoading(false)
+
           });
+      
+        }
       }
-    } catch (e) {
+
+  const getEthBnbPrice = async ()=>{
+    const user = await AsyncStorageLib.getItem("user");
+    setUser(user);
+    setLoading(true)
+
+   /* await getEtherBnbPrice(tokenAddresses.ETH, tokenAddresses.BNB)
+    .then((resp) => {
+      console.log(resp);
+      setEthPrice(resp.Ethprice);
+      setBnbPrice(resp.Bnbprice);
+    })
+    .catch((e) => {
       console.log(e);
-    }
-  }, []);
+    });*/
+   await getEthPrice()
+   .then((response)=>{
+    setEthPrice(response.USD)
+   })
+   await getBnbPrice()
+   .then((response)=>{
+    setBnbPrice(response.USD)
+   })
+  }
+  
   useEffect(() => {
+    setLoading(true)
+    //getEthBalance()
+    getEthBnbPrice()
+    getEthBnbBalance()
     getBalanceInUsd(ethBalance, bnbBalance);
-  }, [ethBalance, bnbBalance, ethPrice, bnbPrice]);
+    setLoading(false)
+  }, [ethBalance, bnbBalance]);
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.text}>Hi,{user}</Text>
-        <Text style={styles.text3}>$ {balance}</Text>
+        <Text style={styles.text3}>$ {loading?<ActivityIndicator size="large" color="green" />:balance}</Text>
         <Text style={styles.text3}> Wallet Address</Text>
 
         <Text selectable={true} style={styles.text2}>
@@ -151,11 +159,6 @@ const MyWallet = (props) => {
             : "You dont have any wallet yet"}
         </Text>
 
-        {loading ? (
-          <ActivityIndicator size="large" color="green" />
-        ) : (
-          <View></View>
-        )}
         <View style={{ width: wp("50"), marginTop: 10 }}>
           <Button
             title="My Tokens"
@@ -171,8 +174,8 @@ const MyWallet = (props) => {
         >
           <Card
             style={{
-              width: wp(80),
-              height: hp(10),
+              width: wp(90),
+              height: hp(13),
               backgroundColor: "white",
               borderRadius: 10,
               marginLeft: 5,
@@ -197,7 +200,7 @@ const MyWallet = (props) => {
                   left: 50,
                 }}
               >
-                {bnbBalance ? bnbBalance : 0} BNB
+                {loading?<ActivityIndicator size="large" color="green" />:bnbBalance ? bnbBalance : 0} BNB
               </Paragraph>
               <Paragraph
                 style={{
@@ -215,7 +218,7 @@ const MyWallet = (props) => {
 
           <Card
             style={{
-              width: wp(80),
+              width: wp(90),
               height: hp(10),
               backgroundColor: "white",
               borderRadius: 10,
@@ -241,7 +244,7 @@ const MyWallet = (props) => {
                   left: 50,
                 }}
               >
-                {ethBalance ? ethBalance : 0} ETH
+                {loading?<ActivityIndicator size="large" color="green" />:ethBalance ? ethBalance : 0} ETH
               </Paragraph>
               <Paragraph
                 style={{
@@ -296,9 +299,9 @@ const styles = StyleSheet.create({
   content: {
     borderWidth: 5,
     borderColor: "#131E3A",
-    height: hp("86"),
-    width: wp(90),
-    margin: hp("3"),
+    height: hp("89"),
+    width: wp(95),
+    margin: hp("1"),
     borderRadius: 30,
     backgroundColor: "white",
     textAlign: "center",

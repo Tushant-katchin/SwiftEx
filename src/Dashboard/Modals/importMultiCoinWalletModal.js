@@ -14,9 +14,7 @@ import {
 import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AddToAllWallets
-} from "../../components/Redux/actions/auth";
+import { AddToAllWallets } from "../../components/Redux/actions/auth";
 import { urls } from "../constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -24,6 +22,8 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
+import ModalHeader from "../reusables/ModalHeader";
+const xrpl = require("xrpl");
 
 const ImportMultiCoinWalletModal = ({
   props,
@@ -42,7 +42,9 @@ const ImportMultiCoinWalletModal = ({
   const [jsonKey, setJsonKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
-
+  const [disable, setDisable] = useState(true)
+  const [ message, setMessage] = useState('')
+  
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
@@ -96,6 +98,9 @@ const ImportMultiCoinWalletModal = ({
     return response;
   }
 
+  const closeModal = ()=>{
+    setWalletVisible(false)
+  }
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -108,6 +113,32 @@ const ImportMultiCoinWalletModal = ({
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
+
+  useEffect(()=>{
+    if(accountName &&  mnemonic )
+    {
+      let valid
+        const phrase = mnemonic.trimStart();
+        const trimmedPhrase = phrase.trimEnd();
+        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
+
+      if(accountName && mnemonic  && valid){
+        setDisable(false)
+      }else{
+        setDisable(true)
+      }
+    }else{
+      setMessage('')
+    }
+    },[mnemonic])
+  
+
 
   return (
     <Animated.View // Special animatable View
@@ -127,6 +158,7 @@ const ImportMultiCoinWalletModal = ({
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal} name={'Multi-Coin'}/>
           <View style={{ display: "flex", alignContent: "flex-start" }}>
             <Text style={style.welcomeText}>Name</Text>
           </View>
@@ -156,10 +188,14 @@ const ImportMultiCoinWalletModal = ({
           ) : (
             <Text> </Text>
           )}
-          <View style={{ width: wp(90), margin: 10 }}>
+          <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
+        <Text style={{color:'red'}}>{message}</Text>
+        </View>
+          <View style={{ display:'flex',alignSelf:'center',width: wp(30), margin: 10 }}>
             <Button
               title={"Import"}
               color={"blue"}
+              disabled={disable}
               onPress={async () => {
                 if (!accountName) {
                   return alert("please enter an accountName to proceed");
@@ -176,6 +212,18 @@ const ImportMultiCoinWalletModal = ({
                       "Incorrect Mnemonic. Please provide a valid Mnemonic"
                     );
                   }
+                    const xrpWalletFromM = xrpl.Wallet.fromMnemonic(trimmedPhrase);
+                    const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
+                    console.log(
+                      "\t===> seed Created from mnemonic",
+                      entropy.split("x")[1]
+                    );
+                    const xrpWallet = xrpl.Wallet.fromEntropy(
+                      entropy.split("x")[1]
+                    ); // This is suggested because we will get seeds also
+                    console.log(xrpWallet); // Produces different addresses
+
+
                   const accountFromMnemonic =
                     ethers.Wallet.fromMnemonic(trimmedPhrase);
                   const Keys = accountFromMnemonic._signingKey();
@@ -183,6 +231,10 @@ const ImportMultiCoinWalletModal = ({
                   const wallet = {
                     address: accountFromMnemonic.address,
                     privateKey: privateKey,
+                    xrp:{
+                      address:xrpWallet.classicAddress,
+                      privateKey:xrpWallet.seed
+                    }
                   };
                   /* const response = saveUserDetails(accountFromMnemonic.address).then(async (response)=>{
                 if(response===400){
@@ -227,23 +279,46 @@ const ImportMultiCoinWalletModal = ({
                       address: wallet.address,
                       privateKey: wallet.privateKey,
                       name: accountName,
+                      xrp:{
+                        address:xrpWallet.classicAddress,
+                        privateKey:xrpWallet.seed
+                      },
                       walletType: "Multi-coin",
                       wallets: wallets,
                     },
                   ];
                   // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                  dispatch(AddToAllWallets(allWallets, user));
+                  dispatch(AddToAllWallets(allWallets, user))
+                  .then(
+                    (response) => {
+                      if (response) {
+                        if (response.status === "Already Exists") {
+                          alert("Account with same name already exists");
+                          setLoading(false);
+                          return;
+                        } else if (response.status === "success") {
+                          setTimeout(() => {
+                            setLoading(false);
+                            setWalletVisible(false);
+                            setVisible(false);
+                            setModalVisible(false);
+                            navigation.navigate("AllWallets");
+                          }, 0);
+                        } else {
+                          alert("failed please try again");
+                          return;
+                        }
+                      }
+                    }
+                  );
+                  
                   // dispatch(getBalance(wallet.address))
                   //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
 
                   let result = [];
 
-                  setLoading(false);
-                  setWalletVisible(false);
-                  navigation.navigate("AllWallets");
-                  setVisible(false);
-                  setModalVisible(false);
+                  
                 } catch (e) {
                   alert(e);
                   setLoading(false);
@@ -273,7 +348,7 @@ const style = StyleSheet.create({
     display: "flex",
     backgroundColor: "white",
     height: hp(90),
-    width: wp(100),
+    width: wp(90),
     textAlign: "center",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
@@ -314,7 +389,7 @@ const style = StyleSheet.create({
     marginBottom: hp("2"),
     color: "black",
     marginTop: hp("2"),
-    width: wp("90"),
+    width: wp("85"),
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
@@ -322,7 +397,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     height: hp(20),
-    width: wp(90),
+    width: wp(85),
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",
@@ -339,7 +414,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     height: hp(5),
-    width: wp(90),
+    width: wp(85),
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",
@@ -349,7 +424,7 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
-
+    backgroundColor: "white",
     elevation: 24,
   },
 });

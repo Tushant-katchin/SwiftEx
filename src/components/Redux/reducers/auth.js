@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const emailId = AsyncStorage.getItem('emailId')
 const user = AsyncStorage.getItem("user");
-const wallet = AsyncStorage.getItem("Wallet");
+const wallet = AsyncStorage.getItem("wallet");
 const walletBalance = AsyncStorage.getItem("walletBalance");
 const OTP = AsyncStorage.getItem("OTP");
 const wallets= AsyncStorage.getItem(`${user}-wallets`);

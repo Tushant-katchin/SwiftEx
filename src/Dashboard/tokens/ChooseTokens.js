@@ -30,6 +30,7 @@ import Xrpimage from "../../../assets/xrp.png";
 import Maticimage from "../../../assets/matic.png";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import TokenHeader from "./TokenHeader";
 
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const ChooseTokens = ({ setModalVisible }) => {
@@ -93,16 +94,24 @@ const ChooseTokens = ({ setModalVisible }) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
+      <TokenHeader setVisible={setModalVisible} name={'Choose Wallet'}/>
       <ScrollView>
         <View style={style.Body}>
           <TouchableOpacity
             style={style.Box3}
-            onPress={() => {
+            onPress={async () => {
               setModalVisible(false);
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              const Type = JSON.parse(walletType);
+              if (Type === "BSC" || Type ==='Multi-coin') {
+              
               let token = "BNB";
               navigation.navigate("Send", {
                 token: token,
               });
+            }else{
+              return alert('Please select a bnb wallet')
+            }
             }}
           >
             <Card
@@ -127,12 +136,19 @@ const ChooseTokens = ({ setModalVisible }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={style.Box2}
-            onPress={() => {
+            onPress={async() => {
               setModalVisible(false);
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              const Type = JSON.parse(walletType);
+              if (Type === "Ethereum" || Type ==='Multi-coin') {
+              
               let token = "Ethereum";
               navigation.navigate("Send", {
                 token: token,
               });
+            }else{
+              return alert('please select an ethereum wallet')
+            }
             }}
           >
             <Card
@@ -158,13 +174,21 @@ const ChooseTokens = ({ setModalVisible }) => {
 
           <TouchableOpacity
             style={style.Box2}
-            onPress={() => {
+            onPress={async () => {
               setModalVisible(false);
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              const Type = JSON.parse(walletType);
+              if (Type === "Matic" || Type ==='Multi-coin') {
+              
               let token = "Matic";
               navigation.navigate("Send", {
                 token: token,
               });
+            }else{
+              return alert('Please select a matic wallet')
+            }
             }}
+            
           >
             <Card
               style={{
@@ -192,15 +216,21 @@ const ChooseTokens = ({ setModalVisible }) => {
               setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
-              if (Type === "Multi-coin") {
-                return alert(
-                  "Sending Xrp using multi-coin wallet is not supported yet"
-                );
-              } else {
+              if(Type==='Multi-coin'){
+                let token = "Multi-coin-Xrp";
+                navigation.navigate("Send", {
+                  token: token,
+                });
+                return
+              }
+               else if(Type==='Xrp'){
                 let token = "Xrp";
                 navigation.navigate("Send", {
                   token: token,
                 });
+                return
+              }else{
+                return alert('Please select xrp wallet')
               }
             }}
           >

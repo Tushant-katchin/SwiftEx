@@ -30,6 +30,7 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
+import ModalHeader from "../reusables/ModalHeader";
 
 const ImportEthereumModal = ({
   props,
@@ -48,7 +49,9 @@ const ImportEthereumModal = ({
   const [jsonKey, setJsonKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
-
+  const [message,setMessage] = useState(false)
+  const [disable, setDisable] = useState(true)
+  const[text, setText] = useState('')
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
@@ -57,51 +60,9 @@ const ImportEthereumModal = ({
 
   const Spin = new Animated.Value(0);
 
-  async function saveUserDetails(address) {
-    let response;
-    const user = await AsyncStorageLib.getItem("user");
-    const token = await AsyncStorageLib.getItem("token");
-    console.log(user);
-    try {
-      response = await fetch(`http://${urls.testUrl}/user/saveUserDetails`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: token,
-          user: user,
-          walletAddress: address,
-          accountName: accountName,
-        }),
-      })
-        .then((response) => response.json())
-        .then(async (responseJson) => {
-          console.log(responseJson);
-          console.log(responseJson);
-          if (responseJson.responseCode === 200) {
-            alert("success");
-            return responseJson.responseCode;
-          } else if (responseJson.responseCode === 400) {
-            alert(
-              "account with same name already exists. Please use a different name"
-            );
-            return responseJson.responseCode;
-          } else {
-            alert("Unable to create account. Please try again");
-            return 401;
-          }
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    } catch (e) {
-      console.log(e);
-      alert(e);
-    }
-    console.log(response);
-    return response;
+  
+  const closeModal =() =>{
+    setWalletVisible(false)
   }
 
   useEffect(() => {
@@ -116,6 +77,42 @@ const ImportEthereumModal = ({
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
+
+  useEffect(()=>{
+    if(accountName && (privateKey || mnemonic || json))
+    {
+      let valid
+      if(label==='mnemonic'){
+        const phrase = mnemonic.trimStart();
+        const trimmedPhrase = phrase.trimEnd();
+        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
+        
+      }else if(label==='privateKey'){
+        valid = ethers.utils.isHexString(privateKey, 32);
+        if(!valid){
+          setMessage('Please enter a valid private key')
+        }
+        else{
+          setMessage('')
+        }
+      }
+      
+      if(accountName && (mnemonic || privateKey || json) && valid){
+        setDisable(false)
+      }else{
+        setDisable(true)
+      }
+    }else{
+      setMessage('')
+    }
+    },[mnemonic,privateKey,json])
+
 
   return (
     <Animated.View // Special animatable View
@@ -135,24 +132,31 @@ const ImportEthereumModal = ({
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal} name={'Ethereum'} />
           <View style={style.Button}>
-            <View style={{ margin: 2, width: wp(32) }}>
+            <View style={{ margin: 2, width: wp(30) }}>
               <Button
                 title={"privateKey"}
                 color={label == "privateKey" ? "green" : "grey"}
                 onPress={() => {
                   setOptionVisible(false);
                   setLabel("privateKey");
+                  if(text){
+                    setPrivateKey(text)
+                  }
                 }}
               ></Button>
             </View>
-            <View style={{ margin: 2, width: wp(32) }}>
+            <View style={{ margin: 2, width: wp(30) }}>
               <Button
                 title={"Mnemonic"}
                 color={label == "mnemonic" ? "green" : "grey"}
                 onPress={() => {
                   setOptionVisible(false);
                   setLabel("mnemonic");
+                  if(text){
+                    setMnemonic(text)
+                  }
                 }}
               ></Button>
             </View>
@@ -163,6 +167,9 @@ const ImportEthereumModal = ({
                 onPress={() => {
                   setLabel("JSON");
                   setOptionVisible(true);
+                  if(text){
+                    setJson(text)
+                  }
                 }}
               ></Button>
             </View>
@@ -187,10 +194,13 @@ const ImportEthereumModal = ({
             style={style.textInput}
             onChangeText={(text) => {
               if (label === "privateKey") {
+                setText(text)
                 setPrivateKey(text);
               } else if (label === "mnemonic") {
+                setText(text)
                 setMnemonic(text);
               } else if (label === "JSON") {
+                setText(text)
                 setJson(text);
               } else {
                 return alert(`please input ${label} to proceed `);
@@ -239,10 +249,14 @@ const ImportEthereumModal = ({
           ) : (
             <Text> </Text>
           )}
-          <View style={{ width: wp(90), margin: 10 }}>
+          <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
+        <Text style={{color:'red'}}>{message}</Text>
+        </View>
+          <View style={{ display:'flex',alignSelf:'center',width: wp(30), margin: 10 }}>
             <Button
               title={"Import"}
               color={"blue"}
+              disabled={disable}
               onPress={async () => {
                 if (!accountName) {
                   return alert("please enter an accountName to proceed");
@@ -321,19 +335,38 @@ const ImportEthereumModal = ({
                   ];
                   // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                  dispatch(AddToAllWallets(allWallets, user));
+                  dispatch(AddToAllWallets(allWallets, user))
+                  .then(
+                    (response) => {
+                      if (response) {
+                        if (response.status === "Already Exists") {
+                          alert("Account with same name already exists");
+                          setLoading(false);
+                          return;
+                        } else if (response.status === "success") {
+                          setTimeout(() => {
+                    
+                            setLoading(false);
+                            setWalletVisible(false);
+                            setVisible(false);
+                            setModalVisible(false);
+                            
+                            navigation.navigate("AllWallets");
+                          }, 0);
+                        } else {
+                          alert("failed please try again");
+                          return;
+                        }
+                      }
+                    }
+                  );
+                  
                   // dispatch(getBalance(wallet.address))
                   // dispatch(setToken(token))
                   //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
 
-                  let result = [];
 
-                  setLoading(false);
-                  setWalletVisible(false);
-                  setVisible(false);
-                  setModalVisible(false);
-
-                  navigation.navigate("AllWallets");
+                  
                 } else if (label === "privateKey") {
                   const check = ethers.utils.isHexString(privateKey, 32);
                   if (!check) {
@@ -399,18 +432,31 @@ const ImportEthereumModal = ({
                   ];
                   // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                  dispatch(AddToAllWallets(allWallets, user));
-                  //  dispatch(getBalance(wallet.address))
-                  //dispatch(setToken(token))
-                  //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-
-                  let result = [];
-
-                  setWalletVisible(false);
-                  setVisible(false);
-                  setModalVisible(false);
-                  setLoading(false);
-                  navigation.navigate("AllWallets");
+                  dispatch(AddToAllWallets(allWallets, user)).then(
+                    (response) => {
+                      if (response) {
+                        if (response.status === "Already Exists") {
+                          alert("Account with same name already exists");
+                          setLoading(false);
+                          return;
+                        } else if (response.status === "success") {
+                          setTimeout(() => {
+                    
+                            setLoading(false);
+                            setWalletVisible(false);
+                            setVisible(false);
+                            setModalVisible(false);
+                            
+                            navigation.navigate("AllWallets");
+                          }, 0);
+                        } else {
+                          alert("failed please try again");
+                          return;
+                        }
+                      }
+                    }
+                  );
+                  
                 } else {
                   try {
                     const user = await AsyncStorageLib.getItem("user");
@@ -469,18 +515,31 @@ const ImportEthereumModal = ({
                         ];
                         // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                        dispatch(AddToAllWallets(allWallets, user));
-                        // dispatch(getBalance(wallet.address))
-                        // dispatch(setToken(token))
-                        //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-
-                        let result = [];
-
-                        setLoading(false);
-                        setWalletVisible(false);
-                        setVisible(false);
-                        setModalVisible(false);
-                        navigation.navigate("AllWallets");
+                        dispatch(AddToAllWallets(allWallets, user)).then(
+                          (response) => {
+                            if (response) {
+                              if (response.status === "Already Exists") {
+                                alert("Account with same name already exists");
+                                setLoading(false);
+                                return;
+                              } else if (response.status === "success") {
+                                setTimeout(() => {
+                          
+                                  setLoading(false);
+                                  setWalletVisible(false);
+                                  setVisible(false);
+                                  setModalVisible(false);
+                                  
+                                  navigation.navigate("AllWallets");
+                                }, 0);
+                              } else {
+                                alert("failed please try again");
+                                return;
+                              }
+                            }
+                          }
+                        );
+                        
                       })
                       .catch((e) => {
                         console.log(e);
@@ -516,7 +575,7 @@ const style = StyleSheet.create({
     display: "flex",
     backgroundColor: "white",
     height: hp(90),
-    width: wp(100),
+    width: wp(90),
     textAlign: "center",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
@@ -557,7 +616,7 @@ const style = StyleSheet.create({
     marginBottom: hp("2"),
     color: "black",
     marginTop: hp("2"),
-    width: wp("90"),
+    width: wp("85"),
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
@@ -565,7 +624,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     height: hp(20),
-    width: wp(90),
+    width: wp(85),
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",
@@ -582,7 +641,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     height: hp(5),
-    width: wp(90),
+    width: wp(85),
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",
@@ -592,6 +651,7 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
+    backgroundColor:'white',
 
     elevation: 24,
   },

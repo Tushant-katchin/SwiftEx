@@ -10,9 +10,18 @@ import CryptoJS from "react-native-crypto-js";
 import { getPassword } from '../constants/alertConstants';
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import Web3 from 'web3';
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
 var ethers = require('ethers');
 
+
 //var CryptoJS = require("crypto-js");
+export const navigationRef = React.createRef();
+
+export function NavigationController(location){
+  navigationRef.current?.navigate(location);
+}
 
 export async function SendTransaction(signedTx, Token){
   let response
@@ -54,34 +63,6 @@ export async function getNonce(address){
     console.log(nonce)
 
     return nonce
-  /*let response
-  const token = await AsyncStorageLib.getItem('token')
-  try{
-
-  
-    response = await fetch(`http://${urls.testUrl}/user/getnonce`, {
-      method: 'POST',
-      headers: {
-               Accept: 'application/json',
-               'Content-Type': 'application/json'
-      },
-     body: JSON.stringify({
-               token:token,
-               address:address})
-     }).then((response) => response.json())
-     .then(async (responseJson) => {
-      console.log(responseJson)
-     
-      
-      return responseJson.nonce
-    
-    }).catch((error)=>{
-      alert(error)
-    })
-  }catch(e){
-    console.log(e)
-    alert(e)
-  }*/
   
 }
 
@@ -91,17 +72,7 @@ export async function getGasPrice(){
   const gasPrice = await provider.getGasPrice()
   console.log(gasPrice)
   return  gasPrice 
-  /* let response
-  let data
-  try{
-
-    response = await fetch(`http://${urls.testUrl}/user/getgasprice`)
-     data = await response.json()
-  }catch(e){
-    console.log(e)
-    alert(e)
-  }
-  return data.gasPrice*/
+ 
 }
 
 
@@ -193,6 +164,7 @@ export const decryptFile=  (privateKey, password) =>{
   //console.log("decrypted text", plaintext);
   return plaintext
 }
+
 export const saveWallet = async (emailId,path, password, name)=>{
   const response= await fetch(`http://${urls.testUrl}/user/savewallet`, {
     method: 'POST',
@@ -812,29 +784,7 @@ if (!routerAllowance.gte(amount)) {
 
 console.log(routerAllowance.toString())
 
-return routerAllowance.toString()//mapper.responseMappingWithData(usrConst.CODE.Success,usrConst.MESSAGE.Success,routerAllowance.toString())
-
-  /*const response = await fetch(`http://${urls.testUrl}/user/approveSwap`, {
-    method: 'POST',
-    headers: {
-             Accept: 'application/json',
-             'Content-Type': 'application/json'
-    },
-   body: JSON.stringify({
-    TOKEN_ADD:TOKEN_ADD,       
-    signedTx:signedTx,
-    amount:amount,
-    USER_ADD:USER_ADD  ,
-    token:token
-  })  
-   }).then((response) => response.json())
-   .then((responseJson) => {
-    console.log(responseJson)
-    return responseJson.responseData
-
-    
-  });
-  return response*/
+return routerAllowance.toString()
 
 
 }
@@ -909,52 +859,29 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
       await AsyncStorageLib.setItem(`${user}-transactions`,JSON.stringify(transactions))
       return transactions
       }
-   })
-   
-  
-   
-
-  /*const token = await AsyncStorageLib.getItem('token')
-
-          try {
-      const response= await fetch(`http://${urls.testUrl}/user/saveTx`, {
-        method: 'POST',
-        headers: {
-                 Accept: 'application/json',
-                 'Content-Type': 'application/json'
-        },
-       body: JSON.stringify({
-        token:token,
-        user: emailid,
-        type:type,
-        hash:hash,
-        token:token,
-        walletType:walletType,
-        chainType:chainType
-
-
-      })  
-       }).then((response) => response.json())
-    .then((json) => {
-      
-    })
-    .catch((error) => {
-      setLoading(false)
-      alert(error)
-      console.error(error);
-    });
-
-
-      } catch (error) {
-
-        setLoading(false)
-        alert(error)
-        console.error(error);
-      }
-   
-  */
-    
+   })    
   };
+
+  export const getEthPrice = async ()=>{
+    const response =await fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
+    .then((res)=>res.json())
+    .then((resJson)=>{
+      //console.log("Eth Current price",resJson)
+      return resJson
+    })
+    return response
+  }
+
+  export const getBnbPrice = async ()=>{
+    const response =await fetch('https://min-api.cryptocompare.com/data/price?fsym=BNB&tsyms=USD')
+    .then((res)=>res.json())
+    .then((resJson)=>{
+      //console.log("Eth Current price",resJson)
+      return resJson
+    })
+    return response
+  }
+
 
   export const getEtherBnbPrice = async (address,address2) => {
     const token = await AsyncStorageLib.getItem('token')
@@ -979,3 +906,25 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
  
  return result
   };
+
+  export function isFloat(value) {
+    if (
+      !Number.isNaN(Number(value)) &&
+      !Number.isInteger(Number(value))
+    ) {
+      return true;
+    }
+  
+    return false;
+  }
+
+  export function isInteger(value)
+  {
+    console.log(value)
+    if(value &&  Number.isSafeInteger(Number(value)))
+    {
+      return true
+    }
+    return false
+  }
+  

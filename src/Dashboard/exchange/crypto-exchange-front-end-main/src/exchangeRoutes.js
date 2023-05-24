@@ -7,11 +7,8 @@ import { getAuth } from "./api";
 import { AccountView } from "./pages/account";
 import { TransactionView } from "./pages/transaction";
 import { NativeRouter, Route, Link, Routes } from "react-router-native";
-import { OnScreenNotification } from './components/onScreenNotification'
-import {
-  onMessageListener,
-  requestFirebaseNotificationPermission,
-} from './utils/fcmHandler'
+import { useNavigate } from "react-router-dom";
+import Header from "../../../reusables/Header"
 const Home = () => {
   return (
     <View>
@@ -19,10 +16,12 @@ const Home = () => {
     </View>
   );
 };
-const Exchange = ({ pressed, setPressed }) => (
+const Exchange = ({ pressed, setPressed, navigation }) => (
+  
   <NativeRouter>
     <View style={styles.container}>
       <View style={styles.nav}>
+
         <Link
           to="/"
           underlayColor="grey"
@@ -34,7 +33,7 @@ const Exchange = ({ pressed, setPressed }) => (
             backgroundColor: pressed === "1" ? "grey" : "white",
             borderRadius: 20,
           }}
-        >
+          >
           <Text>Home</Text>
         </Link>
         <Link
@@ -48,7 +47,7 @@ const Exchange = ({ pressed, setPressed }) => (
             borderRadius: 20,
           }}
           onShowUnderlay={() => setPressed("2")}
-        >
+          >
           <Text>offers</Text>
         </Link>
         <Link
@@ -62,7 +61,7 @@ const Exchange = ({ pressed, setPressed }) => (
             borderRadius: 20,
           }}
           onShowUnderlay={() => setPressed("3")}
-        >
+          >
           <Text>profile</Text>
         </Link>
         <Link
@@ -76,10 +75,11 @@ const Exchange = ({ pressed, setPressed }) => (
             borderRadius: 20,
           }}
           onShowUnderlay={() => setPressed("4")}
-        >
+          >
           <Text>Tx's</Text>
         </Link>
         <Link
+          
           to="/account"
           underlayColor="#f0f4f7"
           style={{
@@ -90,15 +90,16 @@ const Exchange = ({ pressed, setPressed }) => (
             borderRadius: 20,
           }}
           onShowUnderlay={() => setPressed("5")}
-        >
+          >
           <Text>account</Text>
         </Link>
+          
       </View>
       <Routes>
-        <Route path="/" element={<HomeView />} />
-        <Route path="/offers" element={<OfferView />} />
+\        <Route path="/" element={<HomeView setPressed={setPressed} />} />
+        <Route path="/offers" element={<OfferView setPressed={setPressed} />} />
         <Route path="/profile" element={<ProfileView />} />
-        <Route path="/Transactions" element={<TransactionView />} />
+        <Route path="/Transactions" element={<TransactionView setPressed={setPressed}/>} />
         <Route path="/account" element={<AccountView />} />
       </Routes>
     </View>
@@ -107,29 +108,11 @@ const Exchange = ({ pressed, setPressed }) => (
 
 const ExchangeRoutes = () => {
   const [pressed, setPressed] = useState();
-  const [notification, setNotification] = useState(null);
-
-  useEffect(() => {
-    
-    requestFirebaseNotificationPermission();
-  }, []);
-
-  onMessageListener()
-  .then((payload) => {
-    console.log('Notification', payload) //test...
-    setNotification(payload.data)
-  })
-  .catch((err) => console.log('recieve failed: ', err))
+ 
 
   return (
     <View style={{ backgroundColor: "white" }}>
-      {notification && (
-        <OnScreenNotification
-          notification={notification}
-          setNotification={setNotification}
-        />
-      )}
-      <Exchange pressed={pressed} setPressed={setPressed} />
+      <Exchange pressed={pressed} setPressed={setPressed}/>
     </View>
   );
 

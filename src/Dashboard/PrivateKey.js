@@ -95,7 +95,8 @@ const PrivateKey = (props) => {
               }
               let wallet = props.route.params.wallet.wallet;
               wallet.accountName = accountName;
-              props.navigation.navigate("Check Mnemonic", {
+              console.log(wallet)
+             props.navigation.navigate("Check Mnemonic", {
                 wallet,
               });
             }}

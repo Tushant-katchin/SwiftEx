@@ -13,13 +13,20 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Moralis from "moralis"
+import { API_KEYS, MORALIS_API_KEY } from "./src/Dashboard/constants";
 
 LogBox.ignoreLogs(["Setting a timer"]);
+
+
+
 export default function App() {
   const [ready, setReady] = useState(false);
 
   LogBox.ignoreLogs(["Setting a timer"]);
   LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
+  LogBox.ignoreLogs(['Failed prop type: Invalid prop `data[0]` supplied to `XAxis`, expected one of type [number, object]'])
+
   LogBox.ignoreLogs([
     "Can't perform a React state update on an unmounted component",
   ]);
@@ -31,10 +38,13 @@ export default function App() {
   ]);
 
   
-
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
+      
       setReady(true);
+      await Moralis.start({
+        apiKey: MORALIS_API_KEY.apiKey//API_KEYS.MORALIS
+      })
     }, 1500);
   }, []);
 

@@ -15,7 +15,9 @@ import {
 import { useSelector } from "react-redux";
 import Etherimage from "../../assets/ethereum.png";
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
-import { LocalNotification } from "./notifications/pushController";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { getBnbPrice, getEthPrice } from "../utilities/utilities";
+
 function InvestmentChart() {
   const state2 = useSelector((state) => state.walletBalance);
 
@@ -23,7 +25,8 @@ function InvestmentChart() {
   const wallet = useSelector((state) => state.wallet);
   const [bnbBalance, getBnbBalance] = useState(0);
   const [ethBalance, getEthBalance] = useState(0);
-
+  const[ethPrice, setEthPrice] = useState(0)
+  const[bnbPrice, setBnbPrice] = useState(0)
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
       UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -33,50 +36,85 @@ function InvestmentChart() {
 
   const translation = useRef(new Animated.Value(0)).current;
 
-  useEffect(async () => {
-    /*Animated.timing(
-    fadeAnim,
-    {
-      toValue: 1,
-      duration: 1000,
-    }
-  ).start();
+  const getEthBnbPrice = async() => {
+    await getEthPrice()
+    .then((response)=>{
+      setEthPrice(response.USD)
+    })
+    await getBnbPrice()
+    .then((response)=>{
+      setBnbPrice(response.USD)
+    })
+  }
 
-Animated.timing(translation, {
-    toValue: 1,
-    delay: 0.1,
-    useNativeDriver: true,
-  }).start();  */
+  useEffect(async () => {
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
-    if (bal) {
-      getBnbBalance(bal);
-    } else {
-      getBnbBalance(0.0);
-    }
-    if (EthBalance) {
-      getEthBalance(0.0);
-    } else {
-      getEthBalance(0.0);
-    }
+    AsyncStorageLib.getItem('walletType')
+    .then((type)=>{
+      if(JSON.parse(type)==='Ethereum' || JSON.parse(type)==='BSC'){
+
+        if (bal) {
+          getBnbBalance(bal);
+        } else {
+          getBnbBalance(0.0);
+        }
+        if (EthBalance) {
+          getEthBalance(EthBalance);
+        } else {
+          getEthBalance(0.0);
+        }
+      }else{
+        getEthBalance(0.0)
+        getBnbBalance(0.0)
+      }
+    })
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [state2]);
 
   useEffect(async () => {
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
-    if (bal) {
-      getBnbBalance(bal);
-    } else {
-      getBnbBalance(0.0);
-    }
-    if (EthBalance) {
-      getEthBalance(EthBalance);
-    } else {
-      getEthBalance(0.0);
-    }
+    AsyncStorageLib.getItem('walletType')
+    .then((type)=>{
+      if(JSON.parse(type)==='Ethereum'){
+        if (EthBalance) {
+          getEthBalance(Number(EthBalance).toFixed(5));
+          getBnbBalance(0.0)
+        } else {
+          getEthBalance(0.0);
+        }
+      }else if(JSON.parse(type)==='BSC'){
+        if (bal) {
+          getBnbBalance(Number(bal).toFixed(5));
+          getEthBalance(0.0)
+        } else {
+          getBnbBalance(0.0);
+        }
+      }else if(JSON.parse(type)==='Multi-coin'){
+        if (EthBalance) {
+          getEthBalance(Number(EthBalance).toFixed(5));
+        } else {
+          getEthBalance(0.0);
+        }
+
+        if (bal) {
+          getBnbBalance(Number(bal).toFixed(5));
+        } else {
+          getBnbBalance(0.0);
+        }
+      }
+      else{
+        getEthBalance(0.0)
+        getBnbBalance(0.0)
+      }
+    })
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, [wallet]);
+  }, [wallet.address]);
+
+  useEffect(()=>{
+    getEthBnbPrice()
+  },[])
 
   let LeftContent = (props) => (
     <Avatar.Image
@@ -128,7 +166,7 @@ Animated.timing(translation, {
               top: -39,
             }}
           >
-            $300
+           ${bnbPrice>=0?bnbPrice:300}
           </Paragraph>
         </Card.Content>
       </Card>
@@ -172,13 +210,10 @@ Animated.timing(translation, {
               top: -39,
             }}
           >
-            $1300
+          $ {ethPrice>=0?ethPrice:1300}
           </Paragraph>
         </Card.Content>
       </Card>
-      <Button title="notification" color="blue" onPress={()=>{
-        LocalNotification()
-      }} />
     </View>
   );
 }

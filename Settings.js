@@ -79,7 +79,9 @@ const Settings = (props) => {
       <View style={styles.accountBox2}>
         <TouchableOpacity
           onPress={() => {
-            alert("coming soon");
+            //alert("coming soon");
+            props.navigation.navigate("Biometric");
+
           }}
         >
           <Text style={styles.text}>Biometric Authenticaton</Text>

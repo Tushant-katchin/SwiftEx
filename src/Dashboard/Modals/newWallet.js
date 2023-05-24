@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Generate_Wallet2 } from "../../components/Redux/actions/auth";
 import Modal from "react-native-modal";
 import NewWalletPrivateKey from "./newWalletPrivateKey";
+import ModalHeader from "../reusables/ModalHeader";
 
 const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
   const [Checked, setCheckBox] = useState(false);
@@ -34,7 +35,10 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  useEffect(() => {
+  const closeModal =()=>{
+    setVisible(false)
+  }
+    useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -57,14 +61,18 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={visible}
-        useNativeDriver={true}
         statusBarTranslucent={true}
+        useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         onBackdropPress={() => setVisible(false)}
         onBackButtonPress={() => {
           setVisible(false);
         }}
       >
         <View style={style.Body}>
+        <ModalHeader Function={closeModal} name={'Import'}/>
           <Animated.Image
             style={{
               width: wp("5"),
@@ -97,7 +105,7 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
             style={{ display: "flex", flexDirection: "row", marginTop: hp(5) }}
           >
             <Text style={style.welcomeText2}>
-              If i share my private key , my funds can get stolen
+              If i share my private key , my funds can get  stolen
             </Text>
             <View style={{ marginLeft: 10 }}>
               <Switch
@@ -116,7 +124,7 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
             <Button
               title={"Continue"}
               color={"green"}
-              disabled={Checked && Checked2 ? false : true}
+              disabled={loading ? true : Checked && Checked2  ? false : true}
               onPress={() => {
                 setLoading(true);
                 setTimeout(() => {
@@ -164,7 +172,7 @@ const style = StyleSheet.create({
     display: "flex",
     backgroundColor: "#131E3A",
     height: hp(100),
-    width: wp(95),
+    width: wp(90),
     alignItems: "center",
     textAlign: "center",
   },
@@ -179,6 +187,8 @@ const style = StyleSheet.create({
     fontWeight: "200",
     color: "white",
     marginTop: hp(1),
+    width:wp(70)
+
   },
   Button: {
     marginTop: hp(10),

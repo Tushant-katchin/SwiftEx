@@ -5,9 +5,7 @@ import { logout, setUser } from "../components/Redux/actions/auth";
 import Home2 from "./Home2";
 import Settings from "../../Settings";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Assests from "./Assests";
 import Market from "./Market";
-import munziicon from "../../assets/title_icon.png";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyHeader from "./MyHeader";
 import Wallet from "./Wallet";
@@ -20,12 +18,8 @@ import {
 import { Collapse } from "../components/Redux/actions/auth";
 import store from "../components/Redux/Store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GestureRecognizer, {
-  swipeDirections,
-} from "react-native-swipe-gestures";
 import MyHeader3 from "./Header3";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-
 const Tab = createBottomTabNavigator();
 
 const Dashboard = ({ navigation }) => {
@@ -36,6 +30,9 @@ const Dashboard = ({ navigation }) => {
   const dispatch = useDispatch();
   //let state = store.getState()
   console.log(state);
+
+  
+
 
   const updateState = () => {
     let data = store.getState();

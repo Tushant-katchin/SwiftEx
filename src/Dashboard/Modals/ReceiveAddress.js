@@ -6,6 +6,8 @@ import {
   Button,
   ActivityIndicator,
   TouchableOpacity,
+  Share,
+  Clip,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -13,33 +15,36 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Avatar,
-  Card,
-  Title,
-  Paragraph,
-  CardItem,
-  WebView,
-} from "react-native-paper";
+import { Avatar, Card, Title } from "react-native-paper";
 import Bnbimage from "../../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../../assets/ethereum.png";
 import maticImage from "../../../assets/matic.png";
-import titleIcon from "../../../assets/title_icon.png";
+import xrpImage  from "../../../assets/xrp.png"
 import Modal from "react-native-modal";
 import QRCode from "react-native-qrcode-svg";
-import "@ethersproject/shims";
-import { ethers } from "ethers";
-//'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
+import * as Clipboard from "expo-clipboard";
+import Moralis from "moralis";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import SnackBar from 'react-native-snackbar-component'
+import { checkPendingTransactions } from "../../utilities/web3utilities";
+import Header from "../reusables/Header";
+import ModalHeader from "../reusables/ModalHeader";
+const RippleAPI = require('ripple-lib').RippleAPI
+
 const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
-  const [BscWallet, setBscWalletVisible] = useState(false);
-  const [EthereumWallet, setEthereumWallet] = useState(false);
-  const WalletAddress = useSelector((state) => state.wallet.address);
+  const state = useSelector((state) => state);
+  const WalletAddress = useSelector((state) => iconType==='Xrp' && state.wallet.xrp? state.wallet.xrp.address : state.wallet.address);
   const [selected, setSelected] = useState(false);
   const [selected1, setSelected1] = useState(false);
   const [selected2, setSelected2] = useState(false);
   const [qrvalue, setQrvalue] = useState("");
-  const [leftContent, setLeftContent] = useState();
+  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [copiedText, setCopiedText] = useState("");
+  const [transactions, setTransactions] = useState("");
+  const[newTx,setNewTx] = useState()
   const dispatch = useDispatch();
+  const navigation = useNavigation()
 
   let EtherLeftContent = (props) => (
     <Avatar.Image {...props} source={Etherimage} size={50} />
@@ -50,33 +55,287 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   let maticLeftContent = (props) => (
     <Avatar.Image {...props} source={maticImage} size={50} />
   );
+  let xrpLeftContent = (props) => (
+    <Avatar.Image {...props} source={xrpImage} size={50} />
+  );
   //iconType==='BNB'?BnbLeftContent:iconType==='ETH'?EtherLeftContent:maticLeftContent
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  const check = async () => {
-    var url = "wss://goerli-light.eth.linkpool.io/ws";
-
-    var customWsProvider = new ethers.providers.WebSocketProvider(url);
-
-    customWsProvider.on("pending", (tx) => {
-      customWsProvider.getTransaction(tx).then(function (transaction) {
-        console.log(transaction);
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `${state.wallet.address}`,
       });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const copyToClipboard = () => {
+    Clipboard.setString(iconType==='Xrp' && state.wallet.xrp? state.wallet.xrp.address:state.wallet.address);
+    alert("Copied");
+  };
+
+  
+  const saveTransactions = async (txData) => {
+    const user = await state.user;
+    let userTransactions = [];
+
+    await AsyncStorageLib.getItem(`${user}-transactions`).then(
+      async (transactions) => {
+        console.log(JSON.parse(transactions));
+        const data = JSON.parse(transactions);
+        if (data) {
+          data.map((item) => {
+            userTransactions.push(item);
+          });
+          console.log(userTransactions);
+
+          userTransactions.push(txData);
+          await AsyncStorageLib.setItem(
+            `${user}-transactions`,
+            JSON.stringify(userTransactions)
+          );
+
+          return userTransactions;
+        } else {
+          let transactions = [];
+
+          transactions.push(txData);
+          await AsyncStorageLib.setItem(
+            `${user}-transactions`,
+            JSON.stringify(transactions)
+          );
+          console.log(transactions);
+          return transactions;
+        }
+      }
+    );
+  };
+
+  const findNewTransactions = async (transactions, allTransactions) => {
+    const walletType = await AsyncStorageLib.getItem("walletType");
+    let newArr = [];
+    const walletAddress = await state.wallet.address
+    let now = +new Date();
+    var oneDay = 24 * 60 * 60 * 1000;
+    //console.log('Retreiving all transactions from',  minTimestamp);
+
+
+    allTransactions.filter(async (item, index) => {
+      let found;
+      let createdAt = +new Date(Date.parse(item.block_timestamp.toString()));
+
+      if(walletAddress){
+
+        //console.log( item.to_address.toUpperCase() == (await state.wallet.address).toUpperCase(),item.hash);
+      }
+      for (let index = 0; index < transactions.length; index++) {
+        if (item.hash == transactions[index].hash) {
+          found = true;
+        }
+      }
+      console.log(found);
+      if (!found) {
+        console.log("TX_Time = ",item.block_timestamp)
+        console.log("created at = ",now,createdAt )
+
+        if(item.to_address.toUpperCase() == (await state.wallet.address).toUpperCase() && (now - createdAt) < oneDay){
+
+          newArr.push({
+            chainType: walletType==="BSC"?"BSC":walletType=="Ethereum"?"Eth":walletType=='Xrp'?"Xrp":walletType=='Matic'?"Matic":"Eth",
+            hash: item.hash,
+            type: "receive",
+            walletType: JSON.parse(walletType),
+          });
+        }
+      }
     });
 
-    customWsProvider._websocket.on("error", async () => {
-      console.log(`Unable to connect to ${ep.subdomain} retrying in 3s...`);
-      setTimeout(init, 3000);
-    });
-    customWsProvider._websocket.on("close", async (code) => {
-      console.log(
-        `Connection lost with code ${code}! Attempting reconnect in 3s...`
-      );
-      customWsProvider._websocket.terminate();
-      setTimeout(init, 3000);
-    });
+    console.log("hi", newArr);
+
+    //console.log("Hi", pendingData);
+    return newArr;
   };
+
+  const getTransactions = async () => {
+    const user = await AsyncStorageLib.getItem("user");
+    const resp = await AsyncStorageLib.getItem(`${user}-transactions`).then(
+      (transactions) => {
+        const data = JSON.parse(transactions);
+        // console.log(data)
+        if (data) {
+          setTransactions(data.reverse());
+          return data;
+        }else{
+          return []
+        }
+      }
+    );
+    return resp;
+  };
+
+  const checkIncomingTx = async (transactions,chainId) => {
+    try {
+      /* await Moralis.start({
+        apiKey: "KRXC1pBilfY526QDwlrM1pINBUFgtZ2cLcSB8KYQyvlq3vHbrdknIZlfTK5DL1D0"
+      });*/
+      const response =
+        await Moralis.EvmApi.transaction.getWalletTransactionsVerbose({
+          chain: chainId,
+          address: await state.wallet.address,
+        });
+      const allTx = response.raw.result;
+      //  console.log(transactions);
+      console.log("Hi Tx",response.raw.result);
+
+      findNewTransactions(transactions, allTx).then((data) => {
+        console.log(data);
+        //let saved
+        data.map((e) => {
+          //console.log(e);
+          if(e){
+            setTimeout(() => {
+              
+              setSnackbarVisible(true)
+              setNewTx(e)
+            }, 0);
+            /*saveTransactions(e)
+            .then(()=>{
+              return true
+              
+            })*/
+          }
+         
+          
+
+        });
+        
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getIncomingXrpTx = (allTransactions, walletType) =>{
+
+
+// This example connects to a public Test Net server
+const api = new RippleAPI({server: 'wss://s.altnet.rippletest.net:51233'})
+api.connect().then(async () => {
+  console.log('Connected')
+
+  const account_objects_request = {
+    "id": 2,
+    "command": "account_tx",
+    "account": await state.wallet.address,
+    "ledger_index_min": -1,
+    "ledger_index_max": -1,
+    "binary": false,
+    "limit": 2,
+    "forward": false
+  }
+
+  return api.connection.request(account_objects_request)
+}).then(response => {
+  let receiveTransactions =[]
+  let newRecTx =[]
+  //console.log("account_objects response:", response.transactions[0].tx, await state.wallet.address)
+  const allTx = response.transactions
+   allTx.map(async (item)=>{
+    console.log(item.tx)
+    if(item.tx.Destination===WalletAddress){
+      console.log(true)
+      receiveTransactions.push({
+        hash:item.tx.hash
+      })
+    }
+    //console.log(receiveTransactions)
+    
+  })
+ 
+  console.log( receiveTransactions)
+  //console.log(allTransactions)
+  let found
+  let newArr=[]
+  receiveTransactions.filter((item)=>{
+    console.log(item)
+    for (let index = 0; index < allTransactions.length; index++) {
+      if (item.hash == allTransactions[index].hash) {
+        found = true;
+      }
+    }
+    console.log(found);
+    if (!found) {
+
+        newArr.push({
+          chainType: 'Xrp',
+          hash: item.hash,
+          type: "receive",
+          walletType: walletType,
+        });
+    
+    }
+  })
+  //console.log(newArr)
+  newArr.map((e) => {
+    console.log(e);
+    if(e){
+      setTimeout(() => {
+        
+        setSnackbarVisible(true)
+        setNewTx(e)
+      }, 0);
+    }
+  })
+  return newArr
+  
+// Disconnect and return
+}).then(() => {
+  api.disconnect().then(() => {
+    console.log('Disconnected')
+    process.exit()
+  })
+}).catch(console.error) }
+
+const getNewTransactions = async () =>{
+  try {
+        
+    getTransactions().then(async (res) => {
+      //console.log(res);
+      const walletType = await AsyncStorageLib.getItem("walletType");
+    console.log(JSON.parse(walletType))
+      if(JSON.parse(walletType)=="BSC"){
+
+        checkIncomingTx(res?res:[],"97");
+      }else if(JSON.parse(walletType)=="Ethereum"){
+        checkIncomingTx(res?res:[],"5");
+      }
+      else if(JSON.parse(walletType)=="Matic"){
+        checkIncomingTx(res?res:[],"0x13881");
+      }
+      else if(JSON.parse(walletType)=="Xrp"){
+        await getIncomingXrpTx(res?res:[],"Xrp")
+        
+      }
+      else{
+        //alert(`Saving receive tx for ${walletType} is  not supported yet`)
+        console.log(JSON.parse(walletType))
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -92,6 +351,48 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
     //  await check()
   }, []);
 
+  useEffect(async ()=>{
+   //await checkPendingTransactions(WalletAddress)
+  },[])
+  useFocusEffect(
+    React.useCallback(() => {
+      try {
+        
+        getTransactions().then(async (res) => {
+          //console.log(res);
+          const walletType = await AsyncStorageLib.getItem("walletType");
+        console.log(JSON.parse(walletType))
+          if(JSON.parse(walletType)=="BSC"){
+
+            checkIncomingTx(res?res:[],"97");
+          }else if(JSON.parse(walletType)=="Ethereum"){
+            checkIncomingTx(res?res:[],"5");
+          }
+          else if(JSON.parse(walletType)=="Matic"){
+            checkIncomingTx(res?res:[],"0x13881");
+          }
+          else if(JSON.parse(walletType)=="Xrp"){
+            await getIncomingXrpTx(res?res:[],"Xrp")
+            
+          }
+          else if(JSON.parse(walletType)==='Multi-coin'){
+            
+          }
+          else{
+            //alert(`Saving receive tx for ${walletType} is  not supported yet`)
+            console.log(JSON.parse(walletType))
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }, [])
+  );
+  
+  const closeModal = () =>{
+     setModalVisible(false)
+  }
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -103,6 +404,9 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         animationOutTiming={650}
         isVisible={modalVisible}
         useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating
         statusBarTranslucent={true}
         onBackdropPress={() => setModalVisible(false)}
         onBackButtonPress={() => {
@@ -110,6 +414,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         }}
       >
         <View style={style.Body}>
+          <ModalHeader Function={closeModal} name={'Address'} />
           <TouchableOpacity style={style.Box3} onPress={() => {}}>
             <Card
               style={{
@@ -127,6 +432,8 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
                     ? BnbLeftContent
                     : iconType === "ETH"
                     ? EtherLeftContent
+                    :iconType ==="Xrp"
+                    ?xrpLeftContent
                     : maticLeftContent
                 }
               />
@@ -161,7 +468,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             logoBackgroundColor="yellow"
           />
           <Text style={{ marginTop: hp(3) }}>
-            Address: {WalletAddress ? WalletAddress : ""}
+            Address: { WalletAddress ? WalletAddress : ""}
           </Text>
           <View style={style.Button}>
             <TouchableOpacity
@@ -175,8 +482,10 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
                 margin: 10,
               }}
               onPress={() => {
+                copyToClipboard();
                 setSelected(true);
                 setSelected1(false);
+               // setSnackbarVisible(true)
               }}
             >
               <View
@@ -201,6 +510,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
                 margin: 10,
               }}
               onPress={() => {
+                onShare();
                 setSelected1(true);
                 setSelected(false);
               }}
@@ -218,8 +528,23 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               </View>
             </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
+          
+          </View>
+      <SnackBar visible={snackbarVisible} position={'bottom'} textMessage="New Receive Tx Found. Proceed to save it"  
+          actionHandler={()=>{
+            console.log('pressed')
+            setTimeout(() => {
+              
+              console.log(newTx)    
+              saveTransactions(newTx) 
+              alert('Tx Saved! Check Transactions page for more details about the Tx')
+              setSnackbarVisible(false)
+              setModalVisible(false)
+              
+              //navigation.navigate("Transactions")
+            }, 0);
+          }} actionText="Proceed"/>
+          </Modal>
     </Animated.View>
   );
 };

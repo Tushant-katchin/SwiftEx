@@ -16,6 +16,7 @@ const sendEth = async (
   amount,
   addressTo,
   addressFrom,
+  balance,
   setLoading
 ) => {
   let alchemyProvider;
@@ -36,6 +37,15 @@ const sendEth = async (
     walletPrivateKey.address
   );
   console.log(maxFee);
+  let fee = ethers.utils.formatEther(maxFee.maxFeePerGas)
+
+  if(Number(amount)===Number(balance)){
+    console.log(fee)
+   let Amount=Number(amount)-(Number(fee)*22000).toFixed(6)
+   amount = Amount.toString()
+  }
+  console.log(amount)
+ 
   let transaction = {
     to: addressTo,
     value: utils.parseEther(amount),
@@ -67,6 +77,7 @@ const sendBNB = async (
   amount,
   addressTo,
   addressFrom,
+  balance,
   setLoading
 ) => {
   let provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC2);
@@ -75,9 +86,16 @@ const sendBNB = async (
   const walletPrivateKey = new ethers.Wallet(privateKey, provider);
   const nonce = await provider.getTransactionCount(addressFrom); //getNonce(addressFrom)
   console.log(nonce);
-
+  
   const gasPrice = await provider.getGasPrice(addressFrom);
   console.log("hi", gasPrice);
+  let fee = ethers.utils.formatEther(gasPrice)
+
+  if(Number(amount)===Number(balance)){
+   let Amount=Number(amount)-(Number(fee)*22000).toFixed(6)
+   amount = Amount.toString()
+  }
+  console.log(amount)
   let transaction = {
     gasLimit: 21000,
     gasPrice: gasPrice, //await provider.getGasPrice(addressFrom),
@@ -109,6 +127,7 @@ const sendMatic = async (
   amount,
   addressTo,
   addressFrom,
+  balance,
   setLoading
 ) => {
   const walletPrivateKey = new ethers.Wallet(privateKey);
@@ -126,6 +145,14 @@ const sendMatic = async (
   const gasPrice = ethers.utils.hexlify(
     parseInt(await alchemy.core.getGasPrice())
   );
+  let fee = ethers.utils.formatEther(gasPrice)
+  
+  if(Number(amount)===Number(balance)){
+   let Amount=Number(amount)-(Number(fee)*22000)
+   amount = Amount.toString()
+  }
+  console.log(amount)
+ 
   const transaction = {
     chainId: 80001,
     from: addressFrom,
@@ -154,15 +181,15 @@ const sendXRP = async (privateKey, amount, addressTo, setLoading) => {
   console.log("started");
   console.log(privateKey);
   const Wallet = xrpl.Wallet.fromSecret(privateKey);
-  console.log("hi" + Wallet);
+  console.log("hi" + Wallet.classicAddress);
   const client = new xrpl.Client(WSS.XRPWSS);
   await client.connect();
   const wallet = await AsyncStorageLib.getItem("wallet");
-  console.log(JSON.parse(wallet).classicAddress);
+  console.log(JSON.parse(wallet).address);
   const prepared = await client
     .autofill({
       TransactionType: "Payment",
-      Account: JSON.parse(wallet).classicAddress,
+      Account: Wallet.classicAddress,
       Amount: xrpl.xrpToDrops(`${amount}`),
       Destination: addressTo,
     })
@@ -204,87 +231,128 @@ const SendCrypto = async (
   let provider;
 
   // const walletType = await AsyncStorage.getItem('walletType')
-  console.log(walletType);
-  if (walletType == "BSC") {
-    provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC);
-  }
-  setLoading(true);
+  try{
 
-  const privateKey = decrypt ? decrypt : alert("no wallets connected");
-  console.log(privateKey);
-  const addressTo = recieverAddress; //"0x0E52088b2d5a59ee7706DaAabC880Aaf5A1d9974"//address;
-
-  const addressFrom = myAddress
+    console.log(walletType);
+    if (walletType == "BSC") {
+      provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC);
+    }
+    setLoading(true);
+    
+    const privateKey = decrypt ? decrypt : alert("no wallets connected");
+    console.log(privateKey);
+    const addressTo = recieverAddress; //"0x0E52088b2d5a59ee7706DaAabC880Aaf5A1d9974"//address;
+    
+    const addressFrom = myAddress
     ? myAddress
     : alert("please choose a wallet first");
-
-  if (walletType == "Ethereum") {
-    await sendEth(privateKey, amount, addressTo, addressFrom, setLoading).then(
-      (response) => {
-        console.log(response);
-        const info = response;
+    
+    if (walletType == "Ethereum") {
+      await sendEth(privateKey, amount, addressTo, addressFrom, balance,setLoading).then(
+        (response) => {
+          console.log(response);
+          let info = response;
+          const txCost = info.fee.toString();
+          let fee = ethers.utils.formatEther(txCost)
+          let finalAmount = Number(info.amount)+Number(fee)
+          info.finalAmount=finalAmount
+          setLoading(false);
+          if(Number(finalAmount)>Number(balance)){
+            return alert("You don't have enough balance to do this transaction")
+          }
+          navigation.navigate("Confirm Tx", {
+            info,
+          });
+        }
+        );
+      } else if (walletType == "Matic") {
+        try {
+          await sendMatic(
+            privateKey,
+            amount,
+            addressTo,
+            addressFrom,
+            balance,
+            setLoading
+            ).then((response) => {
+              console.log(response);
+              let info = response;
+              const txCost = info.fee.toString();
+              let fee = ethers.utils.formatEther(txCost)
+              let finalAmount = Number(info.amount)+Number(fee)
+              info.finalAmount=finalAmount
+              setLoading(false);
+              if(Number(finalAmount)>=Number(balance)){
+                return alert("You don't have enough balance to do this transaction")
+              }
+              navigation.navigate("Confirm Tx", {
+                info,
+              });
+            });
+          } catch (e) {
+            setDisable(true);
+            
+            console.log(e);
+            setLoading(false);
+          }
+        } else if (walletType == "BSC") {
+          await sendBNB(privateKey, amount, addressTo, addressFrom, balance,setLoading).then(
+            (response) => {
+              console.log(response);
+              let info = response;
+              const txCost = info.fee.toString();
+              let fee = ethers.utils.formatEther(txCost)
+              let finalAmount = Number(info.amount)+Number(fee)
+              info.finalAmount=finalAmount
+              setLoading(false);
+              if(Number(finalAmount)>Number(balance)){
+                return alert("You don't have enough balance to do this transaction")
+              }
+              navigation.navigate("Confirm Tx", {
+                info,
+              });
+            }
+            );
+          } else if (walletType == "Xrp") {
+            await sendXRP(privateKey, amount, addressTo, balance,setLoading).then(
+              (response) => {
+                console.log(response);
+                let info = response;
+                const txCost = info.fee.toString();
+                let fee = ethers.utils.formatEther(txCost)
+                let finalAmount = Number(info.amount)+Number(fee)
+                info.finalAmount=finalAmount
+                setLoading(false);
+                if(Number(finalAmount)>=Number(balance)){
+                  return alert("You don't have enough balance to do this transaction")
+                }
+                navigation.navigate("Confirm Tx", {
+                  info,
+                });
+              }
+              ).catch((e)=>{
+                setLoading(false)
+              });
+            } else if (walletType === "Multi-coin") {
+              if (Token === "Ethereum") {
+                await sendEth(
+                  privateKey,
+                  amount,
+                  addressTo,
+                  addressFrom,
+                  balance,
+                  setLoading
+                  ).then((response) => {
+                    console.log(response);
+        let info = response;
+        const txCost = info.fee.toString();
+        let fee = ethers.utils.formatEther(txCost)
+        let finalAmount = Number(info.amount)+Number(fee)
+        info.finalAmount=finalAmount
         setLoading(false);
-        navigation.navigate("Confirm Tx", {
-          info,
-        });
-      }
-    );
-  } else if (walletType == "Matic") {
-    try {
-      await sendMatic(
-        privateKey,
-        amount,
-        addressTo,
-        addressFrom,
-        setLoading
-      ).then((response) => {
-        console.log(response);
-        const info = response;
-        setLoading(false);
-        navigation.navigate("Confirm Tx", {
-          info,
-        });
-      });
-    } catch (e) {
-      setDisable(true);
-
-      console.log(e);
-      setLoading(false);
-    }
-  } else if (walletType == "BSC") {
-    await sendBNB(privateKey, amount, addressTo, addressFrom, setLoading).then(
-      (response) => {
-        console.log(response);
-        const info = response;
-        setLoading(false);
-        navigation.navigate("Confirm Tx", {
-          info,
-        });
-      }
-    );
-  } else if (walletType == "Xrp") {
-    await sendXRP(privateKey, amount, addressTo, setLoading).then(
-      (response) => {
-        console.log(response);
-        const info = response;
-        setLoading(false);
-        navigation.navigate("Confirm Tx", {
-          info,
-        });
-      }
-    );
-  } else if (walletType === "Multi-coin") {
-    if (Token === "Ethereum") {
-      await sendEth(
-        privateKey,
-        amount,
-        addressTo,
-        addressFrom,
-        setLoading
-      ).then((response) => {
-        console.log(response);
-        const info = response;
-        setLoading(false);
+        if(Number(finalAmount)>Number(balance)){
+          return alert("You don't have enough balance to do this transaction")
+        }        
         navigation.navigate("Confirm Tx", {
           info,
         });
@@ -295,49 +363,113 @@ const SendCrypto = async (
         amount,
         addressTo,
         addressFrom,
+        balance,
         setLoading
-      ).then((response) => {
-        console.log(response);
-        const info = response;
-        setLoading(false);
-        navigation.navigate("Confirm Tx", {
-          info,
-        });
-      });
-    } else if (Token === "Matic") {
-      await sendMatic(
-        privateKey,
-        amount,
-        addressTo,
-        addressFrom,
-        setLoading
-      ).then((response) => {
-        console.log(response);
-        const info = response;
-        setLoading(false);
-        navigation.navigate("Confirm Tx", {
-          info,
-        });
-      });
-    } else if (Token === "Xrp") {
-      await sendXRP(privateKey, amount, addressTo, setLoading).then(
-        (response) => {
+        ).then((response) => {
           console.log(response);
-          const info = response;
+          let info = response;
+          const txCost = info.fee.toString();
+          let fee = ethers.utils.formatEther(txCost)
           setLoading(false);
+         
+          /*if(Number(amount)===Number(balance)){
+            let finalAmount = Number(info.amount)-(Number(fee)*10)
+            info.amount = finalAmount
+            //return alert("You don't have enough balance to do this transaction")
+          }*/
+          let finalAmount = Number(info.amount)+Number(fee)
+          info.finalAmount=finalAmount
+          if(Number(finalAmount)>Number(balance)){
+            return alert("You don't have enough balance to do this transaction")
+          }
           navigation.navigate("Confirm Tx", {
             info,
           });
+        });
+      } else if (Token === "Matic") {
+        await sendMatic(
+          privateKey,
+          amount,
+          addressTo,
+          addressFrom,
+          balance,
+          setLoading
+          ).then((response) => {
+            console.log(response);
+            let info = response;
+            const txCost = info.fee.toString();
+            let fee = ethers.utils.formatEther(txCost)
+            let finalAmount = Number(info.amount)+Number(fee)
+            info.finalAmount=finalAmount
+            setLoading(false);
+            if(Number(finalAmount)>Number(balance)){
+              return alert("You don't have enough balance to do this transaction")
+            }
+            navigation.navigate("Confirm Tx", {
+              info,
+            });
+          });
+        }else if(Token==='Multi-coin-Xrp'){
+          await sendXRP(privateKey, amount, addressTo, balance,setLoading).then(
+            (response) => {
+              console.log(response);
+              let info = response;
+              const txCost = info.fee.toString();
+              let fee = ethers.utils.formatEther(txCost)
+              let finalAmount = Number(info.amount)+Number(fee)
+              info.finalAmount=finalAmount
+              setLoading(false);
+              if(Number(finalAmount)>=Number(balance)){
+                return alert("You don't have enough balance to do this transaction")
+              }
+              navigation.navigate("Confirm Tx", {
+                info,
+              });
+            }
+            );
+          } 
+          else if (Token === "Xrp") {
+            await sendXRP(privateKey, amount, addressTo, balance,setLoading).then(
+              (response) => {
+                console.log(response);
+                let info = response;
+                const txCost = info.fee.toString();
+                let fee = ethers.utils.formatEther(txCost)
+                let finalAmount = Number(info.amount)+Number(fee)
+                info.finalAmount=finalAmount
+                setLoading(false);
+                if(Number(finalAmount)>=Number(balance)){
+                  return alert("You don't have enough balance to do this transaction")
+                }
+                 navigation.navigate("Confirm Tx", {
+                  info,
+                });
+              }
+              );
+            }
+          } else {
+            setDisable(true);
+            
+            setLoading(false);
+            return alert("chain not supported yet");
+          }
+          
+          setLoading(false);
+        }catch(e){
+          if(e.message=='invalid arrayify value (argument="value", value="-0xbefe6f671f38", code=INVALID_ARGUMENT, version=bytes/5.7.0)'){
+            setLoading(false);
+            return alert("You don't have enough balance to do this transaction")
+          }
+          else if(e.message=='fractional component exceeds decimals [ See: https://links.ethers.org/v5-errors-NUMERIC_FAULT ] (fault="underflow", operation="parseFixed", code=NUMERIC_FAULT, version=bignumber/5.7.0)')
+          {
+            setLoading(false)
+            return alert("You don't have enough balance to do this transaction")
+          }
+          alert(e)
+          console.log(e.message)
+          setLoading(false);
+
         }
-      );
-    }
-  } else {
-    setDisable(true);
-
-    setLoading(false);
-    return alert("chain not supported yet");
-  }
-
-  setLoading(false);
-};
-export { SendCrypto };
+        };
+        export { SendCrypto };
+        

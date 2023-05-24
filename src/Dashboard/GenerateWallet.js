@@ -113,6 +113,7 @@ const GenerateWallet = (props) => {
                       const wallet = {
                         wallet: response.wallet,
                       };
+                      console.log(wallet)
                       props.navigation.navigate("PrivateKey", {
                         wallet,
                       });

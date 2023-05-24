@@ -1,10 +1,10 @@
 import { LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { authRequest, GET } from "../api";
 import { NewBidModal } from "../components/newBid.modal";
 import { OfferBidsView } from "../components/offerBids.modal";
-import { DataTable } from "react-native-paper";
+import { TabView, SceneMap } from "react-native-tab-view";
+import { ActivityIndicator, DataTable } from "react-native-paper";
 import {
   StyleSheet,
   Text,
@@ -12,14 +12,16 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Provider as PaperProvider } from "react-native-paper";
+import { CHAIN_ID_TO_SCANNER } from '../web3'
 
-export const OfferListView = ({ self = false, offers, profile, setChange }) => {
+export const OfferListView = ({ self = false, offers, profile, setChange, }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -40,10 +42,10 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
                 return (
                   offer.issuer === profile._id && (
                     <>
-                      <View key={offer._id}>
+                      <View key={offer._id} style={{backgroundColor:'#E2808A'}}>
                         <ScrollView key={offer._id}>
                           <DataTable.Row key={offer._id}>
-                            <DataTable.Cell>{offer.assetName}</DataTable.Cell>
+                            <DataTable.Cell >{offer.assetName}</DataTable.Cell>
 
                             <DataTable.Cell>{offer.amount}</DataTable.Cell>
                             <DataTable.Cell>
@@ -74,11 +76,11 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
                         <DataTable.Cell>{offer.status}</DataTable.Cell>
                       </DataTable.Row>
                       <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View style={{ marginLeft: 10 }}>
+                        <View style={{ marginLeft: 10,marginBottom:hp(5) }}>
                           <OfferBidsView offer={offer} setChange={setChange} />
                         </View>
                         <View style={{ marginLeft: 10 }}>
-                          <NewBidModal offer={offer} />
+                          <NewBidModal offer={offer}  />
                         </View>
                       </View>
                     </ScrollView>
@@ -87,7 +89,82 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
               );
             })
           ) : (
-            <View></View>
+            <View><ActivityIndicator size={"small"} color={'blue'}/></View>
+          )}
+        </ScrollView>
+      </DataTable>
+    </PaperProvider>
+  );
+};
+export const OfferListViewHome = ({ self = false, offers, profile, setChange, setPressed }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <PaperProvider>
+      <DataTable style={styles.container2}>
+        <DataTable.Header style={styles.tableHeader}>
+          <DataTable.Title>Asset</DataTable.Title>
+          <DataTable.Title>Amount</DataTable.Title>
+          <DataTable.Title>Price</DataTable.Title>
+          <DataTable.Title>Total Price</DataTable.Title>
+          <DataTable.Title>Currency</DataTable.Title>
+          <DataTable.Title>Status</DataTable.Title>
+        </DataTable.Header>
+        <ScrollView>
+          {offers ? (
+            offers.map((offer) => {
+              if (self)
+                return (
+                  offer.issuer === profile._id && (
+                    <>
+                      <View key={offer._id} style={{backgroundColor:'#E2808A'}}>
+                        <ScrollView key={offer._id}>
+                          <DataTable.Row key={offer._id}>
+                            <DataTable.Cell >{offer.assetName}</DataTable.Cell>
+
+                            <DataTable.Cell>{offer.amount}</DataTable.Cell>
+                            <DataTable.Cell>
+                              {offer.pricePerUnit}
+                            </DataTable.Cell>
+                            <DataTable.Cell>{offer.totalPrice}</DataTable.Cell>
+                            <DataTable.Cell>
+                              {offer.currencyName}
+                            </DataTable.Cell>
+                            <DataTable.Cell>{offer.status}</DataTable.Cell>
+                          </DataTable.Row>
+                        </ScrollView>
+                        <OfferBidsView offer={offer} self={self} setChange={setChange} />
+                      </View>
+                    </>
+                  )
+                );
+              return (
+                offer.issuer !== profile._id && (
+                  <>
+                    <ScrollView style={styles.scrollView}>
+                      <DataTable.Row key={offer._id}>
+                        <DataTable.Cell>{offer.assetName}</DataTable.Cell>
+                        <DataTable.Cell>{offer.amount}</DataTable.Cell>
+                        <DataTable.Cell>{offer.pricePerUnit}</DataTable.Cell>
+                        <DataTable.Cell>{offer.totalPrice}</DataTable.Cell>
+                        <DataTable.Cell>{offer.currencyName}</DataTable.Cell>
+                        <DataTable.Cell>{offer.status}</DataTable.Cell>
+                      </DataTable.Row>
+                      <View style={{ display: "flex", flexDirection: "row" }}>
+                        <View style={{ marginLeft: 10,marginBottom:hp(5) }}>
+                          <OfferBidsView offer={offer} setChange={setChange} />
+                        </View>
+                        <View style={{ marginLeft: 10 }}>
+                          <NewBidModal offer={offer}  />
+                        </View>
+                      </View>
+                    </ScrollView>
+                  </>
+                )
+              );
+            })
+          ) : (
+            <View><ActivityIndicator size={'large'} color={'white'}/></View>
           )}
         </ScrollView>
       </DataTable>
@@ -95,7 +172,7 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
   );
 };
 
-export const OfferView = (props) => {
+export const OfferView = () => {
   const [message, setMessage] = useState();
   const [offers, setOffers] = useState();
   const[change,setChange] = useState(false)
@@ -107,29 +184,31 @@ export const OfferView = (props) => {
     phoneNumber: "9340079982",
     isEmailVerified: true,
   });
-  const [searchParams] = useSearchParams();
   const [paymentFollowUp, setPaymentFollowUp] = useState(false);
   const [txLink, setTxLink] = useState(null);
   const [refreshTx, setRefreshTx] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: "first", title: "Bid" },
+    { key: "second", title: "My Offers" },
+  ]);
+  const [bids, setBids] = useState();
+  const layout = useWindowDimensions();
 
   useEffect(() => {
     getOffersData();
     fetchProfileData();
+    getBidsData();
+
   }, []);
 
   useEffect(() => {
     getOffersData();
     fetchProfileData();
+    getBidsData();
+
   }, [change]);
 
-  useEffect(() => {
-    if (searchParams) {
-      const sessionId = searchParams.get("session_id");
-      if (sessionId) {
-        fetchTransactionData(sessionId);
-      }
-    }
-  }, [searchParams]);
 
   const getOffersData = async () => {
     try {
@@ -162,10 +241,10 @@ export const OfferView = (props) => {
         GET
       );
       if (err) return setMessage(`${err.status}: ${err.message}`);
-      const { status, cryptoTxHash } = res;
+      const { status, cryptoTxHash, chainId } = res;
       if (status === "PAYMENT_PENDING") return setRefreshTx(true);
       if (cryptoTxHash)
-        setTxLink(`https://goerli.etherscan.io/tx/${cryptoTxHash}`);
+        setTxLink(`${CHAIN_ID_TO_SCANNER[chainId]}/tx/${cryptoTxHash}`);
       setRefreshTx(false);
     } catch (err) {
       console.log(err);
@@ -174,36 +253,56 @@ export const OfferView = (props) => {
       setPaymentFollowUp(false);
     }
   };
+  const getBidsData = async () => {
+    try {
+      const { res, err } = await authRequest("/bids", GET);
+      if (err) return setMessage(`${err.status}: ${err.message}`);
+      setBids(res);
+    } catch (err) {
+      console.log(err);
+      setMessage(err.message || "Something went wrong");
+    }
+  };
 
-  return (
-    <>
-      <View style={styles.content}>
-        <Text>{message}</Text>
-        <Text>{paymentFollowUp ? <LinearProgress /> : ""}</Text>
-        {txLink ? (
-          <View>
-            <TouchableOpacity>
-              <Text>
-                Your transaction is successfully completed
-                {txLink}
-                click here to see it.
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <Text></Text>
-        )}
+  const FirstRoute = () => (
+    <View style={{ flex: 1, backgroundColor: "white", height:hp(100) }}>
+         <OfferListViewHome
+              self={true}
+              profile={profile}
+              offers={offers}
+              setChange={setChange}
+            /> 
+               </View>
+  );
 
-        <View style={styles.table}>
-          <OfferListView
+
+  const SecondRoute = () => (
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+       <OfferListView
             offers={offers}
             profile={profile}
             setMessage={setMessage}
             setChange={setChange}
           />
+
+    </View>
+  );
+
+  const renderScene = SceneMap({
+    first: SecondRoute,
+    second: FirstRoute,
+  });
+  return (
+  
+      <View style={{height:hp(100), backgroundColor:'white'}}>
+                <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: layout.width }}
+          />
         </View>
-      </View>
-    </>
+  
   );
 };
 
@@ -212,6 +311,13 @@ const styles = StyleSheet.create({
     width: wp(100),
     height: hp(80),
     color: "black",
+    
+  },
+  container2: {
+    width: wp(100),
+    height: hp(57),
+    color: "black",
+    
   },
   scrollView: {
     width: wp(100),
@@ -219,12 +325,15 @@ const styles = StyleSheet.create({
   tableHeader: {
     backgroundColor: "#DCDCDC",
     width: wp(100),
+    
   },
   table: {
     display: "flex",
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
+    backgroundColor: "white",
+    
   },
   content: {
     display: "flex",
@@ -232,5 +341,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     height: hp(100),
+    backgroundColor: "white",
   },
 });

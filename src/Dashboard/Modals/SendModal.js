@@ -281,31 +281,52 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
                   console.log(e);
                 });
             } else if (JSON.parse(Type) == "Matic") {
-              const response = await dispatch(
-                getMaticBalance(
-                  state.wallet.address ? state.wallet.address : address
-                )
-              )
-                .then((res) => {
-                  console.log(res.MaticBalance);
-                  setBalance(res.MaticBalance);
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
+              let bal = await AsyncStorageLib.getItem("MaticBalance")
+              console.log(bal);
+              setBalance(bal);
+
+              if (bal) {
+                console.log("balance", bal)
+                setBalance(bal);
+              } else {
+                console.log("coudnt get balance");
+              }
+            /* dispatch(getMaticBalance(address))
+            .then(async(res) => {
+              console.log(res)
+              let bal = await AsyncStorageLib.getItem("MaticBalance")
+              console.log(bal);
+              //setBalance(bal);
+
+              if (bal) {
+                console.log("balance", bal)
+                setBalance(bal);
+              } else {
+                console.log("coudnt get balance");
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });*/
             } else if (JSON.parse(Type) == "Xrp") {
-              await AsyncStorageLib.getItem("wallet").then(async (wallet) => {
-                const response = await dispatch(
-                  getXrpBalance(JSON.parse(wallet).classicAddress)
-                )
-                  .then((res) => {
-                    console.log(res.XrpBalance);
-                    setBalance(res.XrpBalance);
-                  })
-                  .catch((e) => {
-                    console.log(e);
+              try{
+
+                await AsyncStorageLib.getItem("wallet").then(async (wallet) => {
+                  console.log(wallet)
+                  const response = await dispatch(
+                    getXrpBalance(JSON.parse(wallet).address)
+                    )
+                    .then((res) => {
+                      console.log(res.XrpBalance);
+                      setBalance(res.XrpBalance);
+                    })
+                    .catch((e) => {
+                      console.log(e);
+                    });
                   });
-              });
+                }catch(e){
+                  console.log(e)
+                }
             } else {
               const response = await dispatch(getBalance(state.wallet.address))
                 .then(async (response) => {
@@ -336,6 +357,10 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
     console.log(token);
     // console.log(result)
   }, [state.wallet.address, MaticBalance]);
+  useEffect(()=>{
+     Balance();
+
+  },[])
 
   return (
     <View
@@ -352,6 +377,8 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
         visible={modalVisible}
         statusBarTranslucent={true}
         style={{ backgroundColor: "#fff" }}
+        onBackdropPress={() => setModalVisible(false)}
+
         onRequestClose={() => {
           setModalVisible(false);
         }}

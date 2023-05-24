@@ -1,12 +1,12 @@
 //import { initializeApp } from 'react-native-firebase/app'
-//import { getMessaging, getToken, onMessage } from 'react-native-firebase/app'
-import firebase from '@react-native-firebase/app'
-import messaging from '@react-native-firebase/messaging'
+//import { getToken } from 'react-native-firebase/app'
+//import firebase from '@react-native-firebase/app'
+//import messaging from '@react-native-firebase/messaging'
 import AsyncStorageLib from '@react-native-async-storage/async-storage'
 import { authRequest, GET, getAuth, getToken } from '../api'
 import { REACT_APP_FCM_TOKEN_KEY , REACT_APP_GOOGLE_VPID_KEY} from '../ExchangeConstants'
 const REGISTERATION_TOKEN = REACT_APP_FCM_TOKEN_KEY
-const firebaseConfig = {
+/*const firebaseConfig = {
   apiKey: 'AIzaSyAexERzPR03F38U5IYCRwWx1MVP9jBOCGw',
   authDomain: 'crypto-exchange-poc.firebaseapp.com',
   projectId: 'crypto-exchange-poc',
@@ -17,8 +17,8 @@ const firebaseConfig = {
 }
 const config = {
   name: 'munziDapp',
-};
-const app = firebase.initializeApp(firebaseConfig, config)
+};*/
+//const app = firebase.initializeApp(firebaseConfig, config)
 //const app = initializeApp(firebaseConfig)
 //export const messaging = getMessaging(app)
 
@@ -59,6 +59,6 @@ export const saveRegistrationToken = (token) =>
 AsyncStorageLib.setItem(REGISTERATION_TOKEN, token)
 
 export const getRegistrationToken = async () =>{
-  const token = await AsyncStorageLib.getItem(REGISTERATION_TOKEN)
-  return token
+  const token = await AsyncStorageLib.getItem('fcmtoken')
+  return JSON.parse(token)
 }
