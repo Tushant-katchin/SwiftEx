@@ -94,6 +94,24 @@ export function useBiometricsForSendTransaction(Function){
 })
 }
 
+export async function useBiometricsForSwapTransaction(Function){ 
+  rnBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
+.then(async (resultObject) => {
+  const { success } = resultObject
+
+  if (success) {
+    console.log('successful biometrics provided')
+    //navigation.goBack()
+    await Function()
+  } else {
+    console.log('user cancelled biometric prompt')
+  }
+})
+.catch(() => {
+  console.log('biometrics failed')
+})
+}
+
 
 export function turnOffBiometrics(){
     AsyncStorageLib.setItem('Biometric', 'UNSET')

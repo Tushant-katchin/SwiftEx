@@ -425,7 +425,7 @@ const swapTokensforEth = async (privateKey, address, tokenaddress, amount) => {
 const SwapEthForTokens = async (privateKey, address, tokenaddress, amount) => {
   try {
     const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC);
-    const chainId = ChainId.MAINNET;
+    const chainId = ChainId.GÖRLI;
     const gas = await provider.getGasPrice();
     const UNISWAP_ROUTER_ABI = [
       "function getAmountsOut(uint amountIn, address[] memory path) public view returns (uint[] memory amounts)",

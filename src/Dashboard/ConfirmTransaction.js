@@ -265,8 +265,14 @@ const ConfirmTransaction = (props) => {
 
                 const biometric = await AsyncStorageLib.getItem('Biometric')
                 if(biometric==='SET'){
-                  useBiometricsForSendTransaction(sendTx)
-                  return
+                  try{
+
+                    useBiometricsForSendTransaction(sendTx)
+                    return
+                  }catch(e)
+                  {
+                    console.log(e)
+                  }
                 }
               
               //checkBioMetric()

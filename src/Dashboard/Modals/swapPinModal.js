@@ -222,6 +222,7 @@ const SwapPinModal = ({
                                         setLoading(false);
                                         setLoader(false);
                                         setPinViewVisible(false);
+                                        alert(e.message);
                                         console.log(e);
                                       });
                                   } else if (response.code === 404) {
@@ -250,6 +251,7 @@ const SwapPinModal = ({
                                 setLoader(false);
                                 setTradeVisible(false);
                                 setPinViewVisible(false);
+                                alert(e.message);
                                 console.log(e);
                               });
                           } else if (coin1.symbol === "WETH") {
@@ -289,6 +291,7 @@ const SwapPinModal = ({
                                         setLoader(false);
                                         setTradeVisible(false);
                                         setPinViewVisible(false);
+                                        alert(e.message);
                                         console.log(e);
                                       });
                                   } else if (response.code === 400) {
@@ -323,6 +326,7 @@ const SwapPinModal = ({
                                 setLoader(false);
                                 setTradeVisible(false);
                                 setPinViewVisible(false);
+                                alert(e.message);
                                 console.log(e);
                               });
                           } else {
@@ -364,6 +368,7 @@ const SwapPinModal = ({
                                           setLoader(false);
                                           setTradeVisible(false);
                                           setPinViewVisible(false);
+                                          alert(e.message);
                                           console.log(e);
                                         });
                                   } else if (response === 404) {
@@ -392,6 +397,7 @@ const SwapPinModal = ({
                                 setLoading(false);
                                 setTradeVisible(false);
                                 setPinViewVisible(false);
+                                alert(e.message);
                                 console.log(e);
                               });
                           }
@@ -453,6 +459,7 @@ const SwapPinModal = ({
                                           setLoading(false);
                                           setLoader(false);
                                           setPinViewVisible(false);
+                                          alert(e.message);
                                           console.log(e);
                                         });
                                     } else if (response.code === 404) {
@@ -481,6 +488,7 @@ const SwapPinModal = ({
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
+                                  alert(e.message);
                                   console.log(e);
                                 });
                             } else if (coin1.symbol === "WETH") {
@@ -522,6 +530,7 @@ const SwapPinModal = ({
                                           setLoader(false);
                                           setTradeVisible(false);
                                           setPinViewVisible(false);
+                                          alert(e.message);
                                           console.log(e);
                                         });
                                     } else if (response.code === 400) {
@@ -556,6 +565,7 @@ const SwapPinModal = ({
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
+                                  alert(e.message);
                                   console.log(e);
                                 });
                             } else {
@@ -597,6 +607,7 @@ const SwapPinModal = ({
                                             setLoader(false);
                                             setTradeVisible(false);
                                             setPinViewVisible(false);
+                                            alert(e.message);
                                             console.log(e);
                                           });
                                     } else if (response === 404) {
@@ -625,6 +636,7 @@ const SwapPinModal = ({
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
+                                  alert(e.message);
                                   console.log(e);
                                 });
                             }
@@ -648,6 +660,7 @@ const SwapPinModal = ({
                       setLoader(false);
                       setTradeVisible(false);
                       setPinViewVisible(false);
+                      alert(e.message);
                       console.log(e);
                     }
                   } else {
