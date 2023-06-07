@@ -11,8 +11,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Animated } from "react-native";
 import title_icon from "../../assets/title_icon.png";
+
+import { Animated } from "react-native";
 import ReactNativePinView from "react-native-pin-view";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -42,25 +43,23 @@ const Passcode = (props) => {
   };
 
   useFocusEffect(
-    React.useCallback(()=>{
-      const checkBioMetric = async()=>{
-
-        const biometric = await AsyncStorage.getItem('Biometric')
-        if(biometric==='SET'){
-          useBiometrics(props.navigation)
-          return
+    React.useCallback(() => {
+      const checkBioMetric = async () => {
+        const biometric = await AsyncStorage.getItem("Biometric");
+        if (biometric === "SET") {
+          useBiometrics(props.navigation);
+          return;
         }
-      }
-      checkBioMetric()
-    },[])
-  )
+      };
+      checkBioMetric();
+    }, [])
+  );
   useEffect(async () => {
     const Check = await AsyncStorage.getItem("pin");
-    const biometric = await AsyncStorage.getItem('Biometric')
-      if(biometric==='SET'){
-        useBiometrics(props.navigation)
-        
-      }
+    const biometric = await AsyncStorage.getItem("Biometric");
+    if (biometric === "SET") {
+      useBiometrics(props.navigation);
+    }
 
     console.log(Check);
     if (Check) {
@@ -89,7 +88,7 @@ const Passcode = (props) => {
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
       setShowCompletedButton(true);
       if (status === "pinset") {
         setShowCompletedButton(false);
@@ -102,7 +101,6 @@ const Passcode = (props) => {
           console.log(wallets);
           if (user) {
             props.navigation.navigate("HomeScreen");
-            
           } else {
             props.navigation.navigate("Welcome");
           }
@@ -123,7 +121,7 @@ const Passcode = (props) => {
       style={{ opacity: fadeAnim }}
     >
       <View style={style.Body}>
-        <Animated.Image
+         <Animated.Image
           style={{
             width: wp("5"),
             height: hp("5"),
@@ -132,22 +130,23 @@ const Passcode = (props) => {
             transform: [{ rotate: SpinValue }],
           }}
           source={title_icon}
-        />
-        <Text style={style.welcomeText}> Hi,</Text>
+        /> 
+        {/* <Text style={style.welcomeText}> Hi,</Text> */}
         <Text style={style.welcomeText}>
           {" "}
           {status == "verify"
             ? "please re enter pin"
             : status === "pinset"
-            ? "please enter your pin"
+            ? "Create Passcode"
             : "Please create a pin"}
         </Text>
-        <View style={{ marginTop: hp(10) }}>
+        <View style={{ marginTop: hp(2) }}>
           <ReactNativePinView
-            inputSize={32}
+            inputSize={23}
             ref={pinView}
-            pinLength={4}
+            pinLength={6}
             buttonSize={60}
+            // customLeftButtonViewStyle={{backgroundColor:'gray'}}
             onValueChange={(value) => setEnteredPin(value)}
             buttonAreaStyle={{
               marginTop: 24,
@@ -158,23 +157,67 @@ const Passcode = (props) => {
             inputViewEmptyStyle={{
               backgroundColor: "transparent",
               borderWidth: 1,
-              borderColor: "#FFF",
+              borderColor: "#fff",
             }}
             inputViewFilledStyle={{
-              backgroundColor: "#FFF",
+              backgroundColor: "#fff",
             }}
-            buttonViewStyle={{
-              borderWidth: 1,
-              borderColor: "#FFF",
-            }}
+            // buttonViewStyle={{
+            //   borderWidth: 1,
+            //   borderColor: "#FFF",
+            // }}
             buttonTextStyle={{
-              color: "#FFF",
+              color: "#fff",
             }}
+            // onButtonPress={async (key) => {
+            //   if (key === "custom_left") {
+            //     pinView.current.clear();
+            //   }
+            //   if (key === "custom_right") {
+            //     if (status === "verify") {
+            //       if (pin === enteredPin) {
+            //         pinView.current.clearAll();
+            //         props.navigation.navigate("Welcome");
+
+            //         AsyncStorage.setItem("pin", JSON.stringify(pin));
+            //       } else {
+            //         alert("password did not match. please try again");
+            //         pinView.current.clearAll();
+            //         setStatus("");
+            //       }
+            //     } else if (status === "pinset") {
+            //       const Pin = await AsyncStorage.getItem("pin");
+            //       const user = await AsyncStorage.getItem("user");
+            //       const wallets = await AsyncStorage.getItem(`${user}-wallets`);
+
+            //       if (JSON.parse(Pin) === enteredPin) {
+            //         console.log(Pin);
+            //         console.log(user);
+            //         console.log(wallets);
+            //         if (user) {
+            //           props.navigation.navigate("HomeScreen");
+            //         } else {
+            //           props.navigation.navigate("Welcome");
+            //         }
+            //       } else {
+            //         alert("invalid pin");
+            //       }
+            //     } else {
+            //       setPin(enteredPin);
+            //       setStatus("verify");
+
+            //       pinView.current.clearAll();
+            //     }
+            //   }
+            //   if (key === "three") {
+            //     //alert("You can't use 3")
+            //   }
+            // }}
             onButtonPress={async (key) => {
-              if (key === "custom_left") {
+              if (key ===  "custom_right") {
                 pinView.current.clear();
               }
-              if (key === "custom_right") {
+              if (key === "custom_left") {
                 if (status === "verify") {
                   if (pin === enteredPin) {
                     pinView.current.clearAll();
@@ -214,21 +257,41 @@ const Passcode = (props) => {
                 //alert("You can't use 3")
               }
             }}
+            // customLeftButton={
+            //   showRemoveButton ? (
+            //     <Icon name={"ios-backspace"} size={36} color={"gray"} />
+            //   ) : undefined
+            // }
             customLeftButton={
-              showRemoveButton ? (
-                <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
-              ) : undefined
-            }
-            customRightButton={
               showCompletedButton ? (
                 <Icon
-                  name={"ios-chevron-forward-circle"}
+                  name={"finger-print"}
                   size={36}
-                  color={"#FFF"}
+                  color={"gray"}
                 />
               ) : undefined
             }
+            customRightButton={
+              showRemoveButton ? (
+                <Icon name={"ios-backspace"} size={36} color={"gray"} />
+              ) : undefined
+            }
+            // customRightButton={
+            //   showCompletedButton ? (
+
+            //     <Icon
+            //       name={"ios-chevron-forward-circle"}
+            //       size={36}
+            //       color={"white"}
+            //     />
+            //   ) : undefined
+            // }
           />
+          <View style={style.textView}>
+          <Text style={style.simpleText}>Passcode adds an extra layer of security</Text>
+          <Text style={style.simpleText}>when using the app</Text>
+          </View>
+          
         </View>
       </View>
     </Animated.View>
@@ -240,8 +303,9 @@ export default Passcode;
 const style = StyleSheet.create({
   Body: {
     display: "flex",
-    backgroundColor: "#131E3A",
+    backgroundColor:'#131E3A',
     height: hp(100),
+    justifyContent: "center",
     width: wp(100),
     alignItems: "center",
     textAlign: "center",
@@ -249,7 +313,7 @@ const style = StyleSheet.create({
   welcomeText: {
     fontSize: 20,
     fontWeight: "200",
-    color: "white",
+    color: "#fff",
     marginTop: hp(5),
   },
   welcomeText2: {
@@ -273,4 +337,11 @@ const style = StyleSheet.create({
     fontWeight: "200",
     color: "white",
   },
+  textView:{
+marginTop:"25%"
+  },
+  simpleText:{
+    textAlign:"center",
+    color:"#fff"
+  }
 });

@@ -14,10 +14,14 @@ import {
 } from "react-native-responsive-screen";
 import { LineChart } from "react-native-svg-charts";
 import { useDispatch, useSelector } from "react-redux";
+
 import Etherimage from "../../assets/ethereum.png";
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
+import IconWithCircle from "../Screens/iconwithCircle";
+import Icon from "../icon";
+import { style } from "@mui/system";
 
-function Nfts() {
+const Nfts = () => {
   const state2 = useSelector((state) => state.walletBalance);
 
   const state = useSelector((state) => state);
@@ -62,37 +66,138 @@ function Nfts() {
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
 
   return (
-    <Animated.View
-      style={{ display: "flex", flexDirection: "column", marginTop: 5 }}
-    >
-      <View style={{ marginTop: hp(20), marginLeft: wp(25) }}>
-        <Text style={styles.text}>Nfts will appear here</Text>
+    // <Animated.View
+    //   style={{  marginTop: 5 ,backgroundColor:"#fff",height:hp(100)}} >
+    //     <View style={styles.iconContainer}>
+    //     <Icon name="bell-o"
+    //     size={20}
+    //    color="black"
+    //     />
+    //      <Icon name="bell-o"
+    //     size={20}
+    //    color="black"
+    //     />
+
+    //     </View>
+
+    // </Animated.View>
+    <View style={styles.mainContainer}>
+      <View style={styles.iconContainer}>
+        <Icon name="bell-o" size={20} color="black" />
+        <Icon name="sliders" type={'fa'} size={20} color="black" />
       </View>
-      <View style={{ width: wp(30), marginTop: hp(10), marginLeft: wp(35) }}>
-        <Button color="blue" title="receive"></Button>
+      <Text style={styles.dollarText}>$0.00</Text>
+      <View style={styles.textwithIcon}>
+        <Text style={styles.textColor}>Main Wallet 1</Text>
+        <Icon
+          name="caretdown"
+          type={"antDesign"}
+          size={16}
+          style={{ marginHorizontal: hp(0.7) }}
+          color="gray"
+        />
       </View>
-    </Animated.View>
+      <View style={styles.iconsContainer}>
+        <IconWithCircle name={"arrowup"} type={"antDesign"} title={"Send"} />
+        <IconWithCircle
+          name={"arrowdown"}
+          type={"antDesign"}
+          title={"Receive"}
+        />
+        <IconWithCircle
+          name={"credit-card-outline"}
+          type={"materialCommunity"}
+          title={"Buy"}
+        />
+        <IconWithCircle
+          name={"swap-horizontal"}
+          type={"ionicon"}
+          title={"Swap"}
+        />
+      </View>
+      <View style={styles.iconmainContainer}>
+        <View style={styles.iconTextContainer}>
+          <Icon name="graph" type={"simpleLine"} size={hp(3)} />
+          <Text style={{ marginHorizontal: hp(1) }}>
+            Your Portfolio insights
+          </Text>
+        </View>
+        <View style={styles.iconTextContainer}>
+        <View style={styles.numberContainer}>
+        <Text style={styles.number}>3</Text>
+      </View>
+          <Icon name="cross" type={"entypo"} size={hp(3.6)} color="black" />
+          
+        </View>
+      </View>
+     
+    </View>
   );
-}
+};
 
 export default Nfts;
 
 const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    height: 75,
+  mainContainer: {
+    backgroundColor: "#fff",
+    height: hp(100),
   },
-  chart: {
-    height: 75,
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: hp(40),
+    alignSelf: "center",
+    marginTop: hp(3),
   },
-  text: {
-    fontSize: 20,
+  dollarText: {
+    textAlign: "center",
     color: "black",
+    fontSize: 30,
+    marginTop: hp(3),
   },
-  priceUp: {
-    color: "rgb(0,153,51)",
+  textwithIcon: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: hp(2),
   },
-  priceDown: {
-    color: "rgb(204,51,51)",
+  textColor: {
+    color: "gray",
   },
+  iconsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: hp(5),
+  },
+  iconTextContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  iconmainContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: hp(42),
+    alignSelf: "center",
+    marginTop: hp(5),
+    height:hp(9),
+    alignItems:"center",
+    borderRadius:hp(2),
+    padding:hp(2),
+    backgroundColor:"#e8f0f8"
+  },
+  numberContainer:{
+    backgroundColor:"#9bbfde",
+    width:hp(4.3),
+    height:hp(4.3),
+    borderRadius:hp(10),
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  number:{
+    textAlign:"center",
+    color:"#fff",
+    backgroundColor:"#145DA0",
+    paddingHorizontal:10,
+    paddingVertical:4,
+    borderRadius:hp(10)
+  }
 });
