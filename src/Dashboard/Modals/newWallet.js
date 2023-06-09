@@ -180,6 +180,7 @@ const style = StyleSheet.create({
     fontSize: 20,
     fontWeight: "200",
     color: "white",
+    
     marginTop: hp(5),
   },
   welcomeText2: {

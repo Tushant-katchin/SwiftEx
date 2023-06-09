@@ -43,6 +43,11 @@ import { ExchangeNavigation } from "../Dashboard/exchange/crypto-exchange-front-
 import BiometricPage from "../Dashboard/BiometricPage";
 import SplashScreen from "../Screens/splash";
 import Nfts from "../Dashboard/Nfts";
+import ScoringTopTab from "./TopNavigator";
+import ProfileHeader from "../Dashboard/header";
+import Token from "../Dashboard/Token";
+import Settings from "../../Settings";
+import Wallet from "../Dashboard/Wallet";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -51,21 +56,20 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="Nfts"
+      // initialRouteName="privacyPolicy"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
-      {/* <Stack.Screen
-        name="Nfts"
-        component={Nfts}
-        options={{
-          headerShown: false,
-          //header: ({route}) => state.extended===false?Header1( getHeaderTitle(route), state):Header1(getHeaderTitle(route), state)
-        }}
+
+{/* <Stack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicy}
+        options={{ headerShown: false }}
       /> */}
-     
+
+
 
       <Stack.Screen
         name="SplashScreen"
@@ -120,6 +124,11 @@ const AuthStack = () => (
         }}
       />
       <Stack.Screen
+        name="Wallet"
+        component={Wallet}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="ImportWallet"
         component={ImportWallet}
         options={{
@@ -147,6 +156,38 @@ const AuthStack = () => (
           headerTitleStyle: {
             fontWeight: "bold",
           },
+        }}
+      />
+
+
+<Stack.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          headerShown: false,
+          
+        }}
+      /> 
+
+      <Stack.Screen
+        name="ScoringTopTab"
+        component={ScoringTopTab}
+        options={{
+          headerShown: true,
+          header: () => {
+            return <ProfileHeader />;
+          },
+        }}
+      />
+      <Stack.Screen name="Token" component={Token} options={{
+        headerShown:false
+      }}/>
+      <Stack.Screen
+        name="Nfts"
+        component={Nfts}
+        options={{
+          headerShown: false,
+          //header: ({route}) => state.extended===false?Header1( getHeaderTitle(route), state):Header1(getHeaderTitle(route), state)
         }}
       />
 
