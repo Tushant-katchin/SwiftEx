@@ -260,20 +260,20 @@ const Settings = (props) => {
 
       <TouchableOpacity
         style={styles.accountBox}
-        // onPress={async () => {
-        //   const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        //   const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
-        //   console.log(token);
+         onPress={async () => {
+           const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+           const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+           console.log(token);
 
-        //   if (token) {
-        //     props.navigation.navigate("exchange");
-        //   } else {
-        //     props.navigation.navigate("exchangeLogin");
-        //   }
-        // }}
+           if (token) {
+             props.navigation.navigate("exchange");
+           } else {
+             props.navigation.navigate("exchangeLogin");
+           }
+         }}
       >
         <Icon type={"fa"} name="dollar" size={hp(2)} color="black" />
-        <Text style={styles.text}>Price Alerts</Text>
+        <Text style={styles.text}>Exchange</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.accountBox}

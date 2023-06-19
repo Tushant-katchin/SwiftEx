@@ -22,7 +22,7 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { CHAIN_ID_TO_SCANNER } from '../web3'
 
-const TransactionsListView = ({ transactions, self = false, fetchTxPageData, setUpdateTx, setPressed}) => {
+export const TransactionsListView = ({ transactions, self = false, fetchTxPageData, setUpdateTx, setPressed}) => {
   const [open, setOpen] = useState(false);
   const [txLink, setTxLink] = useState("");
   const proceedToPayment = (tx) => setOpen(true);
