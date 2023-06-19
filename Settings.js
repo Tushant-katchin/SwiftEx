@@ -290,6 +290,23 @@ const Settings = (props) => {
         />
         <Text style={styles.text}>Contacts</Text>
       </TouchableOpacity>
+         <TouchableOpacity
+         style={styles.accountBox}
+           onPress={() => {
+             //alert("coming soon");
+             props.navigation.navigate("Biometric");
+
+           }}
+         >
+           <Text style={styles.text}>Biometric Authenticaton</Text>
+           <Icon
+             name="finger-print"
+             size={hp("4")}
+             color="white"
+             style={{ marginLeft: wp("65"), marginTop: hp("-4") }}
+           />
+         </TouchableOpacity>
+       
       <TouchableOpacity
         style={styles.accountBox}
         onPress={() => {
