@@ -368,6 +368,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { CHAIN_ID_TO_SCANNER } from "../web3";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
+import OffersButton from "../../../../offersButton";
 
 const data = [
   {
@@ -527,9 +528,9 @@ export const OfferListViewHome = ({
             </>
           );
         })}
-         <Pressable style={styles.BidsBtn}>
-              <Text style={styles.bidText}>See Bids</Text>
-            </Pressable>
+        <Pressable style={styles.BidsBtn}>
+          <Text style={styles.bidText}>See Bids</Text>
+        </Pressable>
       </LinearGradient>
     </ScrollView>
   );
@@ -633,14 +634,13 @@ export const OfferView = () => {
         setChange={setChange}
       />
       <TouchableOpacity style={styles.transactionBtn}>
-
-  <Text style={{color:"#EE96DF"}}>See Transaction</Text>
+        <Text style={{ color: "#EE96DF" }}>See Transaction</Text>
       </TouchableOpacity>
     </View>
   );
 
   const SecondRoute = () => (
-    <View >
+    <View>
       <OfferListView
         offers={offers}
         profile={profile}
@@ -656,8 +656,13 @@ export const OfferView = () => {
   });
 
   return (
-    <View style={{ height: hp(100),backgroundColor:"#131E3A"}}>
+    <View style={{ height: hp(100), backgroundColor: "#131E3A" ,marginTop:hp(8)}}>
+      {/* <OffersButton/> */}
       <TabView
+        renderTabBar={(e) => {
+          console.log('{}{}{}{}{}{}',e)
+          return <OffersButton {...e} />;
+        }}
         navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
@@ -669,7 +674,7 @@ export const OfferView = () => {
 const styles = StyleSheet.create({
   container: {
     width: wp(100),
-    height: hp(80),
+    height: hp(100),
     color: "black",
   },
   container2: {
@@ -772,24 +777,24 @@ const styles = StyleSheet.create({
     borderRadius: hp(2.5),
     height: hp(80),
     width: wp(95),
-    borderColor:"#EE96DF",
-    borderWidth:StyleSheet.hairlineWidth*1,
+    borderColor: "#EE96DF",
+    borderWidth: StyleSheet.hairlineWidth * 1,
   },
-  offerlistStyleContainer:{
+  offerlistStyleContainer: {
     borderRadius: hp(2.5),
     height: hp(20),
-    borderColor:"#EE96DF",
-    borderWidth:StyleSheet.hairlineWidth*1,
+    borderColor: "#EE96DF",
+    borderWidth: StyleSheet.hairlineWidth * 1,
     width: wp(95),
   },
-  transactionBtn:{
-    width:wp(40),
-    alignSelf:"center",
-    borderRadius:8,
-    borderColor:"#EE96DF",
-    borderWidth:StyleSheet.hairlineWidth*1,
-    padding:8,
-    alignItems:"center",
-    marginTop:hp(6)
-  }
+  transactionBtn: {
+    width: wp(40),
+    alignSelf: "center",
+    borderRadius: 8,
+    borderColor: "#EE96DF",
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    padding: 8,
+    alignItems: "center",
+    marginTop: hp(6),
+  },
 });

@@ -43,12 +43,12 @@ import { ExchangeNavigation } from "../Dashboard/exchange/crypto-exchange-front-
 import BiometricPage from "../Dashboard/BiometricPage";
 import SplashScreen from "../Screens/splash";
 import Nfts from "../Dashboard/Nfts";
-import ScoringTopTab from "./TopNavigator";
-import ProfileHeader from "../Dashboard/header";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
-
+import { OfferView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
+import { HomeView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/home";
+import { TransactionView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/transaction";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,15 +58,15 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="OfferView"
+      // initialRouteName="TransactionView"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
       {/* <Stack.Screen
-        name="OfferView"
-        component={OfferView}
+        name="TransactionView"
+        component={TransactionView}
         options={{ headerShown: false }}
       />   */}
           {/* <Stack.Screen
@@ -393,7 +393,7 @@ const AuthStack = () => (
             fontWeight: "bold",
           },
         }}
-      />
+      /> 
       <Stack.Screen
         name="AllWallets"
         component={AllWallets}
