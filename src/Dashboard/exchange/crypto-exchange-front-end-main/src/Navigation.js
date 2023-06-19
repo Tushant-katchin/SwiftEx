@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeView } from "./pages/home";
 import { ProfileView } from "./pages/profile";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -9,7 +8,7 @@ import {
 import { Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { OfferView } from "./pages/offers";
-import { TransactionView } from "./pages/transaction";
+import { TransactionsListView } from "./pages/transaction";
 import { AccountView } from "./pages/account";
 
 const Tab = createBottomTabNavigator();
@@ -17,7 +16,7 @@ const Tab = createBottomTabNavigator();
 export function ExchangeNavigation() {
   return (
     <Tab.Navigator
-      initialRouteName="/"
+      // initialRouteName="/"
       activeColor="#f0edf6"
       inactiveColor="#3e2465"
       barStyle={{ backgroundColor: "white" }}
@@ -79,8 +78,8 @@ export function ExchangeNavigation() {
         }}
       />
       <Tab.Screen
-        name="Transactions"
-        component={TransactionView}
+        name="TransactionsListView"
+        component={TransactionsListView}
         options={{
           headerShown: false,
           //Tab bar styles can be added here

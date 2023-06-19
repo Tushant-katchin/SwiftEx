@@ -25,7 +25,6 @@ const ScoringTopTab = () => {
       }}>
         <Tab.Screen name="Token" component={Token} />
         <Tab.Screen name="Nfts" component={Nfts}        />
-
       </Tab.Navigator>
     );
   };

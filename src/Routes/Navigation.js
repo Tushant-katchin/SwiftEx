@@ -48,6 +48,8 @@ import ProfileHeader from "../Dashboard/header";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
+
+
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -56,20 +58,27 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="privacyPolicy"
+      // initialRouteName="OfferView"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
-
-{/* <Stack.Screen
-        name="PrivacyPolicy"
-        component={PrivacyPolicy}
+      {/* <Stack.Screen
+        name="OfferView"
+        component={OfferView}
         options={{ headerShown: false }}
-      /> */}
-
-
+      />   */}
+          {/* <Stack.Screen
+        name="ScoringTopTab"
+        component={ScoringTopTab}
+        options={{
+          headerShown: true,
+          header: () => {
+            return <ProfileHeader />;
+          },
+        }}
+      /> */} 
 
       <Stack.Screen
         name="SplashScreen"
@@ -159,17 +168,15 @@ const AuthStack = () => (
         }}
       />
 
-
-<Stack.Screen
+      <Stack.Screen
         name="Settings"
         component={Settings}
         options={{
           headerShown: false,
-          
         }}
-      /> 
+      />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ScoringTopTab"
         component={ScoringTopTab}
         options={{
@@ -178,10 +185,14 @@ const AuthStack = () => (
             return <ProfileHeader />;
           },
         }}
+      /> */}
+      <Stack.Screen
+        name="Token"
+        component={Token}
+        options={{
+          headerShown: false,
+        }}
       />
-      <Stack.Screen name="Token" component={Token} options={{
-        headerShown:false
-      }}/>
       <Stack.Screen
         name="Nfts"
         component={Nfts}
