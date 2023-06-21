@@ -10,7 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { OfferView } from "./pages/offers";
 import { TransactionsListView } from "./pages/transaction";
 import { AccountView } from "./pages/account";
-
+import { TransactionView } from "./pages/transaction";
 const Tab = createBottomTabNavigator();
 
 export function ExchangeNavigation() {
@@ -79,7 +79,7 @@ export function ExchangeNavigation() {
       />
       <Tab.Screen
         name="TransactionsListView"
-        component={TransactionsListView}
+        component={TransactionView}
         options={{
           headerShown: false,
           //Tab bar styles can be added here
