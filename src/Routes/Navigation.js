@@ -34,7 +34,6 @@ import ConfirmTransaction from "../Dashboard/ConfirmTransaction";
 import SendTokens from "../Dashboard/tokens/SendTokens";
 import Transactions from "../Dashboard/Transactions";
 import AllWallets from "../Dashboard/Wallets/allWallets";
-import ExchangeRoutes from "../Dashboard/exchange/crypto-exchange-front-end-main/src/exchangeRoutes";
 import { ExchangeLogin } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
 import { ExchangeRegister } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/signup";
 import LockApp from "../Dashboard/lockApp";
@@ -46,9 +45,7 @@ import Nfts from "../Dashboard/Nfts";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
-import { OfferView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
-import { HomeView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/home";
-import { TransactionView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/transaction";
+import { ProfileView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,17 +55,13 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="TransactionView"
+      // initialRouteName="ProfileView"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
-      {/* <Stack.Screen
-        name="TransactionView"
-        component={TransactionView}
-        options={{ headerShown: false }}
-      />   */}
+       
           {/* <Stack.Screen
         name="ScoringTopTab"
         component={ScoringTopTab}

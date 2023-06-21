@@ -11,8 +11,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import title_icon from "../../assets/title_icon.png";
-
+//import title_icon from "../../assets/title_icon.png";
+import title_icon from "../../assets/icons/Dark blue/1.jpg"
 import { Animated } from "react-native";
 import ReactNativePinView from "react-native-pin-view";
 import Icon from "react-native-vector-icons/Ionicons";
