@@ -277,7 +277,7 @@ export const BidsListView = ({ bids, getBids}) => {
             <WebView
               source={{ uri: `${paymentUrl}` }}
               onNavigationStateChange={(data) => {
-                if (data.url.includes(`offers?session_id`)) {
+                if (data?.url?.includes(`offers?session_id`)) {
                   ///do if payment successfull
                   ShowToast(toast,'Payment Success')
                   navigation('/Transactions')

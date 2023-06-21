@@ -45,7 +45,7 @@ import Nfts from "../Dashboard/Nfts";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
-import { ProfileView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/profile";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -55,12 +55,13 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="ProfileView"
+      // initialRouteName="NewOfferModal"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
+      
        
           {/* <Stack.Screen
         name="ScoringTopTab"
@@ -435,7 +436,6 @@ const AuthStack = () => (
           },
         }}
       />
-
       <Stack.Screen
         name="exchange"
         component={ExchangeNavigation}
@@ -448,7 +448,7 @@ const AuthStack = () => (
             fontWeight: "bold",
           },
         }}
-      />
+      /> 
       <Stack.Screen
         name="appLock"
         component={LockApp}
