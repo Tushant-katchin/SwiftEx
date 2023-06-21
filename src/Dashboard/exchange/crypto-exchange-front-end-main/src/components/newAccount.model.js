@@ -493,6 +493,7 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { LinearGradient } from "expo-linear-gradient";
+import BankModel from "./bankModel";
 
 // <===============================< Constants >==============================>
 /* const TEST_EXTERNAL_ACCOUNT_DATA = {
@@ -608,7 +609,8 @@ export const SelectView = ({
   );
 };
 
-export const NewAccountModal = ({ getAccountDetails }) => {
+export const NewAccountModal = ({ getAccountDetails,isVisible,onPress }) => {
+
   const [modalMessage, setModalMessage] = useState("");
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [isIban, setIsIban] = useState(false);
@@ -727,18 +729,17 @@ export const NewAccountModal = ({ getAccountDetails }) => {
   useEffect(() => {
     // console.log(countryOptions)
   }, []);
-
   return (
     <>
-      <Button title="Add an account" onPress={handleOpen} color={"green"}>
+      {/* <Button title="Add an account" onPress={handleOpen} color={"green"}>
         Add Your Bank Account
-      </Button>
+      </Button> */}
       <Modal
         animationIn="slideInRight"
         animationOut="slideOutRight"
         animationInTiming={100}
         animationOutTiming={200}
-        isVisible={true}
+        isVisible={isVisible}
         onBackdropPress={() => {
           handleClose();
         }}
@@ -747,6 +748,7 @@ export const NewAccountModal = ({ getAccountDetails }) => {
           handleClose();
         }}
       >
+        <View style={styles.modalmainContainer}>
         <LinearGradient
           start={[1, 0]}
           style={{ borderRadius: 20 }}
@@ -775,7 +777,6 @@ export const NewAccountModal = ({ getAccountDetails }) => {
               <View style={styles.dropdownContainer}>
                 <Text style={styles.dropText}>Select Country</Text>
                 <SelectView
-
                   options={countryOptions}
                   value={newAccount.country}
                   onChange={handleChange}
@@ -848,13 +849,15 @@ export const NewAccountModal = ({ getAccountDetails }) => {
                 style={styles.submitgradientContainer}
                 colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
               >
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onPress}>
                   <Text style={{ color: "#fff" }}>Submit</Text>
                 </TouchableOpacity>
               </LinearGradient>
             </View>
           </View>
         </LinearGradient>
+        </View>
+        
       </Modal>
     </>
   );
@@ -928,8 +931,8 @@ const styles = StyleSheet.create({
   dropdown: {
     width: wp("22"),
     borderRadius: 8,
-    borderColor:"#407EC9",
-    borderBottomWidth:StyleSheet.hairlineWidth*1
+    borderColor: "#407EC9",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
   },
   icon: {
     marginRight: 5,
@@ -972,7 +975,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   modelmainContainer: {
-    height: hp(64),
+    height: hp(68),
   },
   accountText: {
     textAlign: "center",
@@ -1019,4 +1022,11 @@ const styles = StyleSheet.create({
     width: wp(75),
     alignSelf: "center",
   },
+  modalmainContainer:{
+    backgroundColor:"rgba(57, 31, 125, 0.65)",
+    height:hp(100),
+    width:wp(100),
+    justifyContent:"center",
+    alignSelf:"center"
+  }
 });
