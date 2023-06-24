@@ -11,6 +11,7 @@ import { OfferView } from "./pages/offers";
 import { TransactionsListView } from "./pages/transaction";
 import { AccountView } from "./pages/account";
 import { TransactionView } from "./pages/transaction";
+import { ExchangeHeader } from "../../../header";
 const Tab = createBottomTabNavigator();
 
 export function ExchangeNavigation() {
@@ -18,7 +19,7 @@ export function ExchangeNavigation() {
     <Tab.Navigator
       // initialRouteName="/"
       activeColor="#f0edf6"
-      inactiveColor="#3e2465"
+      // inactiveColor="#3e2465"
       barStyle={{ backgroundColor: "white" }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -65,16 +66,23 @@ export function ExchangeNavigation() {
       <Tab.Screen
         name="/"
         component={HomeView}
+        
         options={{
           tabBarLabel: "Home",
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeader />;
+          },
         }}
       />
       <Tab.Screen
         name="offers"
         component={OfferView}
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeader />;
+          }
         }}
       />
       <Tab.Screen

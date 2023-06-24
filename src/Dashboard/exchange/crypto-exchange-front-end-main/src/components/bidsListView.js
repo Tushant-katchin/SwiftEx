@@ -15,20 +15,25 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import {Button as Btn} from 'native-base' 
-import { useToast } from 'native-base';
+import { Button as Btn } from "native-base";
+import { useToast } from "native-base";
 import { ShowToast } from "../../../../reusables/Toasts";
-import SnackBar from 'react-native-snackbar-component'
+import SnackBar from "react-native-snackbar-component";
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 
-const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => {
+const UpdateBidModal = ({
+  bid,
+  getBids,
+  setSnackbarVisible,
+  setPaymentUrl,
+}) => {
   const [modalMessage, setModalMessage] = useState("");
   const [updatedBid, setUpdatedBid] = useState({ pricePerUnit: "" });
   const [txFeeInUsd, setTxFeeInUsd] = useState(TX_FEE_IN_USD);
   const [open, setOpen] = useState(false);
-  const[loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [breakDowns, setBreakdowns] = useState({
     finalPayable: 0,
     appFee: 0,
@@ -38,7 +43,7 @@ const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => 
   });
 
   const offer = bid.offer;
-  const toast = useToast()
+  const toast = useToast();
   useEffect(() => {
     getTxFeeData(offer.assetName);
   }, []);
@@ -51,7 +56,6 @@ const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => 
     setOpen(false);
   };
 
-  
   const getTxFeeData = async (txName) => {
     try {
       const { err, res: { gasPriceInUsd = TX_FEE_IN_USD } = {} } =
@@ -77,35 +81,35 @@ const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => 
 
   const updateBid = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const { err, res } = await authRequest(
         `/bids/updateBidPrice/${bid._id}`,
         PATCH,
         updatedBid
       );
       if (err) {
-        setLoading(false)
-        return setModalMessage(`${err.status}: ${err.message}`)};
+        setLoading(false);
+        return setModalMessage(`${err.status}: ${err.message}`);
+      }
 
       if (res) {
-          console.log(res);
-          if (res.paymentUrl) {
-            setPaymentUrl(res.paymentUrl);
-            setLoading(false);
-            setOpen(false)
-            setSnackbarVisible(true)
-            return     
-            
-           }
-          }
-        await getBids();
-        setLoading(false)
-        setOpen(false)
-        ShowToast(toast,'Bid updated successfuly')
+        console.log(res);
+        if (res.paymentUrl) {
+          setPaymentUrl(res.paymentUrl);
+          setLoading(false);
+          setOpen(false);
+          setSnackbarVisible(true);
+          return;
+        }
+      }
+      await getBids();
+      setLoading(false);
+      setOpen(false);
+      ShowToast(toast, "Bid updated successfuly");
       return setModalMessage("success");
     } catch (err) {
       console.log(err);
-      setLoading(false)
+      setLoading(false);
       setModalMessage(err.message || "Something went wrong");
     }
   };
@@ -142,9 +146,7 @@ const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => 
   return (
     <>
       <View>
-        <Btn onPress={handleOpen}>
-          Update
-        </Btn>
+        <Btn onPress={handleOpen}>Update</Btn>
         <Modal
           animationIn="slideInRight"
           animationOut="slideOutRight"
@@ -168,21 +170,21 @@ const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => 
               Update your bid unit price with current value: {bid.pricePerUnit}{" "}
               {bid.currencyName}
             </Text>
-            <Text >{modalMessage}</Text>
+            <Text>{modalMessage}</Text>
             <Input
               mx="3"
               placeholder="Input"
               w="30%"
               onChangeText={(text) => {
                 let event = {
-                  value:text,
-                  name:'pricePerUnit'
-                }
-                handleChange(event)
+                  value: text,
+                  name: "pricePerUnit",
+                };
+                handleChange(event);
               }}
               value={updatedBid.pricePerUnit}
             />
-            <View style={{display:'flex', flexDirection:'column'}}>
+            <View style={{ display: "flex", flexDirection: "column" }}>
               <View>
                 {breakDowns.convertedUnitPrice !== 0 &&
                   breakDowns.convertedUnitPrice && (
@@ -231,7 +233,7 @@ const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => 
               </Text>
             </View>
             <View>
-              <Btn onPress={updateBid} isLoading={loading} >
+              <Btn onPress={updateBid} isLoading={loading}>
                 Update Bid
               </Btn>
             </View>
@@ -242,13 +244,13 @@ const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => 
   );
 };
 
-export const BidsListView = ({ bids, getBids}) => {
+export const BidsListView = ({ bids, getBids }) => {
   const [message, setMessage] = useState("");
-  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState(null);
-  const[txModal, setTxModal] = useState(false)
-  const navigation = useNavigation()
- const toast = useToast()
+  const [txModal, setTxModal] = useState(false);
+  const navigation = useNavigation();
+  const toast = useToast();
   const SeeTransactions = () => {
     return (
       <View>
@@ -280,16 +282,15 @@ export const BidsListView = ({ bids, getBids}) => {
               onNavigationStateChange={(data) => {
                 if (data?.url?.includes(`offers?session_id`)) {
                   ///do if payment successfull
-                  ShowToast(toast,'Payment Success')
-                  navigation('/Transactions')
+                  ShowToast(toast, "Payment Success");
+                  navigation("/Transactions");
                 }
 
                 if (data.url.includes("offers?payFailed=true")) {
                   ///do if payment is cancelled
-                  setTxModal(false)
-                  ShowToast(toast,'Payment failed')
-
-                 }
+                  setTxModal(false);
+                  ShowToast(toast, "Payment failed");
+                }
               }}
             />
           </View>
@@ -297,7 +298,6 @@ export const BidsListView = ({ bids, getBids}) => {
       </View>
     );
   };
-
 
   const cancelBid = async (bidId) => {
     try {
@@ -314,95 +314,104 @@ export const BidsListView = ({ bids, getBids}) => {
   return (
     bids && (
       <>
-        <Text color={"blue.400"}>{message}</Text>
-        <DataTable style={styles.container}>
-          <DataTable.Header style={styles.tableHeader}>
-            <DataTable.Title>Asset</DataTable.Title>
-            <DataTable.Title>Amount</DataTable.Title>
-            <DataTable.Title>Bid Unit Price</DataTable.Title>
-            <DataTable.Title>Bid Currency</DataTable.Title>
-            <DataTable.Title>Offer Unit Price</DataTable.Title>
-            <DataTable.Title>Offer Currency</DataTable.Title>
-            <DataTable.Title>Offer Issuer</DataTable.Title>
-            <DataTable.Title>Status</DataTable.Title>
-          </DataTable.Header>
-          <ScrollView>
-            {bids.length ? (
-              <>
-                {bids.map((bid, index) => (
-                  <View>
-                    <ScrollView>
-                      <DataTable.Row key={bid._id}>
-                        <DataTable.Cell>{bid.offer.assetName}</DataTable.Cell>
-                        <DataTable.Cell>{bid.offer.amount}</DataTable.Cell>
-                        <DataTable.Cell>{bid.pricePerUnit}</DataTable.Cell>
-                        <DataTable.Cell>{bid.currencyName}</DataTable.Cell>
-                        <DataTable.Cell>
-                          {bid.offer.pricePerUnit}
-                        </DataTable.Cell>
-                        <DataTable.Cell>
-                          {bid.offer.currencyName}
-                        </DataTable.Cell>
-                        <DataTable.Cell>{bid.issuerName}</DataTable.Cell>
-                        <DataTable.Cell>{bid.status}</DataTable.Cell>
-                      </DataTable.Row>
-                      {bid.offer.status === OFFER_STATUS_ENUM.ACTIVE && (
-
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          margin: 2,
-                        }}
-                      >
-                        {bid.status === BID_STATUS_ENUM.ACTIVE && (
-                          <>
-                            <UpdateBidModal bid={bid} getBids={getBids} setSnackbarVisible={setSnackbarVisible} setPaymentUrl={setPaymentUrl}/>
-                            <View style={{ marginLeft: 10 }}>
-                              <Btn
-                                onPress={() => cancelBid(bid._id)}
-                                style={{backgroundColor:'red'}}
-                              >
-                                Cancel
-                              </Btn>
-                            </View>
-                          </>
-                        )}
-                        {bid.status === BID_STATUS_ENUM.CANCELED && (
-                          <View>
-                            <Button
-                              onPress={() => cancelBid(bid._id)}
-                              color={"green"}
-                              title={"Re-Activate"}
-                            >
-                              RE-Activate
-                            </Button>
+        <View style={{ backgroundColor: "#131E3A" }}>
+          <Text color={"blue.400"}>{message}</Text>
+          <LinearGradient
+            style={styles.linearStyle1}
+            start={[1, 0]}
+            end={[0, 1]}
+            colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
+          >
+            <View style={styles.tableHeader}>
+              <Text style={styles.AssetText}>Asset Amount</Text>
+              <Text style={styles.AssetText}>Bid Unit Price</Text>
+              <Text style={styles.AssetText}>Bid Currency</Text>
+              <Text style={styles.AssetText}>Offer Unit Price</Text>
+              <Text style={styles.AssetText}>Offer Currency</Text>
+              <Text style={styles.AssetText}>Offer Issuer</Text>
+              <Text style={{color:"#fff",width:wp(10),textAlign:"center"}}>Status</Text>
+            </View>
+            <ScrollView>
+              {bids.length ? (
+                <>
+                  {bids.map((bid, index) => (
+                    <View>
+                      <ScrollView>
+                        <View key={bid._id}>
+                          <Text style={styles.textColor}> {bid.offer.assetName}</Text>
+                          <Text style={styles.textColor}>{bid.offer.amount}</Text>
+                          <Text style={styles.textColor}>{bid.pricePerUnit}</Text>
+                          <Text style={styles.textColor}>{bid.currencyName}</Text>
+                          <Text style={styles.textColor}>{bid.offer.pricePerUnit}</Text>
+                          <Text style={styles.textColor}>{bid.offer.currencyName}</Text>
+                          <Text style={styles.textColor}>{bid.issuerName}</Text>
+                          <Text style={styles.textColor}>{bid.status}</Text>
+                        </View>
+                        {bid.offer.status === OFFER_STATUS_ENUM.ACTIVE && (
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              margin: 2,
+                            }}
+                          >
+                            {bid.status === BID_STATUS_ENUM.ACTIVE && (
+                              <>
+                                <UpdateBidModal
+                                  bid={bid}
+                                  getBids={getBids}
+                                  setSnackbarVisible={setSnackbarVisible}
+                                  setPaymentUrl={setPaymentUrl}
+                                />
+                                <View style={{ marginLeft: 10 }}>
+                                  <Btn
+                                    onPress={() => cancelBid(bid._id)}
+                                    style={{ backgroundColor: "red" }}
+                                  >
+                                    Cancel
+                                  </Btn>
+                                </View>
+                              </>
+                            )}
+                            {bid.status === BID_STATUS_ENUM.CANCELED && (
+                              <View>
+                                <Button
+                                  onPress={() => cancelBid(bid._id)}
+                                  color={"green"}
+                                  title={"Re-Activate"}
+                                >
+                                  RE-Activate
+                                </Button>
+                              </View>
+                            )}
                           </View>
                         )}
-                      </View>
-                      )}
-                    </ScrollView>
-                  </View>
-                ))}
-              </>
-            ) : (
-              <DataTable.Row>
-                <DataTable.Cell>No Bid Here</DataTable.Cell>
-              </DataTable.Row>
-            )}
+                      </ScrollView>
+                    </View>
+                  ))}
+                </>
+              ) : (
+                <View>
+                  <Text style={styles.showText}>No Offers to show !</Text>
+                </View>
+              )}
 
-          <SnackBar visible={snackbarVisible} position={'bottom'} textMessage="Bid is an exact match. Proceed to complete the transaction" 
-          actionHandler={()=>{
-            //Linking.openURL(paymentUrl)
-            setTxModal(true)
-            SeeTransactions()
-            setSnackbarVisible(false)
-          }} actionText="Proceed"/>
-    
-          </ScrollView>
-           <SeeTransactions/>
-        </DataTable>
-        
+              <SnackBar
+                visible={snackbarVisible}
+                position={"bottom"}
+                textMessage="Bid is an exact match. Proceed to complete the transaction"
+                actionHandler={() => {
+                  //Linking.openURL(paymentUrl)
+                  setTxModal(true);
+                  SeeTransactions();
+                  setSnackbarVisible(false);
+                }}
+                actionText="Proceed"
+              />
+            </ScrollView>
+            <SeeTransactions />
+          </LinearGradient>
+        </View>
       </>
     )
   );
@@ -413,7 +422,6 @@ const styles = StyleSheet.create({
     width: wp(100),
     height: hp(50),
     color: "black",
-    backgroundColor:"red",
     paddingBottom: wp(5),
   },
   container2: {
@@ -425,8 +433,14 @@ const styles = StyleSheet.create({
     width: wp(100),
   },
   tableHeader: {
-    backgroundColor: "#DCDCDC",
-    width: wp(100),
+    width: wp(95),
+    alignSelf: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "#EE96DF",
+    paddingVertical: hp(1),
   },
   table: {
     display: "flex",
@@ -442,4 +456,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     height: hp(100),
   },
+  AssetText: {
+    color: "#fff",
+    width: wp(15),
+    textAlign: "center",
+  },
+  linearStyle1: {
+    width: wp(95),
+    height: hp(27),
+    marginBottom: hp(3),
+    marginVertical: hp(2),
+    borderRadius: 10,
+    alignSelf: "center",
+  },
+  showText:{
+    color:"#fff",
+    marginHorizontal:wp(2),
+    marginVertical:hp(2)
+  }
 });

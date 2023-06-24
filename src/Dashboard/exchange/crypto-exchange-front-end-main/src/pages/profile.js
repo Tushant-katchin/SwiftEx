@@ -379,14 +379,9 @@
 //   },
 // });
 
-
-
-
-
-
-
-
 import React from "react";
+import idCard from "../../../../../../assets/idCard.png";
+
 import { useEffect, useState } from "react";
 import { authRequest, GET, POST } from "../api";
 import { Navbar } from "../components/nav";
@@ -417,7 +412,13 @@ import BankModel from "../components/bankModel";
 // import Icon from "react-native-vector-icons/MaterialIcons";
 
 const data = [
-   {bankname:"HDFC",bankholder:"RosieJackson",payoutType:"Standard",country:'India',currency:"INR"}
+  {
+    bankname: "HDFC",
+    bankholder: "RosieJackson",
+    payoutType: "Standard",
+    country: "India",
+    currency: "INR",
+  },
 ];
 
 const VERIFICATION_STATUS = {
@@ -460,28 +461,57 @@ export const FieldView = ({
   disabled = true,
 }) => {
   return (
-    <View>
-      {type === "kyc" ? (
+    // <View>
+    //   {type === "kyc" ? (
+    //     <>
+    //       <Text style={{color:"#fff"}}>KYC STATUS {value === false ? "FALSE" : "true"}</Text>
+    //       {value === true ? (
+    //         <Text style={{color:"#fff"}}>KYC Done</Text>
+    //       ) : (
+    //         <Button
+    //           title="apply"
+    //           onPress={() => {
+    //             applyForKyc();
+    //           }}
+    //         />
+    //       )}
+    //     </>
+    //   ) : (
+    //     <>
+    //       <Text>{title}</Text>
+    //       <Text style={{ backgroundColor: "grey" }}>{value}</Text>
+    //     </>
+    //   )}
+    // </View>
+    <>
+      {type === "kyc" && value == true ? (
         <>
-          <Text style={{color:"#fff"}}>KYC STATUS {value === false ? "FALSE" : "true"}</Text>
-          {value === true ? (
-            <Text style={{color:"#fff"}}>KYC Done</Text>
-          ) : (
-            <Button
-              title="apply"
-              onPress={() => {
-                applyForKyc();
-              }}
-            />
-          )}
+          <View style={styles.idCardContainer}>
+            <View style={styles.walletContainer}>
+              <Text style={styles.idtext}>Identity Status</Text>
+              <Image source={idCard} style={styles.idcardImg} />
+            </View>
+            <View style={styles.walletContainer}>
+              <Icon
+                name={"check-outline"}
+                type={"materialCommunity"}
+                color={"#008C62"}
+                style={styles.checkImg}
+              />
+              <Text style={styles.connectedText}>Verified!</Text>
+            </View>
+          </View>
+          <Text style={styles.readyText}>You are ready to</Text>
         </>
       ) : (
-        <>
-          <Text>{title}</Text>
-          <Text style={{ backgroundColor: "grey" }}>{value}</Text>
-        </>
+        <Button
+          title="apply"
+          onPress={() => {
+            applyForKyc();
+          }}
+        />
       )}
-    </View>
+    </>
   );
 };
 
@@ -657,7 +687,7 @@ const EmailView = ({ value, isVerified }) => {
 
 export const ProfileView = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [isSubmit,setIsSubmit] = useState(false)
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const state = useSelector((state) => state);
   const [profile, setProfile] = useState({
@@ -835,14 +865,18 @@ export const ProfileView = (props) => {
               </TouchableOpacity>
             </LinearGradient>
             <NewAccountModal
-            isVisible={modalVisible}
+              isVisible={modalVisible}
               onPress={() => {
                 setModalVisible(!modalVisible);
-                setIsSubmit(!isSubmit)
+                setIsSubmit(!isSubmit);
               }}
             />
-          <BankModel isVisible={isSubmit} onPress={()=>{setIsSubmit(!isSubmit)}}/>
-
+            <BankModel
+              isVisible={isSubmit}
+              onPress={() => {
+                setIsSubmit(!isSubmit);
+              }}
+            />
           </View>
         )}
       </View>
@@ -1083,5 +1117,37 @@ const styles = StyleSheet.create({
   },
   accounttextColor: {
     color: "#fff",
+  },
+  idCardContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(88),
+    marginTop: hp(3),
+    paddingBottom: hp(1),
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderBottomColor: "#529C8C",
+  },
+  idcardImg: {
+    height: hp(2),
+    width: wp(4),
+    marginHorizontal: hp(1),
+  },
+  checkImg: {
+    marginHorizontal: hp(0.6),
+  },
+  idtext: {
+    color: "#CBBBDC",
+  },
+  checkImg: {
+    marginHorizontal: hp(0.6),
+  },
+  connectedText: {
+    color: "#008C62",
+  },
+  readyText: {
+    color: "#fff",
+    fontSize: hp(2.3),
+    textAlign:"center",
+    marginVertical:hp(2)
   },
 });
