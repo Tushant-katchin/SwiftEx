@@ -1,4 +1,5 @@
 import { LinearProgress } from "@mui/material";
+import OffersButton from "../../../../../Dashboard/offersButton";
 import { useEffect, useState } from "react";
 import { authRequest, GET } from "../api";
 import { NewBidModal } from "../components/newBid.modal";
@@ -19,22 +20,40 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Provider as PaperProvider } from "react-native-paper";
-import { CHAIN_ID_TO_SCANNER } from '../web3'
+import { CHAIN_ID_TO_SCANNER } from "../web3";
+import { LinearGradient } from "expo-linear-gradient";
+import Icon from "../../../../../icon";
 
-export const OfferListView = ({ self = false, offers, profile, setChange, }) => {
+const data = [
+  { one: "0.0ETH", two: "100000", three: "120 INR", four: "Active" },
+];
+
+export const OfferListView = ({ self = false, offers, profile, setChange }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <PaperProvider>
-      <DataTable style={styles.container}>
-        <DataTable.Header style={styles.tableHeader}>
-          <DataTable.Title>Asset</DataTable.Title>
-          <DataTable.Title>Amount</DataTable.Title>
-          <DataTable.Title>Price</DataTable.Title>
-          <DataTable.Title>Total Price</DataTable.Title>
-          <DataTable.Title>Currency</DataTable.Title>
-          <DataTable.Title>Status</DataTable.Title>
-        </DataTable.Header>
+    <View style={{ backgroundColor: "#131E3A" }}>
+      <LinearGradient
+        style={styles.linearStyle}
+        start={[1, 0]}
+        end={[0, 1]}
+        colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
+      >
+        <View style={styles.tableHeader}>
+          <Text style={styles.AssetText}>Asset Amount</Text>
+          <Text style={styles.AssetText}>Unit Price (of Eth)</Text>
+          <Text style={styles.AssetText}>Total Price (In INR)</Text>
+          <Text style={styles.AssetText}>Currency</Text>
+          <View style={{ position: "relative" }}>
+            <Icon
+              name={"info"}
+              type={"feather"}
+              style={styles.infoIcon}
+              color={"#DBAFC9"}
+            />
+            <Text style={styles.textColor}>Status</Text>
+          </View>
+        </View>
         <ScrollView>
           {offers ? (
             offers.map((offer) => {
@@ -42,23 +61,24 @@ export const OfferListView = ({ self = false, offers, profile, setChange, }) => 
                 return (
                   offer.issuer === profile._id && (
                     <>
-                      <View key={offer._id} style={{backgroundColor:'#E2808A'}}>
+                      <View key={offer._id}>
                         <ScrollView key={offer._id}>
-                          <DataTable.Row key={offer._id}>
-                            <DataTable.Cell >{offer.assetName}</DataTable.Cell>
-
-                            <DataTable.Cell>{offer.amount}</DataTable.Cell>
-                            <DataTable.Cell>
-                              {offer.pricePerUnit}
-                            </DataTable.Cell>
-                            <DataTable.Cell>{offer.totalPrice}</DataTable.Cell>
-                            <DataTable.Cell>
-                              {offer.currencyName}
-                            </DataTable.Cell>
-                            <DataTable.Cell>{offer.status}</DataTable.Cell>
-                          </DataTable.Row>
+                          <View style={{ flexDirection: "row" }}>
+                            <View key={offer._id}>
+                              <Text>{offer.assetName}</Text>
+                              <Text>{offer.amount}</Text>
+                              <Text>{offer.pricePerUnit}</Text>
+                              <Text>{offer.totalPrice}</Text>
+                              <Text>{offer.currencyName}</Text>
+                              <Text>{offer.status}</Text>
+                            </View>
+                          </View>
                         </ScrollView>
-                        <OfferBidsView offer={offer} self={self} setChange={setChange} />
+                        <OfferBidsView
+                          offer={offer}
+                          self={self}
+                          setChange={setChange}
+                        />
                       </View>
                     </>
                   )
@@ -67,49 +87,74 @@ export const OfferListView = ({ self = false, offers, profile, setChange, }) => 
                 offer.issuer !== profile._id && (
                   <>
                     <ScrollView style={styles.scrollView}>
-                      <DataTable.Row key={offer._id}>
-                        <DataTable.Cell>{offer.assetName}</DataTable.Cell>
-                        <DataTable.Cell>{offer.amount}</DataTable.Cell>
-                        <DataTable.Cell>{offer.pricePerUnit}</DataTable.Cell>
-                        <DataTable.Cell>{offer.totalPrice}</DataTable.Cell>
-                        <DataTable.Cell>{offer.currencyName}</DataTable.Cell>
-                        <DataTable.Cell>{offer.status}</DataTable.Cell>
-                      </DataTable.Row>
-                      <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View style={{ marginLeft: 10,marginBottom:hp(5) }}>
-                          <OfferBidsView offer={offer} setChange={setChange} />
-                        </View>
-                        <View style={{ marginLeft: 10 }}>
-                          <NewBidModal offer={offer}  />
-                        </View>
+                      <View key={offer._id} style={styles.Table1Container}>
+                        <Text style={styles.textColor}>{offer.assetName}</Text>
+                        <Text style={styles.textColor}>
+                          {offer.pricePerUnit}
+                        </Text>
+                        <Text style={styles.textColor}>{offer.totalPrice}</Text>
+                        <Text style={styles.textColor}>
+                          {offer.currencyName}
+                        </Text>
+
+                        <Text style={styles.statusColor}>{offer.status}</Text>
                       </View>
                     </ScrollView>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.amountText}>
+                        {offer.amount} {"Bid"}
+                      </Text>
+                      <View style={{ marginRight: 20 }}>
+                        <OfferBidsView offer={offer} setChange={setChange} />
+                      </View>
+                      <NewBidModal offer={offer} />
+                    </View>
                   </>
                 )
               );
             })
           ) : (
-            <View><ActivityIndicator size={"small"} color={'blue'}/></View>
+            <View>
+              <ActivityIndicator size={"small"} color={"blue"} />
+            </View>
           )}
         </ScrollView>
-      </DataTable>
-    </PaperProvider>
+      </LinearGradient>
+    </View>
   );
 };
-export const OfferListViewHome = ({ self = false, offers, profile, setChange, setPressed }) => {
+export const OfferListViewHome = ({
+  self = false,
+  offers,
+  profile,
+  setChange,
+  setPressed,
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <PaperProvider>
-      <DataTable style={styles.container2}>
-        <DataTable.Header style={styles.tableHeader}>
-          <DataTable.Title>Asset</DataTable.Title>
-          <DataTable.Title>Amount</DataTable.Title>
-          <DataTable.Title>Price</DataTable.Title>
-          <DataTable.Title>Total Price</DataTable.Title>
-          <DataTable.Title>Currency</DataTable.Title>
-          <DataTable.Title>Status</DataTable.Title>
-        </DataTable.Header>
+    <View style={{ backgroundColor: "#131E3A" }}>
+      <LinearGradient
+        style={styles.linearStyle1}
+        start={[1, 0]}
+        end={[0, 1]}
+        colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
+      >
+        <View style={styles.tableHeader}>
+          <Text style={styles.AssetText}>Asset Amount</Text>
+          <Text style={styles.AssetText}>Unit Price (of Eth)</Text>
+          <Text style={styles.AssetText}>Total Price (In INR)</Text>
+          <Text style={styles.AssetText}>Currency</Text>
+          <View style={{ position: "relative" }}>
+            <Icon
+              name={"info"}
+              type={"feather"}
+              style={styles.infoIcon}
+              color={"#DBAFC9"}
+            />
+            <Text style={styles.textColor}>Status</Text>
+          </View>
+        </View>
         <ScrollView>
           {offers ? (
             offers.map((offer) => {
@@ -117,23 +162,47 @@ export const OfferListViewHome = ({ self = false, offers, profile, setChange, se
                 return (
                   offer.issuer === profile._id && (
                     <>
-                      <View key={offer._id} style={{backgroundColor:'#E2808A'}}>
+                      <View key={offer._id}>
                         <ScrollView key={offer._id}>
-                          <DataTable.Row key={offer._id}>
-                            <DataTable.Cell >{offer.assetName}</DataTable.Cell>
+                          <View
+                            key={offer._id}
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              width: wp(90),
+                              alignItems: "center",
+                              alignSelf: "center",
+                              marginTop: hp(1),
+                            }}
+                          >
+                            <Text style={styles.textColor}>
+                              {offer.assetName}
+                            </Text>
 
-                            <DataTable.Cell>{offer.amount}</DataTable.Cell>
-                            <DataTable.Cell>
+                            <Text style={styles.textColor}>
                               {offer.pricePerUnit}
-                            </DataTable.Cell>
-                            <DataTable.Cell>{offer.totalPrice}</DataTable.Cell>
-                            <DataTable.Cell>
+                            </Text>
+                            <Text style={styles.textColor}>
+                              {offer.totalPrice}
+                            </Text>
+                            <Text style={styles.textColor}>
                               {offer.currencyName}
-                            </DataTable.Cell>
-                            <DataTable.Cell>{offer.status}</DataTable.Cell>
-                          </DataTable.Row>
+                            </Text>
+                            <Text style={styles.statusColor}>
+                              {offer.status}
+                            </Text>
+                          </View>
                         </ScrollView>
-                        <OfferBidsView offer={offer} self={self} setChange={setChange} />
+                        <View style={styles.seeBidStyle}>
+                          <Text style={styles.amountText1}>
+                            {offer.amount} {"Bid"}
+                          </Text>
+                          <OfferBidsView
+                            offer={offer}
+                            self={self}
+                            setChange={setChange}
+                          />
+                        </View>
                       </View>
                     </>
                   )
@@ -142,20 +211,20 @@ export const OfferListViewHome = ({ self = false, offers, profile, setChange, se
                 offer.issuer !== profile._id && (
                   <>
                     <ScrollView style={styles.scrollView}>
-                      <DataTable.Row key={offer._id}>
-                        <DataTable.Cell>{offer.assetName}</DataTable.Cell>
-                        <DataTable.Cell>{offer.amount}</DataTable.Cell>
-                        <DataTable.Cell>{offer.pricePerUnit}</DataTable.Cell>
-                        <DataTable.Cell>{offer.totalPrice}</DataTable.Cell>
-                        <DataTable.Cell>{offer.currencyName}</DataTable.Cell>
-                        <DataTable.Cell>{offer.status}</DataTable.Cell>
-                      </DataTable.Row>
+                      <View key={offer._id}>
+                        <Text>{offer.assetName}</Text>
+                        <Text>{offer.amount}</Text>
+                        <Text>{offer.pricePerUnit}</Text>
+                        <Text>{offer.totalPrice}</Text>
+                        <Text>{offer.currencyName}</Text>
+                        <Text>{offer.status}</Text>
+                      </View>
                       <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View style={{ marginLeft: 10,marginBottom:hp(5) }}>
+                        <View style={{ marginLeft: 10, marginBottom: hp(5) }}>
                           <OfferBidsView offer={offer} setChange={setChange} />
                         </View>
-                        <View style={{ marginLeft: 10 }}>
-                          <NewBidModal offer={offer}  />
+                        <View>
+                          <NewBidModal offer={offer} />
                         </View>
                       </View>
                     </ScrollView>
@@ -164,18 +233,20 @@ export const OfferListViewHome = ({ self = false, offers, profile, setChange, se
               );
             })
           ) : (
-            <View><ActivityIndicator size={'large'} color={'white'}/></View>
+            <View>
+              <ActivityIndicator size={"large"} color={"white"} />
+            </View>
           )}
         </ScrollView>
-      </DataTable>
-    </PaperProvider>
+      </LinearGradient>
+    </View>
   );
 };
 
 export const OfferView = () => {
   const [message, setMessage] = useState();
   const [offers, setOffers] = useState();
-  const[change,setChange] = useState(false)
+  const [change, setChange] = useState(false);
   const [profile, setProfile] = useState({
     isVerified: false,
     firstName: "tushant",
@@ -199,14 +270,12 @@ export const OfferView = () => {
     getOffersData();
     fetchProfileData();
     getBidsData();
-
   }, []);
 
   useEffect(() => {
     getOffersData();
     fetchProfileData();
     getBidsData();
-
   }, [change]);
 
   const getOffersData = async () => {
@@ -264,26 +333,30 @@ export const OfferView = () => {
   };
 
   const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white", height:hp(100) }}>
-         <OfferListViewHome
-              self={true}
-              profile={profile}
-              offers={offers}
-              setChange={setChange}
-            />
-               </View>
+    <ScrollView>
+      <OfferListViewHome
+        self={true}
+        profile={profile}
+        offers={offers}
+        setChange={setChange}
+      />
+      <TouchableOpacity style={styles.transactionBtn}>
+        <Text style={{ color: "#EE96DF" }}>See Transaction</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 
   const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-       <OfferListView
-            offers={offers}
-            profile={profile}
-            setMessage={setMessage}
-            setChange={setChange}
-          />
-
-    </View>
+    <>
+      <ScrollView>
+        <OfferListView
+          offers={offers}
+          profile={profile}
+          setMessage={setMessage}
+          setChange={setChange}
+        />
+      </ScrollView>
+    </>
   );
 
   const renderScene = SceneMap({
@@ -291,39 +364,68 @@ export const OfferView = () => {
     second: FirstRoute,
   });
   return (
-
-      <View style={{height:hp(100), backgroundColor:'white'}}>
-                <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: layout.width }}
-          />
-        </View>
-
+    <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
+      <TabView
+        renderTabBar={(e) => {
+          console.log("{}{}{}{}{}{}", e);
+          return <OffersButton {...e} />;
+        }}
+        nav
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: wp(100),
-    height: hp(80),
-    color: "black",
-
+  linearStyle: {
+    width: wp(95),
+    height: hp(65),
+    marginBottom: hp(3),
+    marginVertical: hp(2),
+    borderRadius: 10,
+    alignSelf: "center",
   },
+  transactionBtn: {
+    width: wp(40),
+    alignSelf: "center",
+    borderRadius: 8,
+    borderColor: "#EE96DF",
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    padding: 8,
+    alignItems: "center",
+    marginTop: hp(2),
+  },
+  linearStyle1: {
+    width: wp(95),
+    height: hp(60),
+    marginBottom: hp(3),
+    marginVertical: hp(2),
+    borderRadius: 10,
+    alignSelf: "center",
+  },
+
   container2: {
     width: wp(100),
     height: hp(57),
     color: "black",
-
   },
   scrollView: {
-    width: wp(100),
+    // width: wp(100),
+    alignSelf: "center",
   },
   tableHeader: {
-    backgroundColor: "#DCDCDC",
-    width: wp(100),
-
+    width: wp(90),
+    alignSelf: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "#EE96DF",
+    paddingVertical: hp(1),
   },
   table: {
     display: "flex",
@@ -331,7 +433,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     backgroundColor: "white",
-
   },
   content: {
     display: "flex",
@@ -340,6 +441,63 @@ const styles = StyleSheet.create({
     textAlign: "center",
     height: hp(100),
     backgroundColor: "white",
+  },
+  textColor: {
+    color: "#fff",
+    width: wp(15),
+    textAlign: "center",
+  },
+  Table1Container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: wp(90),
+    marginTop: hp(2),
+    marginBottom: hp(1),
+    alignSelf: "center",
+  },
+  statusColor: {
+    color: "#38B0EA",
+    width: wp(17),
+    textAlign: "center",
+  },
+  PriceText: {
+    color: "#fff",
+    width: wp(15),
+  },
+  AssetText: {
+    color: "#fff",
+    width: wp(15),
+    textAlign: "center",
+  },
+  currencyText: {
+    color: "#fff",
+    width: wp(15),
+    marginLeft: wp(10),
+  },
+  amountText: {
+    color: "#fff",
+    width: wp(10),
+    textAlign: "center",
+    marginHorizontal: wp(5),
+  },
+  amountText1: {
+    color: "#fff",
+    width: wp(10),
+    marginHorizontal: wp(5),
+    textAlign: "center",
+  },
+
+  infoIcon: {
+    alignSelf: "flex-end",
+    position: "absolute",
+    // left:10,
+    top: -8,
+    right: 5,
+  },
+  seeBidStyle: {
+    flexDirection: "row",
+    width: wp(20),
   },
 });
 
@@ -495,7 +653,7 @@ const styles = StyleSheet.create({
 //   setPressed,
 // }) => {
 //   const [open, setOpen] = useState(false);
-  
+
 //   return (
 //     <ScrollView contentContainerStyle={styles.tableContainer}>
 //       <LinearGradient

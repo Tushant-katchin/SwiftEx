@@ -21,6 +21,7 @@ import { ShowToast } from "../../../../reusables/Toasts";
 import SnackBar from 'react-native-snackbar-component'
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const UpdateBidModal = ({ bid, getBids, setSnackbarVisible, setPaymentUrl }) => {
   const [modalMessage, setModalMessage] = useState("");
@@ -401,6 +402,7 @@ export const BidsListView = ({ bids, getBids}) => {
           </ScrollView>
            <SeeTransactions/>
         </DataTable>
+        
       </>
     )
   );
@@ -411,6 +413,7 @@ const styles = StyleSheet.create({
     width: wp(100),
     height: hp(50),
     color: "black",
+    backgroundColor:"red",
     paddingBottom: wp(5),
   },
   container2: {
