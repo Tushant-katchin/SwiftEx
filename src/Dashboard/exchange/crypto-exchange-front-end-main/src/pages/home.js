@@ -14,7 +14,7 @@ import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { BidsListView } from "../components/bidsListView";
 
-export const HomeView = ({setPressed}) => {
+export const HomeView = ({ setPressed }) => {
   const state = useSelector((state) => state);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState();
@@ -130,27 +130,35 @@ export const HomeView = ({setPressed}) => {
     <>
       <View style={styles.container}>
         <View style={styles.container}>
-          {message ? <Text>{message}</Text> : <Text>No Messages!</Text>}
+          {message ? (
+            <Text style={{ color: "#fff" }}>{message}</Text>
+          ) : (
+            <Text style={{ color: "#fff" }}>No Messages!</Text>
+          )}
         </View>
         <View style={styles.container}>
           {state.wallet ? (
             <View>
-              <Text>Wallet Connected</Text>
-              <Text>{state.wallet.address}</Text>
+              <Text style={{ color: "#fff" }}>Wallet Connected</Text>
+
+              <Text style={{ color: "#fff" }}>{state.wallet.address}</Text>
             </View>
           ) : (
-            <Text>Please select a wallet first!</Text>
+            <Text style={{ color: "#fff" }}>Please select a wallet first!</Text>
           )}
         </View>
         {walletType === "Ethereum" || walletType === "Multi-coin" ? (
-          <Text>{walletType} Wallet Connected</Text>
-          ) : (
-          <Text>Only Ethereum and Multi-coin based wallets are supported.</Text>
+          <Text style={{ color: "#fff" }}>{walletType} Wallet Connected</Text>
+        ) : (
+          <Text style={{ color: "#fff" }}>
+            Only Ethereum and Multi-coin based wallets are supported.
+          </Text>
         )}
-        <Text style={styles.container}>Actions</Text>
+        <Text style={{ color: "#fff" }}>Actions</Text>
         {profile && (
           <View style={styles.container}>
             <FieldView
+              style={{ color: "#fff" }}
               title="KYC Status"
               value={profile.isVerified}
               applyForKyc={applyForKyc}
@@ -163,7 +171,10 @@ export const HomeView = ({setPressed}) => {
                     title="offer"
                     color={"green"}
                     onPress={() => {
-                      if (walletType === "Ethereum" || walletType==="Multi-coin" ) {
+                      if (
+                        walletType === "Ethereum" ||
+                        walletType === "Multi-coin"
+                      ) {
                         setOpen(true);
                       } else {
                         alert("Only Ethereum wallet are supported");
@@ -178,7 +189,9 @@ export const HomeView = ({setPressed}) => {
                   />
                 </>
               ) : (
-                <Text>Please do KYC to start adding offers</Text>
+                <Text style={{ color: "#fff" }}>
+                  Please do KYC to start adding offers
+                </Text>
               )}
             </View>
           </View>
@@ -233,9 +246,9 @@ export const HomeView = ({setPressed}) => {
               backgroundColor: "white",
             }}
           >
-            <Text>Your Bids</Text>
+            <Text style={{ color: "#fff" }}>Your Bids</Text>
             {bids && profile && (
-              <BidsListView bids={bids} getBids={getBidsData}  />
+              <BidsListView bids={bids} getBids={getBidsData} />
             )}
           </View>
         )}
@@ -249,7 +262,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
-    backgroundColor:'white'
+    backgroundColor: "#131E3A",
   },
   container2: {
     display: "flex",

@@ -171,7 +171,7 @@ export const ExchangeRegister = (props) => {
                 placeholder={
                   state.wallet ? state.wallet.address : "Wallet address"
                 }
-                disabled={true}
+                // disabled={true}
                 onChangeText={(text) =>
                   setFormContent({ ...formContent, walletAddress: text })
                 }

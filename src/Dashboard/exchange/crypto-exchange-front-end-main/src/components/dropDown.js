@@ -27,6 +27,7 @@ export const DropDown = ({
   dropdownStyle,
   newOffer,
   handleChange,
+  placeholderTextStyle
 }) => {
   const state = useSelector((state) => state);
   const [value, setValue] = useState(null);
@@ -51,7 +52,7 @@ export const DropDown = ({
           dropdownStyle,
           isFocus && { borderColor: "blue" },
         ]}
-        placeholderStyle={styles.placeholderStyle}
+        placeholderStyle={[styles.placeholderStyle,placeholderTextStyle]}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}

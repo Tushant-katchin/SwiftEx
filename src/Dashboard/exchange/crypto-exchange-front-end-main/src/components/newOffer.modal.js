@@ -660,24 +660,24 @@
 //   );
 // };
 
-// const styles = StyleSheet.create({
-//   input: {
-//     height: hp("5%"),
-//     marginBottom: hp("2"),
-//     color: "#fff",
-//     marginTop: hp("1"),
-//     width: wp("60"),
-//     backgroundColor: "#131E3A",
-//   },
-//   content: {
-//     display: "flex",
-//     alignItems: "center",
+//  const styles = StyleSheet.create({
+//    input: {
+//      height: hp("5%"),
+//      marginBottom: hp("2"),
+//      color: "#fff",
+//      marginTop: hp("1"),
+//      width: wp("60"),
+//      backgroundColor: "#131E3A",
+//    },
+//    content: {
+//      display: "flex",
+//      alignItems: "center",
 //     textAlign: "center",
 //     justifyContent: "space-evenly",
-//     marginTop: hp("1"),
+//      marginTop: hp("1"),
 //     color: "white",
-//   },
-// });
+//    },
+//  });
 /*
 <Text>Enter Price</Text>
             <TextInput
@@ -693,6 +693,8 @@
               placeholderTextColor="#FFF"
             />
 */
+
+
 
 import { useEffect, useState, useMemo } from "react";
 import { authRequest, GET, POST } from "../api";
@@ -727,6 +729,7 @@ import { getEthTokenBalance } from "../../../../../utilities/web3utilities";
 import { DAI, USDT, WBTC } from "../utils/assetAddress";
 import { useToast } from "native-base";
 import { ShowToast } from "../../../../reusables/Toasts";
+import { LinearGradient } from "expo-linear-gradient";
 
 const _getAssetsOptions = (assetsList) =>
   assetsList.map(({ name }) => ({ label: name, value: name }));
@@ -1178,7 +1181,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       animationOut="slideOutRight"
       animationInTiming={100}
       animationOutTiming={200}
-      isVisible={true}
+      isVisible={false}
       useNativeDriver={true}
       useNativeDriverForBackdrop={true}
       backdropTransitionOutTiming={0}
@@ -1193,13 +1196,12 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
     >
       <View
         style={{
-          height: hp(95),
+          height: hp(88),
           width: wp(90),
-          backgroundColor: "red",
-          borderTopRightRadius: 10,
-          borderTopLeftRadius: 10,
+          backgroundColor: "#131E3A",
+         borderRadius:10,
           display: "flex",
-          alignItems: "center",
+          // alignItems: "center",
         }}
       >
         <View
@@ -1244,7 +1246,6 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
             style={{
               display: "flex",
               alignItems: "center",
-              marginTop: hp(2),
             }}
           >
             <View style={styles.dropdownContainer}>
@@ -1252,6 +1253,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
                 <Text style={styles.assetText}>Enter Asset Amount</Text>
                 <DropDown
                   dropdownStyle={styles.dropdownText}
+                  placeholderTextStyle={{ color: "white" }}
                   Title="0.01 ASI"
                   dropdownData={assetsOptions}
                   setNewOffer={setNewOffer}
@@ -1263,6 +1265,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
                 <Text style={styles.currencyText}>Select Curency</Text>
 
                 <DropDown
+                  placeholderTextStyle={{ color: "white" }}
                   dropdownStyle={styles.dropdownText}
                   Title="INR"
                   dropdownData={currencyOptions}
@@ -1277,61 +1280,61 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           <View
             style={{
               display: "flex",
-              alignItems: "center",
             }}
           >
-            <Text style={styles.unitText}>Enter Unit Price</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              theme={{ colors: { text: "white" } }}
-              value={newOffer.amount}
-              placeholder="Amount"
-              onChangeText={async (text) => {
-                setNewOffer({
-                  amount: text,
-                });
-                const type = "amount";
-                await handleChange(text, type);
-              }}
-              autoCapitalize={"none"}
-              placeholderTextColor="#FFF"
-            />
+            <View style={styles.inputContainer}>
+              <Text style={styles.unitText}>Enter Unit Price</Text>
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                // theme={{ colors: { text: "white" } }}
+                value={newOffer.amount}
+                placeholder="1,00,000"
+                onChangeText={async (text) => {
+                  setNewOffer({
+                    amount: text,
+                  });
+                  const type = "amount";
+                  await handleChange(text, type);
+                }}
+                autoCapitalize={"none"}
+                // placeholderTextColor="#FFF"
+              />
+            </View>
+            <Text style={styles.priceMsg}>
+              0.001 Eth for 1,00,000 INR Unit Price!
+            </Text>
           </View>
         </View>
 
         <View
           style={{
             display: "flex",
-            alignItems: "center",
+            alignSelf:"center",
             marginTop: hp(2),
           }}
         >
-          <Text>Balance: {balance}</Text>
-          <Text>Subtotal Payable:</Text>
-          <Text>
-            {breakDowns.subTotal}
-            {newOffer.currencyName}
-          </Text>
-          <View
-            style={{
-              display: "flex",
-              alignItems: "center",
-              alignContent: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>Transaction Fee:</Text>
+          <Text style={styles.balance}>Balance: {balance}</Text>
+          <View style={styles.subTotal}>
+            <Text style={styles.textColor}>Subtotal:</Text>
+
+            <Text style={styles.textColor}>
+              {breakDowns.subTotal}
+              {newOffer.currencyName} {'INR'}
+            </Text>
+          </View>
+          <View style={styles.subTotal}>
+            <Text style={styles.transactionColor}>Transaction Fee:</Text>
             {isRefetchingTxFee ? (
               <View>
                 <ActivityIndicator color={"blue"} size={"large"} />
               </View>
             ) : (
               <View>
-                <Text>{txFeeInUsd / 2} USD</Text>
+                <Text style={styles.textColor}>{txFeeInUsd / 2} USD</Text>
                 {breakDowns.convertedTxFee && (
                   <View>
-                    <Text>
+                    <Text style={styles.textColor}>
                       {" "}
                       {breakDowns.convertedTxFee}
                       {newOffer.currencyName}
@@ -1341,33 +1344,47 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
               </View>
             )}
           </View>
-          <Text>Total Payable Price:</Text>
-          <Text>
-            {breakDowns.finalPayable.toFixed(2)} {newOffer.currencyName}
-          </Text>
-          <Text>
-            Note: The above totals are just estimations that can vary depending
-            on currency rates.
-          </Text>
+          <View style={styles.paybleContainer}>
+            <Text style={styles.textColor}>Total:</Text>
+            <Text style={styles.textColor}>
+              {breakDowns.finalPayable.toFixed(2)} {newOffer.currencyName} {'INR'}
+            </Text>
+          </View>
         </View>
-        <View>
+        <View style={styles.Buttons}>
           <View>
-            <Button
-              title="Submit"
+            <LinearGradient 
+            style={styles.confirmButton}
+            start={[1,0]}
+            end={[0,1]}
+            colors={["rgba(70, 169, 234, 1)","rgba(185, 116, 235, 1)"]}>
+            <TouchableOpacity
               disabled={disable}
               onPress={handleSubmit}
               color="green"
-            />
+            >
+              <Text style={styles.textColor}>Confirm</Text>
+            </TouchableOpacity>
+            </LinearGradient>
+           
           </View>
           {loading ? (
             <ActivityIndicator size="small" color="blue" />
           ) : (
             <View></View>
           )}
-          <View style={{ marginTop: hp(1) }}>
-            <Button title="Cancel" color="red" onPress={() => setOpen(false)} />
+          <View>
+            <TouchableOpacity  
+            style={styles.cancelButton}
+             onPress={() => setOpen(false)} >
+              <Text  style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
+        <Text style={styles.noteText}>
+         <Text style={{fontWeight:"700"}}>Note:</Text>  The above totals are just estimations that can vary depending on
+          currency rates.
+        </Text>
       </View>
       {txLink && (
         <View>
@@ -1382,10 +1399,9 @@ const styles = StyleSheet.create({
   input: {
     height: hp("5%"),
     marginBottom: hp("2"),
-    color: "#fff",
     marginTop: hp("1"),
-    width: wp("60"),
-    backgroundColor: "#131E3A",
+    borderBottomWidth: 1,
+    width: wp(50),
   },
   content: {
     display: "flex",
@@ -1400,31 +1416,93 @@ const styles = StyleSheet.create({
     fontSize: hp(3),
     borderRadius: 0,
     borderWidth: 0,
+    marginVertical:hp(2)
   },
   assetText: {
     color: "#fff",
-    fontSize:hp(2),
-    width:wp(20)
+    fontSize: hp(2),
+    width: wp(20),
   },
-  currencyText:{
+  currencyText: {
     color: "#fff",
-    fontSize:hp(2),
-    
+    fontSize: hp(2),
   },
   dropdownText: {
     width: wp(28),
-    borderColor:"#407EC9",
-    borderBottomWidth:StyleSheet.hairlineWidth*1
+    borderColor: "#407EC9",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
   },
   dropdownContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(70),
   },
-  unitText:{
-    color:"#fff",
-    fontSize:hp(2),
-    marginTop:hp(3)
+  unitText: {
+    color: "#fff",
+    fontSize: hp(2),
+    marginTop: hp(3),
+  },
+  inputContainer: {
+    marginRight: wp(20),
+  },
+  priceMsg: {
+    color: "#fff",
+  },
+  subTotal: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(60),
+    marginTop:hp(1)
+  },
+  balance: {
+    color: "#fff",
+    textAlign:"center",
+    marginVertical:hp(2)
+  },
+  textColor: {
+    color: "#fff",
+  },
+  noteText: {
+    color: "#fff",
+    marginVertical: hp(5),
+    marginHorizontal: wp(17),
+    width:wp(56)
+  },
+  confirmButton:{
+    alignItems:"center",
+    width:wp(23),
+    paddingVertical:hp(0.7),
+    borderRadius:6
+  },
+  cancelButton:{
+    alignItems:"center",
+    borderWidth:StyleSheet.hairlineWidth*1,
+    borderColor:"#EA979A",
+    width:wp(23),
+    paddingVertical:hp(0.7),
+    borderRadius:6
 
+  },
+  paybleContainer:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(60),
+    marginTop:hp(4)
+  },
+  Buttons:{
+    flexDirection:"row",
+    alignItems:"center",
+    marginTop:hp(3),
+    justifyContent:"space-between",
+    alignSelf:"center",
+    width:wp(58)
+  },
+  cancelText:{
+    color:"#EA979A"
+  },
+  transactionColor:{
+    color:"#fff",
+    // marginHorizontal:wp(10)
   }
+ 
 });

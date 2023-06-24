@@ -104,7 +104,7 @@ export const OfferBidsView = ({ offer, self = false , setChange}) => {
     <View >
        
         <TouchableOpacity
-         style={{width:wp(15), height:hp(3), backgroundColor:'blue', borderRadius:10, alignItems:'center'}}
+         style={{width:wp(15), height:hp(3), backgroundColor:'#33B3EA', borderRadius:7, alignItems:'center',justifyContent:"center"}}
          onPress={handleOpen}
          >
          <Text style={{fontSize:13, color:'white'}}>See Bids</Text> 

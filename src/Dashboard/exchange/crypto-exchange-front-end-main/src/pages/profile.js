@@ -379,6 +379,13 @@
 //   },
 // });
 
+
+
+
+
+
+
+
 import React from "react";
 import { useEffect, useState } from "react";
 import { authRequest, GET, POST } from "../api";
@@ -456,9 +463,9 @@ export const FieldView = ({
     <View>
       {type === "kyc" ? (
         <>
-          <Text>KYC STATUS {value === false ? "FALSE" : "true"}</Text>
+          <Text style={{color:"#fff"}}>KYC STATUS {value === false ? "FALSE" : "true"}</Text>
           {value === true ? (
-            <Text>KYC Done</Text>
+            <Text style={{color:"#fff"}}>KYC Done</Text>
           ) : (
             <Button
               title="apply"
