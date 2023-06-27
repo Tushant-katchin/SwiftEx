@@ -59,13 +59,17 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="ExchangeHeader"
+      // initialRouteName="ExchangeNavigation"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
-      
+       {/* <Stack.Screen
+        name="ExchangeNavigation"
+        component={ExchangeNavigation}
+        options={{ headerShown: false }}
+      />  */}
      
           {/* <Stack.Screen
         name="ScoringTopTab"

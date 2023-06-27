@@ -244,6 +244,7 @@ const UpdateBidModal = ({
   );
 };
 
+
 export const BidsListView = ({ bids, getBids }) => {
   const [message, setMessage] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);

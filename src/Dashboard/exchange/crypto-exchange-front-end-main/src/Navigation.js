@@ -89,7 +89,10 @@ export function ExchangeNavigation() {
         name="TransactionsListView"
         component={TransactionView}
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeader />;
+          },
           //Tab bar styles can be added here
         }}
       />

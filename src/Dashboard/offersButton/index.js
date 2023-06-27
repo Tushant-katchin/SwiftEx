@@ -6,12 +6,23 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
 
 const OffersButton = (props) => {
-  const { onPress, value = "Bid" | "My Offers", jumpTo,onPressBid,onPressOffer,firstColor,secondColor} = props;
-  const navigation= useNavigation()
-
+  const {
+    onPress,
+    value = "Bid" | "My Offers",
+    jumpTo,
+    onPressBid,
+    onPressOffer,
+    firstColor,
+    secondColor,
+    title1 = "Bid",
+    title2 = "My Offers",
+    textStyle2,
+    textStyle1,
+  } = props;
+  const navigation = useNavigation();
 
   const [offers, setOffers] = useState(value ? value : "Bid");
 
@@ -19,7 +30,7 @@ const OffersButton = (props) => {
     <View style={[styles.toggleContainer]}>
       <LinearGradient
         colors={firstColor}
-        style={{borderRadius:5}}
+        style={{ borderRadius: 5 }}
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 1 }}
       >
@@ -31,29 +42,16 @@ const OffersButton = (props) => {
           ]}
           onPress={onPressBid}
         >
-          <Text
-            style={[offers == "Bid" ? { color: "#fff" } : { color: "#407EC9" }]}
-          >
-            Bid
-          </Text>
+          <Text style={[textStyle1]}>{title1}</Text>
         </TouchableOpacity>
       </LinearGradient>
-      <LinearGradient
-        colors={secondColor}
-        
-      >
+      <LinearGradient colors={secondColor}>
         <TouchableOpacity
           activeOpacity={0.8}
           style={[styles.toggleBtn2]}
           onPress={onPressOffer}
         >
-          <Text
-            style={[
-              offers == "My Offers" ? { color: "#fff" } : { color: "#407EC9" },
-            ]}
-          >
-            My Offers
-          </Text>
+          <Text style={[textStyle2]}>{title2}</Text>
         </TouchableOpacity>
       </LinearGradient>
     </View>
@@ -66,7 +64,7 @@ const styles = StyleSheet.create({
     borderColor: "#407EC9",
     borderWidth: StyleSheet.hairlineWidth * 1,
     flexDirection: "row",
-    borderRadius:5
+    borderRadius: 5,
   },
   toggleBtn: {
     width: wp(43),
@@ -86,7 +84,3 @@ const styles = StyleSheet.create({
   },
 });
 export default OffersButton;
-
-
-
-

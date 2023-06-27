@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import darkBlue from "../../../../../../assets/darkBlue.png";
 import { authRequest, GET, POST } from "../api";
 import { NewOfferModal } from "../components/newOffer.modal";
 import { FieldView } from "./profile";
@@ -149,10 +150,12 @@ export const HomeView = ({ setPressed }) => {
   return (
     <ScrollView
       contentContainerStyle={{
-        paddingBottom: hp(15),
+        // paddingBottom: hp(2),
         backgroundColor: "#131E3A",
       }}
     >
+      <Image source={darkBlue} style={styles.logoImg} />
+
       <View style={styles.container}>
         <LinearGradient
           start={[1, 0]}
@@ -215,11 +218,11 @@ export const HomeView = ({ setPressed }) => {
             Only Ethereum and Multi-coin based wallets are supported.
           </Text>
         )}
-        <Text style={styles.whiteColor}>Actions</Text>
+        <Text style={styles.actionText}>Actions</Text>
         {profile && (
           <View>
             <FieldView
-              style={styles.whiteColor}
+              style={{color:"#fff"}}
               title="KYC Status"
               value={profile.isVerified}
               applyForKyc={applyForKyc}
@@ -258,7 +261,7 @@ export const HomeView = ({ setPressed }) => {
                   />
                 </>
               ) : (
-                <Text style={styles.whiteColor}>
+                <Text style={styles.kycText}>
                   Please do KYC to start adding offers
                 </Text>
               )}
@@ -348,7 +351,7 @@ export const HomeView = ({ setPressed }) => {
               alignItems: "center",
             }}
           >
-            <Text style={styles.whiteColor}>My Bids</Text>
+            <Text style={styles.bidText}>My Bids</Text>
             {bids && profile && (
               <BidsListView bids={bids} getBids={getBidsData} />
             )}
@@ -370,9 +373,8 @@ const styles = StyleSheet.create({
   },
   linearContainer: {
     width: wp(90),
-    marginVertical: hp(2),
     padding: hp(2),
-    paddingVertical: hp(4),
+    paddingVertical: hp(3),
     borderRadius: hp(2),
   },
   textColor: {
@@ -439,6 +441,8 @@ const styles = StyleSheet.create({
   },
   whiteColor: {
     color: "#fff",
+    marginVertical:hp(2),
+    width:wp(80)
   },
   toggleContainer: {
     alignSelf: "center",
@@ -465,6 +469,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
   },
+  logoImg: {
+    height: hp("15"),
+    width: wp("15"),
+    alignSelf: "center",
+  },
+  actionText:{
+    color:"#fff",
+    marginBottom:hp(2)
+  },
+  kycText:{
+    color:"#fff",
+    marginTop:hp(2)
+  },
+  bidText:{
+    color:"#fff"
+  }
 });
 
 /*

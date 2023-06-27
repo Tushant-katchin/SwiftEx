@@ -44,6 +44,7 @@
 // };
 
 // export const FieldView = ({
+//   fieldViewStyle,
 //   title,
 //   value,
 //   type,
@@ -51,10 +52,41 @@
 //   disabled = true,
 // }) => {
 //   return (
+//     // <>
+//     //    {type === "kyc" && value == true ? (
+//     //     <>
+//     //       <View style={styles.idCardContainer}>
+//     //         <View style={styles.walletContainer}>
+//     //           <Text style={styles.idtext}>Identity Status</Text>
+//     //           <Image source={idCard} style={styles.idcardImg} />
+//     //         </View>
+//     //         <View style={styles.walletContainer}>
+//     //           <Icon
+//     //             name={"check-outline"}
+//     //             type={"materialCommunity"}
+//     //             color={"#008C62"}
+//     //             style={styles.checkImg}
+//     //           />
+//     //           <Text style={styles.connectedText}>Verified!</Text>
+//     //         </View>
+//     //       </View>
+//     //       <Text style={styles.readyText}>You are ready to</Text>
+//     //     </>
+//     //   ) : (
+//     //     <Button
+//     //       title="apply"
+//     //       onPress={() => {
+//     //         applyForKyc();
+//     //       }}
+//     //     />
+//     //   )}
+//     // </>
 //     <View>
 //       {type === "kyc" ? (
 //         <>
-//           <Text>KYC STATUS {value === false ? "FALSE" : "true"}</Text>
+//           <Text style={{ color: "#fff", textAlign: "center" }}>
+//             KYC STATUS {value === false ? "FALSE" : "true"}
+//           </Text>
 //           {value === true ? (
 //             <Text>KYC Done</Text>
 //           ) : (
@@ -173,7 +205,7 @@
 //           display: "flex",
 //           alignContent: "center",
 //           alignItems: "center",
-//           backgroundColor:'white'
+//           backgroundColor: "white",
 //         }}
 //       >
 //         {type === "email" ? (
@@ -207,43 +239,38 @@
 //           onChangeText={(text) => {
 //             // onChange(text)
 //             handleEmailChange(text);
-
 //           }}
 //           autoCapitalize={"none"}
 //           placeholderTextColor="#FFF"
 //         />
-//         <OutlinedInput
-//           EndAdornment={VerifyActionButtonView}
-//           type="email"
-//         />
+//         <OutlinedInput EndAdornment={VerifyActionButtonView} type="email" />
 //       </View>
 //       {verificationStatus === VERIFICATION_STATUS.OTP_SENT && (
 //         <View>
-//         <TextInput
-//         style={styles.input}
-//         theme={{ colors: { text: "white" } }}
-//         value={otp}
-//         placeholder={email}
-//         onChangeText={(text) => {
-//           // onChange(text)
-//           handleOtpChange(text);
-
-//         }}
-//         autoCapitalize={"none"}
-//         placeholderTextColor="#FFF"
-//       />
-//         <OutlinedInput
-//           EndAdornment={
-//             isOtpSubmiting ? (
-//               <ActivityIndicator size={"small"} color={"blue"} />
-//             ) : (
-//               <Button title="Submit" onPress={submitOtp}>
-//                 submit
-//               </Button>
-//             )
-//           }
-//           type="otp"
-//         />
+//           <TextInput
+//             style={styles.input}
+//             theme={{ colors: { text: "white" } }}
+//             value={otp}
+//             placeholder={email}
+//             onChangeText={(text) => {
+//               // onChange(text)
+//               handleOtpChange(text);
+//             }}
+//             autoCapitalize={"none"}
+//             placeholderTextColor="#FFF"
+//           />
+//           <OutlinedInput
+//             EndAdornment={
+//               isOtpSubmiting ? (
+//                 <ActivityIndicator size={"small"} color={"blue"} />
+//               ) : (
+//                 <Button title="Submit" onPress={submitOtp}>
+//                   submit
+//                 </Button>
+//               )
+//             }
+//             type="otp"
+//           />
 //         </View>
 //       )}
 //       <Text style={{ color: "red" }}>{message}</Text>
@@ -298,7 +325,7 @@
 //       <Text>{message}</Text>
 
 //       <View style={styles.fieldView}>
-//         <View style={{ marginRight: 130, marginLeft: -50 }}>
+//         <View style={{ color: "pink" }}>
 //           <FieldView title="First Name" value={profile.firstName} />
 //         </View>
 //         <FieldView title="Last Name" value={profile.lastName} />
@@ -354,13 +381,11 @@
 //     margin: 20,
 //   },
 //   content: {
-//     display: "flex",
-//     alignContent: "center",
+//     backgroundColor: "#fff",
 //     alignItems: "center",
 //     textAlign: "center",
 //     height: hp(100),
-//     width:wp(100),
-//     backgroundColor:'white'
+//     width: wp(100),
 //   },
 //   fieldView: {
 //     display: "flex",

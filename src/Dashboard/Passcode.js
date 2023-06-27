@@ -11,7 +11,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import title_icon from "../../assets/title_icon.png";
+import darkBlue from "../../assets/darkBlue.png";
 
 import { Animated } from "react-native";
 import ReactNativePinView from "react-native-pin-view";
@@ -134,13 +134,13 @@ const Passcode = (props) => {
       <View style={style.Body}>
          <Animated.Image
           style={{
-            width: wp("5"),
-            height: hp("5"),
+            width: wp("15"),
+            height: hp("15"),
             padding: 30,
             marginTop: hp(2),
             transform: [{ rotate: SpinValue }],
           }}
-          source={title_icon}
+          source={darkBlue}
         /> 
         {/* <Text style={style.welcomeText}> Hi,</Text> */}
         <Text style={style.welcomeText}>
@@ -332,7 +332,7 @@ const style = StyleSheet.create({
     fontSize: 20,
     fontWeight: "200",
     color: "#fff",
-    marginTop: hp(5),
+    marginTop: hp(2),
   },
   welcomeText2: {
     fontSize: 20,

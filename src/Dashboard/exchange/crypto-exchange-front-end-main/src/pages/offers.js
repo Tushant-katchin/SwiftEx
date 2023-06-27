@@ -372,10 +372,13 @@ export const OfferView = () => {
 
   return (
     <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
+      <Text style={styles.offersText}>Offers</Text>
       <OffersButton
         onPressBid={() => {
           setRoute("BID");
         }}
+        textStyle1={route == "BID" ? { color: "#fff" } : { color: "#5D9EEA" }}
+        textStyle2={route != "BID" ? { color: "#fff" } : { color: "#5D9EEA" }}
         firstColor={route == "BID" ? activeColor : inActiveColor}
         secondColor={route != "BID" ? activeColor : inActiveColor}
         onPressOffer={() => {
@@ -526,6 +529,12 @@ const styles = StyleSheet.create({
   seeBidStyle: {
     flexDirection: "row",
     width: wp(20),
+  },
+  offersText: {
+    color: "#fff",
+    textAlign: "center",
+    marginTop: hp(2),
+    fontSize: hp(2.1),
   },
 });
 

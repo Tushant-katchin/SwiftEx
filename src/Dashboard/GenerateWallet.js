@@ -12,7 +12,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
-import title_icon from "../../assets/title_icon.png";
+import darkBlue from "../../assets/darkBlue.png";
 import { useDispatch, useSelector } from "react-redux";
 import { Generate_Wallet2 } from "../components/Redux/actions/auth";
 
@@ -51,12 +51,12 @@ const GenerateWallet = (props) => {
       <View style={style.Body}>
         <Animated.Image
           style={{
-            width: wp("5"),
-            height: hp("5"),
+            width: wp("15"),
+            height: hp("15"),
             padding: 30,
             marginTop: hp(10),
           }}
-          source={title_icon}
+          source={darkBlue}
         />
 
         <Text style={style.welcomeText}> Back up you wallet now </Text>
