@@ -45,11 +45,7 @@ import Nfts from "../Dashboard/Nfts";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
-import { ProfileView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/profile";
-import { BidsListView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/bidsListView";
 import { OfferListView, OfferListViewHome, OfferView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
-import { NewOfferModal } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/newOffer.modal";
-import { ExchangeHeader } from "../Dashboard/header";
 
 const Stack = createNativeStackNavigator();
 
@@ -65,11 +61,11 @@ const AuthStack = () => (
         animation: "slide_from_right",
       }}
     >
-       {/* <Stack.Screen
+        {/* <Stack.Screen
         name="ExchangeNavigation"
         component={ExchangeNavigation}
         options={{ headerShown: false }}
-      />  */}
+      />    */}
      
           {/* <Stack.Screen
         name="ScoringTopTab"

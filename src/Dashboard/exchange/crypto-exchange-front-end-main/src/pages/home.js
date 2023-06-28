@@ -150,11 +150,10 @@ export const HomeView = ({ setPressed }) => {
   return (
     <ScrollView
       contentContainerStyle={{
-        // paddingBottom: hp(2),
+        paddingBottom: hp(20),
         backgroundColor: "#131E3A",
       }}
     >
-      <Image source={darkBlue} style={styles.logoImg} />
 
       <View style={styles.container}>
         <LinearGradient
@@ -249,7 +248,7 @@ export const HomeView = ({ setPressed }) => {
                         }
                       }}
                     >
-                      <Text style={styles.whiteColor}>Bid On Offers!</Text>
+                      <Text style={{color:"#fff"}}>Bid On Offers!</Text>
                     </TouchableOpacity>
                   </LinearGradient>
 
@@ -376,6 +375,7 @@ const styles = StyleSheet.create({
     padding: hp(2),
     paddingVertical: hp(3),
     borderRadius: hp(2),
+    marginTop:hp(3)
   },
   textColor: {
     color: "black",

@@ -11,7 +11,7 @@ import { OfferView } from "./pages/offers";
 import { TransactionsListView } from "./pages/transaction";
 import { AccountView } from "./pages/account";
 import { TransactionView } from "./pages/transaction";
-import { ExchangeHeader } from "../../../header";
+import { ExchangeHeader, ExchangeHeaderIcon } from "../../../header";
 const Tab = createBottomTabNavigator();
 
 export function ExchangeNavigation() {
@@ -71,7 +71,7 @@ export function ExchangeNavigation() {
           tabBarLabel: "Home",
           headerShown: true,
           header: () => {
-            return <ExchangeHeader />;
+            return <ExchangeHeaderIcon />;
           },
         }}
       />
@@ -107,7 +107,10 @@ export function ExchangeNavigation() {
         name="profile"
         component={ProfileView}
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeader />;
+          }
         }}
       />
     </Tab.Navigator>

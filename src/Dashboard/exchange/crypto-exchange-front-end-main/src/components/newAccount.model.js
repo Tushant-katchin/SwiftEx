@@ -751,7 +751,7 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,onPress }) => {
         <View style={styles.modalmainContainer}>
         <LinearGradient
           start={[1, 0]}
-          style={{ borderRadius: 20 }}
+          style={{ borderRadius: 20 ,width:wp(92),alignSelf:"center"}}
           end={[0, 1]}
           colors={["rgba(22, 19, 107, 1)", "rgba(210, 88, 150, 1)"]}
         >

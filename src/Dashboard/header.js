@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import Icon from "../icon";
 import {
@@ -8,9 +8,9 @@ import {
 import IconWithCircle from "../Screens/iconwithCircle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import darkBlue from "../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 export const ProfileHeader = () => {
-
   return (
     <View style={styles.mainContainer}>
       <View style={styles.iconContainer}>
@@ -68,7 +68,9 @@ export const ExchangeHeader = () => {
 
   return (
     <View style={styles.headerContainer}>
-      <Icon name={"left"} type={"antDesign"} size={20} color={"#fff"} />
+      <Icon name={"left"} type={"antDesign"} size={20} color={"#fff"} onPress={() => {
+          navigation.goBack();
+        }}/>
       <Text style={{ color: "#fff", fontWeight: "700" }}>Exchange</Text>
       <View style={{ alignItems: "center" }}>
         <Icon
@@ -76,7 +78,40 @@ export const ExchangeHeader = () => {
           type={"materialCommunity"}
           size={20}
           color={"#E96A6A"}
+          onPress={() => {
+            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+            AsyncStorage.removeItem(LOCAL_TOKEN);
+            navigation.navigate("Settings");
+          }}
+        />
+        <Text style={{ color: "#E96A6A" }}>Logout</Text>
+      </View>
+    </View>
+  );
+};
 
+export const ExchangeHeaderIcon = () => {
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.headerContainer}>
+      <Icon
+        name={"left"}
+        type={"antDesign"}
+        size={20}
+        color={"#fff"}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+      <Image source={darkBlue} style={styles.logoImg} />
+      {/* <Text style={{ color: "#fff", fontWeight: "700" }}>Exchange</Text> */}
+      <View style={{ alignItems: "center" }}>
+        <Icon
+          name={"logout"}
+          type={"materialCommunity"}
+          size={20}
+          color={"#E96A6A"}
           onPress={() => {
             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
             AsyncStorage.removeItem(LOCAL_TOKEN);
@@ -160,5 +195,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: wp(100),
     paddingHorizontal: wp(5),
+  },
+  logoImg: {
+    height: hp("13"),
+    width: wp("13"),
   },
 });
