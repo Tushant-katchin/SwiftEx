@@ -10,6 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import darkBlue from "../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
+import { width } from "@mui/system";
 export const ProfileHeader = () => {
   return (
     <View style={styles.mainContainer}>
@@ -68,9 +69,15 @@ export const ExchangeHeader = () => {
 
   return (
     <View style={styles.headerContainer}>
-      <Icon name={"left"} type={"antDesign"} size={20} color={"#fff"} onPress={() => {
+      <Icon
+        name={"left"}
+        type={"antDesign"}
+        size={20}
+        color={"#fff"}
+        onPress={() => {
           navigation.goBack();
-        }}/>
+        }}
+      />
       <Text style={{ color: "#fff", fontWeight: "700" }}>Exchange</Text>
       <View style={{ alignItems: "center" }}>
         <Icon
@@ -94,7 +101,7 @@ export const ExchangeHeaderIcon = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.headerContainer}>
+    <View style={styles.headerContainer1}>
       <Icon
         name={"left"}
         type={"antDesign"}
@@ -105,21 +112,29 @@ export const ExchangeHeaderIcon = () => {
         }}
       />
       <Image source={darkBlue} style={styles.logoImg} />
-      {/* <Text style={{ color: "#fff", fontWeight: "700" }}>Exchange</Text> */}
-      <View style={{ alignItems: "center" }}>
-        <Icon
-          name={"logout"}
-          type={"materialCommunity"}
-          size={20}
-          color={"#E96A6A"}
-          onPress={() => {
-            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            AsyncStorage.removeItem(LOCAL_TOKEN);
-            navigation.navigate("Settings");
-          }}
-        />
-        <Text style={{ color: "#E96A6A" }}>Logout</Text>
+      <View style={{flexDirection:"row",alignItems:"center"}}>
+      <View style={{width:wp(50),justifyContent:"space-between",flexDirection:"row",marginLeft:wp(22)}}>
+      <Text style={{ color: "#fff", fontWeight: "700", textAlign: "center" }}>
+          Exchange
+        </Text>
+        <View style={{ alignItems: "center" }}>
+          <Icon
+            name={"logout"}
+            type={"materialCommunity"}
+            size={20}
+            color={"#E96A6A"}
+            onPress={() => {
+              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+              AsyncStorage.removeItem(LOCAL_TOKEN);
+              navigation.navigate("Settings");
+            }}
+          />
+          <Text style={{ color: "#E96A6A" }}>Logout</Text>
+        </View>
+        
       </View>
+      </View>
+        
     </View>
   );
 };
@@ -196,8 +211,19 @@ const styles = StyleSheet.create({
     width: wp(100),
     paddingHorizontal: wp(5),
   },
+  headerContainer1: {
+    backgroundColor: "#131E3A",
+    height: hp(10),
+    // justifyContent:"space-between",
+        alignItems: "center",
+        alignSelf:"center",
+    flexDirection: "row",
+    width: wp(100),
+    paddingHorizontal: wp(3),
+  },
   logoImg: {
-    height: hp("13"),
-    width: wp("13"),
+    height: hp("12"),
+    width: wp("12"),
+    // marginRight:hp(40)
   },
 });
