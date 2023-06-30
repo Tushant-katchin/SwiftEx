@@ -21,9 +21,7 @@ import { CHAIN_ID_TO_SCANNER } from "../web3";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 
-const data = [
-  { one: "0.0ETH", two: "100000", three: "120 INR", four: "Active" },
-];
+
 
 export const OfferListView = ({ self = false, offers, profile, setChange }) => {
   const [open, setOpen] = useState(false);
@@ -59,16 +57,17 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
                   offer.issuer === profile._id && (
                     <>
                       <View key={offer._id}>
-                        <ScrollView key={offer._id}>
-                          <View style={{ flexDirection: "row" }}>
-                            <View key={offer._id}>
-                              <Text>{offer.assetName}</Text>
-                              <Text>{offer.amount}</Text>
-                              <Text>{offer.pricePerUnit}</Text>
-                              <Text>{offer.totalPrice}</Text>
-                              <Text>{offer.currencyName}</Text>
-                              <Text>{offer.status}</Text>
-                            </View>
+                        <ScrollView key={offer._id} style={styles.scrollView}>
+                            <View key={offer._id} style={styles.Table1Container}>
+                              <View>
+                              <Text style={styles.textColor}>{offer.assetName}</Text>
+                              <Text style={styles.textColor}>{offer.amount}</Text>
+                              </View>
+                             
+                              <Text style={styles.textColor}>{offer.pricePerUnit}</Text>
+                              <Text style={styles.textColor}>{offer.totalPrice}</Text>
+                              <Text style={styles.textColor}>{offer.currencyName}</Text>
+                              <Text style={styles.textColor}>{offer.status}</Text>
                           </View>
                         </ScrollView>
                         <OfferBidsView
@@ -163,14 +162,7 @@ export const OfferListViewHome = ({
                         <ScrollView key={offer._id}>
                           <View
                             key={offer._id}
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              width: wp(90),
-                              alignItems: "center",
-                              alignSelf: "center",
-                              marginTop: hp(1),
-                            }}
+                            style={styles.mainDataContainer}
                           >
                             <Text style={styles.textColor}>
                               {offer.assetName}
@@ -205,16 +197,16 @@ export const OfferListViewHome = ({
                   )
                 );
               return (
-                offer.issuer !== profile._id && (
+                data.issuer !== profile._id && (
                   <>
                     <ScrollView style={styles.scrollView}>
-                      <View key={offer._id}>
-                        <Text>{offer.assetName}</Text>
-                        <Text>{offer.amount}</Text>
-                        <Text>{offer.pricePerUnit}</Text>
-                        <Text>{offer.totalPrice}</Text>
-                        <Text>{offer.currencyName}</Text>
-                        <Text>{offer.status}</Text>
+                      <View key={offer._id}  style={styles.mainDataContainer}>
+                        <Text style={styles.textColor}>{offer.assetName}</Text>
+                        <Text style={styles.textColor}>{offer.amount}</Text>
+                        <Text style={styles.textColor}>{offer.pricePerUnit}</Text>
+                        <Text style={styles.textColor}>{offer.totalPrice}</Text>
+                        <Text style={styles.textColor}>{offer.currencyName}</Text>
+                        <Text style={styles.textColor}>{offer.status}</Text>
                       </View>
                       <View style={{ display: "flex", flexDirection: "row" }}>
                         <View style={{ marginLeft: 10, marginBottom: hp(5) }}>
@@ -412,6 +404,14 @@ export const OfferView = () => {
 };
 
 const styles = StyleSheet.create({
+ mainDataContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(90),
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(1),
+  },
   linearStyle: {
     width: wp(95),
     height: hp(61),
