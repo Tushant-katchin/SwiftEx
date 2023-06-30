@@ -351,7 +351,7 @@ export const HomeView = ({ setPressed }) => {
             }}
           >
             <Text style={styles.bidText}>My Bids</Text>
-            {!bids && !profile && (
+            {bids && profile && (
               <BidsListView bids={bids} getBids={getBidsData} />
             )}
           </View>

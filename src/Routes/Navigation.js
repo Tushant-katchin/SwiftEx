@@ -61,11 +61,11 @@ const AuthStack = () => (
         animation: "slide_from_right",
       }}
     >
-         {/* <Stack.Screen
+          {/* <Stack.Screen
         name="ExchangeNavigation"
         component={ExchangeNavigation}
         options={{ headerShown: false }}
-      />     */}
+      />      */}
      
           {/* <Stack.Screen
         name="ScoringTopTab"
