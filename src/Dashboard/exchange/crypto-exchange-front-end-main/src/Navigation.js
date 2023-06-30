@@ -78,7 +78,7 @@ export function ExchangeNavigation() {
         }}
       />
       <Tab.Screen
-        name="TransactionsListView"
+        name="Transactions"
         component={TransactionView}
         options={{
           headerShown: false,
