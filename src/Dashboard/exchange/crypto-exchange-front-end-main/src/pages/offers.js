@@ -1,4 +1,3 @@
-import { LinearProgress } from "@mui/material";
 import OffersButton from "../../../../../Dashboard/offersButton";
 import { useEffect, useState } from "react";
 import { authRequest, GET } from "../api";
@@ -10,7 +9,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
@@ -19,7 +17,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Provider as PaperProvider } from "react-native-paper";
 import { CHAIN_ID_TO_SCANNER } from "../web3";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
@@ -235,6 +232,9 @@ export const OfferListViewHome = ({
           ) : (
             <View>
               <ActivityIndicator size={"large"} color={"white"} />
+              <Text style={{ color: "#fff", marginHorizontal: wp(5) }}>
+                No Offers to show!
+              </Text>
             </View>
           )}
         </ScrollView>
@@ -247,6 +247,10 @@ export const OfferView = () => {
   const [message, setMessage] = useState();
   const [offers, setOffers] = useState();
   const [change, setChange] = useState(false);
+  const [route, setRoute] = useState("BID");
+  const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
+  const inActiveColor = ["#131E3A", "#131E3A"];
+
   const [profile, setProfile] = useState({
     isVerified: false,
     firstName: "tushant",
@@ -340,7 +344,7 @@ export const OfferView = () => {
         offers={offers}
         setChange={setChange}
       />
-      <TouchableOpacity style={styles.transactionBtn}>
+      <TouchableOpacity style={styles.transactionBtn} onPress={() => {}}>
         <Text style={{ color: "#EE96DF" }}>See Transaction</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -361,21 +365,48 @@ export const OfferView = () => {
 
   const renderScene = SceneMap({
     first: SecondRoute,
+  });
+  const Render = SceneMap({
     second: FirstRoute,
   });
+
   return (
     <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
-      <TabView
-        renderTabBar={(e) => {
-          console.log("{}{}{}{}{}{}", e);
-          return <OffersButton {...e} />;
+      <Text style={styles.offersText}>Offers</Text>
+      <OffersButton
+        onPressBid={() => {
+          setRoute("BID");
         }}
-        nav
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{ width: layout.width }}
+        textStyle1={route == "BID" ? { color: "#fff" } : { color: "#5D9EEA" }}
+        textStyle2={route != "BID" ? { color: "#fff" } : { color: "#5D9EEA" }}
+        firstColor={route == "BID" ? activeColor : inActiveColor}
+        secondColor={route != "BID" ? activeColor : inActiveColor}
+        onPressOffer={() => {
+          setRoute("OFFERS");
+        }}
       />
+
+      {route == "BID" && (
+        <OfferListView
+          offers={offers}
+          profile={profile}
+          setMessage={setMessage}
+          setChange={setChange}
+        />
+      )}
+      {route == "OFFERS" && (
+        <>
+          <OfferListViewHome
+            self={true}
+            profile={profile}
+            offers={offers}
+            setChange={setChange}
+          />
+          <TouchableOpacity style={styles.transactionBtn}>
+            <Text style={{ color: "#EE96DF" }}>See Transaction</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
@@ -383,7 +414,7 @@ export const OfferView = () => {
 const styles = StyleSheet.create({
   linearStyle: {
     width: wp(95),
-    height: hp(65),
+    height: hp(61),
     marginBottom: hp(3),
     marginVertical: hp(2),
     borderRadius: 10,
@@ -401,7 +432,7 @@ const styles = StyleSheet.create({
   },
   linearStyle1: {
     width: wp(95),
-    height: hp(60),
+    height: hp(27),
     marginBottom: hp(3),
     marginVertical: hp(2),
     borderRadius: 10,
@@ -498,6 +529,12 @@ const styles = StyleSheet.create({
   seeBidStyle: {
     flexDirection: "row",
     width: wp(20),
+  },
+  offersText: {
+    color: "#fff",
+    textAlign: "center",
+    marginTop: hp(2),
+    fontSize: hp(2.1),
   },
 });
 

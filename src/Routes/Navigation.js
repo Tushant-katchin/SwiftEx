@@ -45,10 +45,7 @@ import Nfts from "../Dashboard/Nfts";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
-import { ProfileView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/profile";
-import { BidsListView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/bidsListView";
 import { OfferListView, OfferListViewHome, OfferView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
-import { NewOfferModal } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/newOffer.modal";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,14 +55,18 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="NewOfferModal"
+      // initialRouteName="ExchangeNavigation"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
-      
-       
+        {/* <Stack.Screen
+        name="ExchangeNavigation"
+        component={ExchangeNavigation}
+        options={{ headerShown: false }}
+      />    */}
+     
           {/* <Stack.Screen
         name="ScoringTopTab"
         component={ScoringTopTab}
@@ -458,9 +459,8 @@ const AuthStack = () => (
         name="exchange"
         component={ExchangeNavigation}
         options={{
-          headerShown: true,
+          headerShown: false,
 
-          headerStyle: { backgroundColor: "#000C66" },
           headerTintColor: "white",
           headerTitleStyle: {
             fontWeight: "bold",

@@ -6,21 +6,31 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
 
 const OffersButton = (props) => {
-  const { onPress, value = "Bid" | "My Offers", jumpTo} = props;
-  const navigation= useNavigation()
-  const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
-  const inActiveColor = ["#131E3A", "#131E3A"];
+  const {
+    onPress,
+    value = "Bid" | "My Offers",
+    jumpTo,
+    onPressBid,
+    onPressOffer,
+    firstColor,
+    secondColor,
+    title1 = "Bid",
+    title2 = "My Offers",
+    textStyle2,
+    textStyle1,
+  } = props;
+  const navigation = useNavigation();
 
   const [offers, setOffers] = useState(value ? value : "Bid");
 
   return (
     <View style={[styles.toggleContainer]}>
       <LinearGradient
-        colors={offers == "Bid" ? activeColor : inActiveColor}
-        style={{borderRadius:5}}
+        colors={firstColor}
+        style={{ borderRadius: 5 }}
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 1 }}
       >
@@ -30,39 +40,18 @@ const OffersButton = (props) => {
             styles.toggleBtn,
             offers == "Bid" ? { borderRadius: hp(4) } : { borderRadius: null },
           ]}
-          onPress={() => {
-            // navigation.navigate("first");
-            setOffers("Bid");
-            onPress && onPress("Bid");
-          }}
+          onPress={onPressBid}
         >
-          <Text
-            style={[offers == "Bid" ? { color: "#fff" } : { color: "#407EC9" }]}
-          >
-            Bid
-          </Text>
+          <Text style={[textStyle1]}>{title1}</Text>
         </TouchableOpacity>
       </LinearGradient>
-      <LinearGradient
-        colors={offers == "My Offers" ? activeColor : inActiveColor}
-        
-      >
+      <LinearGradient colors={secondColor}>
         <TouchableOpacity
           activeOpacity={0.8}
           style={[styles.toggleBtn2]}
-          onPress={() => {
-            // navigation.navigate("second");
-            setOffers("My Offers");
-            onPress && onPress("My Offers");
-          }}
+          onPress={onPressOffer}
         >
-          <Text
-            style={[
-              offers == "My Offers" ? { color: "#fff" } : { color: "#407EC9" },
-            ]}
-          >
-            My Offers
-          </Text>
+          <Text style={[textStyle2]}>{title2}</Text>
         </TouchableOpacity>
       </LinearGradient>
     </View>
@@ -75,7 +64,7 @@ const styles = StyleSheet.create({
     borderColor: "#407EC9",
     borderWidth: StyleSheet.hairlineWidth * 1,
     flexDirection: "row",
-    borderRadius:5
+    borderRadius: 5,
   },
   toggleBtn: {
     width: wp(43),
@@ -95,7 +84,3 @@ const styles = StyleSheet.create({
   },
 });
 export default OffersButton;
-
-
-
-

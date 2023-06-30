@@ -1,18 +1,37 @@
 import { useState, useEffect } from "react";
+import darkBlue from "../../../../../../assets/darkBlue.png";
 import { authRequest, GET, POST } from "../api";
 import { NewOfferModal } from "../components/newOffer.modal";
 import { FieldView } from "./profile";
 import { OfferListView, OfferListViewHome } from "./offers";
 import { ConnectToWallet } from "../web3";
-import { StyleSheet, Text, View, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useSelector } from "react-redux";
 import { getRegistrationToken } from "../utils/fcmHandler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
+import walletImg from "../../../../../../assets/walletImg.png";
+import idCard from "../../../../../../assets/idCard.png";
+
+import copyRide from "../.././../../../../assets/copyRide.png";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { BidsListView } from "../components/bidsListView";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { LinearGradient } from "expo-linear-gradient";
+import Icon from "../../../../../icon";
 
 export const HomeView = ({ setPressed }) => {
   const state = useSelector((state) => state);
@@ -31,6 +50,8 @@ export const HomeView = ({ setPressed }) => {
   const [offers, setOffers] = useState();
   const [walletType, setWalletType] = useState(null);
   const [change, setChange] = useState(false);
+  const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
+  const inActiveColor = ["#131E3A", "#131E3A"];
 
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
@@ -127,60 +148,110 @@ export const HomeView = ({ setPressed }) => {
   }, []);
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.container}>
-          {message ? (
-            <Text style={{ color: "#fff" }}>{message}</Text>
-          ) : (
-            <Text style={{ color: "#fff" }}>No Messages!</Text>
-          )}
-        </View>
-        <View style={styles.container}>
-          {state.wallet ? (
-            <View>
-              <Text style={{ color: "#fff" }}>Wallet Connected</Text>
+    <ScrollView
+      contentContainerStyle={{
+        paddingBottom: hp(20),
+        backgroundColor: "#131E3A",
+      }}
+    >
 
-              <Text style={{ color: "#fff" }}>{state.wallet.address}</Text>
-            </View>
-          ) : (
-            <Text style={{ color: "#fff" }}>Please select a wallet first!</Text>
-          )}
-        </View>
+      <View style={styles.container}>
+        <LinearGradient
+          start={[1, 0]}
+          end={[0, 1]}
+          colors={["rgba(223, 172, 196, 1)", "rgba(192, 197, 234, 1)"]}
+          style={styles.linearContainer}
+        >
+          <View>
+            {state.wallet ? (
+              <View>
+                <View style={styles.iconwithTextContainer}>
+                  <View style={styles.walletContainer}>
+                    <Text style={styles.myWallet}>My Wallet </Text>
+                    <Image source={walletImg} style={styles.walletImg} />
+                  </View>
+                  <View style={styles.walletContainer}>
+                    <Icon
+                      name={"check-outline"}
+                      type={"materialCommunity"}
+                      color={"#008C62"}
+                    />
+                    <Text style={styles.connectedText}>Connected!</Text>
+                  </View>
+                </View>
+                <Text style={styles.textColor}>{state.wallet.address}</Text>
+              </View>
+            ) : (
+              <Text style={styles.textColor}>
+                Please select a wallet first!
+              </Text>
+            )}
+          </View>
+
+          <View>
+            {message ? (
+              <>
+                <View style={styles.copyRideContainer}>
+                  <Text style={styles.messageStyle}>{message}</Text>
+                  <View>
+                    <Image
+                      source={copyRide}
+                      style={styles.walletImg}
+                      color={"#1D7FA3"}
+                    />
+
+                    <Text style={styles.copyText}>copy</Text>
+                  </View>
+                </View>
+              </>
+            ) : (
+              <Text style={styles.textColor}>No Messages!</Text>
+            )}
+          </View>
+        </LinearGradient>
+
         {walletType === "Ethereum" || walletType === "Multi-coin" ? (
-          <Text style={{ color: "#fff" }}>{walletType} Wallet Connected</Text>
+          <Text style={{ color: "black" }}>{walletType} Wallet Connected</Text>
         ) : (
-          <Text style={{ color: "#fff" }}>
+          <Text style={styles.whiteColor}>
             Only Ethereum and Multi-coin based wallets are supported.
           </Text>
         )}
-        <Text style={{ color: "#fff" }}>Actions</Text>
+        <Text style={styles.actionText}>Actions</Text>
         {profile && (
-          <View style={styles.container}>
+          <View>
             <FieldView
-              style={{ color: "#fff" }}
+              style={{color:"#fff"}}
               title="KYC Status"
               value={profile.isVerified}
               applyForKyc={applyForKyc}
               type="kyc"
             />
-            <View style={styles.container}>
+            <View>
               {profile.isVerified ? (
                 <>
-                  <Button
-                    title="offer"
-                    color={"green"}
-                    onPress={() => {
-                      if (
-                        walletType === "Ethereum" ||
-                        walletType === "Multi-coin"
-                      ) {
-                        setOpen(true);
-                      } else {
-                        alert("Only Ethereum wallet are supported");
-                      }
-                    }}
-                  ></Button>
+                  <LinearGradient
+                    start={[1, 0]}
+                    end={[0, 1]}
+                    colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
+                    style={styles.PresssableBtn}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (
+                          walletType === "Ethereum" ||
+                          walletType === "Multi-coin"
+                        ) {
+                          setOpen(true);
+                        } else {
+                          alert("Only Ethereum wallet are supported");
+                        }
+                      }}
+                    >
+                      <Text style={{color:"#fff"}}>Bid On Offers!</Text>
+                    </TouchableOpacity>
+                  </LinearGradient>
+
                   <NewOfferModal
                     user={profile}
                     open={open}
@@ -189,14 +260,14 @@ export const HomeView = ({ setPressed }) => {
                   />
                 </>
               ) : (
-                <Text style={{ color: "#fff" }}>
+                <Text style={styles.kycText}>
                   Please do KYC to start adding offers
                 </Text>
               )}
             </View>
           </View>
         )}
-        <View style={{ marginTop: 5 }}>
+        {/* <View style={{ marginTop: 5 }}>
           <Button
             title="logout"
             color="red"
@@ -206,31 +277,65 @@ export const HomeView = ({ setPressed }) => {
               navigation.navigate("Settings");
             }}
           ></Button>
-        </View>
-        <View style={{ marginTop: 5, display: "flex", flexDirection: "row" }}>
-          <View style={{ margin: 2 }}>
-            <Button
-              title={"Bids"}
-              color={route === "Bids" ? "green" : "grey"}
+        </View> */}
+
+        <View style={[styles.toggleContainer]}>
+          <LinearGradient
+            colors={route == "Bids" ? activeColor : inActiveColor}
+            style={{ borderRadius: 8 }}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          >
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[
+                styles.toggleBtn,
+                route == "Bid"
+                  ? { borderRadius: hp(4) }
+                  : { borderRadius: null },
+              ]}
               onPress={() => {
                 setRoute("Bids");
               }}
-            ></Button>
-          </View>
-          <View style={{ margin: 2 }}>
-            <Button
-              title={"Offers"}
-              color={route === "Offers" ? "green" : "grey"}
+            >
+              <Text
+                style={[
+                  route == "Bids" ? { color: "#fff" } : { color: "#407EC9" },
+                ]}
+              >
+                Bid
+              </Text>
+            </TouchableOpacity>
+          </LinearGradient>
+          <LinearGradient
+            style={{ borderRadius: 8 }}
+            colors={route == "Offers" ? activeColor : inActiveColor}
+          >
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[styles.toggleBtn2]}
               onPress={() => {
                 setRoute("Offers");
               }}
-            ></Button>
-          </View>
+            >
+              <Text
+                style={[
+                  route == "Offers" ? { color: "#fff" } : { color: "#407EC9" },
+                ]}
+              >
+                My Offers
+              </Text>
+            </TouchableOpacity>
+          </LinearGradient>
         </View>
 
         {route === "Offers" ? (
-          <View style={styles.container2}>
-            <Text>Your Offers</Text>
+          <View>
+            <View style={styles.addofferText}>
+              <Text style={styles.whiteColor}>My Offers</Text>
+              <Text style={{ color: "#EE96DF" }}>Add Offer</Text>
+            </View>
+
             <OfferListViewHome
               self={true}
               profile={profile}
@@ -243,34 +348,145 @@ export const HomeView = ({ setPressed }) => {
             style={{
               alignContent: "center",
               alignItems: "center",
-              backgroundColor: "white",
             }}
           >
-            <Text style={{ color: "#fff" }}>Your Bids</Text>
+            <Text style={styles.bidText}>My Bids</Text>
             {bids && profile && (
               <BidsListView bids={bids} getBids={getBidsData} />
             )}
           </View>
         )}
       </View>
-    </>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   container: {
+    width: wp(100),
+    height: hp(100),
     display: "flex",
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
     backgroundColor: "#131E3A",
   },
-  container2: {
-    display: "flex",
-    alignContent: "center",
-    alignItems: "center",
-    textAlign: "center",
+  linearContainer: {
+    width: wp(90),
+    padding: hp(2),
+    paddingVertical: hp(3),
+    borderRadius: hp(2),
+    marginTop:hp(3)
   },
+  textColor: {
+    color: "black",
+  },
+  iconwithTextContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  copyTextContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingRight: wp(1.9),
+  },
+  copyText: {
+    color: "#2027AC",
+  },
+  myWallet: {
+    fontWeight: "700",
+  },
+  walletContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  connectedText: {
+    color: "#008C62",
+  },
+  walletImg: {
+    height: hp(2.8),
+    width: wp(5),
+    alignSelf: "center",
+  },
+  copyRideContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingRight: wp(6.8),
+    width: wp(90),
+  },
+  copyText: {
+    textAlign: "right",
+    color: "black",
+    marginHorizontal: wp(5),
+  },
+  messageStyle: {
+    color: "black",
+    width: wp(45),
+  },
+  PresssableBtn: {
+    padding: hp(1),
+    width: wp(30),
+    alignSelf: "center",
+    paddingHorizontal: wp(3),
+    borderRadius: hp(0.8),
+    marginBottom: hp(2),
+    alignItems: "center",
+  },
+  addofferText: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(50),
+    marginLeft: wp(40),
+    alignItems: "center",
+  },
+  whiteColor: {
+    color: "#fff",
+    marginVertical:hp(2),
+    width:wp(80)
+  },
+  toggleContainer: {
+    alignSelf: "center",
+    marginVertical: hp(2),
+    borderColor: "#407EC9",
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    flexDirection: "row",
+    borderRadius: 8,
+  },
+  toggleBtn: {
+    width: wp(43),
+    justifyContent: "space-around",
+    alignItems: "center",
+    height: hp(6),
+    flexDirection: "row",
+    alignSelf: "center",
+  },
+  toggleBtn2: {
+    width: wp(43),
+    height: hp(6),
+    borderRadius: 8,
+    justifyContent: "space-around",
+    alignItems: "center",
+    flexDirection: "row",
+    alignSelf: "center",
+  },
+  logoImg: {
+    height: hp("15"),
+    width: wp("15"),
+    alignSelf: "center",
+  },
+  actionText:{
+    color:"#fff",
+    marginBottom:hp(2)
+  },
+  kycText:{
+    color:"#fff",
+    marginTop:hp(2)
+  },
+  bidText:{
+    color:"#fff"
+  }
 });
+
 /*
 <View style={{position:'absolute', height:hp(30)}}>
 
