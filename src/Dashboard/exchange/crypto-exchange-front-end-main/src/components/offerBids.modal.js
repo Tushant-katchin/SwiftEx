@@ -13,9 +13,10 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Modal2 from "react-native-modal";
-import { ActivityIndicator, DataTable } from "react-native-paper";
+import { ActivityIndicator, Colors, DataTable } from "react-native-paper";
 import { OFFER_STATUS_ENUM } from "../utils/constants";
 import { PATCH } from "../api";
+import { LinearGradient } from "expo-linear-gradient";
 export const OfferBidsView = ({ offer, self = false, setChange }) => {
   const [modalMessage, setModalMessage] = useState("");
   const [bids, setBids] = useState();
@@ -115,7 +116,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
         <TouchableOpacity
           style={{
             width: wp(16),
-            marginHorizontal:wp(4),
+            marginHorizontal: wp(4),
             height: hp(3),
             backgroundColor: "#010C66",
             borderRadius: 6,
@@ -132,7 +133,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
           animationOut="slideOutRight"
           animationInTiming={100}
           animationOutTiming={200}
-          isVisible={open}
+          isVisible={true}
           useNativeDriver={true}
           useNativeDriverForBackdrop={true}
           backdropTransitionOutTiming={0}
@@ -145,76 +146,87 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
             setOpen(false);
           }}
         >
-          <View
-            style={{
-              height: hp(50),
-              width: wp(80),
-              backgroundColor: "#E2808A",
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-            }}
-          >
-            <View style={{ alignItems: "center" }}>
-              <Text>
-                {" "}
-                {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "}
-                {offer.currencyName} per unit.
-              </Text>
+          <View style={styles.modalContainer}>
+            <Text style={styles.textColor}>
+              {" Are You Sure You want to add Offer of"}
+              {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "}
+              {offer.currencyName} per unit.
+            </Text>
+            <Text style={styles.textColor}>{modalMessage}</Text>
+            <View style={styles.yesnomainView}>
+              <TouchableOpacity style={styles.yesbtnContainer}>
+                <Text style={styles.textColor}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.nobtnContainer}>
+                <Text style={styles.textColor}>No</Text>
+              </TouchableOpacity>
             </View>
-            <Text>{modalMessage}</Text>
+
             {bids ? (
-              <DataTable style={styles.container}>
-                <DataTable.Header style={styles.tableHeader}>
-                  <DataTable.Title>Bid Amount</DataTable.Title>
-                  <DataTable.Title>Bidder</DataTable.Title>
-                  <DataTable.Title>Status</DataTable.Title>
-                  {self && <DataTable.Title></DataTable.Title>}
-                </DataTable.Header>
+              <View style={styles.container}>
+                <Text style={styles.bidPrice}>
+                  {"1.4 Eth for 1,00,000 INR Unit Price!"}
+                </Text>
+                <View style={styles.bidContainer}>
+                  <Text style={styles.Text}>Bid Amount</Text>
+                  <Text style={styles.Text}>Bidder</Text>
+                  <Text style={styles.Text}>Status</Text>
+                  {self && <Text></Text>}
+                </View>
                 {bids.length ? (
                   bids.map((bid, index) => (
                     <>
-                      <DataTable.Row key={bid._id}>
-                        <DataTable.Cell>{bid.pricePerUnit}</DataTable.Cell>
-                        <DataTable.Cell>
+                      <View key={bid._id} style={styles.bidContainer2}>
+                        <Text style={styles.Text}>{bid.pricePerUnit}</Text>
+                        <Text style={styles.Text}>
                           {bid.user.firstName} {bid.user.lastName}
-                        </DataTable.Cell>
-                        <DataTable.Cell>{bid.status}</DataTable.Cell>
-                        {self && !offer.winnerBid ? (
-                          <View>
-                            <Button
-                              title={"Accept bid"}
-                              //loading={isSubmitting}
-                              color={"blue"}
-                              onPress={async () => {
-                                setLoading(true);
-                                acceptBid(bid);
-                              }}
-                            ></Button>
-                          </View>
-                        ) : self &&
-                          bid._id === offer.winnerBid &&
-                          offer.status === OFFER_STATUS_ENUM.MATCHED ? (
-                          <View>
-                            <Button
-                              title={"Cancel bid"}
-                              color={"red"}
-                              //loading={isCancelling}
-                              onPress={async () => {
-                                setLoading(true);
-                                cancelBid();
-                              }}
-                            >
-                              Cancel Bid
-                            </Button>
-                          </View>
-                        ) : (
-                          <View>
-                            <Button title="No actions" color={"blue"}>
-                              No Actions
-                            </Button>
-                          </View>
-                        )}
-                      </DataTable.Row>
+                        </Text>
+                        <Text style={styles.Text}>{bid.status}</Text>
+                      </View>
+
+                      {self && !offer.winnerBid ? (
+                        <View>
+                          <Button
+                            title={"Accept bid"}
+                            //loading={isSubmitting}
+                            color={"blue"}
+                            onPress={async () => {
+                              setLoading(true);
+                              acceptBid(bid);
+                            }}
+                          ></Button>
+                        </View>
+                      ) : self &&
+                        bid._id === offer.winnerBid &&
+                        offer.status === OFFER_STATUS_ENUM.MATCHED ? (
+                        <View>
+                          <Button
+                            title={"Cancel bid"}
+                            color={"red"}
+                            //loading={isCancelling}
+                            onPress={async () => {
+                              setLoading(true);
+                              cancelBid();
+                            }}
+                          >
+                            Cancel Bid
+                          </Button>
+                        </View>
+                      ) : (
+                        <LinearGradient
+                          style={styles.linearBtn}
+                          start={[1, 0]}
+                          end={[0, 1]}
+                          colors={[
+                            "rgba(70, 169, 234, 1)",
+                            "rgba(185, 116, 235, 1)",
+                          ]}
+                        >
+                          <TouchableOpacity title="No actions">
+                            <Text style={styles.textColor}>No Actions</Text>
+                          </TouchableOpacity>
+                        </LinearGradient>
+                      )}
                     </>
                   ))
                 ) : (
@@ -227,9 +239,9 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                 ) : (
                   <View></View>
                 )}
-              </DataTable>
+              </View>
             ) : (
-              <Text>Loading...</Text>
+              <Text style={styles.textColor}>Loading...</Text>
             )}
             {loading ? (
               <ActivityIndicator size={"large"} color={"blue"} />
@@ -244,10 +256,49 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
+    backgroundColor: "#131E3A",
+    height: hp(35),
+    borderRadius: 16,
+    justifyContent: "center",
+    width: wp(75),
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  textColor: {
+    color: "#fff",
+    textAlign: "center",
+    width: wp(60),
+  },
+  yesnomainView: {
+    marginVertical: hp(3),
+    flexDirection: "row",
+    alignSelf: "center",
+    justifyContent: "space-evenly",
     width: wp(80),
-    height: hp(70),
-    color: "black",
+  },
+  yesbtnContainer: {
+    width: wp(25),
+    height: hp(4.5),
+    justifyContent: "center",
+    borderRadius: 7,
+    backgroundColor: "#53A3EA",
+    alignItems: "center",
+  },
+  nobtnContainer: {
+    width: wp(25),
+    height: hp(4.5),
+    justifyContent: "center",
+    borderRadius: 7,
+    backgroundColor: "#C85350",
+    alignItems: "center",
+  },
+  container: {
+    backgroundColor: "#131E3A",
+    height: hp(45),
+    borderRadius: 16,
+    alignSelf: "center",
+    width: wp("80%"),
   },
   scrollView: {
     width: wp(90),
@@ -269,5 +320,49 @@ const styles = StyleSheet.create({
     textAlign: "center",
     height: hp(100),
     color: "black",
+  },
+  Text: {
+    color: "#fff",
+    textAlign: "center",
+    width: wp(20),
+    textAlign: "center",
+  },
+  bidContainer: {
+    width: wp(75),
+    alignItems: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: wp(4),
+    marginTop: hp(2),
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "#4FA4EA",
+    paddingBottom: hp(1),
+  },
+  bidContainer2: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: hp(2),
+    width: wp(75),
+    marginLeft: wp(4),
+  },
+  bidPrice: {
+    textAlign: "center",
+    color: "#fff",
+    width: wp(78),
+    alignSelf: "center",
+    paddingVertical: hp(2),
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "#4FA4EA",
+  },
+  linearBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: wp(26),
+    alignSelf: "flex-end",
+    borderRadius: hp(1),
+    marginTop: hp(3),
+    height: hp(5),
+    marginRight: wp(4),
   },
 });
