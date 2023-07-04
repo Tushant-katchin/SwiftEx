@@ -19,7 +19,7 @@ import { PATCH } from "../api";
 import { LinearGradient } from "expo-linear-gradient";
 export const OfferBidsView = ({ offer, self = false, setChange }) => {
   const [modalMessage, setModalMessage] = useState("");
-  const [bids, setBids] = useState();
+  const [bids, setBids] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -133,7 +133,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
           animationOut="slideOutRight"
           animationInTiming={100}
           animationOutTiming={200}
-          isVisible={true}
+          isVisible={open}
           useNativeDriver={true}
           useNativeDriverForBackdrop={true}
           backdropTransitionOutTiming={0}
@@ -162,7 +162,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
               </TouchableOpacity>
             </View>
 
-            {bids ? (
+            {bids != "" ? (
               <View style={styles.container}>
                 <Text style={styles.bidPrice}>
                   {"1.4 Eth for 1,00,000 INR Unit Price!"}
@@ -186,15 +186,24 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
 
                       {self && !offer.winnerBid ? (
                         <View>
-                          <Button
-                            title={"Accept bid"}
+                          <LinearGradient
                             //loading={isSubmitting}
-                            color={"blue"}
                             onPress={async () => {
                               setLoading(true);
                               acceptBid(bid);
                             }}
-                          ></Button>
+                            style={styles.linearBtn}
+                            start={[1, 0]}
+                            end={[0, 1]}
+                            colors={[
+                              "rgba(70, 169, 234, 1)",
+                              "rgba(185, 116, 235, 1)",
+                            ]}
+                          >
+                            <TouchableOpacity>
+                              <Text style={styles.textColor}>Accept Bid</Text>
+                            </TouchableOpacity>
+                          </LinearGradient>
                         </View>
                       ) : self &&
                         bid._id === offer.winnerBid &&
@@ -202,7 +211,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                         <View>
                           <Button
                             title={"Cancel bid"}
-                            color={"red"}
+                            color={"#4CA6EA"}
                             //loading={isCancelling}
                             onPress={async () => {
                               setLoading(true);
@@ -222,7 +231,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                             "rgba(185, 116, 235, 1)",
                           ]}
                         >
-                          <TouchableOpacity title="No actions">
+                          <TouchableOpacity>
                             <Text style={styles.textColor}>No Actions</Text>
                           </TouchableOpacity>
                         </LinearGradient>
@@ -230,9 +239,9 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                     </>
                   ))
                 ) : (
-                  <DataTable.Row>
-                    <DataTable.Cell>No bids found</DataTable.Cell>
-                  </DataTable.Row>
+                  <View>
+                    <Text style={styles.bidText}>No bids found</Text>
+                  </View>
                 )}
                 {loading ? (
                   <ActivityIndicator size={"large"} color={"blue"} />
@@ -364,5 +373,10 @@ const styles = StyleSheet.create({
     marginTop: hp(3),
     height: hp(5),
     marginRight: wp(4),
+  },
+  bidText: {
+    color: "#fff",
+    marginTop: hp(2),
+    marginHorizontal: wp(5),
   },
 });
