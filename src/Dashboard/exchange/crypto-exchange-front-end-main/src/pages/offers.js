@@ -21,8 +21,6 @@ import { CHAIN_ID_TO_SCANNER } from "../web3";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 
-
-
 export const OfferListView = ({ self = false, offers, profile, setChange }) => {
   const [open, setOpen] = useState(false);
 
@@ -58,16 +56,26 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
                     <>
                       <View key={offer._id}>
                         <ScrollView key={offer._id} style={styles.scrollView}>
-                            <View key={offer._id} style={styles.Table1Container}>
-                              <View>
-                              <Text style={styles.textColor}>{offer.assetName}</Text>
-                              <Text style={styles.textColor}>{offer.amount}</Text>
-                              </View>
-                             
-                              <Text style={styles.textColor}>{offer.pricePerUnit}</Text>
-                              <Text style={styles.textColor}>{offer.totalPrice}</Text>
-                              <Text style={styles.textColor}>{offer.currencyName}</Text>
-                              <Text style={styles.textColor}>{offer.status}</Text>
+                          <View key={offer._id} style={styles.Table1Container}>
+                            <View>
+                              <Text style={styles.textColor}>
+                                {offer.assetName}
+                              </Text>
+                              <Text style={styles.textColor}>
+                                {offer.amount}
+                              </Text>
+                            </View>
+
+                            <Text style={styles.textColor}>
+                              {offer.pricePerUnit}
+                            </Text>
+                            <Text style={styles.textColor}>
+                              {offer.totalPrice}
+                            </Text>
+                            <Text style={styles.textColor}>
+                              {offer.currencyName}
+                            </Text>
+                            <Text style={styles.textColor}>{offer.status}</Text>
                           </View>
                         </ScrollView>
                         <OfferBidsView
@@ -127,7 +135,7 @@ export const OfferListViewHome = ({
   setPressed,
 }) => {
   const [open, setOpen] = useState(false);
-
+  
   return (
     <View style={{ backgroundColor: "#131E3A" }}>
       <LinearGradient
@@ -197,15 +205,19 @@ export const OfferListViewHome = ({
                   )
                 );
               return (
-                data.issuer !== profile._id && (
+                offers.issuer !== profile._id && (
                   <>
                     <ScrollView style={styles.scrollView}>
-                      <View key={offer._id}  style={styles.mainDataContainer}>
+                      <View key={offer._id} style={styles.mainDataContainer}>
                         <Text style={styles.textColor}>{offer.assetName}</Text>
                         <Text style={styles.textColor}>{offer.amount}</Text>
-                        <Text style={styles.textColor}>{offer.pricePerUnit}</Text>
+                        <Text style={styles.textColor}>
+                          {offer.pricePerUnit}
+                        </Text>
                         <Text style={styles.textColor}>{offer.totalPrice}</Text>
-                        <Text style={styles.textColor}>{offer.currencyName}</Text>
+                        <Text style={styles.textColor}>
+                          {offer.currencyName}
+                        </Text>
                         <Text style={styles.textColor}>{offer.status}</Text>
                       </View>
                       <View style={{ display: "flex", flexDirection: "row" }}>
@@ -404,7 +416,7 @@ export const OfferView = () => {
 };
 
 const styles = StyleSheet.create({
- mainDataContainer: {
+  mainDataContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(90),

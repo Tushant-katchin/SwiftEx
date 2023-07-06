@@ -26,6 +26,12 @@ export const tokenAddresses = {
   ETH2: "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378",
 };
 
+export const faucets ={
+  bscFaucet:'https://testnet.binance.org/faucet-smart/',
+  ethFaucetGoerli:'https://goerlifaucet.com/',
+  polygonFaucet:'https://faucet.polygon.technology/'
+}
+
 export const jwtSecret = "0xC02aaA3MunziAppTestMode0xbb4CdB9";
 
 export const RPC = {

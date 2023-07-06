@@ -45,10 +45,15 @@ const OffersButton = (props) => {
           <Text style={[textStyle1]}>{title1}</Text>
         </TouchableOpacity>
       </LinearGradient>
-      <LinearGradient colors={secondColor}>
+      <LinearGradient colors={secondColor}
+              style={{ borderRadius: 5 }}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 1, y: 0}}
+      >
         <TouchableOpacity
           activeOpacity={0.8}
           style={[styles.toggleBtn2]}
+          
           onPress={onPressOffer}
         >
           <Text style={[textStyle2]}>{title2}</Text>

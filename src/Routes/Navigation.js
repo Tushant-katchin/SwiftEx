@@ -45,7 +45,11 @@ import Nfts from "../Dashboard/Nfts";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
-import { OfferListView, OfferListViewHome, OfferView } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
+import {
+  OfferListView,
+  OfferListViewHome,
+  OfferView,
+} from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,13 +65,13 @@ const AuthStack = () => (
         animation: "slide_from_right",
       }}
     >
-         {/* <Stack.Screen
+      {/* <Stack.Screen
         name="ExchangeNavigation"
         component={ExchangeNavigation}
         options={{ headerShown: false }}
-      />     */}
-     
-          {/* <Stack.Screen
+      /> */}
+
+      {/* <Stack.Screen
         name="ScoringTopTab"
         component={ScoringTopTab}
         options={{
@@ -76,7 +80,7 @@ const AuthStack = () => (
             return <ProfileHeader />;
           },
         }}
-      /> */} 
+      /> */}
 
       <Stack.Screen
         name="SplashScreen"
@@ -131,19 +135,16 @@ const AuthStack = () => (
         }}
       />
 
-
-
-<Stack.Screen
+      <Stack.Screen
         name="OfferListView"
         component={OfferListView}
         options={{ headerShown: false }}
       />
-     <Stack.Screen
+      <Stack.Screen
         name="OfferListViewHome"
         component={OfferListViewHome}
         options={{ headerShown: false }}
       />
-
 
       <Stack.Screen
         name="Wallet"
@@ -406,7 +407,7 @@ const AuthStack = () => (
             fontWeight: "bold",
           },
         }}
-      /> 
+      />
       <Stack.Screen
         name="AllWallets"
         component={AllWallets}
@@ -466,7 +467,7 @@ const AuthStack = () => (
             fontWeight: "bold",
           },
         }}
-      /> 
+      />
       <Stack.Screen
         name="appLock"
         component={LockApp}

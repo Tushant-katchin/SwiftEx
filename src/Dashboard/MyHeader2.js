@@ -6,6 +6,8 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Touchable,
+  TouchableOpacity,
 } from "react-native";
 import { Button } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
@@ -29,6 +31,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { urls } from "./constants";
 import { getEtherBnbPrice, getEthPrice, getBnbPrice } from "../utilities/utilities";
 import { tokenAddresses } from "./constants";
+import {FaucetModal} from "./Modals/faucetModal";
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -46,6 +49,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   console.log(state.wallets);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false)
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -390,6 +394,16 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             alignItems: "center",
           }}
         >
+          <View style={{position:'absolute', marginTop:hp(3),left:wp(0),backgroundColor:'white', height:hp(3),width:wp(20),borderRadius:10}}>
+            <TouchableOpacity
+            onPress={()=>{
+              console.log('pressed')
+              setShowModal(true)
+            }}
+            >
+              <Text style={{color:'black',textAlign:'center'}}>Faucet</Text>
+            </TouchableOpacity>
+         </View>
           <Text
             style={{
               marginTop: 60,
@@ -506,6 +520,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         setModalVisible={setModalVisible3}
         swapType={swapType}
       />
+      <FaucetModal showModal={showModal} setShowModal={setShowModal}/>
     </Animated.View>
   );
 };

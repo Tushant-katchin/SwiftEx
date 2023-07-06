@@ -154,7 +154,6 @@ export const HomeView = ({ setPressed }) => {
         backgroundColor: "#131E3A",
       }}
     >
-
       <View style={styles.container}>
         <LinearGradient
           start={[1, 0]}
@@ -221,7 +220,7 @@ export const HomeView = ({ setPressed }) => {
         {profile && (
           <View>
             <FieldView
-              style={{color:"#fff"}}
+              style={{ color: "#fff" }}
               title="KYC Status"
               value={profile.isVerified}
               applyForKyc={applyForKyc}
@@ -230,27 +229,28 @@ export const HomeView = ({ setPressed }) => {
             <View>
               {profile.isVerified ? (
                 <>
-                  <LinearGradient
+                  {/* <LinearGradient
                     start={[1, 0]}
                     end={[0, 1]}
                     colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
                     style={styles.PresssableBtn}
+                  > */}
+                  <TouchableOpacity
+                    style={styles.PresssableBtn}
+                    onPress={() => {
+                      if (
+                        walletType === "Ethereum" ||
+                        walletType === "Multi-coin"
+                      ) {
+                        setOpen(true);
+                      } else {
+                        alert("Only Ethereum wallet are supported");
+                      }
+                    }}
                   >
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (
-                          walletType === "Ethereum" ||
-                          walletType === "Multi-coin"
-                        ) {
-                          setOpen(true);
-                        } else {
-                          alert("Only Ethereum wallet are supported");
-                        }
-                      }}
-                    >
-                      <Text style={{color:"#fff"}}>Bid On Offers!</Text>
-                    </TouchableOpacity>
-                  </LinearGradient>
+                    <Text style={{ color: "#fff" }}>Bid On Offers!</Text>
+                  </TouchableOpacity>
+                  {/* </LinearGradient> */}
 
                   <NewOfferModal
                     user={profile}
@@ -283,8 +283,8 @@ export const HomeView = ({ setPressed }) => {
           <LinearGradient
             colors={route == "Bids" ? activeColor : inActiveColor}
             style={{ borderRadius: 8 }}
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 1 }}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
           >
             <TouchableOpacity
               activeOpacity={0.8}
@@ -309,6 +309,8 @@ export const HomeView = ({ setPressed }) => {
           </LinearGradient>
           <LinearGradient
             style={{ borderRadius: 8 }}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
             colors={route == "Offers" ? activeColor : inActiveColor}
           >
             <TouchableOpacity
@@ -351,7 +353,7 @@ export const HomeView = ({ setPressed }) => {
             }}
           >
             <Text style={styles.bidText}>My Bids</Text>
-            {!bids && !profile && (
+            {bids && profile && (
               <BidsListView bids={bids} getBids={getBidsData} />
             )}
           </View>
@@ -375,7 +377,7 @@ const styles = StyleSheet.create({
     padding: hp(2),
     paddingVertical: hp(3),
     borderRadius: hp(2),
-    marginTop:hp(3)
+    marginTop: hp(3),
   },
   textColor: {
     color: "black",
@@ -424,6 +426,7 @@ const styles = StyleSheet.create({
     width: wp(45),
   },
   PresssableBtn: {
+    backgroundColor: "#4CA6EA",
     padding: hp(1),
     width: wp(30),
     alignSelf: "center",
@@ -441,8 +444,8 @@ const styles = StyleSheet.create({
   },
   whiteColor: {
     color: "#fff",
-    marginVertical:hp(2),
-    width:wp(80)
+    marginVertical: hp(2),
+    width: wp(80),
   },
   toggleContainer: {
     alignSelf: "center",
@@ -474,17 +477,17 @@ const styles = StyleSheet.create({
     width: wp("15"),
     alignSelf: "center",
   },
-  actionText:{
-    color:"#fff",
-    marginBottom:hp(2)
+  actionText: {
+    color: "#fff",
+    marginBottom: hp(2),
   },
-  kycText:{
-    color:"#fff",
-    marginTop:hp(2)
+  kycText: {
+    color: "#fff",
+    marginTop: hp(2),
   },
-  bidText:{
-    color:"#fff"
-  }
+  bidText: {
+    color: "#fff",
+  },
 });
 
 /*
