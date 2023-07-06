@@ -69,7 +69,7 @@ const AuthStack = () => (
         name="ExchangeNavigation"
         component={ExchangeNavigation}
         options={{ headerShown: false }}
-      /> */}
+      />  */}
 
       {/* <Stack.Screen
         name="ScoringTopTab"
