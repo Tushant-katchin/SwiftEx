@@ -20,7 +20,7 @@ export function ExchangeNavigation() {
       // initialRouteName="/"
       activeColor="#f0edf6"
       // inactiveColor="#3e2465"
-      barStyle={{ backgroundColor: "white" }}
+      barStyle={{ backgroundColor: "#fff" }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -50,7 +50,7 @@ export function ExchangeNavigation() {
         },
 
         tabBarActiveTintColor: "blue",
-        tabBarInactiveTintColor: "gray",
+        tabBarInactiveTintColor: "white",
         tabBarStyle: {
           position: "absolute",
           backgroundColor: "white",
@@ -59,6 +59,7 @@ export function ExchangeNavigation() {
           borderTopRightRadius: 30,
           borderTopColor: "black",
           borderTopWidth: 1,
+          backgroundColor:"#4CA6EA"
         },
         headerTitleAlign: "center",
       })}
@@ -81,7 +82,7 @@ export function ExchangeNavigation() {
         options={{
           headerShown: true,
           header: () => {
-            return <ExchangeHeader />;
+            return <ExchangeHeaderIcon />;
           }
         }}
       />
@@ -91,7 +92,7 @@ export function ExchangeNavigation() {
         options={{
           headerShown: true,
           header: () => {
-            return <ExchangeHeader />;
+            return <ExchangeHeaderIcon />;
           },
           //Tab bar styles can be added here
         }}
@@ -109,7 +110,7 @@ export function ExchangeNavigation() {
         options={{
           headerShown: true,
           header: () => {
-            return <ExchangeHeader />;
+            return <ExchangeHeaderIcon />;
           }
         }}
       />

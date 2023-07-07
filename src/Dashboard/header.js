@@ -102,39 +102,39 @@ export const ExchangeHeaderIcon = () => {
 
   return (
     <View style={styles.headerContainer1}>
-      <Icon
-        name={"left"}
-        type={"antDesign"}
-        size={20}
-        color={"#fff"}
-        onPress={() => {
-          navigation.goBack();
+      <View
+        style={{
+          justifyContent: "space-around",
+          flexDirection: "row",
+          alignItems: "center",
         }}
-      />
-      <Image source={darkBlue} style={styles.logoImg} />
-      <View style={{flexDirection:"row",alignItems:"center"}}>
-      <View style={{width:wp(50),justifyContent:"space-between",flexDirection:"row",marginLeft:wp(22)}}>
-      <Text style={{ color: "#fff", fontWeight: "700", textAlign: "center" }}>
-          Exchange
-        </Text>
-        <View style={{ alignItems: "center" }}>
-          <Icon
-            name={"logout"}
-            type={"materialCommunity"}
-            size={20}
-            color={"#E96A6A"}
-            onPress={() => {
-              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-              AsyncStorage.removeItem(LOCAL_TOKEN);
-              navigation.navigate("Settings");
-            }}
-          />
-          <Text style={{ color: "#E96A6A" }}>Logout</Text>
-        </View>
-        
+      >
+        <Icon
+          name={"left"}
+          type={"antDesign"}
+          size={20}
+          color={"#010C66"}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+        <Image source={darkBlue} style={styles.logoImg} />
       </View>
+      <Text style={styles.text}>Exchange</Text>
+      <View style={{ alignItems: "center" }}>
+        <Icon
+          name={"logout"}
+          type={"materialCommunity"}
+          size={20}
+          color={"#E96A6A"}
+          onPress={() => {
+            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+            AsyncStorage.removeItem(LOCAL_TOKEN);
+            navigation.navigate("Settings");
+          }}
+        />
+        <Text style={{ color: "#E96A6A" }}>Logout</Text>
       </View>
-        
     </View>
   );
 };
@@ -212,18 +212,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(5),
   },
   headerContainer1: {
-    backgroundColor: "#131E3A",
-    height: hp(10),
-    // justifyContent:"space-between",
-        alignItems: "center",
-        alignSelf:"center",
+    backgroundColor: "#4CA6EA",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
     flexDirection: "row",
     width: wp(100),
-    paddingHorizontal: wp(3),
+    paddingHorizontal: wp(2),
   },
   logoImg: {
-    height: hp("12"),
+    height: hp("9"),
     width: wp("12"),
-    // marginRight:hp(40)
+    marginLeft: wp(1.5),
+  },
+  text: {
+    color: "#010C66",
+    fontWeight: "700",
+    alignSelf: "center",
+    textAlign: "center",
+    marginRight: wp(10),
   },
 });
