@@ -8,7 +8,7 @@ import {
 import Icon from "../../icon";
 
 const IconWithCircle = (props) => {
-  const { name, type, title } = props;
+  const { name, type, title, onPress } = props;
   return (
     <View>
       <View style={styles.mainContainer}>
@@ -18,6 +18,7 @@ const IconWithCircle = (props) => {
           size={21}
           style={{ marginHorizontal: hp(0.7) }}
           color="#fff"
+          onPress={onPress}
         />
       </View>
 

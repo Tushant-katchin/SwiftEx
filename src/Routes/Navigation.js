@@ -50,7 +50,9 @@ import {
   OfferListViewHome,
   OfferView,
 } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
-
+import WalletTopTab from "./TopNavigator";
+import ProfileHeader from "../Dashboard/profileHeader";
+import Home2 from "../Dashboard/Home2";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -65,15 +67,26 @@ const AuthStack = () => (
         animation: "slide_from_right",
       }}
     >
-      {/* <Stack.Screen
+       {/* <Stack.Screen
         name="ExchangeNavigation"
         component={ExchangeNavigation}
         options={{ headerShown: false }}
-      />  */}
+      />     */}
 
       {/* <Stack.Screen
-        name="ScoringTopTab"
-        component={ScoringTopTab}
+        name="Home2"
+        component={Home2}
+        options={{
+          headerShown: true,
+          header: () => {
+            return <ProfileHeader />;
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="WalletTopTab"
+        component={WalletTopTab}
         options={{
           headerShown: true,
           header: () => {

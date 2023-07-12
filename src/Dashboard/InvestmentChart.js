@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Button } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import {
   Avatar,
   Card,
@@ -25,8 +25,8 @@ function InvestmentChart() {
   const wallet = useSelector((state) => state.wallet);
   const [bnbBalance, getBnbBalance] = useState(0);
   const [ethBalance, getEthBalance] = useState(0);
-  const[ethPrice, setEthPrice] = useState(0)
-  const[bnbPrice, setBnbPrice] = useState(0)
+  const [ethPrice, setEthPrice] = useState(0);
+  const [bnbPrice, setBnbPrice] = useState(0);
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
       UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -36,24 +36,20 @@ function InvestmentChart() {
 
   const translation = useRef(new Animated.Value(0)).current;
 
-  const getEthBnbPrice = async() => {
-    await getEthPrice()
-    .then((response)=>{
-      setEthPrice(response.USD)
-    })
-    await getBnbPrice()
-    .then((response)=>{
-      setBnbPrice(response.USD)
-    })
-  }
+  const getEthBnbPrice = async () => {
+    await getEthPrice().then((response) => {
+      setEthPrice(response.USD);
+    });
+    await getBnbPrice().then((response) => {
+      setBnbPrice(response.USD);
+    });
+  };
 
   useEffect(async () => {
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
-    AsyncStorageLib.getItem('walletType')
-    .then((type)=>{
-      if(JSON.parse(type)==='Ethereum' || JSON.parse(type)==='BSC'){
-
+    AsyncStorageLib.getItem("walletType").then((type) => {
+      if (JSON.parse(type) === "Ethereum" || JSON.parse(type) === "BSC") {
         if (bal) {
           getBnbBalance(bal);
         } else {
@@ -64,34 +60,33 @@ function InvestmentChart() {
         } else {
           getEthBalance(0.0);
         }
-      }else{
-        getEthBalance(0.0)
-        getBnbBalance(0.0)
+      } else {
+        getEthBalance(0.0);
+        getBnbBalance(0.0);
       }
-    })
+    });
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [state2]);
 
   useEffect(async () => {
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
-    AsyncStorageLib.getItem('walletType')
-    .then((type)=>{
-      if(JSON.parse(type)==='Ethereum'){
+    AsyncStorageLib.getItem("walletType").then((type) => {
+      if (JSON.parse(type) === "Ethereum") {
         if (EthBalance) {
           getEthBalance(Number(EthBalance).toFixed(5));
-          getBnbBalance(0.0)
+          getBnbBalance(0.0);
         } else {
           getEthBalance(0.0);
         }
-      }else if(JSON.parse(type)==='BSC'){
+      } else if (JSON.parse(type) === "BSC") {
         if (bal) {
           getBnbBalance(Number(bal).toFixed(5));
-          getEthBalance(0.0)
+          getEthBalance(0.0);
         } else {
           getBnbBalance(0.0);
         }
-      }else if(JSON.parse(type)==='Multi-coin'){
+      } else if (JSON.parse(type) === "Multi-coin") {
         if (EthBalance) {
           getEthBalance(Number(EthBalance).toFixed(5));
         } else {
@@ -103,18 +98,17 @@ function InvestmentChart() {
         } else {
           getBnbBalance(0.0);
         }
+      } else {
+        getEthBalance(0.0);
+        getBnbBalance(0.0);
       }
-      else{
-        getEthBalance(0.0)
-        getBnbBalance(0.0)
-      }
-    })
+    });
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [wallet.address]);
 
-  useEffect(()=>{
-    getEthBnbPrice()
-  },[])
+  useEffect(() => {
+    getEthBnbPrice();
+  }, []);
 
   let LeftContent = (props) => (
     <Avatar.Image
@@ -127,93 +121,63 @@ function InvestmentChart() {
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
 
   return (
-    <View style={{ display: "flex", flexDirection: "column", marginTop: 5 }}>
-      <Card
-        style={{
-          width: wp(95),
-          height: hp(10),
-          backgroundColor: "white",
-          borderRadius: 10,
-          marginLeft: 5,
-        }}
-      >
-        <Card.Title
-          titleStyle={{ color: "black", fontSize: 15, marginBottom: 23 }}
-          title={"BNB Coin"}
-          left={LeftContent}
-        />
-        <Card.Content
-          style={{ display: "flex", flexDirection: "row", color: "black" }}
-        >
-          <Title style={{ color: "black" }}></Title>
-          <Paragraph
-            style={{
-              color: "black",
-              marginLeft: wp("50"),
-              fontWeight: "bold",
-              top: -50,
-              left: 50,
+    <View>
+      <View style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image
+            source={{
+              uri: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850",
             }}
-          >
-            {bnbBalance ? bnbBalance : 0} BNB
-          </Paragraph>
-          <Paragraph
-            style={{
-              color: "grey",
-              position: "absolute",
-              marginLeft: wp("20"),
-              fontWeight: "bold",
-              top: -39,
-            }}
-          >
-           ${bnbPrice>=0?bnbPrice:300}
-          </Paragraph>
-        </Card.Content>
-      </Card>
+            style={styles.img}
+          />
+          <View style={styles.ethrumView}>
+            <Text>BNB Coin</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              ${bnbPrice >= 0 ? bnbPrice : 300}
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            color: "black",
 
-      <Card
-        style={{
-          width: wp(95),
-          height: hp(10),
-          backgroundColor: "white",
-          borderRadius: 10,
-          marginLeft: 5,
-        }}
-      >
-        <Card.Title
-          titleStyle={{ color: "black", fontSize: 15, marginBottom: 23 }}
-          title={"Ethereum"}
-          left={LeftContent2}
-        />
-        <Card.Content
-        
-          style={{ display: "flex", flexDirection: "row", color: "black" }}
+            fontWeight: "bold",
+          }}
         >
-          <Title style={{ color: "black" }}></Title>
-          <Paragraph
-            style={{
-              color: "black",
-              marginLeft: wp("50"),
-              fontWeight: "bold",
-              top: -50,
-              left: 50,
-            }}
-          >
-            {ethBalance ? ethBalance : 0} ETH
-          </Paragraph>
-          <Paragraph
-            style={{
-              color: "grey",
-              position: "absolute",
-              marginLeft: wp("20"),
-              fontWeight: "bold",
-              top: -39,
-            }}
-          >
-          $ {ethPrice>=0?ethPrice:1300}
-          </Paragraph>
-        </Card.Content>
-      </Card>
+          {bnbBalance ? bnbBalance : 0} BNB
+        </Text>
+      </View>
+
+      <View style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={Etherimage} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>Ethereum</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $ {ethPrice >= 0 ? ethPrice : 1300}
+            </Text>
+          </View>
+        </View>
+
+        <Text
+          style={{
+            color: "black",
+            fontWeight: "bold",
+          }}
+        >
+          {ethBalance ? ethBalance : 0} ETH
+        </Text>
+      </View>
     </View>
   );
 }
@@ -221,6 +185,19 @@ function InvestmentChart() {
 export default InvestmentChart;
 
 const styles = StyleSheet.create({
+  flatlistContainer: {
+    flexDirection: "row",
+    marginVertical:hp(3),
+    width: "80%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: wp(90),
+    alignSelf: "center",
+  },
+  img: { height: hp(5), width: wp(10), borderWidth: 1, borderRadius: hp(3) },
+  ethrumView: {
+    marginHorizontal: wp(4),
+  },
   view: {
     flex: 1,
     height: 75,

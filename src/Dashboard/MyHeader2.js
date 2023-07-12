@@ -8,9 +8,11 @@ import {
   UIManager,
   Touchable,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { Button } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons";
 import SendModal from "./Modals/SendModal";
 import RecieveModal from "./Modals/RecieveModal";
 import { useNavigation } from "@react-navigation/native";
@@ -29,9 +31,15 @@ import { Animated } from "react-native";
 import SwapModal from "./Modals/SwapModal";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { urls } from "./constants";
-import { getEtherBnbPrice, getEthPrice, getBnbPrice } from "../utilities/utilities";
+import {
+  getEtherBnbPrice,
+  getEthPrice,
+  getBnbPrice,
+} from "../utilities/utilities";
 import { tokenAddresses } from "./constants";
-import {FaucetModal} from "./Modals/faucetModal";
+import { FaucetModal } from "./Modals/faucetModal";
+import Icon from "../icon";
+import IconWithCircle from "../Screens/iconwithCircle";
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -42,14 +50,14 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   state = useSelector((state) => state);
   const state2 = useSelector((state) => state.walletBalance);
   const EthBalance = useSelector((state) => state.EthBalance);
-  const bnbBalance = useSelector((state)=> state.walletBalance)
+  const bnbBalance = useSelector((state) => state.walletBalance);
   const walletState = useSelector((state) => state.wallets);
   const type = useSelector((state) => state.walletType);
 
   console.log(state.wallets);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
@@ -59,9 +67,9 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [Type, setType] = useState("");
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
-  const[balanceUsd, setBalance] = useState(0.0)
+  const [balanceUsd, setBalance] = useState(0.0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
+  // onPress={() => setModalVisible(true)}
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
       UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -74,7 +82,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const translation = useRef(new Animated.Value(0)).current;
   const getXrpBal = async (address) => {
     console.log(address);
-   
+
     try {
       const response = await fetch(
         `http://${urls.testUrl}/user/getXrpBalance`,
@@ -93,9 +101,11 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         .then((responseJson) => {
           console.log(responseJson);
           if (responseJson) {
-            setType("XRP")
+            setType("XRP");
             console.log(responseJson.responseData);
-            GetBalance(responseJson.responseData?responseJson.responseData:0)
+            GetBalance(
+              responseJson.responseData ? responseJson.responseData : 0
+            );
           } else {
             console.log(response);
           }
@@ -110,7 +120,6 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       console.log(e);
     }
   };
-
 
   const getAllBalance = async () => {
     try {
@@ -164,24 +173,22 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           }
         } else if (JSON.parse(type) == "Xrp") {
           console.log("entering xrp balance");
-          try{
-
-            const resp =  dispatch(getXrpBalance(address))
-            .then((response)=>{
-              console.log(response)
-              setType("XRP")
-              console.log(response.XrpBalance);
-              GetBalance(response.XrpBalance?response.XrpBalance:0)
-            })
-            .catch((e)=>{
-              console.log(e)
-            })
+          try {
+            const resp = dispatch(getXrpBalance(address))
+              .then((response) => {
+                console.log(response);
+                setType("XRP");
+                console.log(response.XrpBalance);
+                GetBalance(response.XrpBalance ? response.XrpBalance : 0);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
             //await getXrpBal(address)
             //await getXrpBal(address)
-          }catch(e){
-            console.log(e)
+          } catch (e) {
+            console.log(e);
           }
-          
         } else if (JSON.parse(type) == "Multi-coin") {
           await dispatch(getMaticBalance(address))
             .then(async (res) => {
@@ -232,14 +239,12 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   };
 
   useEffect(async () => {
-    try{
-
-      getAllBalance()
-      .catch((e)=>{
-        console.log(e)
+    try {
+      getAllBalance().catch((e) => {
+        console.log(e);
       });
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
 
     Animated.timing(translation, {
@@ -249,15 +254,13 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     }).start();
   }, [state2, wallet]);
 
-  useEffect( () => {
-    try{
-
-      getAllBalance()
-      .catch((e)=>{
-        console.log(e)
+  useEffect(() => {
+    try {
+      getAllBalance().catch((e) => {
+        console.log(e);
       });
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   }, [state.wallet.address, state.wallet.name, state.walletType]);
 
@@ -267,46 +270,41 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   };
 
   const getBalanceInUsd = (ethBalance, bnbBalance) => {
-    console.log("My wallet Type",Type)
-    console.log(ethBalance,bnbBalance)
+    console.log("My wallet Type", Type);
+    console.log(ethBalance, bnbBalance);
     const ethInUsd = ethBalance * ethPrice;
     const bnbInUsd = bnbBalance * bnbPrice;
-    console.log("Eth balance",ethInUsd);
-    console.log("BNB balance",bnbInUsd);
-    AsyncStorageLib.getItem('walletType')
-    .then((Type)=>{
-      console.log("Async type",Type)
-      if(JSON.parse(Type)==='Ethereum'){
-        const totalBalance = Number(ethInUsd)
+    console.log("Eth balance", ethInUsd);
+    console.log("BNB balance", bnbInUsd);
+    AsyncStorageLib.getItem("walletType").then((Type) => {
+      console.log("Async type", Type);
+      if (JSON.parse(Type) === "Ethereum") {
+        const totalBalance = Number(ethInUsd);
         setBalance(totalBalance.toFixed(1));
-        return
-      }
-      else if(JSON.parse(Type)==='BSC'){
-        const totalBalance = Number(bnbInUsd)
+        return;
+      } else if (JSON.parse(Type) === "BSC") {
+        const totalBalance = Number(bnbInUsd);
         setBalance(totalBalance.toFixed(1));
-        return
-      }
-      else if(Type==='Xrp'){
-        setBalance(0.0)
-        return  
-      }
-      else if(Type==='Matic'){
-        setBalance(0.0)
-        return
-      }
-      else if(JSON.parse(Type)==='Multi-coin'){
+        return;
+      } else if (Type === "Xrp") {
+        setBalance(0.0);
+        return;
+      } else if (Type === "Matic") {
+        setBalance(0.0);
+        return;
+      } else if (JSON.parse(Type) === "Multi-coin") {
         const totalBalance = Number(ethInUsd) + Number(bnbInUsd);
         console.log(totalBalance);
         setBalance(totalBalance.toFixed(1));
-        return  
+        return;
       }
-    })
-      return
+    });
+    return;
     // setLoading(false)
   };
- 
-  const getETHBNBPrice = async ()=>{
-   /* await getEtherBnbPrice(tokenAddresses.ETH, tokenAddresses.BNB)
+
+  const getETHBNBPrice = async () => {
+    /* await getEtherBnbPrice(tokenAddresses.ETH, tokenAddresses.BNB)
     .then((resp) => {
       console.log(resp);
       setEthPrice(resp.Ethprice);
@@ -315,18 +313,15 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     .catch((e) => {
       console.log(e);
     });*/
-    await getEthPrice()
-    .then((response)=>{
-      console.log("eth price = ", response.USD)
-      setEthPrice(response.USD)
-    })
-    await getBnbPrice()
-    .then((response)=>{
-      console.log("BNB price= ", response.USD)
-      setBnbPrice(response.USD)
-    })
-   
-  }
+    await getEthPrice().then((response) => {
+      console.log("eth price = ", response.USD);
+      setEthPrice(response.USD);
+    });
+    await getBnbPrice().then((response) => {
+      console.log("BNB price= ", response.USD);
+      setBnbPrice(response.USD);
+    });
+  };
 
   useEffect(async () => {
     Animated.timing(fadeAnim, {
@@ -342,92 +337,50 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, []);
 
-  
-  useEffect(()=>{
-    console.log(balanceUsd)
+  useEffect(() => {
+    console.log(balanceUsd);
     //getEthPrice()
-    getETHBNBPrice()
-    getBalanceInUsd(EthBalance, bnbBalance)
-  },[ethPrice,bnbPrice,EthBalance,bnbBalance,Type])
+    getETHBNBPrice();
+    getBalanceInUsd(EthBalance, bnbBalance);
+  }, [ethPrice, bnbPrice, EthBalance, bnbBalance, Type]);
 
-  useEffect(()=>{
-    console.log(balanceUsd)
+  useEffect(() => {
+    console.log(balanceUsd);
     //getEthPrice()
-    getETHBNBPrice()
-    getBalanceInUsd(EthBalance, bnbBalance)
-  },[])
+    getETHBNBPrice();
+    getBalanceInUsd(EthBalance, bnbBalance);
+  }, []);
 
   return (
-    <Animated.View
-      style={{ height: hp("35"), backgroundColor: "#000C66", width: wp("100") }}
-    >
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          height: hp("33"),
-          backgroundColor: "#000C66",
-          color: "#FFFFFF",
-          borderBottomColor: "white",
-          borderBottomWidth: 0,
-        }}
-      >
-        <Button
-          color="#fff"
-          labelStyle={{ fontSize: 24 }}
-          icon="segment"
-          style={{ marginTop: 20 }}
-          onPress={() => openExtended()}
-        ></Button>
-        <Button
-          color="#fff"
-          labelStyle={{ fontSize: 24 }}
-          icon="bell"
-          style={{ marginTop: 20, marginLeft: wp(85), position: "absolute" }}
-          onPress={() => alert("Notifications will be added soon")}
-        ></Button>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+    <View style={{ backgroundColor: "#fff" }}>
+      <View style={styles.headerContainer}>
+        <Pressable onPress={() => alert("Notifications will be added soon")}>
+          <Icon name="bell" type={"fontisto"} size={24} />
+        </Pressable>
+        <FaucetModal showModal={showModal} setShowModal={setShowModal} />
+
+        {/* <TouchableOpacity
+          style={styles.faucetBtn}
+          onPress={() => {
+            console.log("pressed");
+            setShowModal(true);
           }}
         >
-          <View style={{position:'absolute', marginTop:hp(3),left:wp(0),backgroundColor:'white', height:hp(3),width:wp(20),borderRadius:10}}>
-            <TouchableOpacity
-            onPress={()=>{
-              console.log('pressed')
-              setShowModal(true)
-            }}
-            >
-              <Text style={{color:'black',textAlign:'center'}}>Faucet</Text>
-            </TouchableOpacity>
-         </View>
-          <Text
-            style={{
-              marginTop: 60,
-              fontWeight: "bold",
-              color: "#FFFFFF",
-              fontSize: 29,
-              fontFamily: "sans-serif",
-              marginRight: wp(45),
-            }}
-          >
-            
-            $ {balanceUsd>=0?balanceUsd: 0.00}
+          <Text style={styles.faucetText}>Faucet</Text>
+        </TouchableOpacity> */}
+        <Pressable onPress={() => openExtended()}>
+          <Icon name="sliders" type={"FAIcon"} size={24} />
+        </Pressable>
+      </View>
+      <View style={{ marginVertical: hp(2) }}>
+        <Text style={styles.dollartxt}>
+          $ {balanceUsd >= 0 ? balanceUsd : 0.0}
+        </Text>
+        <View style={styles.wallet}>
+          <Text style={styles.textDesign3}>
+            <Text>{balance ? balance : 0}</Text> {Type}
           </Text>
-
-          <Text
-            style={{
-              marginTop: 10,
-              fontWeight: "bold",
-              color: "#FFFFFF",
-              fontSize: 13,
-              fontFamily: "sans-serif",
-              marginRight: wp(40),
-            }}
-          >
+          <Text style={styles.text}>
             {state.wallet
               ? state.wallet.name
                 ? state.wallet.name
@@ -438,74 +391,48 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           </Text>
         </View>
       </View>
-      <View style={styles.text}>
-        <Text style={styles.textDesign}>All Assets</Text>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginLeft: 5,
-            marginTop: 1,
-          }}
-        >
-          <Logo />
-          <Text style={styles.textDesign3}>
-            <Text>{balance ? balance : 0}</Text> {Type}
-          </Text>
-        </View>
-      </View>
-
       <View style={styles.buttons}>
-        <View>
-          <Button
-            color="#fff"
-            labelStyle={{ fontSize: 24 }}
-            icon="arrow-up"
-            style={styles.addButton}
-            onPress={() => setModalVisible(true)}
-          ></Button>
-          <Text style={styles.textDesign4}>Send</Text>
-        </View>
-        <View>
-          <Button
-            color="#fff"
-            labelStyle={{ fontSize: 24 }}
-            icon="arrow-down"
-            style={styles.addButton}
-            onPress={() => setModalVisible2(true)}
-          ></Button>
-          <Text style={styles.textDesign3}>Recieve</Text>
-        </View>
-        <View>
-          <Button
-            color="#fff"
-            labelStyle={{ fontSize: 24 }}
-            icon="lightning-bolt"
-            style={styles.addButton}
-            onPress={async () => {
-              const walletType = await AsyncStorageLib.getItem('walletType')
-              console.log(JSON.parse(walletType))
-              if(!JSON.parse( walletType)) return alert('please select a wallet first to swap tokens')
-              if(JSON.parse(walletType)==='BSC' ||JSON.parse(walletType)==='Ethereum' || JSON.parse(walletType)==='Multi-coin'){
+        <IconWithCircle
+          name={"arrowup"}
+          type={"antDesign"}
+          title={"Send"}
+          onPress={() => setModalVisible(!modalVisible)}
+        />
 
-                setModalVisible3(true);
-              }else{
-                alert('Swapping is only supported for Ethereum and Binance ')
-              }
-            }}
-          ></Button>
-          <Text style={styles.textDesign4}>Swap</Text>
-        </View>
-        <View>
-          <Button
-            color="#fff"
-            labelStyle={{ fontSize: 24 }}
-            icon="currency-usd"
-            style={styles.addButton}
-            onPress={() => navigation.navigate("buycrypto")}
-          ></Button>
-          <Text style={styles.textDesign2}>Buy</Text>
-        </View>
+        <IconWithCircle
+          name={"arrowdown"}
+          type={"antDesign"}
+          title={"Receive"}
+          onPress={() => setModalVisible2(true)}
+        />
+
+        <IconWithCircle
+          name={"swap-horizontal"}
+          type={"ionicon"}
+          title={"Swap"}
+          onPress={async () => {
+            const walletType = await AsyncStorageLib.getItem("walletType");
+            console.log(JSON.parse(walletType));
+            if (!JSON.parse(walletType))
+              return alert("please select a wallet first to swap tokens");
+            if (
+              JSON.parse(walletType) === "BSC" ||
+              JSON.parse(walletType) === "Ethereum" ||
+              JSON.parse(walletType) === "Multi-coin"
+            ) {
+              setModalVisible3(true);
+            } else {
+              alert("Swapping is only supported for Ethereum and Binance ");
+            }
+          }}
+        />
+
+        <IconWithCircle
+          name={"credit-card-outline"}
+          type={"materialCommunity"}
+          title={"Buy"}
+          onPress={() => navigation.navigate("buycrypto")}
+        />
       </View>
       <SendModal
         modalVisible={modalVisible}
@@ -520,8 +447,22 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         setModalVisible={setModalVisible3}
         swapType={swapType}
       />
-      <FaucetModal showModal={showModal} setShowModal={setShowModal}/>
-    </Animated.View>
+
+      <View style={styles.iconmainContainer}>
+        <View style={styles.iconTextContainer}>
+          <Icon name="graph" type={"simpleLine"} size={hp(3)} />
+          <Text style={{ marginHorizontal: hp(1) }}>
+            Your Portfolio insights
+          </Text>
+        </View>
+        <View style={styles.iconTextContainer}>
+          <View style={styles.numberContainer}>
+            <Text style={styles.number}>3</Text>
+          </View>
+          <Icon name="cross" type={"entypo"} size={hp(3.6)} color="black" />
+        </View>
+      </View>
+    </View>
   );
 };
 
@@ -529,7 +470,6 @@ export default MyHeader2;
 const styles = StyleSheet.create({
   profile: {
     borderWidth: 1,
-    borderColor: "red",
     width: wp("15.1"),
     height: hp("7.7"),
     marginTop: hp("5"),
@@ -553,36 +493,31 @@ const styles = StyleSheet.create({
     marginLeft: wp("3"),
   },
   textDesign2: {
-    color: "white",
+    color: "black",
     fontWeight: "bold",
     marginLeft: wp("5"),
   },
   textDesign3: {
-    color: "white",
+    color: "black",
     fontWeight: "bold",
     marginLeft: wp("2"),
   },
   textDesign4: {
-    color: "white",
+    color: "black",
     fontWeight: "bold",
     marginLeft: wp("4"),
   },
   buttons: {
-    height: hp(3),
-    display: "flex",
+    marginTop: hp(2),
     flexDirection: "row",
     justifyContent: "space-evenly",
-    bottom: hp(15),
   },
   addButton: {
-    display: "flex",
-    paddingLeft: wp("4"),
-    opacity: 0.8,
+    justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    zIndex: 11,
-    backgroundColor: "grey",
-    width: wp("15"),
+    backgroundColor: "#3574B6",
+    width: wp("13"),
     height: hp("6"),
     borderRadius: 45,
     alignItems: "center",
@@ -654,6 +589,71 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  faucetText: {
+    color: "black",
+  },
+  faucetBtn: {
+    backgroundColor: "#4CA6EA",
+    width: wp(15),
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  headerContainer: {
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    marginTop: hp(2),
+    width:wp(90),
+    alignSelf:"center"
+  },
+  dollartxt: {
+    color: "black",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 20,
+    marginBottom: hp(1),
+  },
+  wallet: {
+    flexDirection: "row",
+    alignSelf: "center",
+  },
+  text: {
+    color: "black",
+    textAlign: "center",
+  },
+  iconTextContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  iconmainContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: hp(42),
+    alignSelf: "center",
+    marginTop: hp(3),
+    height: hp(9),
+    alignItems: "center",
+    borderRadius: hp(2),
+    padding: hp(2),
+    backgroundColor: "#e8f0f8",
+  },
+  numberContainer: {
+    backgroundColor: "#9bbfde",
+    width: hp(4.3),
+    height: hp(4.3),
+    borderRadius: hp(10),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  number: {
+    textAlign: "center",
+    color: "#fff",
+    backgroundColor: "#145DA0",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: hp(10),
   },
 });
 /*

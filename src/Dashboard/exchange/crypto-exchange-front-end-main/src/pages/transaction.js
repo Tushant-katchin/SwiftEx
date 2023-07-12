@@ -292,7 +292,7 @@ export const TransactionView = () => {
   const inActiveColor = ["#131E3A", "#131E3A"];
   const [message, setMessage] = useState();
   const [value, setValue] = useState(0);
-  const [transactions, setTransactions] = useState();
+  const [transactions, setTransactions] = useState([]);
   const [profile, setProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
   // const [searchParams] = useSearchParams();
@@ -388,9 +388,9 @@ export const TransactionView = () => {
     <>
       <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
         <Text style={styles.transactionText}>Transactions</Text>
-        <Text>{message}</Text>
+        <Text style={{ textAlign: "center", color: "#fff" }}>{message}</Text>
         {isLoading ? (
-          <Text>Loading...</Text>
+          <Text style={{ textAlign: "center" }}>Loading...</Text>
         ) : (
           <>
             <OffersButton
@@ -410,6 +410,7 @@ export const TransactionView = () => {
               onPressOffer={() => {
                 setRoute("OFFERS");
               }}
+              
             />
             {route == "BID" && (
               <View>

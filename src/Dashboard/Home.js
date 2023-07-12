@@ -99,15 +99,15 @@ const Dashboard = ({ navigation }) => {
     return <MyHeader3 title={title} />;
   };
 
-  useEffect(async () => {
-    // CheckWallet(statee.user, dispatch, importAllWallets)
-    const user = await AsyncStorageLib.getItem("user");
-    console.log(user);
-    dispatch(setUser(JSON.parse(user)));
+  // useEffect(async () => {
+  //   // CheckWallet(statee.user, dispatch, importAllWallets)
+  //   const user = await AsyncStorageLib.getItem("user");
+  //   console.log(user);
+  //   dispatch(setUser(JSON.parse(user)));
 
-    const data = await AsyncStorage.getItem(`${user}-wallets`);
-    console.log(data);
-  }, []);
+  //   const data = await AsyncStorage.getItem(`${user}-wallets`);
+  //   console.log(data);
+  // }, []);
 
   return (
     <>

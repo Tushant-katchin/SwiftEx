@@ -6,82 +6,56 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import IconWithCircle from "../Screens/iconwithCircle";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-import darkBlue from "../../assets/darkBlue.png";
-import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
-import { width } from "@mui/system";
 
-export const ExchangeHeader = () => {
-  const navigation = useNavigation();
-
+const ProfileHeader = () => {
   return (
-    <View style={styles.headerContainer}>
-      <Icon
-        name={"left"}
-        type={"antDesign"}
-        size={20}
-        color={"#fff"}
-        onPress={() => {
-          navigation.goBack();
-        }}
-      />
-      <Text style={{ color: "#fff", fontWeight: "700" }}>Exchange</Text>
-      <View style={{ alignItems: "center" }}>
-        <Icon
-          name={"logout"}
-          type={"materialCommunity"}
-          size={20}
-          color={"#E96A6A"}
-          onPress={() => {
-            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            AsyncStorage.removeItem(LOCAL_TOKEN);
-            navigation.navigate("Settings");
-          }}
-        />
-        <Text style={{ color: "#E96A6A" }}>Logout</Text>
+    <View style={styles.mainContainer}>
+      <View style={styles.iconContainer}>
+        <Icon name="bell-o" size={20} color="black" type={"fa"} />
+        <Icon name="sliders" type={"fa"} size={20} color="black" />
       </View>
-    </View>
-  );
-};
-
-export const ExchangeHeaderIcon = () => {
-  const navigation = useNavigation();
-
-  return (
-    <View style={styles.headerContainer1}>
-      <View
-        style={{
-          justifyContent: "space-around",
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
+      <Text style={styles.dollarText}>$0.00</Text>
+      <View style={styles.textwithIcon}>
+        <Text style={styles.textColor}>Main Wallet 1</Text>
         <Icon
-          name={"left"}
+          name="caretdown"
           type={"antDesign"}
-          size={20}
-          color={"#010C66"}
-          onPress={() => {
-            navigation.goBack();
-          }}
+          size={16}
+          style={{ marginHorizontal: hp(0.7) }}
+          color="gray"
         />
-        <Image source={darkBlue} style={styles.logoImg} />
       </View>
-      <Text style={styles.text}>Exchange</Text>
-      <View style={{ alignItems: "center" }}>
-        <Icon
-          name={"logout"}
-          type={"materialCommunity"}
-          size={20}
-          color={"#E96A6A"}
-          onPress={() => {
-            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            AsyncStorage.removeItem(LOCAL_TOKEN);
-            navigation.navigate("Settings");
-          }}
+      <View style={styles.iconsContainer}>
+        <IconWithCircle name={"arrowup"} type={"antDesign"} title={"Send"} />
+        <IconWithCircle
+          name={"arrowdown"}
+          type={"antDesign"}
+          title={"Receive"}
         />
-        <Text style={{ color: "#E96A6A" }}>Logout</Text>
+        <IconWithCircle
+          name={"credit-card-outline"}
+          type={"materialCommunity"}
+          title={"Buy"}
+        />
+        <IconWithCircle
+          name={"swap-horizontal"}
+          type={"ionicon"}
+          title={"Swap"}
+        />
+      </View>
+      <View style={styles.iconmainContainer}>
+        <View style={styles.iconTextContainer}>
+          <Icon name="graph" type={"simpleLine"} size={hp(3)} />
+          <Text style={{ marginHorizontal: hp(1) }}>
+            Your Portfolio insights
+          </Text>
+        </View>
+        <View style={styles.iconTextContainer}>
+          <View style={styles.numberContainer}>
+            <Text style={styles.number}>3</Text>
+          </View>
+          <Icon name="cross" type={"entypo"} size={hp(3.6)} color="black" />
+        </View>
       </View>
     </View>
   );
@@ -90,7 +64,7 @@ export const ExchangeHeaderIcon = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: "#fff",
-    height: hp(47),
+    height: hp(39),
   },
   iconContainer: {
     flexDirection: "row",
@@ -103,7 +77,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "black",
     fontSize: 30,
-    marginTop: hp(3),
+    marginTop: hp(0.4),
   },
   textwithIcon: {
     flexDirection: "row",
@@ -116,7 +90,7 @@ const styles = StyleSheet.create({
   iconsContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginTop: hp(5),
+    marginTop: hp(2),
   },
   iconTextContainer: {
     flexDirection: "row",
@@ -127,7 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: hp(42),
     alignSelf: "center",
-    marginTop: hp(5),
+    marginTop: hp(3),
     height: hp(9),
     alignItems: "center",
     borderRadius: hp(2),
@@ -181,3 +155,4 @@ const styles = StyleSheet.create({
     marginRight: wp(10),
   },
 });
+export default ProfileHeader;
