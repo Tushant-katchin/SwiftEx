@@ -956,7 +956,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
 
   return (
     <View
-      style={{ marginTop: hp(50) }}
+      // style={{ marginTop: hp(50) }}
       onStartShouldSetResponder={() => Keyboard.dismiss()}
     >
       <Modal

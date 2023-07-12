@@ -4,7 +4,7 @@ import Nfts from '../Dashboard/Nfts';
 import Token from '../Dashboard/Token';
 
 
-const ScoringTopTab = () => {
+const WalletTopTab = () => {
     const Tab = createMaterialTopTabNavigator();
     return (
       <Tab.Navigator
@@ -29,4 +29,4 @@ const ScoringTopTab = () => {
     );
   };
 
-export default ScoringTopTab
+export default WalletTopTab

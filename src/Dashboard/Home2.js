@@ -234,22 +234,22 @@ const Home2 = ({ navigation }) => {
   const renderTabBar = (props) => (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: "blue" }}
-      style={{ backgroundColor: "#189AB4" }}
-      activeColor={"blue"}
-      inactiveColor={"white"}
+      indicatorStyle={{ backgroundColor: "#4CA6EA" }}
+      style={{ backgroundColor: "#fff" }}
+      activeColor={"#4CA6EA"}
+      inactiveColor={"black"}
       pressColor={"black"}
     />
   );
 
   const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View>
       <InvestmentChart />
     </View>
   );
 
   const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View>
       <Nfts />
     </View>
   );
@@ -271,7 +271,7 @@ const Home2 = ({ navigation }) => {
       delay: 0.1,
       useNativeDriver: true,
     }).start();
-   /* if (!state.wallet.address) {
+    /* if (!state.wallet.address) {
       try {
         await SetCurrentWallet().catch((e) => {
           console.log(e);
@@ -280,7 +280,8 @@ const Home2 = ({ navigation }) => {
         console.log(e);
       }
     }
-  */  }, []);
+  */
+  }, []);
   useEffect(async () => {
     try {
       await SetCurrentWallet().catch((e) => {
@@ -331,19 +332,18 @@ const Home2 = ({ navigation }) => {
     getToken();
   }, []);
 
-  /*useFocusEffect(
+  useFocusEffect(
     React.useCallback(() => {
-      try{
-
+      try {
         getTransactions().then((res) => {
           console.log(res);
           checkIncomingTx(res);
         });
-      }catch(e){
-        console.log(e)
+      } catch (e) {
+        console.log(e);
       }
     }, [])
-  );*/
+  );
 
   return (
     <Animated.View style={{ backgroundColor: "#000C66" }}>
@@ -355,7 +355,7 @@ const Home2 = ({ navigation }) => {
           renderScene={renderScene}
           onIndexChange={setIndex}
           initialLayout={{ width: layout.width }}
-          style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
+          // style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
         />
       </View>
     </Animated.View>
@@ -365,13 +365,13 @@ const Home2 = ({ navigation }) => {
 export default Home2;
 const Styles = StyleSheet.create({
   container: {
-    display: "flex",
+    // display: "flex",
     backgroundColor: "white",
     height: hp("100"),
     width: wp("100"),
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    zIndex: 100,
+    // zIndex: 100,
   },
   content: {
     display: "flex",

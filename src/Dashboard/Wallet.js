@@ -272,13 +272,13 @@ import Icon from "../icon";
 
 const Data = [
   {
-    description: "Club 19 Musakhedi Road,",
+    description: "OKX Applies to Become a Registered",
     title: "Digital Assets Service Provider in Finance",
     text: "CryptoTale",
     uri: require("../../assets/Wallet1.png"),
   },
   {
-    description: "Club 19 Musakhedi Road,",
+    description: "OKX Applies to Become a Registered",
     title: "Digital Assets Service Provider in Finance",
     text: "CryptoTale",
     uri: require("../../assets/Wallet1.png"),
@@ -457,12 +457,15 @@ const styles = StyleSheet.create({
     marginTop: hp(3),
     alignItems: "center",
     marginHorizontal: hp(3),
+    paddingBottom:hp(1)
   },
   flatlistContainer2:{
     flexDirection: "row",
     marginTop: hp(3),
     alignItems: "center",
     marginHorizontal: hp(3),
+    paddingBottom:hp(1)
+
   },
   text: {
     color: "gray",
