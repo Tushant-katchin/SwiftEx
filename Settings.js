@@ -265,7 +265,7 @@ const Settings = (props) => {
            const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
            console.log(token);
 
-           if (token) {
+           if (!token) {
              props.navigation.navigate("exchange");
            } else {
              props.navigation.navigate("exchangeLogin");

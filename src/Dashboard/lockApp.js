@@ -95,7 +95,7 @@ const LockApp = (props) => {
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
       //setShowCompletedButton(true)
       const Pin = await AsyncStorage.getItem("pin");
 
@@ -140,7 +140,7 @@ const LockApp = (props) => {
           <ReactNativePinView
             inputSize={32}
             ref={pinView}
-            pinLength={4}
+            pinLength={6}
             buttonSize={60}
             onValueChange={(value) => setEnteredPin(value)}
             buttonAreaStyle={{
