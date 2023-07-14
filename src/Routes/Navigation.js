@@ -61,12 +61,13 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="ExchangeNavigation"
+      // initialRouteName="Transactions"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
+      
        {/* <Stack.Screen
         name="ExchangeNavigation"
         component={ExchangeNavigation}

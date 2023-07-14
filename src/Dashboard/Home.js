@@ -20,6 +20,7 @@ import store from "../components/Redux/Store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyHeader3 from "./Header3";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { ExchangeHeaderIcon } from "./header";
 const Tab = createBottomTabNavigator();
 
 const Dashboard = ({ navigation }) => {
@@ -157,13 +158,11 @@ const Dashboard = ({ navigation }) => {
             );
           },
           tabBarActiveTintColor: "blue",
-          tabBarInactiveTintColor: "gray",
+          tabBarInactiveTintColor: "white",
           tabBarStyle: {
             position: "absolute",
-            backgroundColor: "white",
+            backgroundColor: "#4CA6EA",
             height: hp("12"),
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
             borderTopColor: "black",
             borderTopWidth: 1,
           },
@@ -177,6 +176,8 @@ const Dashboard = ({ navigation }) => {
           component={Home2}
           options={{
             header: () =>
+            
+            
               state.extended === false
                 ? Header1("Home", state)
                 : Header2("Home", state),
@@ -188,7 +189,10 @@ const Dashboard = ({ navigation }) => {
           name="Wallet"
           component={Wallet}
           options={{
-            unmountOnBlur: true,
+            headerShown: true,
+            header: () => {
+              return <ExchangeHeaderIcon  title={'Wallet'} />;
+            },
             tabBarIcon: ({ focused }) => {
               let iconName;
               iconName = "ios-home-sharp"; //for icon or image
@@ -207,27 +211,8 @@ const Dashboard = ({ navigation }) => {
                 </View>
               );
             },
-            tabBarLabel: ({ focused }) => {
-              let iconColor;
-
-              iconColor = focused ? "blue" : "black";
-
-              return (
-                <Text
-                  style={{
-                    width: wp("30"),
-                    color: iconColor,
-                    fontSize: hp("2.5"),
-                    textAlign: "center",
-                    marginBottom: 10,
-                  }}
-                >
-                  Wallet
-                </Text>
-              );
-            },
-            header: () => Header3("Wallet"),
-            headerShown: true,
+           
+            
           }}
         />
 
