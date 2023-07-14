@@ -31,6 +31,7 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 
 const ImportEthereumModal = ({
   props,
@@ -271,7 +272,9 @@ const ImportEthereumModal = ({
                   const check = ethers.utils.isValidMnemonic(trimmedPhrase);
                   if (!check) {
                     setLoading(false);
+                    
                     return alert(
+                      'error',
                       "Incorrect Mnemonic. Please provide a valid Mnemonic"
                     );
                   }
@@ -340,7 +343,7 @@ const ImportEthereumModal = ({
                     (response) => {
                       if (response) {
                         if (response.status === "Already Exists") {
-                          alert("Account with same name already exists");
+                          alert("error","Account with same name already exists");
                           setLoading(false);
                           return;
                         } else if (response.status === "success") {
@@ -354,7 +357,7 @@ const ImportEthereumModal = ({
                             navigation.navigate("AllWallets");
                           }, 0);
                         } else {
-                          alert("failed please try again");
+                          alert("error","failed please try again");
                           return;
                         }
                       }
@@ -372,6 +375,7 @@ const ImportEthereumModal = ({
                   if (!check) {
                     setLoading(false);
                     return alert(
+                      "error",
                       "Incorrect PrivateKey. Please provide a valid privatekey"
                     );
                   }
@@ -436,7 +440,7 @@ const ImportEthereumModal = ({
                     (response) => {
                       if (response) {
                         if (response.status === "Already Exists") {
-                          alert("Account with same name already exists");
+                          alert("error","Account with same name already exists");
                           setLoading(false);
                           return;
                         } else if (response.status === "success") {
@@ -450,7 +454,7 @@ const ImportEthereumModal = ({
                             navigation.navigate("AllWallets");
                           }, 0);
                         } else {
-                          alert("failed please try again");
+                          alert("error","failed please try again");
                           return;
                         }
                       }
@@ -519,7 +523,7 @@ const ImportEthereumModal = ({
                           (response) => {
                             if (response) {
                               if (response.status === "Already Exists") {
-                                alert("Account with same name already exists");
+                                alert("error","Account with same name already exists");
                                 setLoading(false);
                                 return;
                               } else if (response.status === "success") {
@@ -533,7 +537,7 @@ const ImportEthereumModal = ({
                                   navigation.navigate("AllWallets");
                                 }, 0);
                               } else {
-                                alert("failed please try again");
+                                alert("error","failed please try again");
                                 return;
                               }
                             }
@@ -551,7 +555,7 @@ const ImportEthereumModal = ({
                     setLoading(false);
                   } catch (e) {
                     console.log(e);
-                    alert(e);
+                    alert("error",e);
                   }
                 }
 

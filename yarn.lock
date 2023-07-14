@@ -18783,11 +18783,6 @@
     "level-filesystem" "^1.0.1"
     "levelup" "^0.18.2"
 
-"react-native-linear-gradient@^2.6.0":
-  "integrity" "sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ=="
-  "resolved" "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz"
-  "version" "2.6.2"
-
 "react-native-modal@^12.1.0":
   "integrity" "sha512-9myTNZ75gz6MPg1Cngm01x59JbaVkTeWoZvmChmW//PbSAdfbP/dFPnzbidL9IDrRh6Ftuuq8WSuM0aoS5m2lg=="
   "resolved" "https://registry.npmjs.org/react-native-modal/-/react-native-modal-12.1.0.tgz"
@@ -18963,10 +18958,10 @@
   dependencies:
     "prop-types" "^15.6.0"
 
-"react-native-snackbar@^2.4.0":
-  "integrity" "sha512-xEDIDxw0ubBHrsvzaMfrZlFoy+ai1WEJZQwyAsG55fqYxUfQM20h+V4v25u+/H/YKY7ZCRMdCZ8zB5JOnbvCQw=="
-  "resolved" "https://registry.npmjs.org/react-native-snackbar/-/react-native-snackbar-2.4.0.tgz"
-  "version" "2.4.0"
+"react-native-snackbar@^2.6.2":
+  "integrity" "sha512-edAubZJiBowwQUXJV5oXbMqitQ9vw7JzWUCczeTPVo6lRa+FzsUjiCQBHdWBbCw/N8/Q7jgKg4juNXU/bXZdXg=="
+  "resolved" "https://registry.npmjs.org/react-native-snackbar/-/react-native-snackbar-2.6.2.tgz"
+  "version" "2.6.2"
 
 "react-native-snap-carousel@latest":
   "integrity" "sha512-xWEGusacIgK1YaDXLi7Gao2+ISLoGPVEBR8fcMf4tOOJQufutlNwkoLu0l6B8Qgsrre0nTxoVZikRgGRDWlLaQ=="

@@ -214,6 +214,7 @@ import {
 } from "react-native-responsive-screen";
 import {useNavigation } from "@react-navigation/native";
 import Icon from "../icon";
+import { alert } from "./reusables/Toasts";
 
 const Market = (props) => {
   const [data, setData] = useState();
@@ -255,7 +256,8 @@ const Market = (props) => {
         })
         .catch((error) => {
           console.error(error);
-          alert(error);
+          
+          alert("error",error);
         });
     } catch (error) {
       console.log(error);

@@ -24,6 +24,7 @@ import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 const CheckNewWalletMnemonic = ({
   Wallet,
   Visible,
@@ -219,7 +220,8 @@ const CheckNewWalletMnemonic = ({
                     .then((response)=>{
                       if(response){
                         if(response.status==='Already Exists'){
-                          alert('Account with same name already exists')
+                          
+                          alert("error",'Account with same name already exists')
                           setLoading(false)
                           return
                         }
@@ -237,7 +239,7 @@ const CheckNewWalletMnemonic = ({
                           
                         }
                         else{
-                          alert('failed please try again')
+                          alert("error",'failed please try again')
                           return
                         }
                       }
@@ -257,7 +259,7 @@ const CheckNewWalletMnemonic = ({
                   setModalVisible(false);
                   SetPrivateKeyVisible(false);
                   setNewWalletVisible(false);
-                  alert("Failed to import wallet. Please try again");
+                  alert("error","Failed to import wallet. Please try again");
                 }
               }}
             ></Button>

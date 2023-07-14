@@ -26,6 +26,7 @@ import Modal from "react-native-modal";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { decodeUserToken } from "../Auth/jwtHandler";
+import { alert } from "../reusables/Toasts";
 const PinViewModal = ({
   pinViewVisible,
   setPinViewVisible,
@@ -196,17 +197,18 @@ const PinViewModal = ({
                               setPinViewVisible(false);
                               setLoginVisible(false);
                             } else {
-                              alert("invalid login. try using another account");
+                              
+                              alert("error","invalid login. try using another account");
                             }
                           }
                         );
                         //props.navigation.navigate('HomeScreen')
                       } else {
                         // props.navigation.navigate('Welcome')
-                        alert("please enter username first");
+                        alert("error","please enter username first");
                       }
                     } else {
-                      alert("invalid pin");
+                      alert("error","invalid pin");
                     }
                   } else {
                     /* setPin(enteredPin)

@@ -6,6 +6,7 @@ import { urls } from './constants';
 import { WebView } from 'react-native-webview';
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import { alert } from '../../../../reusables/Toasts';
 
 
 
@@ -43,7 +44,8 @@ useEffect(async()=>{
 
       }
       else{
-        return alert("no chainType found in multi-coin transaction. Error 404")
+        
+        return alert('error',"no chainType found in multi-coin transaction. Error 404")
       }
     }
   })

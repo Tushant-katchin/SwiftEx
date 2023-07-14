@@ -55,6 +55,7 @@ import {
 import { SwapEthForTokens } from "../tokens/swapFunctions";
 import { SwapTokensToTokens, UniSwap } from "../tokens/UniswapFunctions";
 import { useBiometricsForSwapTransaction } from "../../biometrics/biometric";
+import { alert } from "../reusables/Toasts";
 
 const SwapModal = ({ modalVisible, setModalVisible }) => {
   const [loading, setLoading] = useState(false);
@@ -150,11 +151,12 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
 
     const Wallet = await state.wallet.address;
     if (!Wallet) {
-      return alert("please select a wallet first");
+      return alert("error","please select a wallet first");
     }
     if (!amount || !coin0.address || !coin1.address) {
       setLoading(false);
-      return alert("All places are mandatory");
+      
+      return alert("error","All places are mandatory");
     }
 
     /*if(balance<=0){
@@ -264,14 +266,14 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             );
             console.log(saveTransaction);
             // await getCustomBalance()
-            alert("Your Tx Hash : " + tx.hash);
+            alert("success","Your Tx Hash : " + tx.hash);
             navigation.navigate("Transactions");
           } catch (e) {
-            alert(e);
+            alert("error",e);
             console.log(e);
           }
         } else {
-          alert("transaction failed");
+          alert("error","transaction failed");
         }
       } else if (coin1.symbol === "BNB") {
         const type = "TOKENTOBNB";
@@ -333,10 +335,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           );
           console.log(saveTransaction);
           //await getCustomBalance()
-          alert("Your Tx Hash : " + Tx.hash);
+          alert('success',"Your Tx Hash : " + Tx.hash);
           navigation.navigate("Transactions");
         } else {
-          alert("Swap failed");
+          alert('error',"Swap failed");
         }
       } else {
         const type = "TOKENTOTOKEN";
@@ -390,10 +392,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           );
           console.log(saveTransaction);
           //await getCustomBalance()
-          alert("Your Tx Hash : " + Tx.hash);
+          alert('success',"Your Tx Hash : " + Tx.hash);
           navigation.navigate("Transactions");
         } else {
-          alert("Swap failed");
+          alert('error',"Swap failed");
         }
       }
     } catch (e) {
@@ -424,7 +426,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                 console.log(response);
                 if (response) {
                   if (response.code === 400) {
-                    return alert("server error please try again");
+                    return alert('error',"server error please try again");
                   } else if (response.code === 401) {
                     console.log(response);
                     const type = "Swap";
@@ -440,33 +442,33 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         setLoading(false);
                         setTradeVisible(false);
                         setModalVisible(false);
-                        alert("Your Tx Hash : " + response.tx.transactionHash);
+                        alert('success',"Your Tx Hash : " + response.tx.transactionHash);
                         navigation.navigate("Transactions");
                       })
                       .catch((e) => {
                         setLoading(false);
-                        alert(e.message);
+                        alert('error',e.message);
                         console.log(e);
                       });
                   } else if (response.code === 404) {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert("pair not found");
+                    return alert('error',"pair not found");
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert(response);
+                    return alert('error',response);
                   }
                 } else {
                   setLoading(false);
                   setTradeVisible(false);
-                  return alert("server error");
+                  return alert('success',"server error");
                 }
               })
               .catch((e) => {
                 setLoading(false);
                 setTradeVisible(false);
-                alert(e.message);
+                alert('error',e.message);
                 console.log(e);
               });
           } else if (coin1.symbol === "WETH") {
@@ -495,31 +497,31 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         setTradeVisible(false);
                         setModalVisible(false);
                         setPinViewVisible(false);
-                        alert("Your Tx Hash : " + response.tx);
+                        alert('success',"Your Tx Hash : " + response.tx);
                         navigation.navigate("Transactions");
                       })
                       .catch((e) => {
                         setLoading(false);
                         setTradeVisible(false);
-                        alert(e.message);
+                        alert('error',e.message);
                         console.log(e);
                       });
                   } else if (response.code === 400) {
                     setLoading(false);
-                    return alert("error while swapping. please try again");
+                    return alert('error',"error while swapping. please try again");
                   } else if (response === 404) {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert("pair not found");
+                    return alert('error',"pair not found");
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert(response);
+                    return alert('error',response);
                   }
                 } else {
                   setLoading(false);
                   setTradeVisible(false);
-                  return alert("server error");
+                  return alert('error',"server error");
                 }
               })
               .catch((e) => {
@@ -553,28 +555,28 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         setLoading(false);
                         setTradeVisible(false);
                         setModalVisible(false);
-                        alert("Your Tx Hash : " + response.tx);
+                        alert('success',"Your Tx Hash : " + response.tx);
                         navigation.navigate("Transactions");
                       })
                       .catch((e) => {
                         setLoading(false);
                         setTradeVisible(false);
-                        alert(e.message);
+                        alert('error',e.message);
                         console.log(e);
                       });
                   } else if (response === 404) {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert("pair not found");
+                    return alert('error',"pair not found");
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert(response);
+                    return alert('error',response);
                   }
                 } else {
                   setLoading(false);
                   setTradeVisible(false);
-                  return alert("server error");
+                  return alert('error',"server error");
                 }
               })
               .catch((e) => {
@@ -586,7 +588,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           }
         } else {
           setLoading(false);
-          alert("no wallets found");
+          alert('error',"no wallets found");
         }
       } else if (JSON.parse(walletType) === "BSC") {
         const swap = await pancakeSwap(Wallet.privateKey);
@@ -607,7 +609,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   console.log(response);
                   if (response) {
                     if (response.code === 400) {
-                      return alert("server error please try again");
+                      return alert('error',"server error please try again");
                     } else if (response.code === 401) {
                       console.log(response);
                       const type = "Swap";
@@ -624,6 +626,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           setTradeVisible(false);
                           setModalVisible(false);
                           alert(
+                            'success',
                             "Your Tx Hash : " + response.tx.transactionHash
                           );
                           navigation.navigate("Transactions");
@@ -635,22 +638,22 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     } else if (response.code === 404) {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert("pair not found");
+                      return alert('error',"pair not found");
                     } else {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert(response);
+                      return alert('success',response);
                     }
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert("server error");
+                    return alert('error',"server error");
                   }
                 })
                 .catch((e) => {
                   setLoading(false);
                   setTradeVisible(false);
-                  alert(e.message);
+                  alert('success',e.message);
                   console.log(e);
                 });
             } else if (coin1.symbol === "WETH") {
@@ -678,37 +681,37 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           setLoading(false);
                           setTradeVisible(false);
                           setModalVisible(false);
-                          alert("Your Tx Hash : " + response.tx);
+                          alert('success',"Your Tx Hash : " + response.tx);
                           navigation.navigate("Transactions");
                         })
                         .catch((e) => {
                           setLoading(false);
                           setTradeVisible(false);
-                          alert(e.message);
+                          alert('error',e.message);
                           console.log(e);
                         });
                     } else if (response.code === 400) {
                       setLoading(false);
-                      return alert("error while swapping. please try again");
+                      return alert('error',"error while swapping. please try again");
                     } else if (response === 404) {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert("pair not found");
+                      return alert('error',"pair not found");
                     } else {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert(response);
+                      return alert('error',response);
                     }
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert("server error");
+                    return alert('error',"server error");
                   }
                 })
                 .catch((e) => {
                   setLoading(false);
                   setTradeVisible(false);
-                  alert(e.message);
+                  alert('error',e.message);
                   console.log(e);
                 });
             } else {
@@ -737,7 +740,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           setLoading(false);
                           setTradeVisible(false);
                           setModalVisible(false);
-                          alert("Your Tx Hash : " + response.tx);
+                          alert('success',"Your Tx Hash : " + response.tx);
                           navigation.navigate("Transactions");
                         })
                         .catch((e) => {
@@ -748,7 +751,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     } else if (response === 404) {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert("pair not found");
+                      return alert('error',"pair not found");
                     } else {
                       setLoading(false);
                       setTradeVisible(false);
@@ -757,19 +760,19 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert("server error");
+                    return alert('error',"server error");
                   }
                 })
                 .catch((e) => {
                   setLoading(false);
                   setTradeVisible(false);
-                  alert(e.message);
+                  alert('error',e.message);
                   console.log(e);
                 });
             }
           } else {
             setLoading(false);
-            alert("no wallets found");
+            alert('error',"no wallets found");
           }
         } else if (swapType === "BSC") {
           const swap = await pancakeSwap(Wallet.privateKey);
@@ -781,7 +784,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     } catch (e) {
       setLoading(false);
       setTradeVisible(false);
-      alert(e.message)
+      alert('error',e.message)
       console.log(e);
     }
   }
@@ -1201,6 +1204,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           console.log(e);
                           setLoading2(false);
                           return alert(
+                            'error',
                             "error fetching pair prices. please try again"
                             );
                           });
@@ -1235,7 +1239,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           .catch((e) => {
                             setLoading2(false);
                             console.log(e);
-                            alert(e);
+                            alert('error',e);
                           });
                         } else if (coin1.symbol === "BNB") {
                           type = "TOKENTOBNB";
@@ -1262,7 +1266,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                             .catch((e) => {
                               setLoading2(false);
                               console.log(e);
-                              alert(e);
+                              alert('error',e);
                             });
                           } else {
                             type = "TOKENTOTOKEN";
@@ -1295,6 +1299,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                                   .catch((e) => {
                                     setLoading2(false);
                                     alert(
+                                      'error',
                                       "Insufficient liquidity. please try with a different token"
                                       );
                                       console.log(e);
@@ -1366,6 +1371,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                                           console.log(e);
                                           setLoading2(false);
                                           return alert(
+                                            'error',
                                             e.message
                                             );
                                           });
@@ -1406,7 +1412,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                       .catch((e) => {
                         setLoading2(false);
                         console.log(e);
-                        alert(e);
+                        alert('error',e);
                       });
                     } else if (coin1.symbol === "BNB") {
                       type = "TOKENTOBNB";
@@ -1434,7 +1440,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         .catch((e) => {
                           setLoading2(false);
                           console.log(e);
-                          alert(e);
+                          alert('error',e);
                         });
                       } else {
                         type = "TOKENTOTOKEN";
@@ -1468,6 +1474,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                               .catch((e) => {
                                 setLoading2(false);
                                 alert(
+                                  'error',
                                   "Insufficient liquidity. please try with a different token"
                                   );
                                   console.log(e);
@@ -1478,7 +1485,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                             }
                           }
                         } else {
-                          return alert("Swap not supported for chain");
+                          return alert('error',"Swap not supported for chain");
                         }
                       }catch(e){
                         setLoading2(false);
@@ -1635,6 +1642,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     }
                     if (Number(amount) >= Number(balance)) {
                       return alert(
+                        'error',
                         "You Don't have enough balance to do this transaction"
                       );
                     }

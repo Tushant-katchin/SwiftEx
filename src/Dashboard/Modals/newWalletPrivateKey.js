@@ -69,15 +69,17 @@ const NewWalletPrivateKey = ({
         .then((response) => response.json())
         .then(async (responseJson) => {
           if (responseJson.responseCode === 200) {
-            alert("success");
+            
+            alert("success","success");
             return responseJson.responseCode;
           } else if (responseJson.responseCode === 400) {
             alert(
+              "error",
               "account with same name already exists. Please use a different name"
             );
             return responseJson.responseCode;
           } else {
-            alert("Unable to create account. Please try again");
+            alert("error","Unable to create account. Please try again");
             return 401;
           }
         })
@@ -90,7 +92,7 @@ const NewWalletPrivateKey = ({
       setVisible(!visible);
 
       console.log(e);
-      alert(e);
+      alert('error',e);
     }
     console.log(response);
     return response;
@@ -186,7 +188,7 @@ const NewWalletPrivateKey = ({
             submitInput={async (inputText) => {
               setVisible(!visible);
               if (!inputText) {
-                return alert("please enter a password to continue");
+                return alert("error","please enter a password to continue");
               } else {
                 const response = await saveUserDetails()
                   .then((response) => {
@@ -235,7 +237,7 @@ const NewWalletPrivateKey = ({
                     props.navigation.navigate("HomeScreen");
                   })
                   .catch((e) => {
-                    return alert("failed to create account. please try again");
+                    return alert("error","failed to create account. please try again");
                   });
 
                 // alert('success ' + accountName)

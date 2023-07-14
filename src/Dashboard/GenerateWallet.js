@@ -15,6 +15,7 @@ import { Animated } from "react-native";
 import darkBlue from "../../assets/darkBlue.png";
 import { useDispatch, useSelector } from "react-redux";
 import { Generate_Wallet2 } from "../components/Redux/actions/auth";
+import { alert } from "./reusables/Toasts";
 
 const GenerateWallet = (props) => {
   const [Checked, setCheckBox] = useState(false);
@@ -119,13 +120,13 @@ const GenerateWallet = (props) => {
                       });
                     } else {
                       setLoading(false);
-
-                      alert("wallet generation failed. Please try again");
+                      
+                      alert("error","wallet generation failed. Please try again");
                     }
                   } else {
                     setLoading(false);
 
-                    alert("Wallet creation failed . Please try again");
+                    alert("error","Wallet creation failed . Please try again");
                   }
                 });
               }, 1);

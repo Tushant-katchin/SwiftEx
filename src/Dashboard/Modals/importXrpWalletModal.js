@@ -24,6 +24,7 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import ModalHeader from "../reusables/ModalHeader";
 import {  utils } from "xrpl-accountlib"
+import { alert } from "../reusables/Toasts";
 
 const ImportXrpWalletModal = ({
   props,
@@ -256,7 +257,8 @@ const ImportXrpWalletModal = ({
               onPress={async () => {
                 const user = await AsyncStorageLib.getItem("user");
                 if (!accountName) {
-                  return alert("please enter an accountName to proceed");
+                  
+                  return alert("error","please enter an accountName to proceed");
                 }
                 setLoading(true);
                 if (label === "mnemonic") {
@@ -348,7 +350,7 @@ const ImportXrpWalletModal = ({
                       (response) => {
                         if (response) {
                           if (response.status === "Already Exists") {
-                            alert("Account with same name already exists");
+                            alert("error","Account with same name already exists");
                             setLoading(false);
                             return;
                           } else if (response.status === "success") {
@@ -360,7 +362,7 @@ const ImportXrpWalletModal = ({
                               navigation.navigate("AllWallets");
                             }, 0);
                           } else {
-                            alert("failed please try again");
+                            alert("error","failed please try again");
                             return;
                           }
                         }
@@ -373,7 +375,7 @@ const ImportXrpWalletModal = ({
                     
                   } catch (e) {
                     console.log(e);
-                    alert(e);
+                    alert("error",e);
                     setLoading(false);
                     setWalletVisible(false);
                     setVisible(false);
@@ -449,7 +451,7 @@ const ImportXrpWalletModal = ({
                       (response) => {
                         if (response) {
                           if (response.status === "Already Exists") {
-                            alert("Account with same name already exists");
+                            alert("error","Account with same name already exists");
                             setLoading(false);
                             return;
                           } else if (response.status === "success") {
@@ -461,7 +463,7 @@ const ImportXrpWalletModal = ({
                               navigation.navigate("AllWallets");
                             }, 0);
                           } else {
-                            alert("failed please try again");
+                            alert("error","failed please try again");
                             return;
                           }
                         }
@@ -479,7 +481,7 @@ const ImportXrpWalletModal = ({
                     setWalletVisible(false);
                     setVisible(false);
                     setModalVisible(false);
-                    alert(e);
+                    alert("error",e);
                   }
                 }
 

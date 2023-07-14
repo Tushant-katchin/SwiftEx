@@ -29,6 +29,7 @@ import Modal from "react-native-modal";
 import RecieveAddress from "./ReceiveAddress";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const RecieveModal = ({ modalVisible, setModalVisible }) => {
   const [visible, setVisible] = useState(false);
@@ -94,7 +95,8 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
                 
                 setIconType("BNB");
               }else{
-                alert('Please select BNB wallet to recieve BNB')
+                
+                alert("error",'Please select BNB wallet to recieve BNB')
               }
             }}
           >
@@ -128,7 +130,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
               }, 0);
               setIconType("ETH");
             }else{
-              alert('please select ETH wallet to recieve ETH tokens')
+              alert('error','please select ETH wallet to recieve ETH tokens')
             }
             }}
           >
@@ -163,7 +165,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
               }, 0);
               setIconType("Matic");
             }else{
-              alert('please select a polygon wallet to recieve matic')
+              alert('error','please select a polygon wallet to recieve matic')
             }
             }}
           >
@@ -197,7 +199,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
               }, 0);
               setIconType("Xrp");
             }else{
-              alert('please select an xrp wallet to recieve xrp')
+              alert('error','please select an xrp wallet to recieve xrp')
             }
             }}
           >

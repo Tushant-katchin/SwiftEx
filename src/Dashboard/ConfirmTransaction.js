@@ -23,7 +23,7 @@ import "@ethersproject/shims";
 import TransactionPinModal from "./Modals/transactionPinModal";
 import { useBiometricsForSendTransaction } from "../biometrics/biometric";
 import { useToast } from 'native-base';
-import { ShowToast } from "./reusables/Toasts";
+import { alert, ShowToast } from "./reusables/Toasts";
 import { CommonActions } from "@react-navigation/native";
 
 var ethers = require("ethers");
@@ -94,7 +94,8 @@ const ConfirmTransaction = (props) => {
        setLoading(false);
        setDisable(false);
        console.log(e);
-       alert(e);
+       
+       alert("error",e);
      }
    }
  } else if (type === "Matic") {
@@ -128,14 +129,14 @@ const ConfirmTransaction = (props) => {
        setDisable(false);
        setLoading(false);
        console.log(e);
-       alert(e);
+       alert("error",e);
      }
    }
  } else if (type === "BSC") {
    const txx = await provider
      .sendTransaction(rawTransaction)
      .catch((e) => {
-       return alert(e);
+       return alert("error",e);
      }); //SendTransaction(signer, token)
    if (txx.hash) {
      try {
@@ -162,7 +163,7 @@ const ConfirmTransaction = (props) => {
        setDisable(false);
        setLoading(false);
        console.log(e);
-       alert(e);
+       alert("error",e);
      }
    }
  } else {
@@ -194,7 +195,7 @@ const ConfirmTransaction = (props) => {
      setDisable(false);
      setLoading(false);
      console.log(e);
-     alert("please try again");
+     alert("error","please try again");
    }
  }
 }

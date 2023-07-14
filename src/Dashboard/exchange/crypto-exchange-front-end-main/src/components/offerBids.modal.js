@@ -17,6 +17,7 @@ import { ActivityIndicator, Colors, DataTable } from "react-native-paper";
 import { OFFER_STATUS_ENUM } from "../utils/constants";
 import { PATCH } from "../api";
 import { LinearGradient } from "expo-linear-gradient";
+import { alert } from "../../../../reusables/Toasts";
 export const OfferBidsView = ({ offer, self = false, setChange }) => {
   const [modalMessage, setModalMessage] = useState("");
   const [bids, setBids] = useState([]);
@@ -62,7 +63,8 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
         bidId: bid._id,
       });
       if (err) {
-        alert(`${err.message}`);
+        
+        alert('error',`${err.message}`);
         setLoading(false);
         return setModalMessage(`${err.message}`);
       }
@@ -71,7 +73,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
       setLoading(false);
       setOpen(false);
       setChange(false);
-      return alert("Bid Accepted Successfully");
+      return alert('success',"Bid Accepted Successfully");
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -97,7 +99,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
       setModalMessage("success");
       setLoading(false);
       setOpen(false);
-      return alert("Bid Cancelled Successfully");
+      return alert('success',"Bid Cancelled Successfully");
     } catch (err) {
       console.log(err);
       setModalMessage(err.message || "Something went wrong");

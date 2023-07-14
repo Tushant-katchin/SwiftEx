@@ -31,6 +31,7 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 
 const ImportBinanceWallet = ({
   props,
@@ -258,7 +259,8 @@ const ImportBinanceWallet = ({
               disabled={disable}
               onPress={async () => {
                 if (!accountName) {
-                  return alert("please enter an accountName to proceed");
+                  
+                  return alert("error","please enter an accountName to proceed");
                 }
                 setLoading(true);
                 if (label === "mnemonic") {
@@ -271,6 +273,7 @@ const ImportBinanceWallet = ({
                     if (!check) {
                       setLoading(false);
                       return alert(
+                        "error",
                         "Incorrect Mnemonic. Please provide a valid Mnemonic"
                       );
                     }
@@ -334,7 +337,7 @@ const ImportBinanceWallet = ({
                       (response) => {
                         if (response) {
                           if (response.status === "Already Exists") {
-                            alert("Account with same name already exists");
+                            alert("error","Account with same name already exists");
                             setLoading(false);
                             return;
                           } else if (response.status === "success") {
@@ -346,7 +349,7 @@ const ImportBinanceWallet = ({
                               navigation.navigate("AllWallets");
                             }, 0);
                           } else {
-                            alert("failed please try again");
+                            alert("error","failed please try again");
                             return;
                           }
                         }
@@ -367,6 +370,7 @@ const ImportBinanceWallet = ({
                     if (!check) {
                       setLoading(false);
                       return alert(
+                        "error",
                         "Incorrect PrivateKey. Please provide a valid privatekey"
                       );
                     }
@@ -437,7 +441,7 @@ const ImportBinanceWallet = ({
                       (response) => {
                         if (response) {
                           if (response.status === "Already Exists") {
-                            alert("Account with same name already exists");
+                            alert("error","Account with same name already exists");
                             setLoading(false);
                             return;
                           } else if (response.status === "success") {
@@ -449,7 +453,7 @@ const ImportBinanceWallet = ({
                               navigation.navigate("AllWallets");
                             }, 0);
                           } else {
-                            alert("failed please try again");
+                            alert("error","failed please try again");
                             return;
                           }
                         }
@@ -532,7 +536,7 @@ const ImportBinanceWallet = ({
                           (response) => {
                             if (response) {
                               if (response.status === "Already Exists") {
-                                alert("Account with same name already exists");
+                                alert("error","Account with same name already exists");
                                 setLoading(false);
                                 return;
                               } else if (response.status === "success") {
@@ -544,7 +548,7 @@ const ImportBinanceWallet = ({
                                   navigation.navigate("AllWallets");
                                 }, 0);
                               } else {
-                                alert("failed please try again");
+                                alert("error","failed please try again");
                                 return;
                               }
                             }

@@ -66,7 +66,7 @@ function InvestmentChart() {
       }
     });
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, [state2]);
+  }, []);
 
   useEffect(async () => {
     const bal = await state.walletBalance;

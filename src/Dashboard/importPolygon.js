@@ -32,6 +32,8 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genUsrToken } from "./Auth/jwtHandler";
+import { alert } from "./reusables/Toasts";
+
 const ImportPolygon = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -252,6 +254,7 @@ const ImportPolygon = (props) => {
                     if (!check) {
                       setLoading(false);
                       return alert(
+                        "error",
                         "Incorrect Mnemonic. Please provide a valid Mnemonic"
                       );
                     }
@@ -332,7 +335,7 @@ const ImportPolygon = (props) => {
                   } catch (e) {
                     console.log(e);
                     setLoading(false);
-                    alert(e);
+                    alert("error",e);
                   }
                 } else if (label === "privateKey") {
                   try {
@@ -340,6 +343,7 @@ const ImportPolygon = (props) => {
                     if (!check) {
                       setLoading(false);
                       return alert(
+                        "error",
                         "Incorrect PrivateKey. Please provide a valid privatekey"
                       );
                     }
@@ -420,7 +424,7 @@ const ImportPolygon = (props) => {
                   } catch (e) {
                     console.log(e);
                     setLoading(false);
-                    alert(e);
+                    alert("error",e);
                   }
                 } else {
                   ethers.Wallet.fromEncryptedJson(json, jsonKey)
@@ -499,7 +503,7 @@ const ImportPolygon = (props) => {
                     .catch((e) => {
                       console.log(e);
                       setLoading(false);
-                      return alert(e);
+                      return alert("error",e);
                     });
                   setLoading(false);
                 }

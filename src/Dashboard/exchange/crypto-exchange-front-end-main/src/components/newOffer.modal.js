@@ -728,7 +728,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { getEthTokenBalance } from "../../../../../utilities/web3utilities";
 import { DAI, USDT, WBTC } from "../utils/assetAddress";
 import { useToast } from "native-base";
-import { ShowToast } from "../../../../reusables/Toasts";
+import { alert, ShowToast } from "../../../../reusables/Toasts";
 import { LinearGradient } from "expo-linear-gradient";
 
 const _getAssetsOptions = (assetsList) =>
@@ -836,7 +836,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       if (err) {
         setModalMessage(`${err.status}: ${err.message}`);
         setOpen(false);
-        return alert(err.message ? err.message : "transaction failed");
+        
+        return alert('error',err.message ? err.message : "transaction failed");
       } else {
         setOpen(false);
         ShowToast(toast, "New Offer Created Successfully");
@@ -844,7 +845,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       }
     } catch (err) {
       console.log(err);
-      alert(err.message ? err.message : "transaction failed");
+      alert('error',err.message ? err.message : "transaction failed");
       setModalMessage(err.message || "Something went wrong");
       setOpen(false);
     }
@@ -886,7 +887,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       if (err) throw new Error(err.message || "transaction failed");
       if (txHash) setTransactionHash(txHash);
       if (err) {
-        alert(err.message ? err.message : "transaction failed");
+        alert('error',err.message ? err.message : "transaction failed");
         throw new Error(err.message || "transaction failed");
       }
 
@@ -898,7 +899,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       await submitNewOffer(newOfferBody);
     } catch (err) {
       console.log(err);
-      alert(err.message ? err.message : "transaction failed");
+      alert('error',err.message ? err.message : "transaction failed");
       setModalMessage(err.message || "transaction failed");
     } finally {
       getOffersData();

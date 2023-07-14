@@ -332,7 +332,7 @@ const Home2 = ({ navigation }) => {
     getToken();
   }, []);
 
-  useFocusEffect(
+  /*useFocusEffect(
     React.useCallback(() => {
       try {
         getTransactions().then((res) => {
@@ -343,7 +343,7 @@ const Home2 = ({ navigation }) => {
         console.log(e);
       }
     }, [])
-  );
+  );*/
 
   return (
     <Animated.View style={{ backgroundColor: "#000C66" }}>

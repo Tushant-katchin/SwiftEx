@@ -25,6 +25,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 import OffersButton from "../../../../offersButton";
 import { OfferListView } from "./offers";
+import { alert } from "../../../../reusables/Toasts";
 
 export const TransactionsListView = ({
   transactions,
@@ -71,7 +72,8 @@ export const TransactionsListView = ({
                   ///do if payment successfull
                   setOpen(false);
                   setUpdateTx(true);
-                  alert("Payment Successful");
+                  
+                  alert('success',"Payment Successful");
                   navigation.navigate("/offers");
                   fetchTxPageData();
                 }
@@ -80,7 +82,7 @@ export const TransactionsListView = ({
                   ///do if payment is cancelled
                   setOpen(false);
                   setUpdateTx(true);
-                  alert("Payment failed. Please try again");
+                  alert('error',"Payment failed. Please try again");
                   fetchTxPageData();
                 }
               }}

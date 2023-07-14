@@ -262,13 +262,21 @@ const styles = StyleSheet.create({
 })
 */
 
-import React, { Image, ScrollView } from "react-native";
+import React, { Image, ScrollView , Button, TouchableOpacity} from "react-native";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Icon from "../icon";
+import SelectWallet from "./Modals/SelectWallet";
+import "react-native-get-random-values";
+import "@ethersproject/shims";
+import NewWalletModal from "./Modals/newWallet";
+import { useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+var ethers = require("ethers");
+const xrpl = require("xrpl");
 
 const Data = [
   {
@@ -336,7 +344,11 @@ const MemeCoinData = [
   },
 ];
 
-const Wallet = () => {
+const Wallet = ({props}) => {
+  const [visible, setVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [newWalletModal, setNewWalletModal] = useState(false);
+    const navigation = useNavigation()
   const RenderItem = ({ item, index }) => {
     return (
       <>
@@ -386,6 +398,31 @@ const Wallet = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.mainContainer}>
+      <View style={styles.accountBox} >
+      <TouchableOpacity onPress={()=>{
+        navigation.navigate('MyWallet')
+      }}>
+      <Text style={styles.text}>My Wallet</Text>
+      <Icon name="chevron-right" size={hp('5')} color="white" style={{marginLeft:wp('63'), marginTop:hp('-4')}} />
+      </TouchableOpacity>
+      </View>
+      <View style={styles.Button}>
+           <Button
+            title="Create wallet"
+            color={"green"}
+            onPress={() => {
+              setNewWalletModal(true);
+            }}
+          ></Button>
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(true);
+            }}
+          >
+            <Text style={styles.Text}>I already have a wallet</Text>
+          </TouchableOpacity>
+
+        </View>
       <Text style={styles.heading}>Discover</Text>
       <View style={styles.iconwithText}>
         <Text style={styles.memeText}>Trending News</Text>
@@ -398,21 +435,12 @@ const Wallet = () => {
         data={Data}
         renderItem={RenderItem}
       />
-      <View style={styles.iconwithText}>
-        <Text style={styles.memeText}>Stacking</Text>
-        <Icon type={"antDesign"} name="arrowright" size={hp(2)} color={'gray'}/>
-      </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={10}
-        nestedScrollEnabled={true}
-        data={Data1}
-        renderItem={Flatlist}
-      />
+      
       <View style={styles.iconwithText}>
         <Text style={styles.memeText}>Meme Coins</Text>
         <Icon type={"antDesign"} name="arrowright" size={hp(2)} color={'gray'}/>
       </View>
+      
       <FlatList
         showsVerticalScrollIndicator={false}
         initialNumToRender={10}
@@ -420,6 +448,17 @@ const Wallet = () => {
         data={MemeCoinData}
         renderItem={MemeCoinflatlist}
       />
+      
+        <SelectWallet
+          visible={visible}
+          setVisible={setVisible}
+          setModalVisible={setModalVisible}
+        />
+        <NewWalletModal
+          visible={newWalletModal}
+          setVisible={setNewWalletModal}
+          setModalVisible={setModalVisible}
+        />
     </ScrollView>
   );
 };
@@ -484,6 +523,52 @@ const styles = StyleSheet.create({
   },
   memeText:{
     color:"gray"
-  }
+  },
+  text:{
+    color:'white',
+    fontSize:hp('2.3'),
+    fontWeight:'bold',
+    fontFamily:'sans-serif',
+    fontStyle:'italic',
+    marginLeft:wp('20')
+   
+},
+Button: {
+      display: "flex",
+      alignContent: "center",
+      alignItems: "center",
+      marginTop: hp(2),
+    },
+    Text: {
+          marginTop: hp(1),
+          fontSize: 15,
+          fontWeight: "200",
+          color: "black",
+        },
+        accountBox:{
+          borderWidth:5,
+          paddingTop:hp('2'),
+          borderRadius:20,
+          borderColor:'#131E3A',
+          height:hp('9'),
+          marginLeft:40,
+          marginRight:40,
+          marginTop:hp(20),
+          backgroundColor:'#000C66',
+          textAlign:'center',
+          display:'flex',
+          alignItems:'center'
+      }
 });
 export default Wallet;
+{/* <View style={styles.iconwithText}>
+        <Text style={styles.memeText}>Stacking</Text>
+        <Icon type={"antDesign"} name="arrowright" size={hp(2)} color={'gray'}/>
+      </View>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={10}
+        nestedScrollEnabled={true}
+        data={Data1}
+        renderItem={Flatlist}
+      /> */}

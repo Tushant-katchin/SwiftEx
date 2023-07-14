@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RPC } from "../constants";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
+import { alert } from "../reusables/Toasts";
 var ethers = require("ethers");
 
 const xrpl = require("xrpl");
@@ -258,7 +259,8 @@ const SendCrypto = async (
           info.finalAmount=finalAmount
           setLoading(false);
           if(Number(finalAmount)>Number(balance)){
-            return alert("You don't have enough balance to do this transaction")
+            
+            return alert("error","You don't have enough balance to do this transaction")
           }
           navigation.navigate("Confirm Tx", {
             info,
@@ -283,7 +285,7 @@ const SendCrypto = async (
               info.finalAmount=finalAmount
               setLoading(false);
               if(Number(finalAmount)>=Number(balance)){
-                return alert("You don't have enough balance to do this transaction")
+                return alert("error","You don't have enough balance to do this transaction")
               }
               navigation.navigate("Confirm Tx", {
                 info,
@@ -306,7 +308,7 @@ const SendCrypto = async (
               info.finalAmount=finalAmount
               setLoading(false);
               if(Number(finalAmount)>Number(balance)){
-                return alert("You don't have enough balance to do this transaction")
+                return alert("error","You don't have enough balance to do this transaction")
               }
               navigation.navigate("Confirm Tx", {
                 info,
@@ -324,7 +326,7 @@ const SendCrypto = async (
                 info.finalAmount=finalAmount
                 setLoading(false);
                 if(Number(finalAmount)>=Number(balance)){
-                  return alert("You don't have enough balance to do this transaction")
+                  return alert("error","You don't have enough balance to do this transaction")
                 }
                 navigation.navigate("Confirm Tx", {
                   info,
@@ -351,7 +353,7 @@ const SendCrypto = async (
         info.finalAmount=finalAmount
         setLoading(false);
         if(Number(finalAmount)>Number(balance)){
-          return alert("You don't have enough balance to do this transaction")
+          return alert("error","You don't have enough balance to do this transaction")
         }        
         navigation.navigate("Confirm Tx", {
           info,
@@ -380,7 +382,7 @@ const SendCrypto = async (
           let finalAmount = Number(info.amount)+Number(fee)
           info.finalAmount=finalAmount
           if(Number(finalAmount)>Number(balance)){
-            return alert("You don't have enough balance to do this transaction")
+            return alert("error","You don't have enough balance to do this transaction")
           }
           navigation.navigate("Confirm Tx", {
             info,
@@ -403,7 +405,7 @@ const SendCrypto = async (
             info.finalAmount=finalAmount
             setLoading(false);
             if(Number(finalAmount)>Number(balance)){
-              return alert("You don't have enough balance to do this transaction")
+              return alert("error","You don't have enough balance to do this transaction")
             }
             navigation.navigate("Confirm Tx", {
               info,
@@ -420,7 +422,7 @@ const SendCrypto = async (
               info.finalAmount=finalAmount
               setLoading(false);
               if(Number(finalAmount)>=Number(balance)){
-                return alert("You don't have enough balance to do this transaction")
+                return alert("error","You don't have enough balance to do this transaction")
               }
               navigation.navigate("Confirm Tx", {
                 info,
@@ -439,7 +441,7 @@ const SendCrypto = async (
                 info.finalAmount=finalAmount
                 setLoading(false);
                 if(Number(finalAmount)>=Number(balance)){
-                  return alert("You don't have enough balance to do this transaction")
+                  return alert("error","You don't have enough balance to do this transaction")
                 }
                  navigation.navigate("Confirm Tx", {
                   info,
@@ -451,21 +453,21 @@ const SendCrypto = async (
             setDisable(true);
             
             setLoading(false);
-            return alert("chain not supported yet");
+            return alert("error","chain not supported yet");
           }
           
           setLoading(false);
         }catch(e){
           if(e.message=='invalid arrayify value (argument="value", value="-0xbefe6f671f38", code=INVALID_ARGUMENT, version=bytes/5.7.0)'){
             setLoading(false);
-            return alert("You don't have enough balance to do this transaction")
+            return alert("error","You don't have enough balance to do this transaction")
           }
           else if(e.message=='fractional component exceeds decimals [ See: https://links.ethers.org/v5-errors-NUMERIC_FAULT ] (fault="underflow", operation="parseFixed", code=NUMERIC_FAULT, version=bignumber/5.7.0)')
           {
             setLoading(false)
-            return alert("You don't have enough balance to do this transaction")
+            return alert("error","You don't have enough balance to do this transaction")
           }
-          alert(e)
+          alert("error",e)
           console.log(e.message)
           setLoading(false);
 

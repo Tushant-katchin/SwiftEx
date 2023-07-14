@@ -31,6 +31,7 @@ import Maticimage from "../../../assets/matic.png";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import TokenHeader from "./TokenHeader";
+import { alert } from "../reusables/Toasts";
 
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const ChooseTokens = ({ setModalVisible }) => {
@@ -110,7 +111,8 @@ const ChooseTokens = ({ setModalVisible }) => {
                 token: token,
               });
             }else{
-              return alert('Please select a bnb wallet')
+              
+              return alert("error",'Please select a bnb wallet')
             }
             }}
           >
@@ -147,7 +149,7 @@ const ChooseTokens = ({ setModalVisible }) => {
                 token: token,
               });
             }else{
-              return alert('please select an ethereum wallet')
+              return alert("error",'please select an ethereum wallet')
             }
             }}
           >
@@ -185,7 +187,7 @@ const ChooseTokens = ({ setModalVisible }) => {
                 token: token,
               });
             }else{
-              return alert('Please select a matic wallet')
+              return alert("error",'Please select a matic wallet')
             }
             }}
             
@@ -230,7 +232,7 @@ const ChooseTokens = ({ setModalVisible }) => {
                 });
                 return
               }else{
-                return alert('Please select xrp wallet')
+                return alert("error",'Please select xrp wallet')
               }
             }}
           >

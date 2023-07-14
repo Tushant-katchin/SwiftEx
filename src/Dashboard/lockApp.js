@@ -23,6 +23,7 @@ import { Platform } from "react-native";
 import { setPlatform } from "../components/Redux/actions/auth";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useBiometricsForAppLock } from "../biometrics/biometric";
+import { alert } from "./reusables/Toasts";
 const LockApp = (props) => {
   const [pin, setPin] = useState();
   const [status, setStatus] = useState("pinset");
@@ -103,7 +104,8 @@ const LockApp = (props) => {
         console.log(Pin);
         navigation.goBack();
       } else {
-        alert("invalid pin");
+        
+        alert("error","invalid pin");
         pinView.current.clearAll();
 
       }
@@ -177,7 +179,7 @@ const LockApp = (props) => {
                   console.log(Pin);
                   navigation.goBack();
                 } else {
-                  alert("invalid pin");
+                  alert("error","invalid pin");
                 }
               }
             }}
