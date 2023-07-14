@@ -1,5 +1,6 @@
-import { View, Text } from "react-native";
+import { ImageBackground } from "react-native";
 import React, { useEffect } from "react";
+import splashImg from "../../../assets/splashImg.png"
 import styles from "./style";
 
 const SplashScreen = ({navigation}) => {
@@ -9,10 +10,9 @@ const SplashScreen = ({navigation}) => {
     }, 3000);
   }, []);
   return (
-    <View style={styles.mainContainer}>
-      <Text style={styles.heading}>Splash....</Text>
-      <Text style={styles.text}>Screen</Text>
-    </View>
+    <ImageBackground source={splashImg} style={styles.mainContainer}>
+
+    </ImageBackground>
   );
 };
 
