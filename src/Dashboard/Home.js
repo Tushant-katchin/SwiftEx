@@ -23,7 +23,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/src/Navigation";
 import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
-import { ExchangeHeaderApp } from "./reusables/ExchangeHeader";
+import { ExchangeHeaderApp, ExchangeHeaderIcon } from "./reusables/ExchangeHeader";
 import { AppHeader } from "./reusables/AppHeader";
 
 const Tab = createBottomTabNavigator();
@@ -209,7 +209,7 @@ const Dashboard = ({ navigation }) => {
           options={{
             headerShown: true,
             header: () => {
-              return <ExchangeHeaderIcon  title={'Wallet'} />;
+              return Header3("Wallet")
             },
             tabBarIcon: ({ focused }) => {
               let iconName;

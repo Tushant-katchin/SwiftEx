@@ -327,10 +327,10 @@ const Home2 = ({ navigation }) => {
     }, [])
   );
 
-  useEffect(() => {
+ /* useEffect(() => {
     requestUserPermission();
     getToken();
-  }, []);
+  }, []);*/
 
   /*useFocusEffect(
     React.useCallback(() => {
