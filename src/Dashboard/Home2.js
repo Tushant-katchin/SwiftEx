@@ -308,42 +308,42 @@ const Home2 = ({ navigation }) => {
   //   });
   // }, []);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const backAction = () => {
-  //       Alert.alert("Hold on!", "Are you sure you want to exit?", [
-  //         { text: "Cancel" },
-  //         { text: "Yes", onPress: () => BackHandler.exitApp() },
-  //       ]);
-  //       return true;
-  //     };
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        Alert.alert("Hold on!", "Are you sure you want to exit?", [
+          { text: "Cancel" },
+          { text: "Yes", onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      };
 
-  //     const backHandler = BackHandler.addEventListener(
-  //       "hardwareBackPress",
-  //       backAction
-  //     );
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
 
-  //     return () => backHandler.remove();
-  //   }, [])
-  // );
+      return () => backHandler.remove();
+    }, [])
+  );
 
-  // useEffect(() => {
-  //   requestUserPermission();
-  //   getToken();
-  // }, []);
+  useEffect(() => {
+    requestUserPermission();
+    getToken();
+  }, []);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     try {
-  //       getTransactions().then((res) => {
-  //         console.log(res);
-  //         checkIncomingTx(res);
-  //       });
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }, [])
-  // );
+  /*useFocusEffect(
+    React.useCallback(() => {
+      try {
+        getTransactions().then((res) => {
+          console.log(res);
+          checkIncomingTx(res);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }, [])
+  );*/
 
   return (
     <Animated.View style={{ backgroundColor: "#000C66" }}>

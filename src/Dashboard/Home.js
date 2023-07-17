@@ -20,7 +20,12 @@ import store from "../components/Redux/Store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyHeader3 from "./Header3";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { ExchangeHeaderIcon } from "./header";
+import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
+import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/src/Navigation";
+import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
+import { ExchangeHeaderApp } from "./reusables/ExchangeHeader";
+import { AppHeader } from "./reusables/AppHeader";
+
 const Tab = createBottomTabNavigator();
 
 const Dashboard = ({ navigation }) => {
@@ -31,7 +36,7 @@ const Dashboard = ({ navigation }) => {
   const dispatch = useDispatch();
   //let state = store.getState()
   console.log(state);
-
+  const [token, setToken] = useState('')
   
 
 
@@ -97,7 +102,7 @@ const Dashboard = ({ navigation }) => {
   };
   const Header3 = (title) => {
     // return <MyHeader2 title={title} state={state} changeState={collapseState} extended={extended} setExtended={setExtended}/>
-    return <MyHeader3 title={title} />;
+    return <AppHeader name={title} />;
   };
 
   // useEffect(async () => {
@@ -109,6 +114,15 @@ const Dashboard = ({ navigation }) => {
   //   const data = await AsyncStorage.getItem(`${user}-wallets`);
   //   console.log(data);
   // }, []);
+
+  useEffect(async ()=>{
+    const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+    const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+    console.log(token);
+
+    setToken(token)
+
+  })
 
   return (
     <>
@@ -134,6 +148,10 @@ const Dashboard = ({ navigation }) => {
             if (route.name === "Settings") {
               iconName = focused ? "ios-settings-sharp" : "ios-settings-sharp";
               iconName = "ios-settings-sharp";
+            }
+            if (route.name === "Exchange") {
+              iconName = focused ? "swap-vertical-outline" : "swap-vertical-outline";
+              iconName = "swap-vertical-outline";
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -223,6 +241,14 @@ const Dashboard = ({ navigation }) => {
             header: () => Header3("Market"),
             headerShown: true,
             unmountOnBlur: true,
+          }}
+        />
+         <Tab.Screen
+          name="Exchange"
+          component={!token?ExchangeNavigation:ExchangeLogin}
+          options={{
+            header: () => {null},
+            headerShown: true,
           }}
         />
         <Tab.Screen

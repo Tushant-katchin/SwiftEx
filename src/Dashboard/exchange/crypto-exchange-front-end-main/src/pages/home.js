@@ -32,6 +32,7 @@ import {
 } from "react-native-responsive-screen";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
+import { alert } from "../../../../reusables/Toasts";
 
 export const HomeView = ({ setPressed }) => {
   const state = useSelector((state) => state);
@@ -244,7 +245,8 @@ export const HomeView = ({ setPressed }) => {
                       ) {
                         setOpen(true);
                       } else {
-                        alert("Only Ethereum wallet are supported");
+                        
+                        alert('error',"Only Ethereum wallet are supported");
                       }
                     }}
                   >

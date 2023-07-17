@@ -24,7 +24,7 @@ export const FaucetModal = ({ showModal, setShowModal }) => {
         onPress={() => setShowModal(true)}
         style={{ backgroundColor: "#145DA0" }}
       >
-        Button
+        Faucet
       </Button>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="400px">

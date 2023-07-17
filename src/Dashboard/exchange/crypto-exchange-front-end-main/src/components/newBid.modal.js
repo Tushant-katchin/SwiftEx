@@ -111,7 +111,7 @@ export const NewBidModal = ({ offer }) => {
                 if (data.url.includes(`offers?session_id`)) {
                   ///do if payment successfull
                   setTxModal(false)
-                  alert('Payment Successful')
+                  alert('success','Payment Successful')
                   setPressed('4')
                   navigation.navigate('/Transactions')
                 }
@@ -119,7 +119,7 @@ export const NewBidModal = ({ offer }) => {
                 if (data.url.includes("offers?payFailed=true")) {
                   ///do if payment is cancelled
                   setTxModal(false)
-                  alert('Payment failed. Please try again')
+                  alert('error','Payment failed. Please try again')
                 }
               }}
             />

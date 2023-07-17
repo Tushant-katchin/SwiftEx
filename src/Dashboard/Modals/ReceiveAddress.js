@@ -30,6 +30,7 @@ import SnackBar from 'react-native-snackbar-component'
 import { checkPendingTransactions } from "../../utilities/web3utilities";
 import Header from "../reusables/Header";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 const RippleAPI = require('ripple-lib').RippleAPI
 
 const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
@@ -76,13 +77,14 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         // dismissed
       }
     } catch (error) {
-      alert(error.message);
+      
+      alert("error",error.message);
     }
   };
 
   const copyToClipboard = () => {
     Clipboard.setString(iconType==='Xrp' && state.wallet.xrp? state.wallet.xrp.address:state.wallet.address);
-    alert("Copied");
+    alert("success","Copied");
   };
 
   
@@ -537,7 +539,7 @@ const getNewTransactions = async () =>{
               
               console.log(newTx)    
               saveTransactions(newTx) 
-              alert('Tx Saved! Check Transactions page for more details about the Tx')
+              alert("success",'Tx Saved! Check Transactions page for more details about the Tx')
               setSnackbarVisible(false)
               setModalVisible(false)
               

@@ -32,6 +32,7 @@ import Maticimage from "../../../assets/matic.png";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import TokenHeader from "./TokenHeader";
+import { alert } from "../reusables/Toasts";
 
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const ChooseTokens = ({ setModalVisible }) => {
@@ -107,14 +108,16 @@ const ChooseTokens = ({ setModalVisible }) => {
               setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
-              if (Type === "BSC" || Type === "Multi-coin") {
-                let token = "BNB";
-                navigation.navigate("Send", {
-                  token: token,
-                });
-              } else {
-                return alert("Please select a bnb wallet");
-              }
+              if (Type === "BSC" || Type ==='Multi-coin') {
+              
+              let token = "BNB";
+              navigation.navigate("Send", {
+                token: token,
+              });
+            }else{
+              
+              return alert("error",'Please select a bnb wallet')
+            }
             }}
           >
             <View style={style.flatView}>
@@ -129,14 +132,15 @@ const ChooseTokens = ({ setModalVisible }) => {
               setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
-              if (Type === "Ethereum" || Type === "Multi-coin") {
-                let token = "Ethereum";
-                navigation.navigate("Send", {
-                  token: token,
-                });
-              } else {
-                return alert("please select an ethereum wallet");
-              }
+              if (Type === "Ethereum" || Type ==='Multi-coin') {
+              
+              let token = "Ethereum";
+              navigation.navigate("Send", {
+                token: token,
+              });
+            }else{
+              return alert("error",'please select an ethereum wallet')
+            }
             }}
           >
             <View style={style.flatView}>
@@ -154,14 +158,15 @@ const ChooseTokens = ({ setModalVisible }) => {
               setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
-              if (Type === "Matic" || Type === "Multi-coin") {
-                let token = "Matic";
-                navigation.navigate("Send", {
-                  token: token,
-                });
-              } else {
-                return alert("Please select a matic wallet");
-              }
+              if (Type === "Matic" || Type ==='Multi-coin') {
+              
+              let token = "Matic";
+              navigation.navigate("Send", {
+                token: token,
+              });
+            }else{
+              return alert("error",'Please select a matic wallet')
+            }
             }}
           >
             <View style={style.flatView}>
@@ -190,9 +195,9 @@ const ChooseTokens = ({ setModalVisible }) => {
                 navigation.navigate("Send", {
                   token: token,
                 });
-                return;
-              } else {
-                return alert("Please select xrp wallet");
+                return
+              }else{
+                return alert("error",'Please select xrp wallet')
               }
             }}
           >

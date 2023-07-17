@@ -42,6 +42,7 @@ import { urls } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../reusables/Header";
 import { RPC, WSS } from "../constants";
+import { alert } from "../reusables/Toasts";
 
 const xrpl = require("xrpl");
 
@@ -317,14 +318,17 @@ const AllWallets = (props) => {
                               );
                               dispatch(setWalletType(item.walletType));
                               //getBalance(state);
-                              alert("Wallet Selected " + item.name);
+                              
+                              alert("success","Wallet Selected " + item.name);
                             } else {
                               alert(
+                                "error",
                                 "error while selecting wallet. please try again"
                               );
                             }
                           } else {
                             alert(
+                              "error",
                               "error while selecting wallet. please try again"
                             );
                           }
@@ -360,9 +364,10 @@ const AllWallets = (props) => {
                               console.log(response)
                             })*/
                             //dispatch(getXrpBalance(item.classicAddress))
-                            alert(`Wallet selected : ${item.name}`);
+                            alert("success",`Wallet selected : ${item.name}`);
                           } else {
                             alert(
+                              "error",
                               "error while selecting wallet. please try again"
                             );
                           }
@@ -384,14 +389,16 @@ const AllWallets = (props) => {
                               );
                               dispatch(setWalletType(item.walletType));
                               //getBalance(state);
-                              alert("Wallet Selected " + item.name);
+                              alert("success","Wallet Selected " + item.name);
                             } else {
                               alert(
+                                "error",
                                 "error while selecting wallet. please try again"
                               );
                             }
                           } else {
                             alert(
+                              "error",
                               "error while selecting wallet. please try again"
                             );
                           }
@@ -399,6 +406,7 @@ const AllWallets = (props) => {
                       }
                     } else {
                       alert(
+                        "error",
                         "wallet not supported. Please try selecting a different wallet"
                       );
                     }

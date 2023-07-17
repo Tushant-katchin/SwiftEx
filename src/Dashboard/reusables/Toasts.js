@@ -1,3 +1,4 @@
+import Snackbar from 'react-native-snackbar';
 import { Box, useToast } from 'native-base';
 
 
@@ -16,3 +17,22 @@ export const ShowToast = ({message})=>{
 
 }
 
+export function alert(type,message){
+    if(type=='success')
+    {
+
+        Snackbar.show({
+            text: message,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor:'green',
+            
+        });
+    }else{
+        Snackbar.show({
+            text: message,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor:'red'
+        });
+    }
+        
+}

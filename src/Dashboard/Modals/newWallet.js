@@ -18,6 +18,7 @@ import { Generate_Wallet2 } from "../../components/Redux/actions/auth";
 import Modal from "react-native-modal";
 import NewWalletPrivateKey from "./newWalletPrivateKey";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 
 const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
   const [Checked, setCheckBox] = useState(false);
@@ -139,13 +140,13 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
                         setNewWalletPrivateKey(true);
                       } else {
                         setLoading(false);
-
-                        alert("wallet generation failed. Please try again");
+                        
+                        alert("error","wallet generation failed. Please try again");
                       }
                     } else {
                       setLoading(false);
 
-                      alert("Wallet creation failed . Please try again");
+                      alert("error","Wallet creation failed . Please try again");
                     }
                   });
                 }, 1);

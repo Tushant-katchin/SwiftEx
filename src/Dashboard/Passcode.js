@@ -24,6 +24,7 @@ import { Platform } from "react-native";
 import { setPlatform } from "../components/Redux/actions/auth";
 import { useBiometrics } from "../biometrics/biometric";
 import { useFocusEffect } from "@react-navigation/native";
+import { alert } from "./reusables/Toasts";
 
 const Passcode = (props) => {
   const [pin, setPin] = useState();
@@ -99,7 +100,8 @@ const Passcode = (props) => {
 
           AsyncStorage.setItem("pin", JSON.stringify(pin));
         } else {
-          alert("password did not match. please try again");
+          
+          alert("error","password did not match. please try again");
           pinView.current.clearAll();
           setStatus("");
         }
@@ -118,7 +120,7 @@ const Passcode = (props) => {
             props.navigation.navigate("Welcome");
           }
         } else {
-          alert("invalid pin");
+          alert("error","invalid pin");
         }
       } else {
         setPin(enteredPin);

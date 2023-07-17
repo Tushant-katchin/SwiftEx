@@ -23,6 +23,7 @@ import PhoneInput from "react-native-phone-number-input";
 import { login, verifyLoginOtp } from "../../api";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import RNOtpVerify from "react-native-otp-verify";
+import { alert } from "../../../../../reusables/Toasts";
 
 export const ExchangeLogin = (props) => {
   const [value, setValue] = useState("");
@@ -92,7 +93,8 @@ export const ExchangeLogin = (props) => {
       setIsOtpSent(false);
       setMessage("");
       navigation.navigate("exchange");
-      alert("success");
+      
+      alert("success","success");
     } catch (err) {
       setMessage(err.message);
     } finally {
@@ -228,7 +230,7 @@ export const ExchangeLogin = (props) => {
                         submitPhoneNumber();
                       } catch (e) {
                         console.log(e);
-                        alert(e);
+                        alert('error',e);
 
                       }
                     } else {

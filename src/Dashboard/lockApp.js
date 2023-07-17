@@ -23,6 +23,7 @@ import { Platform } from "react-native";
 import { setPlatform } from "../components/Redux/actions/auth";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useBiometricsForAppLock } from "../biometrics/biometric";
+import { alert } from "./reusables/Toasts";
 const LockApp = (props) => {
   const [pin, setPin] = useState();
   const [status, setStatus] = useState("pinset");
@@ -95,7 +96,7 @@ const LockApp = (props) => {
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
       //setShowCompletedButton(true)
       const Pin = await AsyncStorage.getItem("pin");
 
@@ -103,7 +104,8 @@ const LockApp = (props) => {
         console.log(Pin);
         navigation.goBack();
       } else {
-        alert("invalid pin");
+        
+        alert("error","invalid pin");
         pinView.current.clearAll();
 
       }
@@ -140,7 +142,7 @@ const LockApp = (props) => {
           <ReactNativePinView
             inputSize={32}
             ref={pinView}
-            pinLength={4}
+            pinLength={6}
             buttonSize={60}
             onValueChange={(value) => setEnteredPin(value)}
             buttonAreaStyle={{
@@ -177,7 +179,7 @@ const LockApp = (props) => {
                   console.log(Pin);
                   navigation.goBack();
                 } else {
-                  alert("invalid pin");
+                  alert("error","invalid pin");
                 }
               }
             }}

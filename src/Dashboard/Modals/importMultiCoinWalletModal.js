@@ -23,6 +23,7 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 const xrpl = require("xrpl");
 
 const ImportMultiCoinWalletModal = ({
@@ -75,15 +76,17 @@ const ImportMultiCoinWalletModal = ({
         .then((response) => response.json())
         .then(async (responseJson) => {
           if (responseJson.responseCode === 200) {
-            alert("success");
+            
+            alert("success","success");
             return responseJson.responseCode;
           } else if (responseJson.responseCode === 400) {
             alert(
+              "error",
               "account with same name already exists. Please use a different name"
             );
             return responseJson.responseCode;
           } else {
-            alert("Unable to create account. Please try again");
+            alert("error","Unable to create account. Please try again");
             return 401;
           }
         })
@@ -198,7 +201,7 @@ const ImportMultiCoinWalletModal = ({
               disabled={disable}
               onPress={async () => {
                 if (!accountName) {
-                  return alert("please enter an accountName to proceed");
+                  return alert("error","please enter an accountName to proceed");
                 }
                 setLoading(true);
                 try {
@@ -209,6 +212,7 @@ const ImportMultiCoinWalletModal = ({
                   if (!check) {
                     setLoading(false);
                     return alert(
+                      "error",
                       "Incorrect Mnemonic. Please provide a valid Mnemonic"
                     );
                   }
@@ -294,7 +298,7 @@ const ImportMultiCoinWalletModal = ({
                     (response) => {
                       if (response) {
                         if (response.status === "Already Exists") {
-                          alert("Account with same name already exists");
+                          alert("error","Account with same name already exists");
                           setLoading(false);
                           return;
                         } else if (response.status === "success") {
@@ -306,7 +310,7 @@ const ImportMultiCoinWalletModal = ({
                             navigation.navigate("AllWallets");
                           }, 0);
                         } else {
-                          alert("failed please try again");
+                          alert("error","failed please try again");
                           return;
                         }
                       }
@@ -320,7 +324,7 @@ const ImportMultiCoinWalletModal = ({
 
                   
                 } catch (e) {
-                  alert(e);
+                  alert("error",e);
                   setLoading(false);
                   setWalletVisible(false);
                   setVisible(false);

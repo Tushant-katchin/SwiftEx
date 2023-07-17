@@ -31,6 +31,7 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
 
 const ImportPolygonWalletModal = ({
   props,
@@ -84,6 +85,7 @@ const ImportPolygonWalletModal = ({
         .then((response) => response.json())
         .then(async (responseJson) => {
           if (responseJson.responseCode === 200) {
+
             alert("success");
             return responseJson.responseCode;
           } else if (responseJson.responseCode === 400) {
@@ -316,7 +318,8 @@ const ImportPolygonWalletModal = ({
                 const user = await AsyncStorageLib.getItem("user");
 
                 if (!accountName) {
-                  return alert("please enter an accountName to proceed");
+                  
+                  return alert("error","please enter an accountName to proceed");
                 }
                 setLoading(true);
                 if (label === "mnemonic") {
@@ -332,6 +335,7 @@ const ImportPolygonWalletModal = ({
                       setLoading(false);
                       setMnemonic('')
                       return alert(
+                        "error",
                         "Incorrect Mnemonic. Please provide a valid Mnemonic"
                       );
                     }
@@ -385,7 +389,7 @@ const ImportPolygonWalletModal = ({
                       (response) => {
                         if (response) {
                           if (response.status === "Already Exists") {
-                            alert("Account with same name already exists");
+                            alert("error","Account with same name already exists");
                             setLoading(false);
                             return;
                           } else if (response.status === "success") {
@@ -398,7 +402,7 @@ const ImportPolygonWalletModal = ({
                               navigation.navigate("AllWallets");
                             }, 0);
                           } else {
-                            alert("failed please try again");
+                            alert("error","failed please try again");
                             return;
                           }
                         }
@@ -416,7 +420,7 @@ const ImportPolygonWalletModal = ({
                     console.log(e);
                     setLoading(false);
                     setMnemonic('')
-                    alert(e);
+                    alert("error",e);
                   }
                 } else if (label === "privateKey") {
                   try {
@@ -428,6 +432,7 @@ const ImportPolygonWalletModal = ({
                       setLoading(false);
                       setPrivateKey('')
                       return alert(
+                        "error",
                         "Incorrect PrivateKey. Please provide a valid privatekey"
                       );
                     }
@@ -496,7 +501,7 @@ const ImportPolygonWalletModal = ({
                       (response) => {
                         if (response) {
                           if (response.status === "Already Exists") {
-                            alert("Account with same name already exists");
+                            alert("error","Account with same name already exists");
                             setLoading(false);
                             return;
                           } else if (response.status === "success") {
@@ -509,7 +514,7 @@ const ImportPolygonWalletModal = ({
                               navigation.navigate("AllWallets");
                             }, 0);
                           } else {
-                            alert("failed please try again");
+                            alert("error","failed please try again");
                             return;
                           }
                         }
@@ -524,7 +529,7 @@ const ImportPolygonWalletModal = ({
                     console.log(e);
                     setLoading(false);
                     setPrivateKey('')
-                    alert(e);
+                    alert("error",e);
                   }
                 } else {
                   ethers.Wallet.fromEncryptedJson(json, jsonKey)
@@ -592,7 +597,7 @@ const ImportPolygonWalletModal = ({
                         (response) => {
                           if (response) {
                             if (response.status === "Already Exists") {
-                              alert("Account with same name already exists");
+                              alert("error","Account with same name already exists");
                               setLoading(false);
                               return;
                             } else if (response.status === "success") {
@@ -605,7 +610,7 @@ const ImportPolygonWalletModal = ({
                                 navigation.navigate("AllWallets");
                               }, 0);
                             } else {
-                              alert("failed please try again");
+                              alert("error","failed please try again");
                               return;
                             }
                           }
@@ -623,7 +628,7 @@ const ImportPolygonWalletModal = ({
                       setWalletVisible(false);
                       setVisible(false);
                       setModalVisible(false);
-                      return alert(e);
+                      return alert("error",e);
                     });
                 }
                 setWalletVisible(false);

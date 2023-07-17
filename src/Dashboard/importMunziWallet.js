@@ -31,6 +31,7 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
+import { alert } from "./reusables/Toasts";
 const xrpl = require("xrpl");
 
 const ImportMunziWallet = (props) => {
@@ -147,7 +148,9 @@ const ImportMunziWallet = (props) => {
                   const check = ethers.utils.isValidMnemonic(trimmedPhrase);
                   if (!check) {
                     setLoading(false);
+                    
                     return alert(
+                      "error",
                       "Incorrect Mnemonic. Please provide a valid Mnemonic"
                     );
                   }
@@ -253,7 +256,7 @@ const ImportMunziWallet = (props) => {
 
                   props.navigation.navigate("HomeScreen");
                 } catch (e) {
-                  alert(e);
+                  alert("error",e);
                   setLoading(false);
                 }
 

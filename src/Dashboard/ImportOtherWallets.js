@@ -31,6 +31,8 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genUsrToken } from "./Auth/jwtHandler";
+import { alert } from "./reusables/Toasts";
+
 const ImportOtherWallets = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -183,7 +185,7 @@ const ImportOtherWallets = (props) => {
               setText(text)
 
             } else {
-              return alert(`please input ${label} to proceed `);
+              return alert("error",`please input ${label} to proceed `);
             }
           }}
           placeholder={
@@ -240,7 +242,7 @@ const ImportOtherWallets = (props) => {
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
               if (!accountName) {
-                return alert("please enter an accountName to proceed");
+                return alert("error","please enter an accountName to proceed");
               }
               setLoading(true);
               setTimeout(() => {
@@ -251,6 +253,7 @@ const ImportOtherWallets = (props) => {
                   if (!check) {
                     setLoading(false);
                     return alert(
+                      "error",
                       "Incorrect Mnemonic. Please provide a valid Mnemonic"
                     );
                   }
@@ -333,6 +336,7 @@ const ImportOtherWallets = (props) => {
                   if (!check) {
                     setLoading(false);
                     return alert(
+                      "error",
                       "Incorrect PrivateKey. Please provide a valid privatekey"
                     );
                   }

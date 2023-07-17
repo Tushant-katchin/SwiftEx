@@ -32,6 +32,7 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
+import { alert } from "./reusables/Toasts";
 
 const CheckMnemonic = (props) => {
   const [loading, setLoading] = useState(false);
@@ -69,7 +70,8 @@ const CheckMnemonic = (props) => {
           console.log(responseJson);
           console.log(responseJson);
           if (responseJson.responseCode === 200) {
-            alert("success");
+            
+            alert("success","successfull");
           } else if (responseJson.responseCode === 400) {
             return {
               code: responseJson.responseCode,
@@ -245,6 +247,7 @@ const CheckMnemonic = (props) => {
               } else {
                 setLoading(false);
                 return alert(
+                  "error",
                   "Wrong Mnemonic. Please retry with correct mnemonic "
                 );
               }

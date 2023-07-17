@@ -494,6 +494,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { LinearGradient } from "expo-linear-gradient";
 import BankModel from "./bankModel";
+import { alert } from "../../../../reusables/Toasts";
 
 // <===============================< Constants >==============================>
 /* const TEST_EXTERNAL_ACCOUNT_DATA = {
@@ -697,7 +698,8 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,onPress }) => {
       if (err) return setModalMessage(`${err.status}: ${err.message}`);
       handleClose();
       setLoading(false);
-      alert("Account Added Successfully");
+      
+      alert('success',"Account Added Successfully");
       getAccountDetails();
       return setModalMessage(res.data.message || "Account added successfully");
     } catch (err) {

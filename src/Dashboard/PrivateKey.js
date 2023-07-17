@@ -27,6 +27,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import DialogInput from "react-native-dialog-input";
 import { encryptFile } from "../utilities/utilities";
 import { urls } from "./constants";
+import { alert } from "./reusables/Toasts";
 const PrivateKey = (props) => {
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
@@ -91,7 +92,8 @@ const PrivateKey = (props) => {
             onPress={() => {
               //setVisible(!visible)
               if (!accountName) {
-                return alert("you must set an account name to continue");
+                
+                return alert("error","you must set an account name to continue");
               }
               let wallet = props.route.params.wallet.wallet;
               wallet.accountName = accountName;

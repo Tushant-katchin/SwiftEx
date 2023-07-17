@@ -30,7 +30,7 @@ import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import { CommonActions } from "@react-navigation/native";
 import { useToast } from 'native-base';
-import { ShowToast } from "../reusables/Toasts";
+import { alert, ShowToast } from "../reusables/Toasts";
 
 const TransactionPinModal = ({
   pinViewVisible,
@@ -234,7 +234,8 @@ const TransactionPinModal = ({
                           setLoader(false);
                           setPinViewVisible(false);
                           console.log(e);
-                          alert(e);
+                          
+                          alert('error',e);
                         }
                       }
                     } else if (type === "Matic") {
@@ -271,7 +272,7 @@ const TransactionPinModal = ({
                           setPinViewVisible(false);
                           setLoading(false);
                           console.log(e);
-                          alert(e);
+                          alert('error',e);
                         }
                       }
                     } else if (type === "BSC") {
@@ -309,7 +310,7 @@ const TransactionPinModal = ({
                           setLoader(false);
                           setLoading(false);
                           console.log(e);
-                          alert(e);
+                          alert('error',e);
                         }
                       }
                     } else {
@@ -345,7 +346,7 @@ const TransactionPinModal = ({
                         setLoader(false);
                         setLoading(false);
                         console.log(e);
-                        alert("please try again");
+                        alert('error',"please try again");
                       }
                     }
                   } else {
@@ -354,7 +355,7 @@ const TransactionPinModal = ({
                     setLoader(false);
                     setDisable(false);
                     pinView.current.clearAll();
-                    alert("invalid pin.please try again!");
+                    alert('error',"invalid pin.please try again!");
                   }
                 }
               }}

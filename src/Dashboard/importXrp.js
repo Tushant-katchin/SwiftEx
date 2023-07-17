@@ -34,6 +34,7 @@ import "@ethersproject/shims";
 import { genUsrToken } from "./Auth/jwtHandler";
 import {  utils } from "xrpl-accountlib"
 import { ethers } from "ethers";
+import { alert } from "./reusables/Toasts";
 const ImportXrp = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -170,7 +171,8 @@ const ImportXrp = (props) => {
               setText(text)
 
             } else {
-              return alert(`please input ${label} to proceed `);
+              
+              return alert("error",`please input ${label} to proceed `);
             }
           }}
           placeholder={
@@ -199,7 +201,7 @@ const ImportXrp = (props) => {
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
               if (!accountName) {
-                return alert("please enter an accountName to proceed");
+                return alert("error","please enter an accountName to proceed");
               }
               setLoading(true);
               setTimeout(async () => {
@@ -292,7 +294,7 @@ const ImportXrp = (props) => {
                     props.navigation.navigate("HomeScreen");
                   } catch (e) {
                     console.log(e);
-                    alert(e);
+                    alert("error",e);
                     setLoading(false);
                   }
                 } else {
@@ -376,7 +378,7 @@ const ImportXrp = (props) => {
                   } catch (e) {
                     console.log(e);
                     setLoading(false);
-                    return alert(e);
+                    return alert("error",e);
                   }
                 }
               }, 1);

@@ -32,6 +32,7 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genUsrToken } from "./Auth/jwtHandler";
+import { alert } from "./reusables/Toasts";
 const ImportBscWallet = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -235,7 +236,8 @@ const ImportBscWallet = (props) => {
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
               if (!accountName) {
-                return alert("please enter an accountName to proceed");
+                
+                return alert("error","please enter an accountName to proceed");
               }
               setLoading(true);
               setTimeout(() => {
@@ -247,6 +249,7 @@ const ImportBscWallet = (props) => {
                     if (!check) {
                       setLoading(false);
                       return alert(
+                        "error",
                         "Incorrect Mnemonic. Please provide a valid Mnemonic"
                       );
                     }
@@ -334,7 +337,7 @@ const ImportBscWallet = (props) => {
                     //setVisible(!visible)
                   } catch (e) {
                     console.log(e);
-                    alert(e);
+                    alert("error",e);
                     setLoading(false);
                   }
                 } else if (label === "privateKey") {
@@ -343,6 +346,7 @@ const ImportBscWallet = (props) => {
                     if (!check) {
                       setLoading(false);
                       return alert(
+                        "error",
                         "Incorrect PrivateKey. Please provide a valid privatekey"
                       );
                     }
@@ -426,7 +430,7 @@ const ImportBscWallet = (props) => {
                   } catch (e) {
                     console.log(e);
                     setLoading(false);
-                    return alert(e);
+                    return alert("error",e);
                   }
                 } else {
                   ethers.Wallet.fromEncryptedJson(json, jsonKey)
@@ -511,7 +515,7 @@ const ImportBscWallet = (props) => {
                     .catch((e) => {
                       console.log(e);
                       setLoading(false);
-                      return alert(e);
+                      return alert("error",e);
                     });
                   setLoading(false);
                 }

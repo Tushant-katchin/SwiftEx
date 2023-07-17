@@ -27,6 +27,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { alert } from "./reusables/Toasts";
 
 //https://data-seed-prebsc-1-s1.binance.org:8545
 
@@ -89,8 +90,8 @@ const ImportWallet = () => {
           //setAddress(res.wallet.address)
           setLoading(false);
           console.log("success");
-
-          alert("Wallet imported successfully");
+          
+          alert("success","Wallet imported successfully");
           /*dispatch(getBalance(res.wallet.address))
         .then((response) => {
                 
@@ -110,13 +111,13 @@ const ImportWallet = () => {
         });*/
         } else {
           setLoading(false);
-          alert("Wallet does not exist");
+          alert("error","Wallet does not exist");
         }
       })
       .catch((error) => {
         setLoading(false);
         console.log(error);
-        alert(error);
+        alert("error",error);
       });
   };
 
@@ -290,7 +291,7 @@ const ImportWallet = () => {
             style={styles.addButton3}
             onPress={async () => {
               if (!name) {
-                return alert("please enter account name first");
+                return alert("error","please enter account name first");
               } else {
                 const wallets = await getWallets();
                 console.log(wallets);
@@ -310,6 +311,7 @@ const ImportWallet = () => {
                     setLoading(false);
 
                     return alert(
+                      "error",
                       "account with same name already exists. please use a different name"
                     );
                   } else {
@@ -347,6 +349,7 @@ const ImportWallet = () => {
                   });
                   if (valid === true) {
                     return alert(
+                      "error",
                       "account with same name already exists. please use a different name"
                     );
                   } else {

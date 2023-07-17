@@ -30,6 +30,7 @@ import "@ethersproject/shims";
 import { urls } from "../constants";
 import { checkAddressValidity } from "../../utilities/web3utilities";
 import { isFloat, isInteger } from "../../utilities/utilities";
+import { alert } from "../reusables/Toasts";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -100,7 +101,8 @@ const SendTokens = (props) => {
       console.log(state.wallet.address);
       if (!state.wallet.address) {
         setBalance(0);
-        alert("please select a wallet first");
+        
+        alert("error","please select a wallet first");
       } else {
         if (Type) {
           if (Type == "Ethereum") {
