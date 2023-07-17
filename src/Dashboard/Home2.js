@@ -51,7 +51,7 @@ const Home2 = ({ navigation }) => {
   ]);
   const Navigation = useNavigation();
 
-  const { getToken, requestUserPermission } = useFirebaseCloudMessaging();
+  // const { getToken, requestUserPermission } = useFirebaseCloudMessaging();
 
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -259,54 +259,54 @@ const Home2 = ({ navigation }) => {
     second: SecondRoute,
   });
 
-  useEffect(async () => {
-    // getWallets(state.user, readData,dispatch, importAllWallets)
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-    }).start();
+  // useEffect(async () => {
+  //   // getWallets(state.user, readData,dispatch, importAllWallets)
+  //   Animated.timing(fadeAnim, {
+  //     toValue: 1,
+  //     duration: 1000,
+  //   }).start();
 
-    Animated.timing(translation, {
-      toValue: 1,
-      delay: 0.1,
-      useNativeDriver: true,
-    }).start();
-    /* if (!state.wallet.address) {
-      try {
-        await SetCurrentWallet().catch((e) => {
-          console.log(e);
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  */
-  }, []);
-  useEffect(async () => {
-    try {
-      await SetCurrentWallet().catch((e) => {
-        console.log(e);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+  //   Animated.timing(translation, {
+  //     toValue: 1,
+  //     delay: 0.1,
+  //     useNativeDriver: true,
+  //   }).start();
+  //   /* if (!state.wallet.address) {
+  //     try {
+  //       await SetCurrentWallet().catch((e) => {
+  //         console.log(e);
+  //       });
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
+  // */
+  // }, []);
+  // useEffect(async () => {
+  //   try {
+  //     await SetCurrentWallet().catch((e) => {
+  //       console.log(e);
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    AppState.addEventListener("change", (changedState) => {
-      currentState.current = changedState;
-      setAppState(currentState.current);
-      console.log(currentState.current);
-      if (currentState.current === "background") {
-        console.log(currentState.current);
+  // useEffect(() => {
+  //   AppState.addEventListener("change", (changedState) => {
+  //     currentState.current = changedState;
+  //     setAppState(currentState.current);
+  //     console.log(currentState.current);
+  //     if (currentState.current === "background") {
+  //       console.log(currentState.current);
 
-        navigation.navigate("appLock");
-        /* if(routeName.name!=='exchangeLogin'){
+  //       navigation.navigate("appLock");
+  //       /* if(routeName.name!=='exchangeLogin'){
             
-          }*/
-      }
-    });
-  }, []);
+  //         }*/
+  //     }
+  //   });
+  // }, []);
 
   useFocusEffect(
     React.useCallback(() => {

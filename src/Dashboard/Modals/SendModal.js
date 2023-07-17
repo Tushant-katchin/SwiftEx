@@ -367,7 +367,6 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
         transparent={true}
         visible={modalVisible}
         statusBarTranslucent={true}
-        style={{ backgroundColor: "#fff" }}
         onBackdropPress={() => setModalVisible(false)}
         onRequestClose={() => {
           setModalVisible(false);
@@ -375,19 +374,23 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
       >
         <View
           style={{
-            height: "90%",
-            marginTop: "auto",
-            backgroundColor: "white",
-            borderRadius: 20,
+            backgroundColor: "#131E3A",
+            height: hp(70),
+            marginTop: hp(20),
+            width: wp(95),
+            borderRadius: hp(2),
+            alignSelf: "center",
+            borderWidth: 1,
+            borderColor: "#E0E0E0",
           }}
         >
-          <View style={styles.footer}>
-            <View style={styles.Amount}>
-              <View style={{ right: Visible === false ? wp(0) : wp(100) }}>
-                <ChooseTokens setModalVisible={setModalVisible} />
-              </View>
-            </View>
+          {/* <View style={styles.footer}> */}
+          {/* <View style={styles.Amount}> */}
+          <View style={{ right: Visible === false ? wp(0) : wp(100) }}>
+            <ChooseTokens setModalVisible={setModalVisible} />
           </View>
+          {/* </View> */}
+          {/* </View> */}
         </View>
       </Modal>
     </View>

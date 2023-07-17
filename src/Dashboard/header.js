@@ -45,7 +45,8 @@ export const ExchangeHeader = () => {
   );
 };
 
-export const ExchangeHeaderIcon = () => {
+export const ExchangeHeaderIcon = (props) => {
+  const {title} = props 
   const navigation = useNavigation();
 
   return (
@@ -68,7 +69,7 @@ export const ExchangeHeaderIcon = () => {
         />
         <Image source={darkBlue} style={styles.logoImg} />
       </View>
-      <Text style={styles.text}>Exchange</Text>
+      <Text style={styles.text}>{title}</Text>
       <View style={{ alignItems: "center" }}>
         <Icon
           name={"logout"}
