@@ -245,7 +245,7 @@ const Dashboard = ({ navigation }) => {
         />
          <Tab.Screen
           name="Exchange"
-          component={!token?ExchangeNavigation:ExchangeLogin}
+          component={token?ExchangeNavigation:ExchangeLogin}
           options={{
             header: () => {null},
             headerShown: true,

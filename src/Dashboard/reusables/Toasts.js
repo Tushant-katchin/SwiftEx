@@ -18,7 +18,10 @@ export const ShowToast = ({message})=>{
 }
 
 export function alert(type,message){
-    console.log(message)
+    console.log(String(message))
+    if(typeof(message)!=String){
+        message = String(message)
+    }
     if(type=='success')
     {
 
@@ -30,7 +33,7 @@ export function alert(type,message){
         });
     }else{
         Snackbar.show({
-            text: JSON.stringify(message),
+            text: message,
             duration: Snackbar.LENGTH_SHORT,
             backgroundColor:'red'
         });

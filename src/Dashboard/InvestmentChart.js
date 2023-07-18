@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import {
   Avatar,
   Card,
   Title,
   Paragraph,
   CardItem,
-  WebView,
+  WebView
 } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
@@ -17,6 +17,8 @@ import Etherimage from "../../assets/ethereum.png";
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { getBnbPrice, getEthPrice } from "../utilities/utilities";
+import Maticimage from "../../assets/matic.png";
+import Xrpimage from "../../assets/xrp.png";
 
 function InvestmentChart() {
   const state2 = useSelector((state) => state.walletBalance);
@@ -24,6 +26,8 @@ function InvestmentChart() {
   const state = useSelector((state) => state);
   const wallet = useSelector((state) => state.wallet);
   const [bnbBalance, getBnbBalance] = useState(0);
+  const [xrpBalance, getXrpBalance] = useState(0);
+  const [maticBalance, getMaticBalance] = useState(0);
   const [ethBalance, getEthBalance] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
   const [bnbPrice, setBnbPrice] = useState(0);
@@ -48,8 +52,10 @@ function InvestmentChart() {
   useEffect(async () => {
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
+    const xrpBalance = await state.XrpBalance
+    const maticBalance = await state.MaticBalance
     AsyncStorageLib.getItem("walletType").then((type) => {
-      if (JSON.parse(type) === "Ethereum" || JSON.parse(type) === "BSC") {
+      if (JSON.parse(type) === "Ethereum" || JSON.parse(type) === "BSC" || JSON.parse(type) === "Multi-coin") {
         if (bal) {
           getBnbBalance(bal);
         } else {
@@ -60,9 +66,22 @@ function InvestmentChart() {
         } else {
           getEthBalance(0.0);
         }
+        if (xrpBalance) {
+          getXrpBalance(EthBalance);
+        } else {
+          getXrpBalance(0.0);
+        }
+        if (maticBalance) {
+          getMaticBalance(EthBalance);
+        } else {
+          getMaticBalance(0.0);
+        }
       } else {
         getEthBalance(0.0);
         getBnbBalance(0.0);
+        getMaticBalance(0.0);
+        getXrpBalance(0.0);
+
       }
     });
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -122,6 +141,7 @@ function InvestmentChart() {
 
   return (
     <View>
+    <ScrollView>
       <View style={styles.flatlistContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image
@@ -178,6 +198,57 @@ function InvestmentChart() {
           {ethBalance ? ethBalance : 0} ETH
         </Text>
       </View>
+      <View style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={Maticimage} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>Matic</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $ {ethPrice >= 0 ? ethPrice : 1300}
+            </Text>
+          </View>
+        </View>
+
+        <Text
+          style={{
+            color: "black",
+            fontWeight: "bold",
+          }}
+        >
+          {maticBalance ? maticBalance : 0} MAT
+        </Text>
+      </View>
+      <View style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={Xrpimage} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>XRP</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $ {ethPrice >= 0 ? ethPrice : 1300}
+            </Text>
+          </View>
+        </View>
+
+        <Text
+          style={{
+            color: "black",
+            fontWeight: "bold",
+          }}
+        >
+          {xrpBalance ? xrpBalance : 0} XRP
+        </Text>
+      </View>
+    </ScrollView>
     </View>
   );
 }
@@ -193,6 +264,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: wp(90),
     alignSelf: "center",
+    marginBottom:0
   },
   img: { height: hp(5), width: wp(10), borderWidth: 1, borderRadius: hp(3) },
   ethrumView: {

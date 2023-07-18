@@ -6,6 +6,7 @@ import {
   AppState,
   BackHandler,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setWalletType } from "../components/Redux/actions/auth";
@@ -243,9 +244,9 @@ const Home2 = ({ navigation }) => {
   );
 
   const FirstRoute = () => (
-    <View>
+    <ScrollView>
       <InvestmentChart />
-    </View>
+    </ScrollView>
   );
 
   const SecondRoute = () => (
