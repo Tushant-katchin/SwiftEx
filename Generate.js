@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
+  
   ActivityIndicator,
+  Text,
 } from "react-native";
 import { heightPercentageToDP } from "react-native-responsive-screen";
 import { WebView } from "react-native-webview";
@@ -45,7 +47,7 @@ export default function Generate() {
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
-        console.log(response.url);
+        console.log("=================",response.url);
         setUrl(response.url);
       })
       .catch((err) => console.error(err));
@@ -56,7 +58,8 @@ export default function Generate() {
 
   return (
     <View style={styles.container}>
-      {loading ? <Spinner /> : <View></View>}
+      {loading ? <Spinner /> : <View>
+        </View>}
       <WebView
         startInLoadingState={true}
         originWhitelist={["*"]}

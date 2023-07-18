@@ -113,7 +113,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box2}
+            style={style.Box3}
             onPress={async() => {
               const walletType = await AsyncStorageLib.getItem('walletType')
               if(JSON.parse(walletType)==="Ethereum"|| JSON.parse(walletType)==="eth" || JSON.parse(walletType)==="Multi-coin"){
@@ -138,7 +138,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box2}
+            style={style.Box3}
             onPress={async() => {
               const walletType = await AsyncStorageLib.getItem('walletType')
               if(JSON.parse(walletType)==="Matic" || JSON.parse(walletType)==="Multi-coin"){
@@ -161,7 +161,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box2}
+            style={style.Box3}
             onPress={async() => {
               const walletType = await AsyncStorageLib.getItem('walletType')
               if(JSON.parse(walletType)==="Xrp" || JSON.parse(walletType)==='Multi-coin'){
@@ -209,10 +209,11 @@ const style = StyleSheet.create({
   walletText: {
     marginTop: hp(4),
     fontSize: 14,
+    color:"white"
   },
   Body: {
     display: "flex",
-    backgroundColor: "white",
+    backgroundColor: "#131E3A",
     height: hp(83),
     width: wp(95),
     borderRadius:hp(2),
