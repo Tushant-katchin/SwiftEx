@@ -25,6 +25,7 @@ import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/sr
 import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
 import { ExchangeHeaderApp, ExchangeHeaderIcon } from "./reusables/ExchangeHeader";
 import { AppHeader } from "./reusables/AppHeader";
+import { ExchangeHeaderIcon } from "./header";
 
 const Tab = createBottomTabNavigator();
 
