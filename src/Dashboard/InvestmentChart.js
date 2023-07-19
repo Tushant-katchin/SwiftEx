@@ -106,6 +106,7 @@ function InvestmentChart() {
 
   useEffect(async () => {
     await getTokenBalance()
+    getEthBnbPrice();
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, []);
 
@@ -115,7 +116,7 @@ function InvestmentChart() {
   }, [wallet.address]);
 
   useEffect(() => {
-    getEthBnbPrice();
+   
   }, []);
 
   let LeftContent = (props) => (

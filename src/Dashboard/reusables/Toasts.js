@@ -2,7 +2,7 @@ import Snackbar from 'react-native-snackbar';
 import { Box, useToast } from 'native-base';
 
 
-export const ShowToast = ({toast,message})=>{
+export const ShowToast = (toast,message)=>{
   //const toast = useToast()
   
     return (toast.show({

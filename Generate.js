@@ -46,7 +46,7 @@ export default function Generate() {
     fetch("https://api.testwyre.com/v3/orders/reserve", options)
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
+        console.log("My",response);
         console.log("=================",response.url);
         setUrl(response.url);
       })

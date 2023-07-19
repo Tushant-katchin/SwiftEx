@@ -1101,11 +1101,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                 </View>
               </View>
             </View>
-            <Text style={{ marginLeft: wp(18) }}>
-              {" "}
-              {amount} {coin0.name} ={" "}
-              {tradePrice ? tradePrice.token1totoken2 : ""} {coin1.name}
-            </Text>
+            
             <View
               style={{
                 display: "flex",

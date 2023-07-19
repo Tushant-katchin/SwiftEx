@@ -59,7 +59,8 @@ export function ExchangeNavigation() {
           borderTopRightRadius: 30,
           borderTopColor: "black",
           borderTopWidth: 1,
-          backgroundColor:"#4CA6EA"
+          backgroundColor:"#4CA6EA",
+
         },
         headerTitleAlign: "center",
       })}

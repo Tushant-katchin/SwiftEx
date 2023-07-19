@@ -193,6 +193,7 @@ const Dashboard = ({ navigation }) => {
         <Tab.Screen
           name="Home"
           component={Home2}
+          
           options={{
             header: () =>
             
@@ -242,6 +243,7 @@ const Dashboard = ({ navigation }) => {
             header: () => Header3("Market"),
             headerShown: true,
             unmountOnBlur: true,
+            
           }}
         />
          <Tab.Screen
@@ -250,7 +252,10 @@ const Dashboard = ({ navigation }) => {
           options={{
             header: () => {null},
             headerShown: true,
+            display: "none",
+            tabBarStyle: { display: "none" },
           }}
+          
         />
         <Tab.Screen
           name="Settings"
