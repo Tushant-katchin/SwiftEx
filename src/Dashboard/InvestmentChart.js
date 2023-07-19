@@ -48,81 +48,70 @@ function InvestmentChart() {
       setBnbPrice(response.USD);
     });
   };
-
-  useEffect(async () => {
+  async function getTokenBalance()
+  {
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
     const xrpBalance = await state.XrpBalance
     const maticBalance = await state.MaticBalance
     AsyncStorageLib.getItem("walletType").then((type) => {
-      if (JSON.parse(type) === "Ethereum" || JSON.parse(type) === "BSC" || JSON.parse(type) === "Multi-coin") {
-        if (bal) {
-          getBnbBalance(bal);
-        } else {
-          getBnbBalance(0.0);
-        }
-        if (EthBalance) {
-          getEthBalance(EthBalance);
-        } else {
-          getEthBalance(0.0);
-        }
-        if (xrpBalance) {
-          getXrpBalance(EthBalance);
-        } else {
-          getXrpBalance(0.0);
-        }
-        if (maticBalance) {
-          getMaticBalance(EthBalance);
-        } else {
-          getMaticBalance(0.0);
-        }
-      } else {
-        getEthBalance(0.0);
-        getBnbBalance(0.0);
-        getMaticBalance(0.0);
-        getXrpBalance(0.0);
-
-      }
-    });
-    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
-
-  useEffect(async () => {
-    const bal = await state.walletBalance;
-    const EthBalance = await state.EthBalance;
-    AsyncStorageLib.getItem("walletType").then((type) => {
       if (JSON.parse(type) === "Ethereum") {
         if (EthBalance) {
-          getEthBalance(Number(EthBalance).toFixed(5));
-          getBnbBalance(0.0);
+          getEthBalance(Number(EthBalance).toFixed(2));
+          getBnbBalance(0);
         } else {
-          getEthBalance(0.0);
+          getEthBalance(0);
         }
       } else if (JSON.parse(type) === "BSC") {
         if (bal) {
           getBnbBalance(Number(bal).toFixed(5));
-          getEthBalance(0.0);
+          getEthBalance(0);
         } else {
-          getBnbBalance(0.0);
+          getBnbBalance(0);
         }
       } else if (JSON.parse(type) === "Multi-coin") {
         if (EthBalance) {
-          getEthBalance(Number(EthBalance).toFixed(5));
+          getEthBalance(Number(EthBalance).toFixed(2));
         } else {
-          getEthBalance(0.0);
+          getEthBalance(0);
         }
 
         if (bal) {
-          getBnbBalance(Number(bal).toFixed(5));
+          getBnbBalance(Number(bal).toFixed(2));
         } else {
-          getBnbBalance(0.0);
+          getBnbBalance(0);
         }
-      } else {
-        getEthBalance(0.0);
-        getBnbBalance(0.0);
+        if (xrpBalance) {
+          getXrpBalance(EthBalance);
+        } else {
+          getXrpBalance(0);
+        }
+        if (maticBalance) {
+          getMaticBalance(EthBalance);
+        } else {
+          getMaticBalance(0);
+        }
+
+      } else {   
+        getEthBalance(0);
+        getBnbBalance(0);
+        getMaticBalance(0);
+        getXrpBalance(0);
+
       }
     });
+   
+    
+  }
+
+  useEffect(async () => {
+    await getTokenBalance()
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, []);
+
+  useEffect(async () => {
+    await getTokenBalance()
+
   }, [wallet.address]);
 
   useEffect(() => {

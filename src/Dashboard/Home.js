@@ -23,7 +23,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/src/Navigation";
 import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
-import { ExchangeHeaderApp, ExchangeHeaderIcon } from "./reusables/ExchangeHeader";
+import { ExchangeHeaderApp} from "./reusables/ExchangeHeader";
 import { AppHeader } from "./reusables/AppHeader";
 import { ExchangeHeaderIcon } from "./header";
 

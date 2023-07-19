@@ -61,7 +61,7 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="Welcome"
+       //initialRouteName="Passcode"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",

@@ -53,20 +53,12 @@ export default function App() {
     <StoreProvider store={store}>
       <NativeBaseProvider>
         <PaperProvider>
-          <AnimatedSplash
-            translucent={true}
-            isLoaded={ready}
-            logoImage={require("./assets/splash.jpeg")}
-            backgroundColor={"#131E3A"}
-            logoHeight={hp("150")}
-            logoWidth={wp("100")}
-          >
+          
             <View style={styles.container}>
               <StatusBar hidden />
 
               <NavigationProvider />
             </View>
-          </AnimatedSplash>
         </PaperProvider>
       </NativeBaseProvider>
     </StoreProvider>
