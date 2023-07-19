@@ -265,7 +265,7 @@ const Settings = (props) => {
            const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
            console.log(token);
 
-           if (!token) {
+           if (token) {
              props.navigation.navigate("exchange");
            } else {
              props.navigation.navigate("exchangeLogin");
@@ -321,9 +321,9 @@ const Settings = (props) => {
           style={styles.accountBox}
           onPress={() => {
             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            // AsyncStorageLib.removeItem('user')
+            //AsyncStorageLib.removeItem('user')
             AsyncStorageLib.removeItem(LOCAL_TOKEN);
-            // props.navigation.navigate("Passcode");
+             props.navigation.navigate("Passcode");
             /* dispatch(logout()).then((res)=>{
       }).catch((e)=>{
         console.log(e)
@@ -331,7 +331,7 @@ const Settings = (props) => {
           }}
         >
           <Icon name="chevron-right" size={hp(2)} color="black" />
-          <Text style={styles.text}>Wallet Connect</Text>
+          <Text style={styles.text}>Log Out</Text>
         </TouchableOpacity>
       </View>
 

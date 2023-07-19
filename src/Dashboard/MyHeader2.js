@@ -376,20 +376,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Text style={styles.dollartxt}>
           $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>
-        <View style={styles.wallet}>
-          <Text style={styles.textDesign3}>
-            <Text>{balance ? balance : 0}</Text> {Type}
-          </Text>
-          <Text style={styles.text}>
-            {state.wallet
-              ? state.wallet.name
-                ? state.wallet.name
-                : state.wallet.accountName
-                ? state.wallet.accountName
-                : "Main Wallet"
-              : "No connected wallet"}
-          </Text>
-        </View>
+        
       </View>
       <View style={styles.buttons}>
         <IconWithCircle
@@ -736,4 +723,20 @@ const styles = StyleSheet.create({
           )}
         />
       </View>
+
+      <View style={styles.wallet}>
+          <Text style={styles.textDesign3}>
+            <Text>{balance ? balance : 0}</Text> {Type}
+          </Text>
+          
+        </View>
+        <Text style={styles.text}>
+            {state.wallet
+              ? state.wallet.name
+                ? state.wallet.name
+                : state.wallet.accountName
+                ? state.wallet.accountName
+                : "Main Wallet"
+              : "No connected wallet"}
+          </Text>
 */

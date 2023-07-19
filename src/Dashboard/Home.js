@@ -23,7 +23,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/src/Navigation";
 import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
-import { ExchangeHeaderApp } from "./reusables/ExchangeHeader";
+import { ExchangeHeaderApp} from "./reusables/ExchangeHeader";
 import { AppHeader } from "./reusables/AppHeader";
 import { ExchangeHeaderIcon } from "./header";
 
@@ -193,6 +193,7 @@ const Dashboard = ({ navigation }) => {
         <Tab.Screen
           name="Home"
           component={Home2}
+          
           options={{
             header: () =>
             
@@ -210,7 +211,7 @@ const Dashboard = ({ navigation }) => {
           options={{
             headerShown: true,
             header: () => {
-              return <ExchangeHeaderIcon  title={'Wallet'} />;
+              return Header3("Wallet")
             },
             tabBarIcon: ({ focused }) => {
               let iconName;
@@ -242,15 +243,19 @@ const Dashboard = ({ navigation }) => {
             header: () => Header3("Market"),
             headerShown: true,
             unmountOnBlur: true,
+            
           }}
         />
          <Tab.Screen
           name="Exchange"
-          component={!token?ExchangeNavigation:ExchangeLogin}
+          component={token?ExchangeNavigation:ExchangeLogin}
           options={{
             header: () => {null},
             headerShown: true,
+            display: "none",
+            tabBarStyle: { display: "none" },
           }}
+          
         />
         <Tab.Screen
           name="Settings"

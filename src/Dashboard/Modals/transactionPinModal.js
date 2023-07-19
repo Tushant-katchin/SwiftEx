@@ -341,10 +341,10 @@ const TransactionPinModal = ({
                         Navigate();
                         navigation.navigate("Transactions");
                       } catch (e) {
-                        setDisable(false);
-                        setPinViewVisible(false);
                         setLoader(false);
                         setLoading(false);
+                        setDisable(false);
+                        setPinViewVisible(false);
                         console.log(e);
                         alert('error',"please try again");
                       }

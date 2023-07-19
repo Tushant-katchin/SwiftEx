@@ -2,8 +2,8 @@ import Snackbar from 'react-native-snackbar';
 import { Box, useToast } from 'native-base';
 
 
-export const ShowToast = ({message})=>{
-  const toast = useToast()
+export const ShowToast = (toast,message)=>{
+  //const toast = useToast()
   
     return (toast.show({
         placement: "top",
@@ -18,6 +18,10 @@ export const ShowToast = ({message})=>{
 }
 
 export function alert(type,message){
+    console.log(String(message))
+    if(typeof(message)!=String){
+        message = String(message)
+    }
     if(type=='success')
     {
 

@@ -48,13 +48,21 @@ export const FaucetModal = ({ showModal, setShowModal }) => {
                 onPress={() => {
                   //setShowModal(false);
                   if (!network) {
+                    setShowModal(false);
+
                     return alert("please select a network to proceed");
                   }
                   if (network === "BSC") {
+                    setShowModal(false);
+
                     Linking.openURL(faucets.bscFaucet);
                   } else if (network === "Ethereum") {
+                    setShowModal(false);
+
                     Linking.openURL(faucets.ethFaucetGoerli);
                   } else {
+                    setShowModal(false);
+
                     Linking.openURL(faucets.polygonFaucet);
                   }
                 }}

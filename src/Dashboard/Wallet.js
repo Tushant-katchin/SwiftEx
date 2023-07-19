@@ -80,7 +80,9 @@ const Wallet = ({ navigation }) => {
             Private Keys never leave your device
           </Text>
         </View>
-
+        <TouchableOpacity onPress={() => {
+              navigation.navigate("MyWallet");
+            }}>
         <View style={styles.wallet}>
           <Pressable onPress={() => {
               navigation.navigate("MyWallet");
@@ -96,7 +98,7 @@ const Wallet = ({ navigation }) => {
             color="white"
           />
         </View>
-
+        </TouchableOpacity>
         <View style={styles.Button}>
           <LinearGradient
             start={[1, 0]}

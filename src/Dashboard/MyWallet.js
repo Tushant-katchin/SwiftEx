@@ -46,6 +46,7 @@ const MyWallet = (props) => {
   const dispatch = useDispatch();
   const [extended, setExtended] = useState(false);
   const [loading, setLoading] = useState();
+  const [bnbLoading,setBnbLoading] = useState(false)
   const [user, setUser] = useState("");
   const [balance, setBalance] = useState(0);
   const [bnbBalance, setBnbBalance] = useState(0);
@@ -84,7 +85,7 @@ const MyWallet = (props) => {
           let bal = await AsyncStorageLib.getItem("EthBalance");
 
           if (Eth) {
-            setEthBalance(Number(Eth).toFixed(4));
+            setEthBalance(Number(Eth).toFixed(2));
             setLoading(false);
           } else {
             console.log("coudnt get balance");
@@ -100,7 +101,7 @@ const MyWallet = (props) => {
           const bal = await state.walletBalance;
           console.log("My" + bal);
           if (bal) {
-            setBnbBalance(Number(bal).toFixed(4));
+            setBnbBalance(Number(bal).toFixed(2));
             setLoading(false);
           } else {
             setBnbBalance(0);
@@ -176,13 +177,10 @@ const MyWallet = (props) => {
           colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
           style={styles.PresssableBtn}
         >
-          <TouchableOpacity
-            onPress={() => {
-              // setModalVisible2(true)
-            }}
+          <View
           >
-            <Text style={{ color: "white" }}>Create wallet</Text>
-          </TouchableOpacity>
+            <Text style={{ color: "white" }}>Tokens</Text>
+          </View>
         </LinearGradient>
 
         <View
@@ -217,9 +215,7 @@ const MyWallet = (props) => {
                   left: 50,
                 }}
               >
-                {loading ? (
-                  <ActivityIndicator size="large" color="green" />
-                ) : bnbBalance ? (
+                {bnbBalance ? (
                   bnbBalance
                 ) : (
                   0
@@ -269,9 +265,7 @@ const MyWallet = (props) => {
                   left: 50,
                 }}
               >
-                {loading ? (
-                  <ActivityIndicator size="large" color="green" />
-                ) : ethBalance ? (
+                {ethBalance ? (
                   ethBalance
                 ) : (
                   0
