@@ -21,6 +21,7 @@ import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
+import darkBlue from "../../../assets/darkBlue.png";
 
 const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
   const [Checked, setCheckBox] = useState(false);
@@ -78,11 +79,11 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
           <Animated.Image
             style={{
-              width: wp("5"),
-              height: hp("5"),
+              width: wp("12"),
+              height: hp("12"),
               padding: 30,
-                        }}
-            source={title_icon}
+            }}
+            source={darkBlue}
           />
 
           <Text style={style.welcomeText}> Back up you wallet now </Text>
@@ -90,7 +91,12 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
             In the next page , you will see your secret phrase
           </Text>
           <View
-            style={{ display: "flex", flexDirection: "row", marginTop: hp(5),alignItems:"center"}}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginTop: hp(5),
+              alignItems: "center",
+            }}
           >
             <Text style={style.welcomeText2}>
               If i loose my private key , my funds will be lost
@@ -104,7 +110,12 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
           </View>
 
           <View
-            style={{ display: "flex", flexDirection: "row", marginTop: hp(5),alignItems:"center" }}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginTop: hp(5),
+              alignItems: "center",
+            }}
           >
             <Text style={style.welcomeText2}>
               If i share my private key , my funds can get stolen
@@ -122,55 +133,50 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
             <Text> </Text>
           )}
 
-<LinearGradient 
-start={[1, 0]}
-end={[0, 1]}
-colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-style={style.PresssableBtn}
->
-<TouchableOpacity
- disabled={loading ? true : Checked && Checked2 ? false : true}
-onPress={() => {
-  setLoading(true);
-  setTimeout(() => {
-    dispatch(Generate_Wallet2()).then((response) => {
-      if (response) {
-        if (response.status === "success") {
-          setLoading(false);
+          <LinearGradient
+            start={[1, 0]}
+            end={[0, 1]}
+            colors={ Checked && Checked2 ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]:["gray","gray"]}
+            style={style.PresssableBtn}
+          >
+            <TouchableOpacity
+               disabled={loading ? true : Checked && Checked2 ? false : true}
+              onPress={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  dispatch(Generate_Wallet2()).then((response) => {
+                    if (response) {
+                      if (response.status === "success") {
+                        setLoading(false);
 
-          console.log(response.wallet);
-          const wallet = response.wallet;
-          setWallet(wallet);
-          setNewWalletPrivateKey(true);
-        } else {
-          setLoading(false);
+                        console.log(response.wallet);
+                        const wallet = response.wallet;
+                        setWallet(wallet);
+                        setNewWalletPrivateKey(true);
+                      } else {
+                        setLoading(false);
 
-          alert(
-            "error",
-            "wallet generation failed. Please try again"
-          );
-        }
-      } else {
-        setLoading(false);
+                        alert(
+                          "error",
+                          "wallet generation failed. Please try again"
+                        );
+                      }
+                    } else {
+                      setLoading(false);
 
-        alert(
-          "error",
-          "Wallet creation failed . Please try again"
-        );
-      }
-    });
-  }, 1);
-}}
->
-  <Text>Continue</Text>
-</TouchableOpacity>
-
-</LinearGradient>
-
-
-
-
-          </View>
+                      alert(
+                        "error",
+                        "Wallet creation failed . Please try again"
+                      );
+                    }
+                  });
+                }, 1);
+              }}
+            >
+              <Text>Continue</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
         <NewWalletPrivateKey
           Wallet={Wallet}
           SetVisible={setNewWalletPrivateKey}
@@ -189,7 +195,7 @@ const style = StyleSheet.create({
   Body: {
     backgroundColor: "#131E3A",
     height: hp(68),
-    justifyContent:"center",
+    justifyContent: "center",
     borderRadius: hp(2),
     width: wp(90),
     alignItems: "center",

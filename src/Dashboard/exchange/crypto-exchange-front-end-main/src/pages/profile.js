@@ -389,15 +389,15 @@ export const ProfileView = (props) => {
           <Image source={girlProfile} style={styles.img} />
           <View style={styles.fnlnTextView}>
             <FieldView
-              value={profile.firstName}
+              value={profile.firstName + profile.lastName}
               valueStyle={styles.nameText}
               numberOfLines={1}
             />
-            <FieldView
+            {/* <FieldView
               value={profile.lastName}
               valueStyle={styles.nameText}
               numberOfLines={1}
-            />
+            /> */}
           </View>
 
           <View style={{ flexDirection: "row", marginLeft: wp(10) }}>
@@ -654,8 +654,8 @@ const styles = StyleSheet.create({
   },
   valueColor: { color: "#CBBBDC" },
   nameText: {
-    width: wp(13),
-    marginLeft: wp(2),
+    width: wp(30),
+    marginLeft: wp(10),
   },
   walletCard: {
     width: wp(90),
