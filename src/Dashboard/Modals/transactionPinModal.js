@@ -105,7 +105,7 @@ const TransactionPinModal = ({
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
       setShowCompletedButton(true);
     } else {
       setShowCompletedButton(false);
