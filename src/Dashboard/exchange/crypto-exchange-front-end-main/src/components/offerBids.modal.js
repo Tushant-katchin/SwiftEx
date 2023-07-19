@@ -149,11 +149,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
           }}
         >
           <View style={styles.modalContainer}>
-            <Text style={styles.textColor}>
-              {" Are You Sure You want to add Offer of"}
-              {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "}
-              {offer.currencyName} per unit.
-            </Text>
+            
             <Text style={styles.textColor}>{modalMessage}</Text>
             <View style={styles.yesnomainView}>
               <TouchableOpacity style={styles.yesbtnContainer}>

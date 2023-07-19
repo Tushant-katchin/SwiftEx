@@ -388,6 +388,7 @@ getBalance(offer.assetName)
           }}
 
           onPress={()=>{
+            console.log(walletType)
             if(walletType==='Ethereum' || walletType ==='Multi-coin'){
 
               setOpen(true)
