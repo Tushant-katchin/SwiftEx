@@ -130,19 +130,31 @@ export const TransactionsListView = ({
                       <Text style={styles.textColor}>{tx.totalPrice}</Text>
                       <Text style={styles.textColor}>{tx.currency}</Text>
                       {tx.status !== "SUCCEEDED" && (
+                        
                         <Text style={styles.statusColor}>{tx.status}</Text>
                       )}
 
-                      {tx.status === "PAYMENT_PENDING" && (
+                     
+                      <SeeTransactions tx={txLink} />
+                    </View>
+                    {tx.status === "PAYMENT_PENDING" && (
                         <View>
-                          <Button
+<TouchableOpacity style={styles.procedBtn}
+ onPress={() => {
+                              console.log(tx.sessionUrl);
+                              setTxLink(tx.sessionUrl);
+                              setOpen(true);
+                            }}>
+  <Text style={{color:"white",fontSize:12}}>Proceed to pay</Text>
+</TouchableOpacity>
+                          {/* <Button
                             title="Proceed to pay"
                             onPress={() => {
                               console.log(tx.sessionUrl);
                               setTxLink(tx.sessionUrl);
                               setOpen(true);
                             }}
-                          ></Button>
+                          ></Button> */}
                         </View>
                       )}
 
@@ -162,8 +174,6 @@ export const TransactionsListView = ({
                           See tx
                         </Button>
                       )}
-                      <SeeTransactions tx={txLink} />
-                    </View>
                   </ScrollView>
                 ))}
               </>
@@ -493,12 +503,12 @@ const styles = StyleSheet.create({
   },
   textColor: {
     color: "#fff",
-    width: wp(18.5),
+    width: wp(15),
     textAlign: "center",
   },
   statusColor: {
     color: "#DFE96A",
-    width: wp(18.5),
+    width: wp(15),
     textAlign: "center",
   },
   transferdColor: {
@@ -510,7 +520,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: wp(90),
+    width: wp(92),
     marginTop: hp(2),
     marginBottom: hp(1),
     alignSelf: "center",
@@ -547,6 +557,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: hp(5),
   },
+  procedBtn:{
+    backgroundColor:"#010C66",
+    width:wp(26),
+    padding:8,
+    alignItems:"center",
+    borderRadius:6,
+    marginLeft:wp(5)
+  }
 });
 
 /* 

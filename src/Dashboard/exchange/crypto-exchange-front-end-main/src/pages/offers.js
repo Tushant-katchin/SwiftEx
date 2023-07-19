@@ -159,7 +159,7 @@ export const OfferListViewHome = ({
             <Text style={styles.textColor}>Status</Text>
           </View>
         </View>
-        <ScrollView>
+        <ScrollView nestedScrollEnabled={true}>
           {offers ? (
             offers.map((offer) => {
               if (self)

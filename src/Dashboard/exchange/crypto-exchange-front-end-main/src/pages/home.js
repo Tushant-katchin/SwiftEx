@@ -490,6 +490,7 @@ const styles = StyleSheet.create({
   bidText: {
     color: "#fff",
   },
+  
 });
 
 /*

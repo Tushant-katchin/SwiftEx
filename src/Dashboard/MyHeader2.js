@@ -605,8 +605,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 10,
     marginTop: hp(2),
-    width:wp(90),
-    alignSelf:"center"
+    width: wp(90),
+    alignSelf: "center",
   },
   dollartxt: {
     color: "black",

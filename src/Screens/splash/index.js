@@ -6,7 +6,7 @@ import styles from "./style";
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(async () => {
-      navigation.navigate("HomeScreen");
+      navigation.navigate("Passcode");
     }, 3000);
   }, []);
   return (

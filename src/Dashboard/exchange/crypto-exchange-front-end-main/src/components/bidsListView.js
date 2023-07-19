@@ -22,6 +22,7 @@ import SnackBar from "react-native-snackbar-component";
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const UpdateBidModal = ({
   bid,
@@ -146,7 +147,23 @@ const UpdateBidModal = ({
   return (
     <>
       <View>
-        <Btn onPress={handleOpen}>Update</Btn>
+        <View style={{ margin: 5 }}>
+          <Button
+            title="Update"
+            onPress={() => {
+              handleOpen();
+            }}
+          />
+        </View>
+
+        {/* <TouchableOpacity
+          onPress={() => {
+            handleOpen();
+          }}
+          style={styles.cancelBtn}
+        >
+          <Text style={{ color: "white" }}>Update</Text>
+        </TouchableOpacity> */}
         <Modal
           animationIn="slideInRight"
           animationOut="slideOutRight"
@@ -244,7 +261,6 @@ const UpdateBidModal = ({
   );
 };
 
-
 export const BidsListView = ({ bids, getBids }) => {
   const [message, setMessage] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -330,64 +346,65 @@ export const BidsListView = ({ bids, getBids }) => {
               <Text style={styles.AssetText}>Offer Unit Price</Text>
               <Text style={styles.AssetText}>Offer Currency</Text>
               <Text style={styles.AssetText}>Offer Issuer</Text>
-              <Text style={{color:"#fff",width:wp(10),textAlign:"center"}}>Status</Text>
+              <Text
+                style={{ color: "#fff", width: wp(10), textAlign: "center" }}
+              >
+                Status
+              </Text>
             </View>
-            <ScrollView>
+            <ScrollView nestedScrollEnabled={true}>
               {bids.length ? (
                 <>
                   {bids.map((bid, index) => (
                     <View>
-                      <ScrollView>
-                        <View key={bid._id}>
-                          <Text style={styles.textColor}> {bid.offer.assetName}</Text>
-                          <Text style={styles.textColor}>{bid.offer.amount}</Text>
-                          <Text style={styles.textColor}>{bid.pricePerUnit}</Text>
-                          <Text style={styles.textColor}>{bid.currencyName}</Text>
-                          <Text style={styles.textColor}>{bid.offer.pricePerUnit}</Text>
-                          <Text style={styles.textColor}>{bid.offer.currencyName}</Text>
-                          <Text style={styles.textColor}>{bid.issuerName}</Text>
-                          <Text style={styles.textColor}>{bid.status}</Text>
-                        </View>
-                        {bid.offer.status === OFFER_STATUS_ENUM.ACTIVE && (
-                          <View
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              margin: 2,
-                            }}
-                          >
-                            {bid.status === BID_STATUS_ENUM.ACTIVE && (
-                              <>
-                                <UpdateBidModal
-                                  bid={bid}
-                                  getBids={getBids}
-                                  setSnackbarVisible={setSnackbarVisible}
-                                  setPaymentUrl={setPaymentUrl}
-                                />
-                                <View style={{ marginLeft: 10 }}>
-                                  <Btn
-                                    onPress={() => cancelBid(bid._id)}
-                                    style={{ backgroundColor: "red" }}
-                                  >
-                                    Cancel
-                                  </Btn>
-                                </View>
-                              </>
-                            )}
-                            {bid.status === BID_STATUS_ENUM.CANCELED && (
-                              <View>
+                      <View key={bid._id} style={styles.mainDataContainer}>
+                        <Text style={styles.textColor}>
+                          {" "}
+                          {bid.offer.assetName}
+                        </Text>
+                        <Text style={styles.textColor}>{bid.offer.amount}</Text>
+                        <Text style={styles.textColor}>{bid.currencyName}</Text>
+                        <Text style={styles.textColor}>
+                          {bid.offer.pricePerUnit}
+                        </Text>
+                        <Text style={styles.textColor}>
+                          {bid.offer.currencyName}
+                        </Text>
+                        <Text style={styles.textColor}>{bid.issuerName}</Text>
+                        <Text style={{color:"#33B3EA",width:wp(10),textAlign:"center"}}>{bid.status}</Text>
+                      </View>
+                      {bid.offer.status === OFFER_STATUS_ENUM.ACTIVE && (
+                        <View
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            margin: 2,
+                          }}
+                        >
+                          {bid.status === BID_STATUS_ENUM.ACTIVE && (
+                            <>
+                              <UpdateBidModal
+                                bid={bid}
+                                getBids={getBids}
+                                setSnackbarVisible={setSnackbarVisible}
+                                setPaymentUrl={setPaymentUrl}
+                              />
+                              <View style={{ margin: 5 }}>
                                 <Button
-                                  onPress={() => cancelBid(bid._id)}
-                                  color={"green"}
-                                  title={"Re-Activate"}
-                                >
-                                  RE-Activate
-                                </Button>
+                                  onPress={cancelBid(bid._id)}
+                                  title="Cancel"
+                                ></Button>
                               </View>
-                            )}
-                          </View>
-                        )}
-                      </ScrollView>
+                            </>
+                          )}
+                          {bid.status === BID_STATUS_ENUM.CANCELED && (
+                            <Button
+                              title="Re-Activate"
+                              onPress={cancelBid(bid._id)}
+                            ></Button>
+                          )}
+                        </View>
+                      )}
                     </View>
                   ))}
                 </>
@@ -459,20 +476,42 @@ const styles = StyleSheet.create({
   },
   AssetText: {
     color: "#fff",
-    width: wp(15),
+    width: wp(12),
     textAlign: "center",
   },
   linearStyle1: {
     width: wp(95),
-    height: hp(27),
+    height: hp(33),
     marginBottom: hp(3),
     marginVertical: hp(2),
     borderRadius: 10,
     alignSelf: "center",
   },
-  showText:{
-    color:"#fff",
-    marginHorizontal:wp(2),
-    marginVertical:hp(2)
-  }
+  showText: {
+    color: "#fff",
+    marginHorizontal: wp(2),
+    marginVertical: hp(2),
+  },
+  textColor: {
+    color: "#fff",
+    width: wp(10),
+    textAlign: "center",
+  },
+  mainDataContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(95),
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(1),
+  },
+  cancelBtn: {
+    width: wp(17),
+    alignItems: "center",
+    marginLeft: 10,
+    backgroundColor: "#010C66",
+    borderRadius: hp(0.6),
+    marginLeft: wp(2),
+    padding: 3,
+  },
 });

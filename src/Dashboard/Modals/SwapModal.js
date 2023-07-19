@@ -7,12 +7,12 @@ import {
   Button,
   Modal,
   FlatList,
+  TextInput,
   TouchableOpacity,
   Alert,
   ActivityIndicator,
   Keyboard,
 } from "react-native";
-import { TextInput } from "react-native-paper";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { getBalance } from "../../components/Redux/actions/auth";
@@ -34,6 +34,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal2 from "react-native-modal";
 import TokenList from "../tokens/TokenList";
 import TokenHeader from "../tokens/TokenHeader";
@@ -151,12 +152,12 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
 
     const Wallet = await state.wallet.address;
     if (!Wallet) {
-      return alert("error","please select a wallet first");
+      return alert("error", "please select a wallet first");
     }
     if (!amount || !coin0.address || !coin1.address) {
       setLoading(false);
-      
-      return alert("error","All places are mandatory");
+
+      return alert("error", "All places are mandatory");
     }
 
     /*if(balance<=0){
@@ -266,14 +267,14 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             );
             console.log(saveTransaction);
             // await getCustomBalance()
-            alert("success","Your Tx Hash : " + tx.hash);
+            alert("success", "Your Tx Hash : " + tx.hash);
             navigation.navigate("Transactions");
           } catch (e) {
-            alert("error",e);
+            alert("error", e);
             console.log(e);
           }
         } else {
-          alert("error","transaction failed");
+          alert("error", "transaction failed");
         }
       } else if (coin1.symbol === "BNB") {
         const type = "TOKENTOBNB";
@@ -335,10 +336,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           );
           console.log(saveTransaction);
           //await getCustomBalance()
-          alert('success',"Your Tx Hash : " + Tx.hash);
+          alert("success", "Your Tx Hash : " + Tx.hash);
           navigation.navigate("Transactions");
         } else {
-          alert('error',"Swap failed");
+          alert("error", "Swap failed");
         }
       } else {
         const type = "TOKENTOTOKEN";
@@ -392,10 +393,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           );
           console.log(saveTransaction);
           //await getCustomBalance()
-          alert('success',"Your Tx Hash : " + Tx.hash);
+          alert("success", "Your Tx Hash : " + Tx.hash);
           navigation.navigate("Transactions");
         } else {
-          alert('error',"Swap failed");
+          alert("error", "Swap failed");
         }
       }
     } catch (e) {
@@ -426,7 +427,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                 console.log(response);
                 if (response) {
                   if (response.code === 400) {
-                    return alert('error',"server error please try again");
+                    return alert("error", "server error please try again");
                   } else if (response.code === 401) {
                     console.log(response);
                     const type = "Swap";
@@ -442,33 +443,36 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         setLoading(false);
                         setTradeVisible(false);
                         setModalVisible(false);
-                        alert('success',"Your Tx Hash : " + response.tx.transactionHash);
+                        alert(
+                          "success",
+                          "Your Tx Hash : " + response.tx.transactionHash
+                        );
                         navigation.navigate("Transactions");
                       })
                       .catch((e) => {
                         setLoading(false);
-                        alert('error',e.message);
+                        alert("error", e.message);
                         console.log(e);
                       });
                   } else if (response.code === 404) {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',"pair not found");
+                    return alert("error", "pair not found");
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',response);
+                    return alert("error", response);
                   }
                 } else {
                   setLoading(false);
                   setTradeVisible(false);
-                  return alert('success',"server error");
+                  return alert("success", "server error");
                 }
               })
               .catch((e) => {
                 setLoading(false);
                 setTradeVisible(false);
-                alert('error',e.message);
+                alert("error", e.message);
                 console.log(e);
               });
           } else if (coin1.symbol === "WETH") {
@@ -497,31 +501,34 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         setTradeVisible(false);
                         setModalVisible(false);
                         setPinViewVisible(false);
-                        alert('success',"Your Tx Hash : " + response.tx);
+                        alert("success", "Your Tx Hash : " + response.tx);
                         navigation.navigate("Transactions");
                       })
                       .catch((e) => {
                         setLoading(false);
                         setTradeVisible(false);
-                        alert('error',e.message);
+                        alert("error", e.message);
                         console.log(e);
                       });
                   } else if (response.code === 400) {
                     setLoading(false);
-                    return alert('error',"error while swapping. please try again");
+                    return alert(
+                      "error",
+                      "error while swapping. please try again"
+                    );
                   } else if (response === 404) {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',"pair not found");
+                    return alert("error", "pair not found");
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',response);
+                    return alert("error", response);
                   }
                 } else {
                   setLoading(false);
                   setTradeVisible(false);
-                  return alert('error',"server error");
+                  return alert("error", "server error");
                 }
               })
               .catch((e) => {
@@ -555,28 +562,28 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         setLoading(false);
                         setTradeVisible(false);
                         setModalVisible(false);
-                        alert('success',"Your Tx Hash : " + response.tx);
+                        alert("success", "Your Tx Hash : " + response.tx);
                         navigation.navigate("Transactions");
                       })
                       .catch((e) => {
                         setLoading(false);
                         setTradeVisible(false);
-                        alert('error',e.message);
+                        alert("error", e.message);
                         console.log(e);
                       });
                   } else if (response === 404) {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',"pair not found");
+                    return alert("error", "pair not found");
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',response);
+                    return alert("error", response);
                   }
                 } else {
                   setLoading(false);
                   setTradeVisible(false);
-                  return alert('error',"server error");
+                  return alert("error", "server error");
                 }
               })
               .catch((e) => {
@@ -588,7 +595,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           }
         } else {
           setLoading(false);
-          alert('error',"no wallets found");
+          alert("error", "no wallets found");
         }
       } else if (JSON.parse(walletType) === "BSC") {
         const swap = await pancakeSwap(Wallet.privateKey);
@@ -609,7 +616,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   console.log(response);
                   if (response) {
                     if (response.code === 400) {
-                      return alert('error',"server error please try again");
+                      return alert("error", "server error please try again");
                     } else if (response.code === 401) {
                       console.log(response);
                       const type = "Swap";
@@ -626,7 +633,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           setTradeVisible(false);
                           setModalVisible(false);
                           alert(
-                            'success',
+                            "success",
                             "Your Tx Hash : " + response.tx.transactionHash
                           );
                           navigation.navigate("Transactions");
@@ -638,22 +645,22 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     } else if (response.code === 404) {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert('error',"pair not found");
+                      return alert("error", "pair not found");
                     } else {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert('success',response);
+                      return alert("success", response);
                     }
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',"server error");
+                    return alert("error", "server error");
                   }
                 })
                 .catch((e) => {
                   setLoading(false);
                   setTradeVisible(false);
-                  alert('success',e.message);
+                  alert("success", e.message);
                   console.log(e);
                 });
             } else if (coin1.symbol === "WETH") {
@@ -681,37 +688,40 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           setLoading(false);
                           setTradeVisible(false);
                           setModalVisible(false);
-                          alert('success',"Your Tx Hash : " + response.tx);
+                          alert("success", "Your Tx Hash : " + response.tx);
                           navigation.navigate("Transactions");
                         })
                         .catch((e) => {
                           setLoading(false);
                           setTradeVisible(false);
-                          alert('error',e.message);
+                          alert("error", e.message);
                           console.log(e);
                         });
                     } else if (response.code === 400) {
                       setLoading(false);
-                      return alert('error',"error while swapping. please try again");
+                      return alert(
+                        "error",
+                        "error while swapping. please try again"
+                      );
                     } else if (response === 404) {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert('error',"pair not found");
+                      return alert("error", "pair not found");
                     } else {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert('error',response);
+                      return alert("error", response);
                     }
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',"server error");
+                    return alert("error", "server error");
                   }
                 })
                 .catch((e) => {
                   setLoading(false);
                   setTradeVisible(false);
-                  alert('error',e.message);
+                  alert("error", e.message);
                   console.log(e);
                 });
             } else {
@@ -740,7 +750,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           setLoading(false);
                           setTradeVisible(false);
                           setModalVisible(false);
-                          alert('success',"Your Tx Hash : " + response.tx);
+                          alert("success", "Your Tx Hash : " + response.tx);
                           navigation.navigate("Transactions");
                         })
                         .catch((e) => {
@@ -751,7 +761,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                     } else if (response === 404) {
                       setLoading(false);
                       setTradeVisible(false);
-                      return alert('error',"pair not found");
+                      return alert("error", "pair not found");
                     } else {
                       setLoading(false);
                       setTradeVisible(false);
@@ -760,19 +770,19 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   } else {
                     setLoading(false);
                     setTradeVisible(false);
-                    return alert('error',"server error");
+                    return alert("error", "server error");
                   }
                 })
                 .catch((e) => {
                   setLoading(false);
                   setTradeVisible(false);
-                  alert('error',e.message);
+                  alert("error", e.message);
                   console.log(e);
                 });
             }
           } else {
             setLoading(false);
-            alert('error',"no wallets found");
+            alert("error", "no wallets found");
           }
         } else if (swapType === "BSC") {
           const swap = await pancakeSwap(Wallet.privateKey);
@@ -784,7 +794,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     } catch (e) {
       setLoading(false);
       setTradeVisible(false);
-      alert('error',e.message)
+      alert("error", e.message);
       console.log(e);
     }
   }
@@ -977,158 +987,144 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
       >
         <View
           style={{
-            height: "93%",
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
+            height: "70%",
             marginTop: "auto",
-            backgroundColor: "white",
+            backgroundColor: "#131E3A",
           }}
         >
-          <TokenHeader setVisible={setModalVisible} name={name} />
-          <View style={styles.footer}>
-            <View elevation={5}>
-              <View style={styles.container}>
-                <View
-                  style={{
-                    borderRadius: 10,
-                    height: hp(20),
-                    backgroundColor: "white",
-                  }}
-                >
-                  <Text style={{ margin: 10, color: "grey" }}>You Pay</Text>
-                  <View
-                    style={{ display: "flex", flexDirection: "row" }}
-                    onStartShouldSetResponder={() => Keyboard.dismiss()}
-                  >
-                    <TextInput
-                      style={styles.textInput2}
-                      keyboardType="numeric"
-                      placeholder="0"
-                      onChangeText={(text) => {
-                        setAmount(text);
-                      }}
-                    />
-                    <Text
-                      style={{
-                        marginTop: hp(0),
-                        marginLeft: wp(8),
-                        color: "black",
-                        fontSize: 18,
-                      }}
-                    >
-                      {coin0.name}
-                    </Text>
-                    <TouchableOpacity
-                      style={{
-                        position: "absolute",
-                        marginLeft: wp(70),
-                        marginTop: hp(3),
-                      }}
-                      onPress={() => {
-                        setCoinType("0");
-                        setOpenChain(true);
-                      }}
-                    >
-                      <Icon
-                        name={"ios-chevron-forward-circle"}
-                        size={40}
-                        color={"grey"}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <Text style={{ margin: 5, color: "grey" }}>
-                    Balance:{balance ? balance : 0}
-                  </Text>
-                </View>
-                <Icon
-                  name={"swap-vertical"}
-                  size={44}
-                  color={"grey"}
-                  style={{
-                    position: "absolute",
-                    marginLeft: wp(70),
-                    marginTop: hp(19),
-                    zIndex: 100,
-                  }}
-                />
-                <View
-                  style={{
-                    borderRadius: 10,
-                    height: hp(20),
-                    backgroundColor: "white",
-                    marginTop: hp(0.5),
-                  }}
-                  onStartShouldSetResponder={() => Keyboard.dismiss()}
-                >
-                  <Text style={{ margin: 10, color: "grey" }}>You Get</Text>
-                  <View style={{ display: "flex", flexDirection: "row" }}>
-                    <TextInput
-                      style={styles.textInput2}
-                      disabled={true}
-                      keyboardType="numeric"
-                      placeholder={trade ? `${trade.minimumAmountOut}` : `0`}
-                      onChangeText={(text) => {
-                        setAmount2(text);
-                      }}
-                    />
-                    <Text
-                      style={{
-                        marginTop: hp(0),
-                        marginLeft: wp(9),
-                        color: "black",
-                        fontSize: 18,
-                      }}
-                    >
-                      {coin1.name}
-                    </Text>
-                    <TouchableOpacity
-                      style={{
-                        position: "absolute",
-                        marginLeft: wp(70),
-                        marginTop: hp(3),
-                      }}
-                      onPress={() => {
-                        setCoinType("1");
+          <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}>
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={20}
+            color={"white"}
+            style={{ padding: hp(2) }}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
+          />
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18,
+              fontWeight: "600",
+              textAlign: "center",
+              marginRight:wp(45)
+            }}
+          >
+            Swap
+          </Text>
 
-                        setVisible(true);
-                      }}
-                    >
-                      <Icon
-                        name={"ios-chevron-forward-circle"}
-                        size={40}
-                        color={"grey"}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
+          </View>
+          {/* <TokenHeader setVisible={setModalVisible} name={name} /> */}
+        
+
+          <View
+            style={styles.cardmainContainer}
+            onStartShouldSetResponder={() => Keyboard.dismiss()}
+          >
+            <View style={styles.tokenView}>
+              <Text style={styles.color}>{coin0.name}</Text>
+              <Text style={styles.color}> Balance:{balance ? balance : 0}</Text>
             </View>
-            <Text style={{ marginLeft: wp(18) }}>
-              {" "}
-              {amount} {coin0.name} ={" "}
-              {tradePrice ? tradePrice.token1totoken2 : ""} {coin1.name}
-            </Text>
-            <View
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ marginTop: 20, color: "red" }}>{message}</Text>
+            <View style={styles.tokenView}>
+              <TextInput
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  setAmount(text);
+                }}
+                placeholder="0"
+                placeholderTextColor={"gray"}
+                style={styles.textinputCon}
+              />
+              <Icon
+                onPress={() => {
+                  setCoinType("0");
+                  setOpenChain(true);
+                }}
+                name={"ios-chevron-forward-circle"}
+                size={30}
+                color={"black"}
+              />
             </View>
           </View>
+
+          <Icon
+            name={"swap-vertical"}
+            size={30}
+            color={"white"}
+            style={{ alignSelf: "center", marginTop: hp(1) }}
+          />
+
+          <View
+            style={styles.cardmainContainer1}
+            onStartShouldSetResponder={() => Keyboard.dismiss()}
+          >
+            <View style={styles.tokenView}>
+              <Text style={styles.color}> {coin1.name}</Text>
+              <Text style={styles.color}> Balance:{balance ? balance : 0}</Text>
+            </View>
+            <View style={styles.tokenView}>
+              <TextInput
+                disabled={true}
+                keyboardType="numeric"
+                placeholder={trade ? `${trade.minimumAmountOut}` : `0`}
+                onChangeText={(text) => {
+                  setAmount2(text);
+                }}
+                placeholderTextColor={"gray"}
+                style={{
+                  width: wp(50),
+                  padding: 4,
+                  height: hp(5),
+                  borderRadius: hp(1.4),
+                  backgroundColor: "white",
+                  borderWidth: StyleSheet.hairlineWidth * 2,
+                }}
+              />
+              <Icon
+                onPress={() => {
+                  setCoinType("1");
+
+                  setVisible(true);
+                }}
+                name={"ios-chevron-forward-circle"}
+                size={30}
+                color={"black"}
+              />
+            </View>
+          </View>
+
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: hp(4),
+              fontSize: 16,
+              color: "white",
+            }}
+          >
+            {" "}
+            {amount} {coin0.name} ={" "}
+            {tradePrice ? tradePrice.token1totoken2 : ""} {coin1.name}
+          </Text>
+          <View
+            style={{
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ marginTop: 20, color: "red" }}>{message}</Text>
+          </View>
+
           <TouchableOpacity
             style={{
-              position: "absolute",
-              zIndex: 11,
-              left: wp(10),
-              bottom: hp(23),
               backgroundColor: disable ? "grey" : "#000C66",
-              width: wp(80),
-              height: 70,
-              borderRadius: 5,
+              width: wp(50),
+              padding: hp(1),
+              borderRadius: hp(0.6),
               alignItems: "center",
-              justifyContent: "center",
-              elevation: 8,
+              alignSelf: "center",
             }}
             disabled={disable}
             onPress={async () => {
@@ -1140,56 +1136,55 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               const Wallet = await state.wallet;
               console.log(Wallet);
               console.log(amount);
-              try{
-
+              try {
                 if (walletType === "Ethereum") {
                   if (Wallet) {
                     if (coin0.symbol === "WETH") {
                       await getETHtoTokenPrice(coin1.address, amount)
-                      .then((resp) => {
-                        console.log(resp);
-                        if (resp) {
+                        .then((resp) => {
                           console.log(resp);
+                          if (resp) {
+                            console.log(resp);
+                            setLoading2(false);
+                            setTradePrice({
+                              token1totoken2: resp.token1totoken2,
+                              token2totoken1: resp.token2totoken1,
+                            });
+                            setTrade(resp.trade);
+                            setTradeVisible(true);
+                          }
+                        })
+                        .catch((e) => {
                           setLoading2(false);
-                          setTradePrice({
-                            token1totoken2: resp.token1totoken2,
-                            token2totoken1: resp.token2totoken1,
-                          });
-                          setTrade(resp.trade);
-                          setTradeVisible(true);
-                        }
-                      })
-                      .catch((e) => {
-                        setLoading2(false);
-                        console.log(e);
-                      });
+                          console.log(e);
+                        });
                     } else if (coin1.symbol === "WETH") {
                       await getTokentoEthPrice(coin0.address, amount)
-                      .then((resp) => {
-                        console.log(resp);
-                        if (resp) {
+                        .then((resp) => {
                           console.log(resp);
-                          setTradePrice({
-                            token1totoken2: resp.token1totoken2,
-                            token2totoken1: resp.token2totoken1,
-                          });
-                          setTrade(resp.trade);
-                          setTradeVisible(true);
+                          if (resp) {
+                            console.log(resp);
+                            setTradePrice({
+                              token1totoken2: resp.token1totoken2,
+                              token2totoken1: resp.token2totoken1,
+                            });
+                            setTrade(resp.trade);
+                            setTradeVisible(true);
+                            setLoading2(false);
+                          }
+                        })
+                        .catch((e) => {
                           setLoading2(false);
-                        }
-                      })
-                      .catch((e) => {
-                        setLoading2(false);
-                        
-                        console.log(e);
-                      });
+
+                          console.log(e);
+                        });
                     } else {
                       tokenTotokenPrice(
                         Wallet.address,
                         coin0.address,
                         coin1.address,
                         amount
-                        )
+                      )
                         .then((response) => {
                           console.log(response);
                           setTradePrice({
@@ -1204,216 +1199,216 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           console.log(e);
                           setLoading2(false);
                           return alert(
-                            'error',
+                            "error",
                             "error fetching pair prices. please try again"
-                            );
-                          });
-                        }
-                      }
-                    } else if (walletType === "BSC") {
-                      let amountIn = (await ethers).utils.parseUnits(amount, "ether");
-                      let type;
-                      if (coin0.symbol === "BNB") {
-                        type = "BNBTOTOKEN";
-                        await getSwapPrice(
-                          amountIn,
-                          coin0.address,
-                          coin1.address,
-                          type
-                          )
-                          .then((response) => {
-                            console.log(response);
-                            const trade = {
-                              slippageTolerance: 1,
-                              minimumAmountOut: response.token1totoken2,
-                            };
-                            console.log(response.token1totoken2);
-                            setTradePrice({
-                              token1totoken2: response.token1totoken2,
-                              token2totoken1: response.token2totoken1,
-                            });
-                            setTrade(trade);
-                            setTradeVisible(true);
-                            setLoading2(false);
-                          })
-                          .catch((e) => {
-                            setLoading2(false);
-                            console.log(e);
-                            alert('error',e);
-                          });
-                        } else if (coin1.symbol === "BNB") {
-                          type = "TOKENTOBNB";
-                          await getSwapPrice(
-                            amountIn,
-                            coin0.address,
-                            coin1.address,
-                            type
-                            )
-                            .then((response) => {
-                              const trade = {
-                                slippageTolerance: 1,
-                                minimumAmountOut: response.token1totoken2,
-                              };
-                              console.log(response.token1totoken2);
-                              setTradePrice({
-                                token1totoken2: response.token1totoken2,
-                                token2totoken1: response.token2totoken1,
-                              });
-                              setTrade(trade);
-                              setTradeVisible(true);
-                              setLoading2(false);
-                            })
-                            .catch((e) => {
-                              setLoading2(false);
-                              console.log(e);
-                              alert('error',e);
-                            });
-                          } else {
-                            type = "TOKENTOTOKEN";
-                            const approve = await approveSwap(
-                              coin0.address,
-                              amountIn,
-                              Wallet.privateKey,
-                              token
-                              ).then(async (next) => {
-                                await getSwapPrice(
-                                  amountIn,
-                                  coin0.address,
-                                  coin1.address,
-                                  type
-                                  )
-                                  .then(async (response) => {
-                                    const trade = {
-                                      slippageTolerance: 1,
-                                      minimumAmountOut: response.token1totoken2,
-                                    };
-                                    console.log(response.token1totoken2);
-                                    setTradePrice({
-                                      token1totoken2: response.token1totoken2,
-                                      token2totoken1: response.token2totoken1,
-                                    });
-                                    setTrade(trade);
-                                    setTradeVisible(true);
-                                    setLoading2(false);
-                                  })
-                                  .catch((e) => {
-                                    setLoading2(false);
-                                    alert(
-                                      'error',
-                                      "Insufficient liquidity. please try with a different token"
-                                      );
-                                      console.log(e);
-                                    });
-                                  });
-                                  console.log(approve);
-                                  setLoading2(false);
-                                }
-                              } else if (walletType === "Multi-coin") {
-                                if (swapType === "ETH") {
-                                  if (Wallet) {
-                                    if (coin0.symbol === "WETH") {
-                                      await getETHtoTokenPrice(coin1.address, amount)
-                                      .then((resp) => {
-                                        console.log(resp);
-                                        if (resp) {
-                                          console.log(resp);
-                                          setLoading2(false);
-                                          setTradePrice({
-                                            token1totoken2: resp.token1totoken2,
-                                            token2totoken1: resp.token2totoken1,
-                                          });
-                                          setTrade(resp.trade);
-                                          setTradeVisible(true);
-                                        }
-                                      })
-                                      .catch((e) => {
-                                        setLoading2(false);
-                                        console.log(e);
-                                      });
-                                    } else if (coin1.symbol === "WETH") {
-                                      await getTokentoEthPrice(coin0.address, amount)
-                                      .then((resp) => {
-                                        console.log(resp);
-                                        if (resp) {
-                                          console.log(resp);
-                                          setTradePrice({
-                                            token1totoken2: resp.token1totoken2,
-                                            token2totoken1: resp.token2totoken1,
-                                          });
-                                          setTrade(resp.trade);
-                                          setTradeVisible(true);
-                                          setLoading2(false);
-                                        }
-                                      })
-                                      .catch((e) => {
-                                        setLoading2(false);
-                                        
-                                        console.log(e);
-                                      });
-                                    } else {
-                                      tokenTotokenPrice(
-                                        Wallet.address,
-                                        coin0.address,
-                                        coin1.address,
-                                        amount
-                                        )
-                                        .then((response) => {
-                                          console.log(response);
-                                          setTradePrice({
-                                            token1totoken2: response.token1totoken2,
-                                            token2totoken1: response.token2totoken1,
-                                          });
-                                          setTrade(response.trade);
-                                          setTradeVisible(true);
-                                          setLoading2(false);
-                                        })
-                                        .catch((e) => {
-                                          console.log(e);
-                                          setLoading2(false);
-                                          return alert(
-                                            'error',
-                                            e.message
-                                            );
-                                          });
-                                        }
-                                      }
-                                    } else if (swapType === "BSC") {
-                                      console.log(coin0.address, coin1.address);
-                                      let amountIn = (await ethers).utils.parseUnits(
-                                        amount,
-                                        "ether"
-                                        );
-                                        console.log("My amount", amountIn);
-                                        let type;
-                                        if (coin0.symbol === "BNB") {
-                                          type = "BNBTOTOKEN";
-                                          await getSwapPrice(
-                                            amountIn,
-                                            coin0.address,
-                                            coin1.address,
-                                            type
-                                            )
-                                            .then((response) => {
-                                              console.log(response);
-                                              const trade = {
-                                                slippageTolerance: 1,
-                                                minimumAmountOut: response.token1totoken2,
-                                              };
-                                              console.log(response);
-                                              setTradePrice({
-                                                token1totoken2: response.token1totoken2,
-                                                token2totoken1:
-                                                Number(amount) / Number(response.token1totoken2),
-                                              });
-                                              setTrade(trade);
+                          );
+                        });
+                    }
+                  }
+                } else if (walletType === "BSC") {
+                  let amountIn = (await ethers).utils.parseUnits(
+                    amount,
+                    "ether"
+                  );
+                  let type;
+                  if (coin0.symbol === "BNB") {
+                    type = "BNBTOTOKEN";
+                    await getSwapPrice(
+                      amountIn,
+                      coin0.address,
+                      coin1.address,
+                      type
+                    )
+                      .then((response) => {
+                        console.log(response);
+                        const trade = {
+                          slippageTolerance: 1,
+                          minimumAmountOut: response.token1totoken2,
+                        };
+                        console.log(response.token1totoken2);
+                        setTradePrice({
+                          token1totoken2: response.token1totoken2,
+                          token2totoken1: response.token2totoken1,
+                        });
+                        setTrade(trade);
                         setTradeVisible(true);
                         setLoading2(false);
                       })
                       .catch((e) => {
                         setLoading2(false);
                         console.log(e);
-                        alert('error',e);
+                        alert("error", e);
                       });
+                  } else if (coin1.symbol === "BNB") {
+                    type = "TOKENTOBNB";
+                    await getSwapPrice(
+                      amountIn,
+                      coin0.address,
+                      coin1.address,
+                      type
+                    )
+                      .then((response) => {
+                        const trade = {
+                          slippageTolerance: 1,
+                          minimumAmountOut: response.token1totoken2,
+                        };
+                        console.log(response.token1totoken2);
+                        setTradePrice({
+                          token1totoken2: response.token1totoken2,
+                          token2totoken1: response.token2totoken1,
+                        });
+                        setTrade(trade);
+                        setTradeVisible(true);
+                        setLoading2(false);
+                      })
+                      .catch((e) => {
+                        setLoading2(false);
+                        console.log(e);
+                        alert("error", e);
+                      });
+                  } else {
+                    type = "TOKENTOTOKEN";
+                    const approve = await approveSwap(
+                      coin0.address,
+                      amountIn,
+                      Wallet.privateKey,
+                      token
+                    ).then(async (next) => {
+                      await getSwapPrice(
+                        amountIn,
+                        coin0.address,
+                        coin1.address,
+                        type
+                      )
+                        .then(async (response) => {
+                          const trade = {
+                            slippageTolerance: 1,
+                            minimumAmountOut: response.token1totoken2,
+                          };
+                          console.log(response.token1totoken2);
+                          setTradePrice({
+                            token1totoken2: response.token1totoken2,
+                            token2totoken1: response.token2totoken1,
+                          });
+                          setTrade(trade);
+                          setTradeVisible(true);
+                          setLoading2(false);
+                        })
+                        .catch((e) => {
+                          setLoading2(false);
+                          alert(
+                            "error",
+                            "Insufficient liquidity. please try with a different token"
+                          );
+                          console.log(e);
+                        });
+                    });
+                    console.log(approve);
+                    setLoading2(false);
+                  }
+                } else if (walletType === "Multi-coin") {
+                  if (swapType === "ETH") {
+                    if (Wallet) {
+                      if (coin0.symbol === "WETH") {
+                        await getETHtoTokenPrice(coin1.address, amount)
+                          .then((resp) => {
+                            console.log(resp);
+                            if (resp) {
+                              console.log(resp);
+                              setLoading2(false);
+                              setTradePrice({
+                                token1totoken2: resp.token1totoken2,
+                                token2totoken1: resp.token2totoken1,
+                              });
+                              setTrade(resp.trade);
+                              setTradeVisible(true);
+                            }
+                          })
+                          .catch((e) => {
+                            setLoading2(false);
+                            console.log(e);
+                          });
+                      } else if (coin1.symbol === "WETH") {
+                        await getTokentoEthPrice(coin0.address, amount)
+                          .then((resp) => {
+                            console.log(resp);
+                            if (resp) {
+                              console.log(resp);
+                              setTradePrice({
+                                token1totoken2: resp.token1totoken2,
+                                token2totoken1: resp.token2totoken1,
+                              });
+                              setTrade(resp.trade);
+                              setTradeVisible(true);
+                              setLoading2(false);
+                            }
+                          })
+                          .catch((e) => {
+                            setLoading2(false);
+
+                            console.log(e);
+                          });
+                      } else {
+                        tokenTotokenPrice(
+                          Wallet.address,
+                          coin0.address,
+                          coin1.address,
+                          amount
+                        )
+                          .then((response) => {
+                            console.log(response);
+                            setTradePrice({
+                              token1totoken2: response.token1totoken2,
+                              token2totoken1: response.token2totoken1,
+                            });
+                            setTrade(response.trade);
+                            setTradeVisible(true);
+                            setLoading2(false);
+                          })
+                          .catch((e) => {
+                            console.log(e);
+                            setLoading2(false);
+                            return alert("error", e.message);
+                          });
+                      }
+                    }
+                  } else if (swapType === "BSC") {
+                    console.log(coin0.address, coin1.address);
+                    let amountIn = (await ethers).utils.parseUnits(
+                      amount,
+                      "ether"
+                    );
+                    console.log("My amount", amountIn);
+                    let type;
+                    if (coin0.symbol === "BNB") {
+                      type = "BNBTOTOKEN";
+                      await getSwapPrice(
+                        amountIn,
+                        coin0.address,
+                        coin1.address,
+                        type
+                      )
+                        .then((response) => {
+                          console.log(response);
+                          const trade = {
+                            slippageTolerance: 1,
+                            minimumAmountOut: response.token1totoken2,
+                          };
+                          console.log(response);
+                          setTradePrice({
+                            token1totoken2: response.token1totoken2,
+                            token2totoken1:
+                              Number(amount) / Number(response.token1totoken2),
+                          });
+                          setTrade(trade);
+                          setTradeVisible(true);
+                          setLoading2(false);
+                        })
+                        .catch((e) => {
+                          setLoading2(false);
+                          console.log(e);
+                          alert("error", e);
+                        });
                     } else if (coin1.symbol === "BNB") {
                       type = "TOKENTOBNB";
                       await getSwapPrice(
@@ -1421,7 +1416,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         coin0.address,
                         coin1.address,
                         type
-                        )
+                      )
                         .then((response) => {
                           const trade = {
                             slippageTolerance: 1,
@@ -1431,7 +1426,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                           setTradePrice({
                             token1totoken2: response.token1totoken2,
                             token2totoken1:
-                            Number(amount) / Number(response.token1totoken2),
+                              Number(amount) / Number(response.token1totoken2),
                           });
                           setTrade(trade);
                           setTradeVisible(true);
@@ -1440,69 +1435,69 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                         .catch((e) => {
                           setLoading2(false);
                           console.log(e);
-                          alert('error',e);
+                          alert("error", e);
                         });
-                      } else {
-                        type = "TOKENTOTOKEN";
-                        const approve = await approveSwap(
-                          coin0.address,
+                    } else {
+                      type = "TOKENTOTOKEN";
+                      const approve = await approveSwap(
+                        coin0.address,
+                        amountIn,
+                        Wallet.privateKey,
+                        token
+                      ).then(async (next) => {
+                        await getSwapPrice(
                           amountIn,
-                          Wallet.privateKey,
-                          token
-                          ).then(async (next) => {
-                            await getSwapPrice(
-                              amountIn,
-                              coin0.address,
-                              coin1.address,
-                              type
-                              )
-                              .then(async (response) => {
-                                const trade = {
-                                  slippageTolerance: 1,
-                                  minimumAmountOut: response.token1totoken2,
-                                };
-                                console.log(response.token1totoken2);
-                                setTradePrice({
-                                  token1totoken2: response.token1totoken2,
-                                  token2totoken1:
-                                  Number(amount) / Number(response.token1totoken2),
-                                });
-                                setTrade(trade);
-                                setTradeVisible(true);
-                                setLoading2(false);
-                              })
-                              .catch((e) => {
-                                setLoading2(false);
-                                alert(
-                                  'error',
-                                  "Insufficient liquidity. please try with a different token"
-                                  );
-                                  console.log(e);
-                                });
-                              });
-                              console.log(approve);
-                              setLoading2(false);
-                            }
-                          }
-                        } else {
-                          return alert('error',"Swap not supported for chain");
-                        }
-                      }catch(e){
-                        setLoading2(false);
-
-                      }
-                      }}
-                      >
-                      <Text style={styles.addButtonText}>
+                          coin0.address,
+                          coin1.address,
+                          type
+                        )
+                          .then(async (response) => {
+                            const trade = {
+                              slippageTolerance: 1,
+                              minimumAmountOut: response.token1totoken2,
+                            };
+                            console.log(response.token1totoken2);
+                            setTradePrice({
+                              token1totoken2: response.token1totoken2,
+                              token2totoken1:
+                                Number(amount) /
+                                Number(response.token1totoken2),
+                            });
+                            setTrade(trade);
+                            setTradeVisible(true);
+                            setLoading2(false);
+                          })
+                          .catch((e) => {
+                            setLoading2(false);
+                            alert(
+                              "error",
+                              "Insufficient liquidity. please try with a different token"
+                            );
+                            console.log(e);
+                          });
+                      });
+                      console.log(approve);
+                      setLoading2(false);
+                    }
+                  }
+                } else {
+                  return alert("error", "Swap not supported for chain");
+                }
+              } catch (e) {
+                setLoading2(false);
+              }
+            }}
+          >
+            <Text style={styles.addButtonText}>
               {loading2 ? (
                 <ActivityIndicator size="small" color="white" />
-                ) : (
-                  "Swap"
-                  )}
+              ) : (
+                "Swap"
+              )}
             </Text>
           </TouchableOpacity>
-          </View>
-          <Modal2
+        </View>
+        <Modal2
           animationIn="slideInRight"
           animationOut="slideOutRight"
           animationInTiming={100}
@@ -1627,22 +1622,21 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                 style={styles.addButton3}
                 onPress={() => {
                   setTimeout(async () => {
-                    const biometric = await AsyncStorageLib.getItem('Biometric')
-                    console.log("Biometric =",biometric)
-                    if(biometric==='SET')
-                    {
-                      try{
-
-                        await useBiometricsForSwapTransaction(swapTokens)
-                        return
-                      }catch(e)
-                      {
-                        console.log(e)
+                    const biometric = await AsyncStorageLib.getItem(
+                      "Biometric"
+                    );
+                    console.log("Biometric =", biometric);
+                    if (biometric === "SET") {
+                      try {
+                        await useBiometricsForSwapTransaction(swapTokens);
+                        return;
+                      } catch (e) {
+                        console.log(e);
                       }
                     }
                     if (Number(amount) >= Number(balance)) {
                       return alert(
-                        'error',
+                        "error",
                         "You Don't have enough balance to do this transaction"
                       );
                     }
@@ -1825,5 +1819,61 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  tokenView: {
+    padding: hp(2),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignSelf: "center",
+    width: wp(80),
+  },
+  cardmainContainer1: {
+    // backgroundColor:"red"
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    elevation: 4,
+    shadowRadius: wp(1),
+    overflow: "hidden",
+    shadowOpacity: 0.2,
+    shadowColor: "#000",
+    backgroundColor: "white",
+    borderColor: "rgba(238, 227, 232,1)",
+
+    width: wp(93),
+    borderRadius: hp(2),
+    alignSelf: "center",
+    marginTop: hp(1),
+  },
+  cardmainContainer: {
+    // backgroundColor:"red"
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    elevation: 4,
+    shadowRadius: wp(1),
+    overflow: "hidden",
+    shadowOpacity: 0.2,
+    shadowColor: "#000",
+    backgroundColor: "white",
+    borderColor: "rgba(238, 227, 232,1)",
+
+    width: wp(93),
+    borderRadius: hp(2),
+    alignSelf: "center",
+    marginTop: hp(4),
+  },
+  color: {
+    color: "black",
+  },
+  textinputCon: {
+    width: wp(50),
+    padding: 4,
+    height: hp(5),
+    borderRadius: hp(1.4),
+    backgroundColor: "white",
+    borderWidth: StyleSheet.hairlineWidth * 2,
   },
 });
