@@ -56,7 +56,9 @@ const PrivateKey = (props) => {
   const RenderItem = ({ item, index }) => {
     console.log("-------------", item);
     return (
-      <Pressable style={style.pressable}>
+      <Pressable style={style.pressable} onPress={()=>{
+        console.log("Hello World")
+      }}>
         <Text style={style.pressText}>{index + 1}</Text>
 
         <Text style={style.itemText}>{item}</Text>

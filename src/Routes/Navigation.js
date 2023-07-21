@@ -53,6 +53,7 @@ import {
 import WalletTopTab from "./TopNavigator";
 import ProfileHeader from "../Dashboard/profileHeader";
 import Home2 from "../Dashboard/Home2";
+import { ExchangeHeaderIcon } from "../Dashboard/header";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -67,8 +68,7 @@ const AuthStack = () => (
         animation: "slide_from_right",
       }}
     >
-      
-       {/* <Stack.Screen
+      {/* <Stack.Screen
         name="ExchangeNavigation"
         component={ExchangeNavigation}
         options={{ headerShown: false }}
@@ -271,11 +271,8 @@ const AuthStack = () => (
         name="PrivateKey"
         component={PrivateKey}
         options={{
-          headerShown: false,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <ExchangeHeaderIcon />;
           },
         }}
       />
@@ -375,11 +372,8 @@ const AuthStack = () => (
         name="Check Mnemonic"
         component={CheckMnemonic}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <ExchangeHeaderIcon />;
           },
         }}
       />
