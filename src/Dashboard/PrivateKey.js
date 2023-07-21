@@ -54,7 +54,9 @@ const PrivateKey = (props) => {
   const RenderItem = ({ item, index }) => {
     console.log("-------------", item);
     return (
-      <Pressable style={style.pressable}>
+      <Pressable style={style.pressable} onPress={()=>{
+        console.log("Hello World")
+      }}>
         <Text style={style.pressText}>{index + 1}</Text>
 
         <Text style={style.itemText}>{item}</Text>
@@ -134,7 +136,7 @@ const PrivateKey = (props) => {
           alignItems: "center",
           backgroundColor:accountName && !/\s/.test(accountName) ?'green':"grey",
           marginTop: hp(4),
-          width: wp(60),
+         width: wp(60),
           padding: 10,
           borderRadius: 10,
         }}

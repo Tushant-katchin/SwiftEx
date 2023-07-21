@@ -352,6 +352,8 @@ import {
   View,
   Button,
   ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -380,7 +382,6 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
 import { alert } from "./reusables/Toasts";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const CheckMnemonic = (props) => {
   const [loading, setLoading] = useState(false);
@@ -466,6 +467,22 @@ const CheckMnemonic = (props) => {
     console.log(wallet);
   }, [fadeAnim, Spin]);
 
+  const RenderItem = ({ item, index }) => {
+    console.log("--------ni-----", item);
+    return (
+      <TouchableOpacity
+        style={style.pressable}
+        onPress={() => {
+          console.log("Hello dWorld");
+        }}
+      >
+        <Text style={style.pressText}>{index + 1}</Text>
+
+        <Text style={style.itemText}>{item}</Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -475,13 +492,35 @@ const CheckMnemonic = (props) => {
         <Text style={style.wordText}>
           Tap the words to put them next to each other in the correct order.
         </Text>
-        <TextInput
+
+        <View style={{ marginTop: hp(15) }}>
+          <FlatList
+            data={[
+              "name",
+              "avxd",
+              "call",
+              "ringtone",
+              "cricket",
+              "nave",
+              "arrow",
+              "never",
+              "evergreen",
+            ]}
+            // data={props.route.params.wallet.wallet.mnemonic}
+            renderItem={RenderItem}
+            numColumns={3}
+            contentContainerStyle={{
+              alignSelf: "center",
+            }}
+          />
+        </View>
+        {/* <TextInput
           style={style.textInput}
           onChangeText={(text) => {
             setMnemonic(text);
           }}
           placeholder={"Enter your secret phrase here"}
-        />
+        /> */}
         {loading ? (
           <ActivityIndicator size="large" color="green" />
         ) : (
@@ -610,7 +649,7 @@ export default CheckMnemonic;
 
 const style = StyleSheet.create({
   Body: {
-    backgroundColor: "#131E3A",
+    backgroundColor: "white",
     height: hp(100),
 
     textAlign: "center",
@@ -682,14 +721,14 @@ const style = StyleSheet.create({
     elevation: 24,
   },
   verifyText: {
-    color: "white",
+    color: "black",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
     marginTop: hp(2),
   },
   wordText: {
-    color: "white",
+    color: "black",
     textAlign: "center",
     marginTop: hp(1),
     width: wp(88),
@@ -702,6 +741,59 @@ const style = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
-    marginTop: hp(40),
+    marginTop: hp(20),
+  },
+  pressable: {
+    borderColor: "#D7D7D7",
+    borderWidth: 0.5,
+    backgroundColor: "#F2F2F2",
+    width: wp(30),
+    justifyContent: "center",
+    paddingVertical: hp(2),
+    paddingHorizontal: 3,
+    position: "relative",
+  },
+  pressText: {
+    alignSelf: "flex-end",
+    paddingRight: 5,
+    top: 0,
+    position: "absolute",
+  },
+  itemText: {
+    textAlign: "left",
+    marginVertical: 6,
+    marginHorizontal: wp(1.5),
+  },
+  backupText: {
+    fontWeight: "bold",
+    fontSize: 17,
+    color: "black",
+    marginLeft: 20,
+    marginTop: hp(3),
+    marginBottom: hp(2),
+  },
+  dotView: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(4),
+  },
+  dotView1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(2),
+  },
+  accountText: { color: "black", marginHorizontal: wp(9), marginTop: hp(4) },
+  nextButton: {
+    alignSelf: "center",
+    alignItems: "center",
+    backgroundColor: "gray",
+    marginTop: hp(4),
+    width: wp(60),
+    padding: 10,
+    borderRadius: 10,
   },
 });
