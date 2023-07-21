@@ -235,7 +235,7 @@ const Market = (props) => {
   ) => {
     try {
       const response = await fetch(
-        `http://${urls.testUrl}/user/getcryptodata`,
+        `https://${urls.testUrl}/user/getcryptodata`,
         {
           method: "GET",
           headers: {

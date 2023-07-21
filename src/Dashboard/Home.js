@@ -218,7 +218,7 @@ const Dashboard = ({ navigation }) => {
               iconName = "ios-home-sharp"; //for icon or image
               let iconColor;
 
-              iconColor = focused ? "blue" : "grey";
+              iconColor = focused ? "blue" : "white";
               return (
                 <View>
                   <Text>

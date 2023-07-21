@@ -7,6 +7,7 @@ import {
   BackHandler,
   Alert,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setWalletType } from "../components/Redux/actions/auth";
@@ -46,6 +47,7 @@ const Home2 = ({ navigation }) => {
   const currentState = useRef(AppState.currentState);
   const [appState, setAppState] = useState(currentState.current);
   const [transactions, setTransactions] = useState();
+  
   const [routes] = useState([
     { key: "first", title: "Tokens" },
     { key: "second", title: "NFTs" },
@@ -54,15 +56,8 @@ const Home2 = ({ navigation }) => {
 
   const { getToken, requestUserPermission } = useFirebaseCloudMessaging();
 
-  if (Platform.OS === "android") {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-  }
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  const translation = useRef(new Animated.Value(0)).current;
-
+  
+  
   const getAllBalance = async () => {
     try {
       const wallet = await AsyncStorageLib.getItem("wallet");
@@ -240,11 +235,12 @@ const Home2 = ({ navigation }) => {
       activeColor={"#4CA6EA"}
       inactiveColor={"black"}
       pressColor={"black"}
+      
     />
   );
 
   const FirstRoute = () => (
-    <ScrollView>
+    <ScrollView style={{ flex: 1}}>
       <InvestmentChart />
     </ScrollView>
   );
@@ -256,8 +252,8 @@ const Home2 = ({ navigation }) => {
   );
 
   const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
+    first: InvestmentChart,
+    second: Nfts,
   });
 
   // useEffect(async () => {
@@ -355,7 +351,8 @@ const Home2 = ({ navigation }) => {
           renderTabBar={renderTabBar}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          initialLayout={{ width: layout.width }}
+          lazy
+          initialLayout={{width: Dimensions.get('window').width}}
           // style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
         />
       </View>
