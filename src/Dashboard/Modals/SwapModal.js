@@ -1026,7 +1026,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           >
             <View style={styles.tokenView}>
               <Text style={styles.color}>{coin0.name}</Text>
-              <Text style={styles.color}> Balance:{balance ? balance : 0}</Text>
             </View>
             <View style={styles.tokenView}>
               <TextInput
@@ -1048,6 +1047,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                 color={"black"}
               />
             </View>
+                <Text style={styles.color}> Balance:{balance ? Number(balance).toFixed(2) : 0}</Text>
           </View>
 
           <Icon
@@ -1063,7 +1063,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           >
             <View style={styles.tokenView}>
               <Text style={styles.color}> {coin1.name}</Text>
-              <Text style={styles.color}> Balance:{balance ? balance : 0}</Text>
             </View>
             <View style={styles.tokenView}>
               <TextInput
@@ -1096,18 +1095,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             </View>
           </View>
 
-          <Text
-            style={{
-              textAlign: "center",
-              marginTop: hp(4),
-              fontSize: 16,
-              color: "white",
-            }}
-          >
-            {" "}
-            {amount} {coin0.name} ={" "}
-            {tradePrice ? tradePrice.token1totoken2 : ""} {coin1.name}
-          </Text>
+          
           <View
             style={{
               alignContent: "center",
@@ -1867,6 +1855,7 @@ const styles = StyleSheet.create({
   },
   color: {
     color: "black",
+    margin:2
   },
   textinputCon: {
     width: wp(50),

@@ -98,13 +98,7 @@ export function ExchangeNavigation() {
           //Tab bar styles can be added here
         }}
       />
-      <Tab.Screen
-        name="account"
-        component={AccountView}
-        options={{
-          headerShown: false,
-        }}
-      />
+     
       <Tab.Screen
         name="profile"
         component={ProfileView}

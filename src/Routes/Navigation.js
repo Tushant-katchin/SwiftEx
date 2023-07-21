@@ -50,9 +50,6 @@ import {
   OfferListViewHome,
   OfferView,
 } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
-import WalletTopTab from "./TopNavigator";
-import ProfileHeader from "../Dashboard/profileHeader";
-import Home2 from "../Dashboard/Home2";
 import { ExchangeHeaderIcon } from "../Dashboard/header";
 const Stack = createNativeStackNavigator();
 

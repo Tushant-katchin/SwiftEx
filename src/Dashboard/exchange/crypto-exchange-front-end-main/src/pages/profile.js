@@ -134,7 +134,6 @@ export const FieldView = ({
                   <Text style={styles.connectedText}>Verified!</Text>
                 </View>
               </View>
-              <Text style={styles.readyText}>You are ready to</Text>
             </>
           ) : (
             <Button
@@ -341,10 +340,29 @@ export const ProfileView = (props) => {
     isEmailVerified: false,
   });
   const [message, setMessage] = useState("");
-
+  const [account, setAccount] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
   useEffect(() => {
     fetchProfileData();
   }, []);
+  useEffect(() => {
+    getAccountDetails();
+  }, []);
+
+  const getAccountDetails = async () => {
+    try {
+      const { res, err } = await authRequest("/users/getStripeAccount", GET);
+      if (err) return setMessage(` ${err.message}`);
+      setAccount(res);
+    } catch (err) {
+      console.log(err);
+      setMessage(err.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   const fetchProfileData = async () => {
     try {
@@ -484,14 +502,14 @@ export const ProfileView = (props) => {
           type="kyc"
         />
 
-        {data.length ? (
+        {account ? (
           <View style={styles.deleteContainer}>
             <Text style={styles.accountText}>Account Details</Text>
             <View style={{ alignItems: "center" }}>
               <Icon
                 name={"delete"}
                 type={"materialCommunity"}
-                size={hp(3)}
+                size={hp(2)}
                 color={"#E96A6A"}
               />
               <Text style={styles.deleteText}>Delete</Text>
@@ -501,7 +519,7 @@ export const ProfileView = (props) => {
           <Text></Text>
         )}
 
-        {data.length ? (
+        {account ? (
           <>
             <View style={styles.tableContainer}>
               <LinearGradient
@@ -521,12 +539,12 @@ export const ProfileView = (props) => {
                   <Text style={styles.amountText}>Country</Text>
                   <Text style={styles.amountText}>Currency</Text>
                 </View>
-                {data.map((item, index) => {
+                {account.external_accounts.data.map((item, index) => {
                   return (
                     <View style={styles.activeTextConatiner}>
-                      <Text style={styles.amountText}>{item.bankname}</Text>
-                      <Text style={styles.amountText}>{item.bankholder}</Text>
-                      <Text style={styles.amountText}>{item.payoutType}</Text>
+                      <Text style={styles.amountText}>{item.bank_name}</Text>
+                      <Text style={styles.amountText}>{item.account_holder_name}</Text>
+                      <Text style={styles.amountText}>{item.available_payout_methods[0]}</Text>
                       <Text style={styles.amountText}>{item.country}</Text>
                       <Text style={styles.amountText}>{item.currency}</Text>
                     </View>
@@ -536,7 +554,7 @@ export const ProfileView = (props) => {
             </View>
             <View style={styles.enableContainer}>
               <Text style={styles.enableText}>Charges Enabled: No</Text>
-              <Text style={styles.payoutText}>Payout Enabled: {"  "} No</Text>
+              <Text style={styles.payoutText}>Payout Enabled: No</Text>
             </View>
           </>
         ) : (
@@ -598,6 +616,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     height: hp(100),
     width: wp(100),
+    marginBottom:hp(10)
   },
   fieldView: {
     display: "flex",
@@ -733,8 +752,9 @@ const styles = StyleSheet.create({
   tableContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: hp(2),
+    marginTop: hp(1),
     alignSelf: "center",
+    marginTop:hp(1)
   },
   statustext: {
     width: wp(20),
@@ -780,16 +800,20 @@ const styles = StyleSheet.create({
   },
   enableText: {
     color: "#CBBBDC",
-    fontSize: hp(2.1),
+    fontSize: hp(1.5),
+    margin:5
   },
   enableContainer: {
+    display:'flex',
+    flexDirection:'row',
     marginHorizontal: wp(5),
     marginVertical: hp(2),
+    justifyContent:'space-evenly'
   },
   payoutText: {
     color: "#CBBBDC",
-    fontSize: hp(2.1),
-    marginTop: hp(1),
+    fontSize: hp(1.5),
+    margin:5
   },
   borderStyle: {
     borderBottomWidth: StyleSheet.hairlineWidth * 1,

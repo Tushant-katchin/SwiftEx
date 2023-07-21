@@ -1,5 +1,5 @@
 export const urls = {
-  testUrl: "3.19.76.40:2000",
+  testUrl: "172.31.39.19:2000",
   mainUrl: "3.19.76.40:2000",
 };
 

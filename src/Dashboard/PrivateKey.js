@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   TextInput,
   Image,
   TouchableOpacity,
@@ -17,24 +16,15 @@ import {
 import { Animated } from "react-native";
 import title_icon from "../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AddToAllWallets,
-  getBalance,
-  setCurrentWallet,
-  setUser,
-  setToken,
-  setWalletType,
-} from "../components/Redux/actions/auth";
-import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import DialogInput from "react-native-dialog-input";
-import { encryptFile } from "../utilities/utilities";
-import { urls } from "./constants";
 import { alert } from "./reusables/Toasts";
+import * as Clipboard from "expo-clipboard";
 import Icon from "../icon";
+import { Button } from "native-base";
 const PrivateKey = (props) => {
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
-
+  const[ mnemonic,setMnemonic]= useState()
+  const[disable,setDisable]=useState(true)
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
 
@@ -44,15 +34,23 @@ const PrivateKey = (props) => {
     outputRange: ["0deg", "360deg"],
   });
 
+  const copyToClipboard = (string) => {
+    Clipboard.setString(string);
+    alert("success","Copied");
+  };
+
   useEffect(async () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
     }).start();
 
-    console.log(props.route.params.wallet);
-  }, [fadeAnim]);
-
+    console.log(props.route.params.wallet.wallet.mnemonic);
+    const mnemonic = props.route.params.wallet.wallet.mnemonic.match(/.*?[\.\s]+?/g);
+    console.log("My mnemonic",mnemonic)
+    setMnemonic(mnemonic)
+  }, []);
+  
   const RenderItem = ({ item, index }) => {
     console.log("-------------", item);
     return (
@@ -89,17 +87,7 @@ const PrivateKey = (props) => {
         </View>
         <View style={{ marginTop: hp(3) }}>
           <FlatList
-            data={[
-              "name",
-              "avxd",
-              "call",
-              "ringtone",
-              "cricket",
-              "nave",
-              "arrow",
-              "never",
-              "evergreen",
-            ]}
+            data={mnemonic}
             // data={props.route.params.wallet.wallet.mnemonic}
             renderItem={RenderItem}
             numColumns={3}
@@ -107,6 +95,13 @@ const PrivateKey = (props) => {
               alignSelf: "center",
             }}
           />
+        </View>
+        <View style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:10}}>
+          <Button 
+          onPress={()=>{
+            copyToClipboard(props.route.params.wallet.wallet.mnemonic)
+          }}
+          >Copy</Button>
         </View>
         <View style={style.dotView}>
           <Icon name="dot-single" type={"entypo"} size={20} />
@@ -137,10 +132,18 @@ const PrivateKey = (props) => {
           autoCapitalize={"none"}
         />
         <TouchableOpacity
-          style={style.nextButton}
-          disabled={accountName ? false : true}
+          style={{alignSelf: "center",
+          alignItems: "center",
+          backgroundColor:accountName&&!/\s/.test(accountName) ?'green':"grey",
+          marginTop: hp(2),
+          width: wp(60),
+          padding: 10,
+          borderRadius: 10,
+        }}
+          disabled={accountName && !/\s/.test(accountName)  ? false : true}
           onPress={() => {
             //setVisible(!visible)
+            console.log(accountName.length)
             if (!accountName) {
               return alert("error", "you must set an account name to continue");
             }
@@ -152,7 +155,7 @@ const PrivateKey = (props) => {
             });
           }}
         >
-          <Text>Next</Text>
+          <Text style={{color:'white'}}>Next</Text>
         </TouchableOpacity>
 
         {/* <View style={style.Button}> */}
@@ -257,7 +260,7 @@ const style = StyleSheet.create({
   nextButton: {
     alignSelf: "center",
     alignItems: "center",
-    backgroundColor: "gray",
+    backgroundColor: "green",
     marginTop: hp(4),
     width: wp(60),
     padding: 10,
