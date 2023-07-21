@@ -50,7 +50,7 @@ import {
   OfferListViewHome,
   OfferView,
 } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
-import { ExchangeHeaderIcon } from "../Dashboard/header";
+import { ExchangeHeader, ExchangeHeaderIcon, WalletHeader } from "../Dashboard/header";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -269,7 +269,7 @@ const AuthStack = () => (
         component={PrivateKey}
         options={{
           header: () => {
-            return <ExchangeHeaderIcon />;
+            return <WalletHeader title='Private-Key'/>;
           },
         }}
       />
@@ -370,7 +370,7 @@ const AuthStack = () => (
         component={CheckMnemonic}
         options={{
           header: () => {
-            return <ExchangeHeaderIcon />;
+            return <WalletHeader title='Check-Mneumonic' />;
           },
         }}
       />

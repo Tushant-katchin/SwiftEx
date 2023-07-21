@@ -45,6 +45,42 @@ export const ExchangeHeader = () => {
   );
 };
 
+
+export const WalletHeader = (props) => {
+  const {title,title1,IconName,IconType} = props
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.walletContainer}>
+      <Icon
+        name={"left"}
+        type={"antDesign"}
+        size={20}
+        color={"#fff"}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+      <Text style={styles.text1}>{title}</Text>
+      <View style={{ alignItems: "center" }}>
+        <Icon
+          name={IconName}
+          type={IconType}
+          size={20}
+          color={"#E96A6A"}
+          onPress={() => {
+            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+            AsyncStorage.removeItem(LOCAL_TOKEN);
+            navigation.navigate("Settings");
+          }}
+        />
+        <Text style={{ color: "#E96A6A" }}>{title1}</Text>
+      </View>
+    </View>
+  );
+};
+
+
 export const ExchangeHeaderIcon = (props) => {
   const {title} = props 
   const navigation = useNavigation();
@@ -169,6 +205,16 @@ const styles = StyleSheet.create({
     width: wp(100),
     paddingHorizontal: wp(2),
   },
+  walletContainer:{
+    backgroundColor: "#4CA6EA",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+    paddingVertical:hp(1.8),
+    width: wp(100),
+    paddingHorizontal: wp(2),
+  },
   logoImg: {
     height: hp("9"),
     width: wp("12"),
@@ -181,4 +227,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginRight: wp(10),
   },
+  text1:{
+    color: "white",
+    fontWeight: "700",
+    alignSelf: "center",
+    textAlign: "center",
+    marginRight: wp(10),
+  }
 });
