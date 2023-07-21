@@ -6,26 +6,23 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useSelector } from "react-redux";
-import {
-  Avatar,
-  Card,
-  Title,
-  Paragraph,
-
-} from "react-native-paper";
+import { Avatar, Card, Title, Paragraph } from "react-native-paper";
 import Bnbimage from "../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../assets/ethereum.png";
 import Xrpimage from "../../assets/xrp.png";
 import Maticimage from "../../assets/matic.png";
 import title_icon from "../../assets/title_icon.png";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+
 const Transactions = (props) => {
+  // const transactions = [{ type: "red", hash: "Nisha" }];
   const [transactions, setTransactions] = useState("");
   const state = useSelector((state) => state);
 
@@ -92,12 +89,15 @@ try{
     <View
       style={{
         height: hp(100),
-        backgroundColor: "white",
+        backgroundColor: "#131E3A",
       }}
     >
       <View style={styles.footer}>
         <View elevation={5} style={{ height: hp(100) }}>
-          <ScrollView alwaysBounceVertical={true} style={{ marginBottom:hp(10)}}>
+          <ScrollView
+            alwaysBounceVertical={true}
+            style={{ marginBottom: hp(10) }}
+          >
             {transactions[0] ? (
               transactions.map((item) => {
                 const hash = item.hash;
@@ -110,11 +110,11 @@ try{
                   );
                 } else if (item.walletType === "BSC") {
                   LeftContent = BnbLeftContent;
-                }else if (item.walletType == "Xrp") {
+                } else if (item.walletType == "Xrp") {
                   LeftContent = XrpLeftContent;
-                }else if (item.walletType == "Matic") {
+                } else if (item.walletType == "Matic") {
                   LeftContent = MaticLeftContent;
-                }  else if (item.walletType === "Multi-coin") {
+                } else if (item.walletType === "Multi-coin") {
                   if (item.chainType === "Eth") {
                     LeftContent = EtherLeftContent;
                   } else if (item.chainType === "BSC") {
@@ -150,51 +150,37 @@ try{
                       props.navigation.navigate("TxDetail", { data });
                     }}
                   >
-                    <View style={{ marginTop: 10, width: wp(99), margin: 2 }}>
-                      <Card
+                    <View
+                      style={{
+                        width: wp(90),
+                        margin: 2,
+                        backgroundColor: "white",
+                        flexDirection: "row",
+                        alignSelf:"center",
+                        alignItems:"center",
+                        borderRadius:10,
+                        paddingVertical:hp(2),
+                        marginTop:hp(2)
+                      }}
+                    >
+                      <Image
+                        source={Etherimage}
                         style={{
-                          width: wp(95),
-                          height: hp(10),
-                          backgroundColor: "white",
-                          borderRadius: 10,
-                          marginLeft: 5,
+                          height: hp(5),
+                          width: wp(9),
+                          borderRadius: hp(3),
                         }}
-                      >
-                        <Card.Title
-                          titleStyle={{
-                            color: "black",
-                            fontSize: 15,
-                            marginBottom: 23,
-                          }}
-                          title={item.type}
-                          left={LeftContent}
-                        />
-                        <Card.Content
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            color: "black",
-                          }}
-                        >
-                          <Title style={{ color: "black" }}></Title>
-                          <Paragraph
-                            style={{
-                              color: "grey",
-                              marginLeft: wp("12"),
-                              fontWeight: "bold",
-                              top: -39,
-                            }}
-                          >
-                            {item.hash}
-                          </Paragraph>
-                        </Card.Content>
-                      </Card>
+                      />
+                      <View style={{marginHorizontal:wp(3)}}>
+                        <Text>{item.type}</Text>
+                        <Text style={{ color: "black" }}>{item.hash}</Text>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 );
               })
             ) : (
-              <Text>No transactions yet!</Text>
+              <Text style={{color:"white",textAlign:"center",fontSize:16,marginTop:hp(4)}}>No transactions yet!</Text>
             )}
           </ScrollView>
         </View>
@@ -230,7 +216,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    backgroundColor: "#ddd",
+    backgroundColor: "#131E3A",
     bottom: 0,
     left: 0,
     right: 0,

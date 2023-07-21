@@ -58,7 +58,7 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-       //initialRouteName="Passcode"
+      //  initialRouteName="Check Mnemonic"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
