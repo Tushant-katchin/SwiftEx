@@ -4,8 +4,11 @@ import {
   Text,
   View,
   Button,
+  TextInput,
   Image,
   TouchableOpacity,
+  FlatList,
+  Pressable,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -13,7 +16,6 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import title_icon from "../../assets/title_icon.png";
-import { TextInput, Checkbox } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AddToAllWallets,
@@ -28,6 +30,7 @@ import DialogInput from "react-native-dialog-input";
 import { encryptFile } from "../utilities/utilities";
 import { urls } from "./constants";
 import { alert } from "./reusables/Toasts";
+import Icon from "../icon";
 const PrivateKey = (props) => {
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
@@ -50,12 +53,24 @@ const PrivateKey = (props) => {
     console.log(props.route.params.wallet);
   }, [fadeAnim]);
 
+  const RenderItem = ({ item, index }) => {
+    console.log("-------------", item);
+    return (
+      <Pressable style={style.pressable}>
+        <Text style={style.pressText}>{index + 1}</Text>
+
+        <Text style={style.itemText}>{item}</Text>
+      </Pressable>
+    );
+  };
+
   return (
-    <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim }}
-    >
-      <View style={style.Body}>
-        <Animated.Image
+    <View style={{ backgroundColor: "white", height: hp(100) }}>
+      <Animated.View // Special animatable View
+        style={{ opacity: fadeAnim }}
+      >
+        <View style={style.Body}>
+          {/* <Animated.Image
           style={{
             width: wp("5"),
             height: hp("5"),
@@ -63,49 +78,86 @@ const PrivateKey = (props) => {
             marginTop: hp(3),
           }}
           source={title_icon}
-        />
-        <Text style={style.welcomeText}> Hi,</Text>
-        <Text style={style.welcomeText}>
-          {" "}
-          Please copy your mnemonic or save it
-        </Text>
-        <Text style={style.welcomeText2}> Your Mnemonic Phrase</Text>
+        /> */}
+          <Text style={style.backupText}>Backup Mneumonic Phrase</Text>
+          <Text style={style.welcomeText1}>
+            Please select the menumonic in order to ensure the backup is
+            correct.
+          </Text>
+        </View>
+        <View style={{ marginTop: hp(3) }}>
+          <FlatList
+            data={[
+              "name",
+              "avxd",
+              "call",
+              "ringtone",
+              "cricket",
+              "nave",
+              "arrow",
+              "never",
+              "evergreen",
+            ]}
+            // data={props.route.params.wallet.wallet.mnemonic}
+            renderItem={RenderItem}
+            numColumns={3}
+            contentContainerStyle={{
+              alignSelf: "center",
+            }}
+          />
+        </View>
+        <View style={style.dotView}>
+          <Icon name="dot-single" type={"entypo"} size={20} />
+          <Text style={{ color: "black" }}>
+            Keep your mneumonic in a safe place isolated from any network
+          </Text>
+        </View>
+        <View style={style.dotView1}>
+          <Icon name="dot-single" type={"entypo"} size={20} />
+          <Text style={style.welcomeText}>
+            Don't share and store mneumonic with a network, such as email,photo,
+            social apps, and so on
+          </Text>
+        </View>
 
-        <Text selectable={true} style={style.welcomeText2}>
+        {/* <Text selectable={true} style={style.welcomeText2}>
           {props.route.params.wallet.wallet.mnemonic}
-        </Text>
-        <Text style={style.welcomeText2}> Account Name</Text>
+        </Text> */}
+
+        <Text style={style.accountText}> Account Name</Text>
 
         <TextInput
           style={style.input}
-          theme={{ colors: { text: "black" } }}
+          placeholder="Enter your account name"
           value={accountName}
           onChangeText={(text) => setAccountName(text)}
           placeholderTextColor="#FFF"
           autoCapitalize={"none"}
         />
-        <View style={style.Button}>
-          <Button
-            title="Next"
-            color={"green"}
-            disabled={accountName ? false : true}
-            onPress={() => {
-              //setVisible(!visible)
-              if (!accountName) {
-                
-                return alert("error","you must set an account name to continue");
-              }
-              let wallet = props.route.params.wallet.wallet;
-              wallet.accountName = accountName;
-              console.log(wallet)
-             props.navigation.navigate("Check Mnemonic", {
-                wallet,
-              });
-            }}
-          ></Button>
-        </View>
-      </View>
-    </Animated.View>
+        <TouchableOpacity
+          style={style.nextButton}
+          disabled={accountName ? false : true}
+          onPress={() => {
+            //setVisible(!visible)
+            if (!accountName) {
+              return alert("error", "you must set an account name to continue");
+            }
+            let wallet = props.route.params.wallet.wallet;
+            wallet.accountName = accountName;
+            console.log(wallet);
+            props.navigation.navigate("Check Mnemonic", {
+              wallet,
+            });
+          }}
+        >
+          <Text>Next</Text>
+        </TouchableOpacity>
+
+        {/* <View style={style.Button}> */}
+
+        {/* </View> */}
+      </Animated.View>
+    </View>
   );
 };
 
@@ -113,27 +165,26 @@ export default PrivateKey;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
-    backgroundColor: "#131E3A",
-    height: hp(100),
     width: wp(100),
     alignItems: "center",
     textAlign: "center",
   },
   welcomeText: {
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(5),
+    color: "black",
+  },
+  welcomeText1: {
+    marginLeft: wp(4.7),
+    color: "gray",
+    marginLeft: wp(4),
+    width: wp(90),
   },
   welcomeText2: {
     fontSize: 20,
     fontWeight: "200",
-    color: "white",
-    marginTop: hp(10),
+    color: "black",
   },
   Button: {
-    marginTop: hp(0),
+    backgroundColor: "red",
   },
   tinyLogo: {
     width: wp("5"),
@@ -148,13 +199,66 @@ const style = StyleSheet.create({
     color: "white",
   },
   input: {
-    height: hp("5%"),
-    marginBottom: hp("2"),
-    color: "#fff",
-    marginTop: hp("2"),
-    width: wp("70"),
-    paddingRight: wp("7"),
     backgroundColor: "white",
-    borderColor: "white",
+    borderWidth: 1,
+    paddingHorizontal:wp(3),
+    borderRadius: 10,
+    width: wp(80),
+    height: hp(5),
+    marginTop: hp(2),
+    alignSelf: "center",
+  },
+  pressable: {
+    borderColor: "#D7D7D7",
+    borderWidth: 0.5,
+    backgroundColor: "#F2F2F2",
+    width: wp(30),
+    justifyContent: "center",
+    paddingVertical: hp(2),
+    paddingHorizontal: 3,
+    position: "relative",
+  },
+  pressText: {
+    alignSelf: "flex-end",
+    paddingRight: 5,
+    top: 0,
+    position: "absolute",
+  },
+  itemText: {
+    textAlign: "left",
+    marginVertical: 6,
+    marginHorizontal: wp(1.5),
+  },
+  backupText: {
+    fontWeight: "bold",
+    fontSize: 17,
+    color: "black",
+    marginLeft: 20,
+    marginTop: hp(3),
+    marginBottom: hp(2),
+  },
+  dotView: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(4),
+  },
+  dotView1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(2),
+  },
+  accountText: { color: "black", marginHorizontal: wp(9), marginTop: hp(4) },
+  nextButton: {
+    alignSelf: "center",
+    alignItems: "center",
+    backgroundColor: "gray",
+    marginTop: hp(4),
+    width: wp(60),
+    padding: 10,
+    borderRadius: 10,
   },
 });

@@ -171,6 +171,8 @@ const MyWallet = (props) => {
             }}
           ></Button>
         </View> */}
+
+        <View style={{flexDirection:"row",justifyContent:"space-around",width:wp(70)}}>
         <LinearGradient
           start={[1, 0]}
           end={[0, 1]}
@@ -182,6 +184,24 @@ const MyWallet = (props) => {
             <Text style={{ color: "white" }}>Tokens</Text>
           </View>
         </LinearGradient>
+
+        <LinearGradient
+          start={[1, 0]}
+          end={[0, 1]}
+          colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
+          style={styles.PresssableBtn}
+        >
+          <View
+          >
+            <Text style={{ color: "white" }}>Transfer</Text>
+          </View>
+        </LinearGradient>
+
+        </View>
+
+
+
+
 
         <View
           style={{ display: "flex", flexDirection: "column", marginTop: 5 }}
