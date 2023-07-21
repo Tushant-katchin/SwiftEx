@@ -132,7 +132,7 @@ const PrivateKey = (props) => {
         <TouchableOpacity
           style={{alignSelf: "center",
           alignItems: "center",
-          backgroundColor:accountName&&!/\s/.test(accountName) ?'green':"grey",
+          backgroundColor:accountName && !/\s/.test(accountName) ?'green':"grey",
           marginTop: hp(4),
           width: wp(60),
           padding: 10,
@@ -147,9 +147,11 @@ const PrivateKey = (props) => {
             }
             let wallet = props.route.params.wallet.wallet;
             wallet.accountName = accountName;
+            
             console.log(wallet);
             props.navigation.navigate("Check Mnemonic", {
               wallet,
+              mnemonic
             });
           }}
         >
