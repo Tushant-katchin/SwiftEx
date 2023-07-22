@@ -389,7 +389,8 @@ const CheckMnemonic = (props) => {
   const [mnemonic, setMnemonic] = useState("");
   const [visible, setVisible] = useState(false);
   const [Wallet, setWallet] = useState();
-
+  const [Mnemonic, SetMnemonic] = useState([]);
+  const [data, setData] = useState();
   const dispatch = useDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -399,58 +400,6 @@ const CheckMnemonic = (props) => {
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
-
-  async function saveUserDetails() {
-    let response;
-    try {
-      response = await fetch(`http://${urls.testUrl}/user/createUser`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          walletAddress: props.route.params.wallet.address,
-          user: props.route.params.wallet.accountName,
-        }),
-      })
-        .then((response) => response.json())
-        .then(async (responseJson) => {
-          console.log(responseJson);
-          console.log(responseJson);
-          if (responseJson.responseCode === 200) {
-            alert("success", "successfull");
-          } else if (responseJson.responseCode === 400) {
-            return {
-              code: responseJson.responseCode,
-              message:
-                "account with same name already exists. Please use a different name",
-            };
-          } else {
-            return {
-              code: 401,
-              message: "Unable to create account. Please try again",
-            };
-          }
-          return {
-            code: responseJson.responseCode,
-            token: responseJson.responseData,
-          };
-        })
-        .catch((error) => {
-          setVisible(!visible);
-
-          alert(error);
-        });
-    } catch (e) {
-      setVisible(!visible);
-
-      console.log(e);
-      alert(e);
-    }
-    console.log(response);
-    return response;
-  }
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -466,22 +415,66 @@ const CheckMnemonic = (props) => {
     const wallet = props?.route?.params?.wallet;
     console.log(wallet);
   }, [fadeAnim, Spin]);
+  // <Text style={style.pressText}>{index + 1}</Text>
 
   const RenderItem = ({ item, index }) => {
-    console.log("--------ni-----", item);
+    let Data = data.map((item) => {
+      return item;
+    });
+    let newArray = [];
+    newArray = Mnemonic;
     return (
       <TouchableOpacity
-        style={style.pressable}
+        style={{
+          borderColor: "#D7D7D7",
+          borderWidth: 0.5,
+          backgroundColor: item.selected ? "green" : "#F2F2F2",
+          width: wp(30),
+          justifyContent: "center",
+          paddingVertical: hp(2),
+          paddingHorizontal: 3,
+          position: "relative",
+        }}
         onPress={() => {
-          console.log("Hello dWorld");
+          console.log("pressed");
+          if (!item.selected) {
+            Data[index].selected = true;
+            newArray.push(item.mnemonic);
+            console.log(newArray);
+            SetMnemonic(newArray);
+            setData(Data);
+          } else {
+            Data[index].selected = false;
+            const data = newArray.filter((Item) => {
+              return Item != item.mnemonic;
+            });
+            console.log(data);
+            SetMnemonic(data);
+            setData(Data);
+          }
         }}
       >
-        <Text style={style.pressText}>{index + 1}</Text>
-
-        <Text style={style.itemText}>{item}</Text>
+        <Text style={style.itemText}>{item.mnemonic}</Text>
       </TouchableOpacity>
     );
   };
+
+  function func(a, b) {
+    return 0.5 - Math.random();
+  }
+
+  useEffect(() => {
+    let data = props.route.params.mnemonic.map((item) => {
+      let data = {
+        mnemonic: item,
+        selected: false,
+      };
+      return data;
+    });
+    console.log(data);
+    const newData = data.sort(func);
+    setData(newData);
+  }, []);
 
   return (
     <Animated.View // Special animatable View
@@ -495,17 +488,7 @@ const CheckMnemonic = (props) => {
 
         <View style={{ marginTop: hp(15) }}>
           <FlatList
-            data={[
-              "name",
-              "avxd",
-              "call",
-              "ringtone",
-              "cricket",
-              "nave",
-              "arrow",
-              "never",
-              "evergreen",
-            ]}
+            data={data}
             // data={props.route.params.wallet.wallet.mnemonic}
             renderItem={RenderItem}
             numColumns={3}
@@ -531,109 +514,107 @@ const CheckMnemonic = (props) => {
             style={style.ButtonView}
             onPress={async () => {
               setLoading(true);
-              const pin = await AsyncStorageLib.getItem("pin");
+              try {
+                const pin = await AsyncStorageLib.getItem("pin");
+                console.log(Mnemonic);
+                console.log(props.route.params.mnemonic);
 
-              if (mnemonic === props.route.params.wallet.mnemonic) {
-                /* const response = await saveUserDetails().then((response)=>{
+                if (
+                  JSON.stringify(Mnemonic) ==
+                  JSON.stringify(props.route.params.mnemonic)
+                ) {
+                  console.log(pin);
+                  const body = {
+                    accountName: props.route.params.wallet.accountName,
+                    pin: JSON.parse(pin),
+                  };
+                  const token = genUsrToken(body);
+                  console.log(token);
 
-                  if(response.code===400){
-                    return alert(response.message)
-                  }
-                  else if(response.code===401){
-                    return alert(response.message)
-                  }
-                }).catch((e)=>{
-                  console.log(e)
-                  //return alert('failed to create account. please try again')
-                })*/
-
-                console.log(pin);
-                const body = {
-                  accountName: props.route.params.wallet.accountName,
-                  pin: JSON.parse(pin),
-                };
-                const token = genUsrToken(body);
-                console.log(token);
-
-                const accounts = {
-                  address: props.route.params.wallet.address,
-                  privateKey: props.route.params.wallet.privateKey,
-                  name: props.route.params.wallet.accountName,
-                  walletType: "Multi-coin",
-                  xrp: {
-                    address: props.route.params.wallet.xrp.address,
-                    privateKey: props.route.params.wallet.xrp.privateKey,
-                  },
-                  wallets: [],
-                };
-                let wallets = [];
-                wallets.push(accounts);
-                const allWallets = [
-                  {
+                  const accounts = {
                     address: props.route.params.wallet.address,
                     privateKey: props.route.params.wallet.privateKey,
                     name: props.route.params.wallet.accountName,
+                    walletType: "Multi-coin",
                     xrp: {
                       address: props.route.params.wallet.xrp.address,
                       privateKey: props.route.params.wallet.xrp.privateKey,
                     },
-                    walletType: "Multi-coin",
-                  },
-                ];
+                    wallets: [],
+                  };
+                  let wallets = [];
+                  wallets.push(accounts);
+                  const allWallets = [
+                    {
+                      address: props.route.params.wallet.address,
+                      privateKey: props.route.params.wallet.privateKey,
+                      name: props.route.params.wallet.accountName,
+                      xrp: {
+                        address: props.route.params.wallet.xrp.address,
+                        privateKey: props.route.params.wallet.xrp.privateKey,
+                      },
+                      walletType: "Multi-coin",
+                    },
+                  ];
 
-                AsyncStorageLib.setItem(
-                  "wallet",
-                  JSON.stringify(allWallets[0])
-                );
-                AsyncStorageLib.setItem(
-                  `${props.route.params.wallet.accountName}-wallets`,
-                  JSON.stringify(allWallets)
-                );
-                AsyncStorageLib.setItem(
-                  "user",
-                  props.route.params.wallet.accountName
-                );
-                AsyncStorageLib.setItem(
-                  "currentWallet",
-                  props.route.params.wallet.accountName
-                );
-                AsyncStorageLib.setItem(
-                  `${props.route.params.wallet.accountName}-token`,
-                  token
-                );
-
-                dispatch(setUser(props.route.params.wallet.accountName));
-                dispatch(
-                  setCurrentWallet(
-                    props.route.params.wallet.address,
-                    props.route.params.wallet.accountName,
-                    props.route.params.wallet.privateKey,
-                    props.route.params.wallet.xrp.address
-                      ? props.route.params.wallet.xrp.address
-                      : "",
-                    props.route.params.wallet.xrp.privateKey
-                      ? props.route.params.wallet.xrp.privateKey
-                      : "",
-                    (walletType = "Multi-coin")
-                  )
-                );
-                dispatch(
-                  AddToAllWallets(
-                    wallets,
+                  AsyncStorageLib.setItem(
+                    "wallet",
+                    JSON.stringify(allWallets[0])
+                  );
+                  AsyncStorageLib.setItem(
+                    `${props.route.params.wallet.accountName}-wallets`,
+                    JSON.stringify(allWallets)
+                  );
+                  AsyncStorageLib.setItem(
+                    "user",
                     props.route.params.wallet.accountName
-                  )
-                );
-                dispatch(getBalance(props.route.params.wallet.address));
-                dispatch(setWalletType("Multi-coin"));
-                dispatch(setToken(token));
+                  );
+                  AsyncStorageLib.setItem(
+                    "currentWallet",
+                    props.route.params.wallet.accountName
+                  );
+                  AsyncStorageLib.setItem(
+                    `${props.route.params.wallet.accountName}-token`,
+                    token
+                  );
 
-                props.navigation.navigate("HomeScreen");
-              } else {
-                setLoading(false);
-                return alert(
-                  "error",
-                  "Wrong Mnemonic. Please retry with correct mnemonic "
-                );
+                  dispatch(setUser(props.route.params.wallet.accountName));
+                  dispatch(
+                    setCurrentWallet(
+                      props.route.params.wallet.address,
+                      props.route.params.wallet.accountName,
+                      props.route.params.wallet.privateKey,
+                      props.route.params.wallet.xrp.address
+                        ? props.route.params.wallet.xrp.address
+                        : "",
+                      props.route.params.wallet.xrp.privateKey
+                        ? props.route.params.wallet.xrp.privateKey
+                        : "",
+                      walletType = "Multi-coin"
+                    )
+                  );
+                  dispatch(
+                    AddToAllWallets(
+                      wallets,
+                      props.route.params.wallet.accountName
+                    )
+                  );
+                  dispatch(getBalance(props.route.params.wallet.address));
+                  dispatch(setWalletType("Multi-coin"));
+                  dispatch(setToken(token));
+                  console.log("navigating to home screen");
+                  props.navigation.navigate("HomeScreen");
+                  alert("success", "correct mnemonic");
+                } else {
+                  setLoading(false);
+                  SetMnemonic([]);
+                  return alert(
+                    "error",
+                    "Wrong Mnemonic. Please retry with correct mnemonic "
+                  );
+                }
+              } catch (e) {
+                console.log(e);
               }
             }}
           >

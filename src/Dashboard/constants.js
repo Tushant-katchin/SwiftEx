@@ -1,5 +1,5 @@
 export const urls = {
-  testUrl: "172.31.39.19:2000",
+  testUrl: "ec2-43-205-140-238.ap-south-1.compute.amazonaws.com:2000",
   mainUrl: "3.19.76.40:2000",
 };
 

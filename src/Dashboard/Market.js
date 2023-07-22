@@ -234,8 +234,8 @@ const Market = (props) => {
     setImageUrl
   ) => {
     try {
-      const response = await fetch(
-        `https://${urls.testUrl}/user/getcryptodata`,
+       await fetch(
+        `http://${urls.testUrl}/user/getcryptodata`,
         {
           method: "GET",
           headers: {
@@ -280,7 +280,7 @@ const Market = (props) => {
   };
 
   useEffect(async () => {
-    const resp = await fetchKline(
+    await fetchKline(
       setData,
       setLoading,
       setPercent,
@@ -289,8 +289,7 @@ const Market = (props) => {
       setImageUrl
     );
   }, []);
-  let logo = "https://static.alchemyapi.io/images/assets/3408.png";
-  let LeftContent;
+ 
 
   return (
     <View style={{ backgroundColor: "white" }}>

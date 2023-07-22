@@ -89,6 +89,7 @@ function InvestmentChart(setCurrentWallet) {
         }
 
         if (bal) {
+          console.log('bal',bal)
           getBnbBalance(Number(bal).toFixed(2));
         } else {
           getBnbBalance(0.00);

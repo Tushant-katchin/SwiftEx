@@ -135,7 +135,7 @@ const PrivateKey = (props) => {
           style={{alignSelf: "center",
           alignItems: "center",
           backgroundColor:accountName && !/\s/.test(accountName) ?'green':"grey",
-          marginTop: hp(4),
+          marginTop: hp(2),
          width: wp(60),
           padding: 10,
           borderRadius: 10,
