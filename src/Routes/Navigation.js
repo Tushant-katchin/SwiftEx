@@ -50,7 +50,11 @@ import {
   OfferListViewHome,
   OfferView,
 } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
-import { ExchangeHeader, ExchangeHeaderIcon, WalletHeader } from "../Dashboard/header";
+import {
+  ExchangeHeader,
+  ExchangeHeaderIcon,
+  WalletHeader,
+} from "../Dashboard/header";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -59,7 +63,7 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      //  initialRouteName="Check Mnemonic"
+      //  initialRouteName="splash"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
@@ -93,6 +97,8 @@ const AuthStack = () => (
         }}
       /> */}
 
+
+
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -124,14 +130,13 @@ const AuthStack = () => (
       <Stack.Screen
         name="MyWallet"
         component={MyWallet}
-        options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
+       options={{
+        header:()=>{
+          return(
+            <WalletHeader title={'Wallet'} IconName='delete' IconType='material' />
+          )
+        }
+       }}
       />
       <Stack.Screen
         name="CreateWallet"
@@ -269,7 +274,7 @@ const AuthStack = () => (
         component={PrivateKey}
         options={{
           header: () => {
-            return <WalletHeader title='Private-Key'/>;
+            return <WalletHeader title="Private-Key" />;
           },
         }}
       />
@@ -370,7 +375,7 @@ const AuthStack = () => (
         component={CheckMnemonic}
         options={{
           header: () => {
-            return <WalletHeader title='Check-Mneumonic' />;
+            return <WalletHeader title="Check-Mneumonic" />;
           },
         }}
       />
@@ -379,11 +384,8 @@ const AuthStack = () => (
         name="Send"
         component={SendTokens}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Send ETH" />;
           },
         }}
       />

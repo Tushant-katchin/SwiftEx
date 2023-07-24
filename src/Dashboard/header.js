@@ -45,9 +45,8 @@ export const ExchangeHeader = () => {
   );
 };
 
-
 export const WalletHeader = (props) => {
-  const {title,title1,IconName,IconType} = props
+  const { title, title1, IconName, IconType } = props;
   const navigation = useNavigation();
 
   return (
@@ -67,7 +66,7 @@ export const WalletHeader = (props) => {
           name={IconName}
           type={IconType}
           size={20}
-          color={"#E96A6A"}
+          color={"white"}
           onPress={() => {
             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
             AsyncStorage.removeItem(LOCAL_TOKEN);
@@ -80,9 +79,8 @@ export const WalletHeader = (props) => {
   );
 };
 
-
 export const ExchangeHeaderIcon = (props) => {
-  const {title} = props 
+  const { title } = props;
   const navigation = useNavigation();
 
   return (
@@ -205,13 +203,13 @@ const styles = StyleSheet.create({
     width: wp(100),
     paddingHorizontal: wp(2),
   },
-  walletContainer:{
+  walletContainer: {
     backgroundColor: "#4CA6EA",
     justifyContent: "space-between",
     alignItems: "center",
     alignSelf: "center",
     flexDirection: "row",
-    paddingVertical:hp(1.8),
+    paddingVertical: hp(1.8),
     width: wp(100),
     paddingHorizontal: wp(2),
   },
@@ -227,11 +225,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginRight: wp(10),
   },
-  text1:{
+  text1: {
     color: "white",
     fontWeight: "700",
     alignSelf: "center",
     textAlign: "center",
     marginRight: wp(10),
-  }
+  },
 });

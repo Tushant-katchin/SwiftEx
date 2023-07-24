@@ -7,8 +7,9 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  TextInput,
+  Pressable,
 } from "react-native";
-import { TextInput, Checkbox } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -31,6 +32,7 @@ import { urls } from "../constants";
 import { checkAddressValidity } from "../../utilities/web3utilities";
 import { isFloat, isInteger } from "../../utilities/utilities";
 import { alert } from "../reusables/Toasts";
+import Icon from "../../icon";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -101,8 +103,8 @@ const SendTokens = (props) => {
       console.log(state.wallet.address);
       if (!state.wallet.address) {
         setBalance(0);
-        
-        alert("error","please select a wallet first");
+
+        alert("error", "please select a wallet first");
       } else {
         if (Type) {
           if (Type == "Ethereum") {
@@ -255,50 +257,57 @@ const SendTokens = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-      <View style={style.Body}>
-        <Text style={{ marginLeft: wp(5), marginTop: hp(5) }}>
-          {" "}
-          Reciepent address{" "}
-        </Text>
-        <TextInput
-          style={style.textInput2}
-          onChangeText={(input) => {
-            if (input && address) {
-              setDisable(false);
-            } else {
-              setDisable(true);
-            }
-            console.log(input);
-            setAddress(input);
-          }}
-        />
-        <Text style={{ marginLeft: wp(5), marginTop: hp(1) }}>
-          Available balance {balance ? balance : 0}
-        </Text>
-        <Text style={{ marginLeft: wp(5), marginTop: hp(10) }}> Amount </Text>
-        <TextInput
-          style={style.textInput2}
-          value={amount}
-          keyboardType="numeric"
-          onChangeText={(input) => {
-            if (amount && address) {
-              setDisable(false);
-            } else {
-              setDisable(true);
-            }
-            console.log(input);
-            setAmount(input);
-          }}
-        />
-        <View style={{ width: wp(20), margin: 10 }}>
-          <Button
-            color={"blue"}
-            title={"max"}
-            onPress={() => {
-              setAmount(balance);
-              console.log("pressed", amount, balance);
+      <View style={{ backgroundColor: "white", height: hp(100) }}>
+        <View style={style.inputView}>
+          <TextInput
+            onChangeText={(input) => {
+              if (input && address) {
+                setDisable(false);
+              } else {
+                setDisable(true);
+              }
+              console.log(input);
+              setAddress(input);
             }}
-          />
+            placeholder="Recipient Address"
+            style={style.input}
+          ></TextInput>
+          <Icon name="scan" type={"ionicon"} size={20} color={"blue"} />
+          <Text style={style.pasteText}>PASTE</Text>
+        </View>
+        <Text style={style.balance}>
+          Available balance :-{" "}
+          {balance ? balance : <Text style={{ color: "#C1BDBD" }}>0</Text>}
+        </Text>
+
+        <View style={style.inputView}>
+          <TextInput
+            value={amount}
+            keyboardType="numeric"
+            // onChangeText={(input) => {
+            //   if (amount && address) {
+            //     setDisable(false);
+            //   } else {
+            //     setDisable(true);
+            //   }
+            //   console.log(input);
+            //   setAmount(input);
+            // }}
+            placeholder="Amount ETH"
+            style={style.input}
+          ></TextInput>
+          <Pressable
+            onPress={() => {
+              console.log("fhhhhhhhhhhhhhhhh")
+            }}
+            // onPress={() => {
+            //   setAmount(balance);
+            //   console.log("pressed", amount, balance);
+            // }}
+          >
+            <Text  onPress={()=>{console.log("dkfk")}} style={{ color: "blue" }}>MAX</Text>
+          </Pressable>
+          <Text style={style.pasteText}>ETH</Text>
         </View>
         {Loading ? (
           <View style={{ marginBottom: hp("-4") }}>
@@ -307,16 +316,10 @@ const SendTokens = (props) => {
         ) : (
           <Text> </Text>
         )}
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            alignContent: "center",
-          }}
-        >
-          <Text style={{ color: "red" }}>{message}</Text>
-        </View>
-        <View style={{ width: wp(30), marginTop: hp(10), marginLeft: wp(33) }}>
+
+        <Text style={style.msgText}>{message}</Text>
+
+        <View style={style.btnView}>
           <Button
             disabled={disable}
             color="blue"
@@ -328,11 +331,13 @@ const SendTokens = (props) => {
               const token = props.route.params.token;
               const wallet = await AsyncStorageLib.getItem("Wallet");
               console.log(wallet);
-              /*  if(amount&&balance&&amount>balance){
-                setLoading(false)
-                console.log(amount,balance)
-                return alert("You don't have enough balance to do this transaction ")
-              } */
+              if (amount && balance && amount > balance) {
+                setLoading(false);
+                console.log(amount, balance);
+                return alert(
+                  "You don't have enough balance to do this transaction "
+                );
+              }
 
               if (token === "Multi-coin-Xrp") {
                 privateKey = (await state.wallet.xrp.privateKey)
@@ -345,9 +350,9 @@ const SendTokens = (props) => {
               }
               console.log(privateKey);
               /* if(balance<amount){
-                console.log(balance,amount)
-                return alert('You dont have enough balance to do this transaction')
-              }*/
+    console.log(balance,amount)
+    return alert('You dont have enough balance to do this transaction')
+  }*/
 
               if (
                 walletType &&
@@ -424,4 +429,143 @@ const style = StyleSheet.create({
 
     elevation: 24,
   },
+  inputView: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    width: wp(93),
+    alignSelf: "center",
+    borderColor: "#C1BDBD",
+    marginTop: hp(3),
+    paddingVertical: hp(1.5),
+    borderRadius: hp(1),
+  },
+  pasteText: { color: "blue", marginHorizontal: wp(3) },
+  balance: { marginLeft: wp(5), marginTop: hp(2) },
+  input: {
+    width: wp(70),
+    alignSelf: "center",
+    paddingHorizontal: wp(4),
+  },
+  msgText: { color: "red", textAlign: "center" },
+  btnView: { width: wp(30), alignSelf: "center", marginTop: hp(8) },
 });
+
+/* <View style={style.Body}>
+<Text style={{ marginLeft: wp(5), marginTop: hp(5) }}>
+  {" "}
+  Reciepent address{" "}
+</Text>
+<TextInput
+  style={style.textInput2}
+  onChangeText={(input) => {
+    if (input && address) {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+    console.log(input);
+    setAddress(input);
+  }}
+/>
+<Text style={{ marginLeft: wp(5), marginTop: hp(1) }}>
+  Available balance {balance ? balance : 0}
+</Text>
+<Text style={{ marginLeft: wp(5), marginTop: hp(10) }}> Amount </Text>
+<TextInput
+  style={style.textInput2}
+  value={amount}
+  keyboardType="numeric"
+  onChangeText={(input) => {
+    if (amount && address) {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+    console.log(input);
+    setAmount(input);
+  }}
+/>
+<View style={{ width: wp(20), margin: 10 }}>
+  <Button
+    color={"blue"}
+    title={"max"}
+    onPress={() => {
+      setAmount(balance);
+      console.log("pressed", amount, balance);
+    }}
+  />
+</View>
+{Loading ? (
+  <View style={{ marginBottom: hp("-4") }}>
+    <ActivityIndicator size="small" color="blue" />
+  </View>
+) : (
+  <Text> </Text>
+)}
+<View
+  style={{
+    display: "flex",
+    alignItems: "center",
+    alignContent: "center",
+  }}
+>
+  <Text style={{ color: "red" }}>{message}</Text>
+</View>
+<View style={{ width: wp(30), marginTop: hp(10), marginLeft: wp(33) }}>
+  <Button
+    disabled={disable}
+    color="blue"
+    title="Send"
+    onPress={async () => {
+      console.log(walletType);
+      let privateKey;
+      const myAddress = await state.wallet.address;
+      const token = props.route.params.token;
+      const wallet = await AsyncStorageLib.getItem("Wallet");
+      console.log(wallet);
+      /*  if(amount&&balance&&amount>balance){
+        setLoading(false)
+        console.log(amount,balance)
+        return alert("You don't have enough balance to do this transaction ")
+      } */
+
+//   if (token === "Multi-coin-Xrp") {
+//     privateKey = (await state.wallet.xrp.privateKey)
+//       ? await state.wallet.xrp.privateKey
+//       : JSON.parse(wallet).xrp.privateKey;
+//   } else {
+//     privateKey = (await state.wallet.privateKey)
+//       ? await state.wallet.privateKey
+//       : JSON.parse(wallet).privateKey;
+//   }
+//   console.log(privateKey);
+//   /* if(balance<amount){
+//     console.log(balance,amount)
+//     return alert('You dont have enough balance to do this transaction')
+//   }*/
+
+//   if (
+//     walletType &&
+//     token &&
+//     myAddress &&
+//     privateKey &&
+//     amount &&
+//     address
+//   ) {
+//     await SendCrypto(
+//       address,
+//       amount,
+//       privateKey,
+//       balance,
+//       setLoading,
+//       walletType,
+//       setDisable,
+//       myAddress,
+//       token,
+//       navigation
+//     );
+//   }
+// }}
+// ></Button>
+// </View>
