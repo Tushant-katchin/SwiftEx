@@ -35,12 +35,12 @@ const Welcome = (props) => {
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
-      toValue: 1,
+      toValue: 0,
       duration: 1000,
     }).start();
 
     Animated.timing(Spin, {
-      toValue: 1,
+      toValue: 0,
       duration: 1500,
       useNativeDriver: true,
     }).start();
@@ -106,8 +106,8 @@ const Welcome = (props) => {
     <View style={style.imageContainer}>
       <SliderBox
         images={Slider.images}
-        autoplay={true}
-        circleLoop={true}
+        autoplay={false}
+        circleLoop={false}
         ImageComponentStyle={style.imageStyle}
       />
       <View
