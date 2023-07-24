@@ -22,7 +22,6 @@ import title_icon from "../../assets/title_icon.png";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 
 const Transactions = (props) => {
-  // const transactions = [{ type: "red", hash: "Nisha" }];
   const [transactions, setTransactions] = useState("");
   const state = useSelector((state) => state);
 
@@ -85,11 +84,13 @@ try{
     await getTransactions();
   }, []);
 
+ 
+
   return (
     <View
       style={{
         height: hp(100),
-        backgroundColor: "#131E3A",
+        backgroundColor: "white",
       }}
     >
       <View style={styles.footer}>
@@ -151,36 +152,35 @@ try{
                     }}
                   >
                     <View
-                      style={{
-                        width: wp(90),
-                        margin: 2,
-                        backgroundColor: "white",
-                        flexDirection: "row",
-                        alignSelf:"center",
-                        alignItems:"center",
-                        borderRadius:10,
-                        paddingVertical:hp(2),
-                        marginTop:hp(2)
-                      }}
+                      style={styles.flatView}
                     >
                       <Image
                         source={Etherimage}
-                        style={{
-                          height: hp(5),
-                          width: wp(9),
-                          borderRadius: hp(3),
-                        }}
+                        style={styles.img}
                       />
-                      <View style={{marginHorizontal:wp(3)}}>
+                      <View style={{ marginHorizontal: wp(3) }}>
                         <Text>{item.type}</Text>
-                        <Text style={{ color: "black" }}>{item.hash}</Text>
+                        <Text
+                          style={styles.text}
+                        >
+                          {item.hash}
+                        </Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                 );
               })
             ) : (
-              <Text style={{color:"white",textAlign:"center",fontSize:16,marginTop:hp(4)}}>No transactions yet!</Text>
+              <Text
+                style={{
+                  color: "black",
+                  textAlign: "center",
+                  fontSize: 16,
+                  marginTop: hp(4),
+                }}
+              >
+                No transactions yet!
+              </Text>
             )}
           </ScrollView>
         </View>
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    backgroundColor: "#131E3A",
+    backgroundColor: "white",
     bottom: 0,
     left: 0,
     right: 0,
@@ -289,4 +289,25 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
   },
+  flatView:{
+    width: wp(90),
+    padding: hp(1),
+    flexDirection: "row",
+    alignSelf: "center",
+    alignItems: "center",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "gray",
+    marginTop: hp(2),
+    alignItems:"center"
+  },
+  img:{
+    height: hp(5),
+    width: wp(9),
+    borderRadius: hp(3),
+  },
+  text:{
+  color: "gray",
+  fontSize: 12,
+  marginVertical: hp(0.5),
+}
 });
