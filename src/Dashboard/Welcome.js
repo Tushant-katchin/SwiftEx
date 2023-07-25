@@ -12,10 +12,10 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
-import W4 from "../../assets/W4.png";
-import W3 from "../../assets/W3.png";
-import W2 from "../../assets/W2.png";
-import W1 from "../../assets/W1.png";
+import W4 from "../../assets/W4.jpg";
+import W3 from "../../assets/W3.jpg";
+import W2 from "../../assets/W2.jpg";
+import W1 from "../../assets/W1.jpg";
 import { LoginModal } from "./Modals/LoginModal";
 import { SliderBox } from "react-native-image-slider-box";
 import { Colors } from "react-native-paper";
@@ -35,12 +35,12 @@ const Welcome = (props) => {
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
-      toValue: 1,
+      toValue: 0,
       duration: 1000,
     }).start();
 
     Animated.timing(Spin, {
-      toValue: 1,
+      toValue: 0,
       duration: 1500,
       useNativeDriver: true,
     }).start();
@@ -106,8 +106,8 @@ const Welcome = (props) => {
     <View style={style.imageContainer}>
       <SliderBox
         images={Slider.images}
-        autoplay={true}
-        circleLoop={true}
+        autoplay={false}
+        circleLoop={false}
         ImageComponentStyle={style.imageStyle}
       />
       <View

@@ -407,12 +407,11 @@ const AuthStack = () => (
         name="Transactions"
         component={Transactions}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
+         header:()=>{
+          return(
+            <WalletHeader title='Transaction'/>
+          )
+         }
         }}
       />
       <Stack.Screen
