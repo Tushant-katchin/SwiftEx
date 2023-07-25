@@ -282,6 +282,7 @@ const ImportMultiCoinWalletModal = ({
                     {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
+                      mnemonic:trimmedPhrase,
                       name: accountName,
                       xrp:{
                         address:xrpWallet.classicAddress,

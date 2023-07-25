@@ -5,7 +5,7 @@ import {
   View,
   Button,
   ActivityIndicator,
-  Pressable,
+  TouchableOpacity
 } from "react-native";
 import { TextInput, Checkbox, Switch } from "react-native-paper";
 import {
@@ -23,13 +23,13 @@ import { alert } from "../reusables/Toasts";
 //import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import darkBlue from "../../../assets/darkBlue.png";
+import { useNavigation } from "@react-navigation/native";
 
-const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
+export const GetPrivateKeyModal = ({  visible, setVisible }) => {
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [newWalletPrivateKey, setNewWalletPrivateKey] = useState(false);
-  const [Wallet, setWallet] = useState();
+  const navigation = useNavigation()
   const dispatch = useDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -61,8 +61,8 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
       style={{ opacity: fadeAnim }}
     >
       <Modal
-        animationIn="slideInRight"
-        animationOut="slideOutRight"
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={visible}
@@ -137,64 +137,28 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
           <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
-            colors={
-              Checked && Checked2
-                ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]
-                : ["gray", "gray"]
-            }
+            colors={ Checked && Checked2 ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]:["gray","gray"]}
             style={style.PresssableBtn}
           >
-            <Pressable
-              disabled={loading ? true : Checked && Checked2 ? false : true}
+            <TouchableOpacity
+               //disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
-                setLoading(true);
-                setTimeout(() => {
-                  dispatch(Generate_Wallet2()).then((response) => {
-                    if (response) {
-                      if (response.status === "success") {
-                        setLoading(false);
-
-                        console.log(response.wallet);
-                        const wallet = response.wallet;
-                        setWallet(wallet);
-                        setNewWalletPrivateKey(true);
-                      } else {
-                        setLoading(false);
-
-                        alert(
-                          "error",
-                          "wallet generation failed. Please try again"
-                        );
-                      }
-                    } else {
-                      setLoading(false);
-
-                      alert(
-                        "error",
-                        "Wallet creation failed . Please try again"
-                      );
-                    }
-                  });
-                }, 1);
+                //setLoading(true);
+                setVisible(false)
+                navigation.navigate('My PrivateKey')
+                
               }}
             >
-              <Text style={{ color: "white" }}>Continue</Text>
-            </Pressable>
+              <Text>Continue</Text>
+            </TouchableOpacity>
           </LinearGradient>
         </View>
-        <NewWalletPrivateKey
-          Wallet={Wallet}
-          SetVisible={setNewWalletPrivateKey}
-          Visible={newWalletPrivateKey}
-          setModalVisible={setModalVisible}
-          setNewWalletVisible={setVisible}
-        />
       </Modal>
     </Animated.View>
   );
 };
 
-export default NewWalletModal;
+export default GetPrivateKeyModal;
 
 const style = StyleSheet.create({
   Body: {

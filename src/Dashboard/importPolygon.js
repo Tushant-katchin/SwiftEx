@@ -292,6 +292,7 @@ const ImportPolygon = (props) => {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
                       name: accountName,
+                      mnemonic:trimmedPhrase,
                       walletType: "Matic",
                       wallets: [],
                     };
@@ -301,6 +302,7 @@ const ImportPolygon = (props) => {
                       {
                         address: wallet.address,
                         privateKey: wallet.privateKey,
+                        mnemonic:trimmedPhrase,
                         name: accountName,
                         walletType: "Matic",
                       },
@@ -321,7 +323,8 @@ const ImportPolygon = (props) => {
                       setCurrentWallet(
                         wallet.address,
                         accountName,
-                        wallet.privateKey
+                        wallet.privateKey,
+                        trimmedPhrase,
                       )
                     );
                     dispatch(AddToAllWallets(wallets, accountName));

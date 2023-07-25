@@ -39,6 +39,7 @@ import {
   getEthPrice,
 } from "../utilities/utilities";
 import Icon from "../icon";
+import { GetPrivateKeyModal } from "./Modals/getPrivateKeyModal";
 const { StorageAccessFramework } = FileSystem;
 
 const MyWallet = (props) => {
@@ -54,6 +55,7 @@ const MyWallet = (props) => {
   const [ethBalance, setEthBalance] = useState(0);
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
+  const [visible, setVisible] = useState(false)
   let LeftContent = (props) => (
     <Avatar.Image
       {...props}
@@ -138,30 +140,34 @@ const MyWallet = (props) => {
     });
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     setLoading(true);
     //getEthBalance()
     getEthBnbPrice();
     getEthBnbBalance();
     getBalanceInUsd(ethBalance, bnbBalance);
     setLoading(false);
-  }, [ethBalance, bnbBalance]);
+  }, [ethBalance, bnbBalance]);*/
 
   return (
     <View style={styles.mainView}>
       <View style={styles.labelInputContainer}>
         <Text style={styles.label}>Name</Text>
-        <TextInput style={{ width: wp("78%") }} placeholder="Main Wallet 1" placeholderTextColor={'black'}/>
+        <TextInput style={{ width: wp("78%") }} placeholder={user?user:"Main Wallet 1"} placeholderTextColor={'black'}/>
       </View>
 
       <View>
         <View
           style={styles.mainContainer}
         >
-          <View style={styles.iconContainer}>
+          <TouchableOpacity style={styles.iconContainer}
+          onPress={()=>{
+            setVisible(true)
+          }}
+          >
             <Icon name="document-text-sharp" type={"ionicon"} size={20} />
             <Text style={styles.secretText}>Show Secret Phrase</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.rightIcon}>
             <Icon name="right" type={"antDesign"} color={"#DADADA"} size={20} />
           </View>
@@ -170,6 +176,7 @@ const MyWallet = (props) => {
         <Text style={styles.text}>
         If you lose access to this device,your funds will be lost,unless you back up!
         </Text>
+        <GetPrivateKeyModal visible={visible} setVisible={setVisible}/>
     </View>
     // <View style={styles.container}>
     //   <View style={styles.content}>

@@ -55,6 +55,7 @@ import {
   ExchangeHeaderIcon,
   WalletHeader,
 } from "../Dashboard/header";
+import MyPrivateKey from "../Dashboard/myPrivateKey";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -376,6 +377,16 @@ const AuthStack = () => (
         options={{
           header: () => {
             return <WalletHeader title="Check-Mneumonic" />;
+          },
+        }}
+      />
+
+<Stack.Screen
+        name="My PrivateKey"
+        component={MyPrivateKey}
+        options={{
+          header: () => {
+            return <WalletHeader title="Secret Key" />;
           },
         }}
       />

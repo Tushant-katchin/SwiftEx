@@ -206,6 +206,7 @@ const CheckNewWalletMnemonic = ({
                         address: Wallet.address,
                         privateKey: Wallet.privateKey,
                         name: Wallet.accountName,
+                        mnemonic:mnemonic,
                         walletType: "Multi-coin",
                         xrp:{
                           address:Wallet.xrp.address,

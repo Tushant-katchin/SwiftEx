@@ -192,13 +192,14 @@ const Home2 = ({ navigation }) => {
     console.log(user);
     let walletType = await AsyncStorageLib.getItem("walletType");
     let wallet = await AsyncStorageLib.getItem(`Wallet`).then((wallet) => {
-      console.log(JSON.parse(wallet));
+      console.log("My Wallet",JSON.parse(wallet));
       if (JSON.parse(wallet).xrp) {
         dispatch(
           setCurrentWallet(
             JSON.parse(wallet).address,
             user,
             JSON.parse(wallet).privateKey,
+            JSON.parse(wallet).mnemonic,
             JSON.parse(wallet).xrp.address
               ? JSON.parse(wallet).xrp.address
               : "",
@@ -284,6 +285,7 @@ const Home2 = ({ navigation }) => {
       await SetCurrentWallet().catch((e) => {
         console.log(e);
       });
+     
     } catch (e) {
       console.log(e);
     }
@@ -328,6 +330,9 @@ const Home2 = ({ navigation }) => {
     requestUserPermission();
     getToken();
   }, []);
+  useEffect(()=>{
+    console.log('wallet changed')
+  },[state.wallet.name])
 
   /*useFocusEffect(
     React.useCallback(() => {
@@ -351,7 +356,6 @@ const Home2 = ({ navigation }) => {
           renderTabBar={renderTabBar}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          lazy
           initialLayout={{width: Dimensions.get('window').width}}
           // style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
         />

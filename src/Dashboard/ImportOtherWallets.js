@@ -291,6 +291,7 @@ const ImportOtherWallets = (props) => {
                   const accounts = {
                     address: wallet.address,
                     privateKey: wallet.privateKey,
+                    mnemonic:trimmedPhrase,
                     name: accountName,
                     walletType: "Ethereum",
                     wallets: [],
@@ -301,6 +302,7 @@ const ImportOtherWallets = (props) => {
                     {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
+                      mnemonic:trimmedPhrase,
                       name: accountName,
                       walletType: "Ethereum",
                     },
@@ -321,7 +323,8 @@ const ImportOtherWallets = (props) => {
                     setCurrentWallet(
                       wallet.address,
                       accountName,
-                      wallet.privateKey
+                      wallet.privateKey,
+                      trimmedPhrase
                     )
                   );
                   dispatch(AddToAllWallets(wallets, accountName));

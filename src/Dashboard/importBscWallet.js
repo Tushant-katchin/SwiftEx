@@ -291,6 +291,7 @@ const ImportBscWallet = (props) => {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
                       name: accountName,
+                      mnemonic:trimmedPhrase,
                       walletType: "BSC",
                       wallets: [],
                     };
@@ -301,6 +302,7 @@ const ImportBscWallet = (props) => {
                         address: wallet.address,
                         privateKey: wallet.privateKey,
                         name: accountName,
+                        mnemonic:trimmedPhrase,
                         walletType: "BSC",
                       },
                     ];
@@ -322,7 +324,9 @@ const ImportBscWallet = (props) => {
                       setCurrentWallet(
                         wallet.address,
                         accountName,
-                        wallet.privateKey
+                        wallet.privateKey,
+                        trimmedPhrase,
+
                       )
                     );
                     dispatch(AddToAllWallets(wallets, accountName));

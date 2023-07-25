@@ -275,7 +275,7 @@ const Settings = (props) => {
         <Icon type={"fa"} name="exchange" size={hp(2)} color="black" />
         <Text style={styles.text}>Exchange</Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.accountBox}
         onPress={() => {
           //alert("coming soon");
@@ -289,7 +289,7 @@ const Settings = (props) => {
           color="black"
         />
         <Text style={styles.text}>Contacts</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
          <TouchableOpacity
          style={styles.accountBox}
            onPress={() => {

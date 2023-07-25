@@ -435,20 +435,19 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         swapType={swapType}
       />
 
-      <View style={styles.iconmainContainer}>
+      <TouchableOpacity style={styles.iconmainContainer} onPress={()=>{
+             navigation.navigate('Market')
+      }}>
         <View style={styles.iconTextContainer}>
           <Icon name="graph" type={"simpleLine"} size={hp(3)} />
           <Text style={{ marginHorizontal: hp(1) }}>
-            Your Portfolio insights
+            Market insights
           </Text>
         </View>
         <View style={styles.iconTextContainer}>
-          <View style={styles.numberContainer}>
-            <Text style={styles.number}>3</Text>
-          </View>
           <Icon name="cross" type={"entypo"} size={hp(3.6)} color="black" />
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
