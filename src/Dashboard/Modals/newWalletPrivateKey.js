@@ -4,8 +4,10 @@ import {
   Text,
   View,
   Button,
+  FlatList,
   Image,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -13,7 +15,6 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
-import { TextInput, Checkbox } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AddToAllWallets,
@@ -42,6 +43,8 @@ const NewWalletPrivateKey = ({
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
   const [newWallet, setNewWallet] = useState(false);
+  // const [data, setData] = useState();
+
   const [MnemonicVisible, setMnemonicVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
@@ -69,8 +72,7 @@ const NewWalletPrivateKey = ({
         .then((response) => response.json())
         .then(async (responseJson) => {
           if (responseJson.responseCode === 200) {
-            
-            alert("success","success");
+            alert("success", "success");
             return responseJson.responseCode;
           } else if (responseJson.responseCode === 400) {
             alert(
@@ -79,7 +81,7 @@ const NewWalletPrivateKey = ({
             );
             return responseJson.responseCode;
           } else {
-            alert("error","Unable to create account. Please try again");
+            alert("error", "Unable to create account. Please try again");
             return 401;
           }
         })
@@ -92,17 +94,15 @@ const NewWalletPrivateKey = ({
       setVisible(!visible);
 
       console.log(e);
-      alert('error',e);
+      alert("error", e);
     }
     console.log(response);
     return response;
   }
 
-
-  const closeModal =()=>{
-    SetVisible(false)
-   
-  }
+  const closeModal = () => {
+    SetVisible(false);
+  };
 
   useEffect(async () => {
     Animated.timing(fadeAnim, {
@@ -113,6 +113,31 @@ const NewWalletPrivateKey = ({
     console.log(Wallet);
   }, [fadeAnim]);
 
+  const data = [
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+    { name: "liar" },
+  ];
+  const RenderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        style={style.flatBtn}
+      >
+        <Text style={{ textAlign: "right" }}>{index + 1}</Text>
+        <Text>{item.name}</Text>
+      </TouchableOpacity>
+    );
+    
+  };
+ 
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -130,32 +155,32 @@ const NewWalletPrivateKey = ({
         hideModalContentWhileAnimating
         onBackdropPress={() => {
           SetVisible(false);
-                }}
+        }}
         onBackButtonPress={() => {
           SetVisible(false);
         }}
       >
         <View style={style.Body}>
-          <ModalHeader Function={closeModal} name={'Private Key'}/>
-          <Animated.Image
-            style={{
-              width: wp("5"),
-              height: hp("5"),
-              padding: 30,
-              marginTop: hp(10),
-            }}
-            source={title_icon}
-          />
-          <Text style={style.welcomeText}> Hi,</Text>
-          <Text style={style.welcomeText}>
-            {" "}
-            Please note your mnemonic or save it
-          </Text>
-          <Text style={style.welcomeText2}> Your Mnemonic Phrase</Text>
+          {/* <ModalHeader Function={closeModal} name={'Private Key'}/> */}
 
-          <Text selectable={true} style={style.welcomeText2}>
-            {Wallet ? Wallet.mnemonic : ""}
+          <Text style={style.verifyText}>Verify Secret Phrase</Text>
+          <Text style={style.wordText}>
+            Tap the words to put them next to each other in the correct order.
           </Text>
+
+          <View style={{ marginTop: hp(4) }}>
+            <FlatList
+              data={data}
+              renderItem={RenderItem}
+              numColumns={3}
+              contentContainerStyle={{
+                alignSelf: "center",
+              }}
+            />
+          </View>
+          {/* <Text selectable={true} style={style.welcomeText2}>
+            {Wallet ? Wallet.mnemonic : ""}
+          </Text> */}
           <Text style={style.welcomeText2}> Account Name</Text>
 
           <TextInput
@@ -166,10 +191,10 @@ const NewWalletPrivateKey = ({
             placeholderTextColor="#FFF"
             autoCapitalize={"none"}
           />
-          <View style={style.Button}>
-            <Button
-              title="Next"
-              color={"green"}
+
+          <View style={{ width: wp(95)}}>
+            <TouchableOpacity
+              style={style.ButtonView}
               disabled={accountName ? false : true}
               onPress={() => {
                 //setVisible(!visible)
@@ -178,8 +203,11 @@ const NewWalletPrivateKey = ({
                 setNewWallet(wallet);
                 setMnemonicVisible(true);
               }}
-            ></Button>
+            >
+              <Text style={{color:"white"}}>Done</Text>
+            </TouchableOpacity>
           </View>
+
           <DialogInput
             isDialogVisible={visible}
             title={"Wallet password"}
@@ -188,7 +216,7 @@ const NewWalletPrivateKey = ({
             submitInput={async (inputText) => {
               setVisible(!visible);
               if (!inputText) {
-                return alert("error","please enter a password to continue");
+                return alert("error", "please enter a password to continue");
               } else {
                 const response = await saveUserDetails()
                   .then((response) => {
@@ -237,7 +265,10 @@ const NewWalletPrivateKey = ({
                     props.navigation.navigate("HomeScreen");
                   })
                   .catch((e) => {
-                    return alert("error","failed to create account. please try again");
+                    return alert(
+                      "error",
+                      "failed to create account. please try again"
+                    );
                   });
 
                 // alert('success ' + accountName)
@@ -264,12 +295,11 @@ export default NewWalletPrivateKey;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
-    backgroundColor: "#131E3A",
-    height: hp(100),
-    width: wp(90),
-    alignItems: "center",
-    textAlign: "center",
+    backgroundColor: "white",
+    height: hp(90),
+    borderRadius:hp(2),
+    width: wp(95),
+    alignSelf: "center",
   },
   welcomeText: {
     fontSize: 20,
@@ -278,11 +308,10 @@ const style = StyleSheet.create({
     marginTop: hp(5),
   },
   welcomeText2: {
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(6),
-
+    fontSize: 14,
+    color: "black",
+    textAlign:"center",
+    marginTop: hp(5),
   },
   Button: {
     marginTop: hp(0),
@@ -300,13 +329,44 @@ const style = StyleSheet.create({
     color: "white",
   },
   input: {
-    height: hp("5%"),
-    marginBottom: hp("2"),
+    marginTop:hp(2),
     color: "#fff",
-    marginTop: hp("2"),
     width: wp("70"),
-    paddingRight: wp("7"),
+    height: hp(4),
     backgroundColor: "white",
-    borderColor: "white",
+    alignSelf: "center",
+    borderWidth: StyleSheet.hairlineWidth * 1,
   },
+  verifyText: {
+    color: "black",
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+    marginTop: hp(2),
+  },
+  wordText: {
+    color: "black",
+    textAlign: "center",
+    marginTop: hp(1),
+    width: wp(88),
+    marginHorizontal: wp(5),
+  },
+  ButtonView: {
+    backgroundColor: "#4CA6EA",
+    width: wp(55),
+    alignSelf: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    marginTop: hp(1.5),
+    paddingVertical:hp(1.7)
+  },
+  flatBtn:{
+    backgroundColor: "#F2F2F2",
+    borderRadius:hp(0.3),
+    width: wp(28),
+    paddingVertical: hp(2),
+    borderWidth: 0.3,
+    borderColor: "#D7D7D7",
+    padding:6
+  }
 });

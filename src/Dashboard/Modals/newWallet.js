@@ -5,7 +5,7 @@ import {
   View,
   Button,
   ActivityIndicator,
-  TouchableOpacity
+  Pressable,
 } from "react-native";
 import { TextInput, Checkbox, Switch } from "react-native-paper";
 import {
@@ -137,11 +137,15 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
           <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
-            colors={ Checked && Checked2 ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]:["gray","gray"]}
+            colors={
+              Checked && Checked2
+                ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]
+                : ["gray", "gray"]
+            }
             style={style.PresssableBtn}
           >
-            <TouchableOpacity
-               //disabled={loading ? true : Checked && Checked2 ? false : true}
+            <Pressable
+              disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
                 setLoading(true);
                 setTimeout(() => {
@@ -174,8 +178,8 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
                 }, 1);
               }}
             >
-              <Text>Continue</Text>
-            </TouchableOpacity>
+              <Text style={{ color: "white" }}>Continue</Text>
+            </Pressable>
           </LinearGradient>
         </View>
         <NewWalletPrivateKey
