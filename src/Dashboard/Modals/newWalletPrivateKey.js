@@ -31,6 +31,7 @@ import { urls } from "../constants";
 import Modal from "react-native-modal";
 import CheckNewWalletMnemonic from "./checkNewWalletMnemonic";
 import ModalHeader from "../reusables/ModalHeader";
+import Icon from "../../icon";
 
 const NewWalletPrivateKey = ({
   props,
@@ -43,7 +44,7 @@ const NewWalletPrivateKey = ({
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
   const [newWallet, setNewWallet] = useState(false);
-  // const [data, setData] = useState();
+  const [data, setData] = useState();
 
   const [MnemonicVisible, setMnemonicVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -113,31 +114,19 @@ const NewWalletPrivateKey = ({
     console.log(Wallet);
   }, [fadeAnim]);
 
-  const data = [
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-    { name: "liar" },
-  ];
+  const mnemonic = Wallet?.mnemonic.match(/.*?[\.\s]+?/g);
+  console.log("My mnemonic", mnemonic);
   const RenderItem = ({ item, index }) => {
+    console.log("============------------", item);
+    setData(data);
     return (
-      <TouchableOpacity
-        style={style.flatBtn}
-      >
+      <TouchableOpacity style={style.flatBtn}>
         <Text style={{ textAlign: "right" }}>{index + 1}</Text>
-        <Text>{item.name}</Text>
+        <Text>{item}</Text>
       </TouchableOpacity>
     );
-    
   };
- 
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -163,14 +152,15 @@ const NewWalletPrivateKey = ({
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Private Key'}/> */}
 
-          <Text style={style.verifyText}>Verify Secret Phrase</Text>
-          <Text style={style.wordText}>
-            Tap the words to put them next to each other in the correct order.
+          <Text style={style.backupText}>Backup Mneumonic Phrase</Text>
+          <Text style={style.welcomeText1}>
+            Please select the menumonic in order to ensure the backup is
+            correct.
           </Text>
 
           <View style={{ marginTop: hp(4) }}>
             <FlatList
-              data={data}
+              data={mnemonic}
               renderItem={RenderItem}
               numColumns={3}
               contentContainerStyle={{
@@ -178,6 +168,20 @@ const NewWalletPrivateKey = ({
               }}
             />
           </View>
+
+          <View style={style.dotView}>
+          <Icon name="dot-single" type={"entypo"} size={20} />
+          <Text style={{ color: "black" }}>
+            Keep your mneumonic in a safe place isolated from network
+          </Text>
+        </View>
+        <View style={style.dotView1}>
+          <Icon name="dot-single" type={"entypo"} size={20} />
+          <Text style={{color:"black",width:"90%"}}>
+            Don't share and store mneumonic with a network, such as email,photo,
+            social apps, and so on
+          </Text>
+        </View>
           {/* <Text selectable={true} style={style.welcomeText2}>
             {Wallet ? Wallet.mnemonic : ""}
           </Text> */}
@@ -185,14 +189,14 @@ const NewWalletPrivateKey = ({
 
           <TextInput
             style={style.input}
-            theme={{ colors: { text: "black" } }}
             value={accountName}
+            placeholder='Enter your account number'
             onChangeText={(text) => setAccountName(text)}
-            placeholderTextColor="#FFF"
+            placeholderTextColor="black"
             autoCapitalize={"none"}
           />
 
-          <View style={{ width: wp(95)}}>
+          <View style={{ width: wp(95) }}>
             <TouchableOpacity
               style={style.ButtonView}
               disabled={accountName ? false : true}
@@ -204,7 +208,7 @@ const NewWalletPrivateKey = ({
                 setMnemonicVisible(true);
               }}
             >
-              <Text style={{color:"white"}}>Done</Text>
+              <Text style={{ color: "white" }}>Done</Text>
             </TouchableOpacity>
           </View>
 
@@ -297,7 +301,7 @@ const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
     height: hp(90),
-    borderRadius:hp(2),
+    borderRadius: hp(2),
     width: wp(95),
     alignSelf: "center",
   },
@@ -310,7 +314,7 @@ const style = StyleSheet.create({
   welcomeText2: {
     fontSize: 14,
     color: "black",
-    textAlign:"center",
+    textAlign: "center",
     marginTop: hp(5),
   },
   Button: {
@@ -329,8 +333,7 @@ const style = StyleSheet.create({
     color: "white",
   },
   input: {
-    marginTop:hp(2),
-    color: "#fff",
+    marginTop: hp(2),
     width: wp("70"),
     height: hp(4),
     backgroundColor: "white",
@@ -358,15 +361,47 @@ const style = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     marginTop: hp(1.5),
-    paddingVertical:hp(1.7)
+    paddingVertical: hp(1.7),
   },
-  flatBtn:{
+  flatBtn: {
     backgroundColor: "#F2F2F2",
-    borderRadius:hp(0.3),
+    borderRadius: hp(0.3),
     width: wp(28),
     paddingVertical: hp(2),
     borderWidth: 0.3,
     borderColor: "#D7D7D7",
-    padding:6
-  }
+    padding: 6,
+  },
+  backupText: {
+    fontWeight: "bold",
+    fontSize: 17,
+    color: "black",
+    marginLeft: 20,
+    marginTop: hp(3),
+    marginBottom: hp(2),
+  },
+  welcomeText1: {
+    marginLeft: wp(4.7),
+    color: "gray",
+    marginLeft: wp(4),
+    width: wp(90),
+  },
+  dotView: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(4),
+  },
+  dotView1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(2),
+  },
+  welcomeText: {
+    color: "black",
+    textAlign:'center'
+  },
 });

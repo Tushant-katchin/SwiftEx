@@ -5,6 +5,8 @@ import {
   View,
   Button,
   ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -13,10 +15,8 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AddToAllWallets,
-} from "../../components/Redux/actions/auth";
-import {  urls } from "../constants";
+import { AddToAllWallets } from "../../components/Redux/actions/auth";
+import { urls } from "../constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
@@ -35,7 +35,10 @@ const CheckNewWalletMnemonic = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
+
   const [mnemonic, setMnemonic] = useState("");
+  const [Mnemonic, SetMnemonic] = useState([]);
+
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
 
@@ -100,9 +103,9 @@ const CheckNewWalletMnemonic = ({
     return response;
   }
 
-  const closeModal=()=>{
-    SetVisible(false)
-  }
+  const closeModal = () => {
+    SetVisible(false);
+  };
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -119,6 +122,64 @@ const CheckNewWalletMnemonic = ({
     console.log(wallet);
   }, [fadeAnim, Spin]);
 
+  
+const data=[
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+  {mnemonic:"Hash"},
+
+]
+
+  console.log("000000000000000", Wallet?.mnemonic);
+  const RenderItem = ({ item, index }) => {
+    console.log("----------------------", item);
+    let Data = data.map((item) => {
+      return item;
+    });
+    let newArray = [];
+    newArray = Mnemonic;
+    return (
+      <TouchableOpacity
+        style={{
+          borderColor: "#D7D7D7",
+          borderWidth: 0.5,
+          backgroundColor: item.selected ? "green" : "#F2F2F2",
+          width: wp(30),
+          justifyContent: "center",
+          paddingVertical: hp(2),
+          paddingHorizontal: 3,
+          position: "relative",
+        }}
+        // onPress={() => {
+        //   console.log("pressed");
+        //   if (!item.selected) {
+        //     Data[index].selected = true;
+        //     newArray.push(item.mnemonic);
+        //     console.log(newArray);
+        //     SetMnemonic(newArray);
+        //     setData(Data);
+        //   } else {
+        //     Data[index].selected = false;
+        //     const data = newArray.filter((Item) => {
+        //       return Item != item.mnemonic;
+        //     });
+        //     console.log(data);
+        //     SetMnemonic(data);
+        //     setData(Data);
+        //   }
+        // }}
+      >
+        <Text style={style.itemText}>{item.mnemonic}</Text>
+      </TouchableOpacity>
+    );
+  };
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -136,31 +197,49 @@ const CheckNewWalletMnemonic = ({
         }}
       >
         <View style={style.Body}>
-          <ModalHeader Function={closeModal} name={'Check Mnemonic'}/>
-          <View style={{ display: "flex", alignContent: "flex-start" }}>
-            <Text style={style.welcomeText}>Enter your mnemonic below</Text>
+          {/* <ModalHeader Function={closeModal} name={'Check Mnemonic'}/> */}
+          <Text style={style.verifyText}>Verify Secret Phrase</Text>
+          <Text style={style.wordText}>
+            Tap the words to put them next to each other in the correct order.
+          </Text>
+
+          <View style={{ marginTop: hp(6) }}>
+            <FlatList
+              data={data}
+              // data={props.route.params.wallet.wallet.mnemonic}
+              renderItem={RenderItem}
+              numColumns={3}
+              contentContainerStyle={{
+                alignSelf: "center",
+              }}
+            />
           </View>
 
-          <TextInput
+          {/* <TextInput
             style={style.textInput}
             onChangeText={(text) => {
               setMnemonic(text);
             }}
             placeholder={"Enter your secret phrase here"}
-          />
-          <Text style={{ margin: 5 }}>
-            Secret Phrases are typically 12(sometimes 16) words long.They are
-            also called mnemonic phrase.{" "}
-          </Text>
+          /> */}
+
           {loading ? (
             <ActivityIndicator size="large" color="green" />
           ) : (
             <Text> </Text>
           )}
-          <View style={{ display:'flex',alignSelf:'center',width: wp(30), margin: 10 }}>
-            <Button
-              title={"Import"}
-              color={"blue"}
+          <View
+            style={{
+              display: "flex",
+              alignSelf: "center",
+              width: wp(30),
+              margin: 10,
+            }}
+          >
+            <TouchableOpacity
+                          style={style.ButtonView}
+
+              
               onPress={async () => {
                 setLoading(true);
                 try {
@@ -206,53 +285,46 @@ const CheckNewWalletMnemonic = ({
                         address: Wallet.address,
                         privateKey: Wallet.privateKey,
                         name: Wallet.accountName,
-                        mnemonic:mnemonic,
+                        mnemonic: mnemonic,
                         walletType: "Multi-coin",
-                        xrp:{
-                          address:Wallet.xrp.address,
-                          privateKey:Wallet.xrp.privateKey
+                        xrp: {
+                          address: Wallet.xrp.address,
+                          privateKey: Wallet.xrp.privateKey,
                         },
                         wallets: wallets,
                       },
                     ];
                     // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                    dispatch(AddToAllWallets(allWallets, user))
-                    .then((response)=>{
-                      if(response){
-                        if(response.status==='Already Exists'){
-                          
-                          alert("error",'Account with same name already exists')
-                          setLoading(false)
-                          return
-                        }
-
-                        else if(response.status==='success'){
-                          setTimeout(() => {
-                      
+                    dispatch(AddToAllWallets(allWallets, user)).then(
+                      (response) => {
+                        if (response) {
+                          if (response.status === "Already Exists") {
+                            alert(
+                              "error",
+                              "Account with same name already exists"
+                            );
                             setLoading(false);
-                            SetVisible(false);
-                            setModalVisible(false);
-                            SetPrivateKeyVisible(false);
-                            setNewWalletVisible(false);
-                            navigation.navigate("AllWallets");
-                          }, 0);
-                          
-                        }
-                        else{
-                          alert("error",'failed please try again')
-                          return
+                            return;
+                          } else if (response.status === "success") {
+                            setTimeout(() => {
+                              setLoading(false);
+                              SetVisible(false);
+                              setModalVisible(false);
+                              SetPrivateKeyVisible(false);
+                              setNewWalletVisible(false);
+                              navigation.navigate("AllWallets");
+                            }, 0);
+                          } else {
+                            alert("error", "failed please try again");
+                            return;
+                          }
                         }
                       }
-                    })
-                    
+                    );
+
                     // dispatch(getBalance(wallet.address))
                     //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-
-
-                    
-                      
-                    
                   }
                 } catch (e) {
                   setLoading(false);
@@ -260,10 +332,13 @@ const CheckNewWalletMnemonic = ({
                   setModalVisible(false);
                   SetPrivateKeyVisible(false);
                   setNewWalletVisible(false);
-                  alert("error","Failed to import wallet. Please try again");
+                  alert("error", "Failed to import wallet. Please try again");
                 }
               }}
-            ></Button>
+            >
+
+              <Text style={{color:"white"}}>Import</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -275,12 +350,11 @@ export default CheckNewWalletMnemonic;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
     backgroundColor: "white",
-    height: hp(90),
-    width: wp(90),
-    borderRadius:20,
-    textAlign: "center",
+    height: hp(85),
+    width: wp(95),
+    borderRadius: 20,
+    alignSelf: "center",
   },
   welcomeText: {
     fontSize: 15,
@@ -355,5 +429,33 @@ const style = StyleSheet.create({
     shadowRadius: 16.0,
 
     elevation: 24,
+  },
+  verifyText: {
+    color: "black",
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+    marginTop: hp(4),
+  },
+  wordText: {
+    color: "black",
+    textAlign: "center",
+    marginTop: hp(1),
+    width: wp(88),
+    marginHorizontal: wp(5),
+  },
+  itemText: {
+    textAlign: "left",
+    marginVertical: 6,
+    marginHorizontal: wp(1.5),
+  },
+  ButtonView: {
+    backgroundColor: "#4CA6EA",
+    width: wp(85),
+    alignSelf: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+    marginTop: hp(10),
   },
 });
