@@ -15,11 +15,9 @@ import { useState } from "react";
 import { FaucetDropdown } from "../reusables/faucetDropdown";
 import { Linking } from "react-native";
 import { faucets } from "../constants";
-import { useSelector } from "react-redux";
 
 export const FaucetModal = ({ showModal, setShowModal }) => {
   const [network, setNetwork] = useState("");
-  const state = useSelector((state)=>state)
   return (
     <Center>
       <Button
@@ -47,28 +45,26 @@ export const FaucetModal = ({ showModal, setShowModal }) => {
                 Cancel
               </Button>
               <Button
-                onPress={async () => {
+                onPress={() => {
                   //setShowModal(false);
-                  // if (!network) {
-                  //   setShowModal(false);
+                  if (!network) {
+                    setShowModal(false);
 
-                  //   return alert("please select a network to proceed");
-                  // }
-                  // if (network === "BSC") {
-                  //   setShowModal(false);
+                    return alert("please select a network to proceed");
+                  }
+                  if (network === "BSC") {
+                    setShowModal(false);
 
-                  //   Linking.openURL(faucets.bscFaucet);
-                  // } else if (network === "Ethereum") {
-                  //   setShowModal(false);
+                    Linking.openURL(faucets.bscFaucet);
+                  } else if (network === "Ethereum") {
+                    setShowModal(false);
 
-                  //   Linking.openURL(faucets.ethFaucetGoerli);
-                  // } else {
-                  //   setShowModal(false);
+                    Linking.openURL(faucets.ethFaucetGoerli);
+                  } else {
+                    setShowModal(false);
 
-                  //   Linking.openURL(faucets.polygonFaucet);
-                  // }
-                  const mnemonic = await state.wallet
-                  console.log("My mnemonic",mnemonic)
+                    Linking.openURL(faucets.polygonFaucet);
+                  }
                 }}
               >
                 open

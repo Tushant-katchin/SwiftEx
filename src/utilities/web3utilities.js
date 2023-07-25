@@ -4,6 +4,7 @@ import Moralis from 'moralis';
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
+import { getBalance, getEthBalance, getMaticBalance } from "../components/Redux/actions/auth";
 
 export const watchEtherTransfers = ()=> {
     // Instantiate web3 with WebSocket provider
@@ -114,3 +115,9 @@ export const watchEtherTransfers = ()=> {
       return validity
   }
   
+  export const GetBalance =async (state,dispatch)=>{
+    const address = await state.wallet.address
+    dispatch(getEthBalance(address))
+    dispatch(getMaticBalance(address))
+    dispatch(getBalance(address))
+  }

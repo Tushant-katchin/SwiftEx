@@ -12,7 +12,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Etherimage from "../../assets/ethereum.png";
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
@@ -20,6 +20,7 @@ import { getBnbPrice, getEthPrice } from "../utilities/utilities";
 import Maticimage from "../../assets/matic.png";
 import Xrpimage from "../../assets/xrp.png";
 import bnbimage from "../../assets/bnb-icon2_2x.png";
+import { GetBalance } from "../utilities/web3utilities";
 
 function InvestmentChart(setCurrentWallet) {
   const state = useSelector((state) => state);
@@ -28,10 +29,15 @@ function InvestmentChart(setCurrentWallet) {
   const [xrpBalance, getXrpBalance] = useState(0.00);
   const [maticBalance, getMaticBalance] = useState(0.00);
   const [ethBalance, getEthBalance] = useState(0.00);
+  const EthBalance = useSelector((state) => state.EthBalance);
+  const BnbBalance = useSelector((state) => state.walletBalance);
+  const walletState = useSelector((state) => state.wallets);
+  const type = useSelector((state) => state.walletType);
+
   const [ethPrice, setEthPrice] = useState();
   const [bnbPrice, setBnbPrice] = useState();
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useDispatch()
   const getEthBnbPrice = async () => {
     await getEthPrice().then((response) => {
       setEthPrice(response.USD);
@@ -40,6 +46,8 @@ function InvestmentChart(setCurrentWallet) {
       setBnbPrice(response.USD);
     });
   };
+
+  
 
   const getTokenBalance =  async() => {
    
@@ -120,9 +128,10 @@ function InvestmentChart(setCurrentWallet) {
     getEthBnbPrice();
   }, []);
 
-  useEffect(async () => {
-   await getTokenBalance();
-  }, [wallet.address]);
+  useEffect( async () => {
+    getTokenBalance();
+   // await GetBalance(await state)
+  }, [wallet.address,wallet.name,EthBalance,bnbBalance]);
 
   let LeftContent = (props) => (
     <Avatar.Image

@@ -297,6 +297,7 @@ const AllWallets = (props) => {
                   onPress={() => {
                     // props.navigation.navigate('Import Multi-Coin Wallet')
                     if (item.walletType) {
+                      console.log(item.mnemonic)
                       AsyncStorageLib.setItem("currentWallet", item.name);
                       if(item.xrp){
                         dispatch(
@@ -304,6 +305,7 @@ const AllWallets = (props) => {
                             item.address,
                             item.name,
                             item.privateKey,
+                            item.mnemonic?item.mnemonic:'',
                             item.xrp.address?item.xrp.address:'',
                             item.xrp.privateKey?item.xrp.privateKey:'',
                             walletType='Multi-coin'
@@ -317,7 +319,7 @@ const AllWallets = (props) => {
                                 JSON.stringify(item.walletType)
                               );
                               dispatch(setWalletType(item.walletType));
-                              //getBalance(state);
+                             // getBalance(state);
                               
                               alert("success","Wallet Selected " + item.name);
                             } else {
@@ -340,7 +342,9 @@ const AllWallets = (props) => {
                           setCurrentWallet(
                             item.classicAddress,
                             item.name,
-                            item.privateKey
+                            item.privateKey,
+                            item.mnemonic?item.mnemonic:'',
+
                           )
                         ).then(async (response) => {
                           console.log(response)
@@ -377,7 +381,8 @@ const AllWallets = (props) => {
                           setCurrentWallet(
                             item.address,
                             item.name,
-                            item.privateKey
+                            item.privateKey,
+                            item.mnemonic?item.mnemonic:'',
                           )
                         ).then((response) => {
                           console.log(response);
@@ -388,7 +393,7 @@ const AllWallets = (props) => {
                                 JSON.stringify(item.walletType)
                               );
                               dispatch(setWalletType(item.walletType));
-                              //getBalance(state);
+                            //  getBalance(state);
                               alert("success","Wallet Selected " + item.name);
                             } else {
                               alert(
