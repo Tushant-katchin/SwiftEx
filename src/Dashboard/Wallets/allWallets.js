@@ -6,6 +6,7 @@ import {
   Button,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -267,12 +268,11 @@ const AllWallets = (props) => {
     setAllWallets(allwallets);
   }, []);
 
+
+ 
   return (
-    <View style={style.Body}>
-      <Text>Main Wallet</Text>
-      <ScrollView
-        style={{ height: hp(1), width: wp(90), marginBottom: hp(10) }}
-      >
+    <ScrollView contentContainerStyle={style.body}>
+    
         {Wallets[0] ? (
           Wallets[0].map((item) => {
             if (item.walletType === "BSC") {
@@ -412,57 +412,47 @@ const AllWallets = (props) => {
                     }
                   }}
                 >
-                  <Card
+                  <View
                     style={{
-                      width: wp(99),
-                      height: hp(10),
-                      backgroundColor: "white",
-                      borderRadius: 10,
-                      marginRight: wp(-20),
+                     flexDirection:"row",
+                     alignItems:"center"
                     }}
                   >
-                    <Card.Title
-                      titleStyle={{ color: "black" }}
-                      title={item.name}
+                    <Image source={title_icon}/>
+                    <Text style={{marginHorizontal:wp(3)}}
                       left={LeftContent}
-                    />
-                    <Card.Content
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        color: "#fff",
-                      }}
-                    ></Card.Content>
-                  </Card>
+                    >{item.name}</Text>
+                   
+                  </View>
                 </TouchableOpacity>
               </View>
             );
           })
         ) : (
-          <Text>No wallets</Text>
+          <Text style={style.NoText}>No wallets found</Text>
         )}
-      </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
 
 export default AllWallets;
 
 const style = StyleSheet.create({
-  Body: {
-    display: "flex",
-    backgroundColor: "white",
-    height: hp(100),
-    width: wp(100),
-    alignItems: "center",
-    textAlign: "center",
-    justifyContent: "flex-start",
-  },
+ body:{backgroundColor:"white",height:hp(100)},
   welcomeText: {
     fontSize: 20,
     fontWeight: "200",
     color: "black",
     marginTop: hp(5),
+  },
+  wallet:{
+textAlign:"center",
+marginTop:hp(3),
+fontSize:16
+  },
+  NoText:{
+textAlign:"center",
+marginTop:hp(2)
   },
   welcomeText2: {
     fontSize: 15,
@@ -481,16 +471,11 @@ const style = StyleSheet.create({
     color: "white",
   },
   Box: {
-    height: hp("10"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(1),
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
+    marginHorizontal:wp(6),
+    borderBottomWidth:StyleSheet.hairlineWidth*1,
+    padding:10,
+    marginTop:hp(2),
+    borderColor:"#D7D7D7"
   },
   Box2: {
     height: hp("15%"),

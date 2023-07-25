@@ -417,14 +417,13 @@ const AuthStack = () => (
       <Stack.Screen
         name="AllWallets"
         component={AllWallets}
-        options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
+      options={{
+        header:()=>{
+          return(
+            <WalletHeader title='All Wallets'/>
+          )
+        }
+      }}
       />
       <Stack.Screen
         name="Biometric"
