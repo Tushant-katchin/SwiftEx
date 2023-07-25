@@ -139,6 +139,10 @@ const MyWallet = (props) => {
       setBnbPrice(response.USD);
     });
   };
+  useEffect(async ()=>{
+    const user = await AsyncStorageLib.getItem("user");
+    setUser(user);
+  },[])
 
   /*useEffect(() => {
     setLoading(true);

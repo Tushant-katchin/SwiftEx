@@ -124,21 +124,7 @@ const MyPrivateKey = (props) => {
 
 
        
-        <TouchableOpacity
-          style={{alignSelf: "center",
-          alignItems: "center",
-          backgroundColor:'red',
-          marginTop: hp(2),
-         width: wp(60),
-          padding: 10,
-          borderRadius: 10,
-        }}
-          onPress={() => {
-            setVisible(false)
-          }}
-        >
-          <Text style={{color:'white'}}>close</Text>
-        </TouchableOpacity>
+        
 
         {/* <View style={style.Button}> */}
 
