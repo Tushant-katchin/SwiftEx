@@ -331,6 +331,7 @@ const ImportEthereumModal = ({
                     {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
+                      mnemonic:trimmedPhrase,
                       name: accountName,
                       walletType: "Ethereum",
                       wallets: wallets,

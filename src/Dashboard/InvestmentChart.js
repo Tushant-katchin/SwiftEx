@@ -42,6 +42,7 @@ function InvestmentChart(setCurrentWallet) {
   };
 
   const getTokenBalance =  async() => {
+   
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
     const xrpBalance = await state.XrpBalance;

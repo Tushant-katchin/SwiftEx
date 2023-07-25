@@ -201,6 +201,7 @@ const ImportMunziWallet = (props) => {
                   const accounts = {
                     address: wallet.address,
                     privateKey: wallet.privateKey,
+                    mnemonic:trimmedPhrase,
                     name: accountName,
                     xrp:{
                       address:xrpWallet.classicAddress,
@@ -215,6 +216,7 @@ const ImportMunziWallet = (props) => {
                     {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
+                      mnemonic:trimmedPhrase,
                       name: accountName,
                       xrp:{
                         address:xrpWallet.classicAddress,
@@ -241,6 +243,7 @@ const ImportMunziWallet = (props) => {
                       wallet.address,
                       accountName,
                       wallet.privateKey,
+                      trimmedPhrase,
                       xrpWallet.classicAddress,
                       xrpWallet.seed,
                       walletType='Multi-coin'

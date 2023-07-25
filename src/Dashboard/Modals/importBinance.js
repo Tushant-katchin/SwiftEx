@@ -326,6 +326,7 @@ const ImportBinanceWallet = ({
                       {
                         address: wallet.address,
                         privateKey: wallet.privateKey,
+                        mnemonic:trimmedPhrase,
                         name: accountName,
                         walletType: "BSC",
                         wallets: wallets,

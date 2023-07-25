@@ -248,6 +248,7 @@ const ImportXrp = (props) => {
                       classicAddress: wallet.classicAddress,
                       address: wallet.classicAddress,
                       privateKey: privateKey,
+                      mnemonic:trimmedPhrase,
                       name: accountName,
                       walletType: "Xrp",
                       wallets: [],
@@ -259,6 +260,7 @@ const ImportXrp = (props) => {
                         classicAddress: wallet.classicAddress,
                         address: wallet.classicAddress,
                         privateKey: privateKey,
+                        mnemonic:trimmedPhrase,
                         name: accountName,
                         walletType: "Xrp",
                       },
@@ -280,7 +282,9 @@ const ImportXrp = (props) => {
                         wallet.classicAddress,
                         accountName,
                         privateKey,
-                        wallet.classicAddress
+                        wallet.classicAddress,
+                        trimmedPhrase,
+
                       )
                     );
                     

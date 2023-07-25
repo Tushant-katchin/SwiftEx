@@ -140,7 +140,7 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
             style={style.PresssableBtn}
           >
             <TouchableOpacity
-               disabled={loading ? true : Checked && Checked2 ? false : true}
+               //disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
                 setLoading(true);
                 setTimeout(() => {

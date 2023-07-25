@@ -534,6 +534,7 @@ const CheckMnemonic = (props) => {
                   const accounts = {
                     address: props.route.params.wallet.address,
                     privateKey: props.route.params.wallet.privateKey,
+                    mnemonic:props.route.params.wallet.mnemonic,
                     name: props.route.params.wallet.accountName,
                     walletType: "Multi-coin",
                     xrp: {
@@ -549,6 +550,7 @@ const CheckMnemonic = (props) => {
                       address: props.route.params.wallet.address,
                       privateKey: props.route.params.wallet.privateKey,
                       name: props.route.params.wallet.accountName,
+                      mnemonic:props.route.params.wallet.mnemonic,
                       xrp: {
                         address: props.route.params.wallet.xrp.address,
                         privateKey: props.route.params.wallet.xrp.privateKey,
@@ -584,6 +586,7 @@ const CheckMnemonic = (props) => {
                       props.route.params.wallet.address,
                       props.route.params.wallet.accountName,
                       props.route.params.wallet.privateKey,
+                      props.route.params.wallet.mnemonic,
                       props.route.params.wallet.xrp.address
                         ? props.route.params.wallet.xrp.address
                         : "",

@@ -284,6 +284,7 @@ const Home2 = ({ navigation }) => {
       await SetCurrentWallet().catch((e) => {
         console.log(e);
       });
+     
     } catch (e) {
       console.log(e);
     }
