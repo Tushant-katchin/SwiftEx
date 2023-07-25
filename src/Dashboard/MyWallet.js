@@ -151,7 +151,7 @@ const MyWallet = (props) => {
     <View style={styles.mainView}>
       <View style={styles.labelInputContainer}>
         <Text style={styles.label}>Name</Text>
-        <TextInput style={{ width: wp("78%") }} placeholder="Main Wallet 1" placeholderTextColor={'black'}/>
+        <TextInput style={{ width: wp("78%") }} placeholder={user?user:"Main Wallet 1"} placeholderTextColor={'black'}/>
       </View>
 
       <View>

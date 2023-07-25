@@ -80,7 +80,7 @@ function InvestmentChart(setCurrentWallet) {
         // const balance = await provider.getBalance(address)
         // console.log('balances=',balance)
         if (
-          EthBalance 
+          EthBalance >=0
         ) {
           getEthBalance(Number(EthBalance).toFixed(2));
          
@@ -88,7 +88,7 @@ function InvestmentChart(setCurrentWallet) {
           getEthBalance(0.00);
         }
 
-        if (bal) {
+        if (bal>=0) {
           console.log('bal',bal)
           getBnbBalance(Number(bal).toFixed(2));
         } else {

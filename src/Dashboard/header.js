@@ -62,17 +62,7 @@ export const WalletHeader = (props) => {
       />
       <Text style={styles.text1}>{title}</Text>
       <View style={{ alignItems: "center" }}>
-        <Icon
-          name={IconName}
-          type={IconType}
-          size={20}
-          color={"white"}
-          onPress={() => {
-            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            AsyncStorage.removeItem(LOCAL_TOKEN);
-            navigation.navigate("Settings");
-          }}
-        />
+       
         <Text style={{ color: "#E96A6A" }}>{title1}</Text>
       </View>
     </View>
