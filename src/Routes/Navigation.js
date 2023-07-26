@@ -98,8 +98,6 @@ const AuthStack = () => (
         }}
       /> */}
 
-
-
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -131,13 +129,17 @@ const AuthStack = () => (
       <Stack.Screen
         name="MyWallet"
         component={MyWallet}
-       options={{
-        header:()=>{
-          return(
-            <WalletHeader title={'Wallet'} IconName='delete' IconType='material' />
-          )
-        }
-       }}
+        options={{
+          header: () => {
+            return (
+              <WalletHeader
+                title={"Wallet"}
+                IconName="delete"
+                IconType="material"
+              />
+            );
+          },
+        }}
       />
       <Stack.Screen
         name="CreateWallet"
@@ -297,11 +299,8 @@ const AuthStack = () => (
         name="Import"
         component={ImportAccount}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import" />;
           },
         }}
       />
@@ -310,11 +309,8 @@ const AuthStack = () => (
         name="Import Multi-Coin Wallet"
         component={ImportMunziWallet}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Multi-Coin Wallet" />;
           },
         }}
       />
@@ -323,11 +319,8 @@ const AuthStack = () => (
         name="Import Ethereum"
         component={ImportOtherWallets}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Ethereum" />;
           },
         }}
       />
@@ -336,11 +329,8 @@ const AuthStack = () => (
         name="Import Binance"
         component={ImportBscWallet}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Binance" />;
           },
         }}
       />
@@ -349,11 +339,8 @@ const AuthStack = () => (
         name="Import Polygon"
         component={ImportPolygon}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Polygon" />;
           },
         }}
       />
@@ -362,11 +349,8 @@ const AuthStack = () => (
         name="Import Xrp"
         component={ImportXrp}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Xrp" />;
           },
         }}
       />
@@ -381,7 +365,7 @@ const AuthStack = () => (
         }}
       />
 
-<Stack.Screen
+      <Stack.Screen
         name="My PrivateKey"
         component={MyPrivateKey}
         options={{
@@ -418,23 +402,19 @@ const AuthStack = () => (
         name="Transactions"
         component={Transactions}
         options={{
-         header:()=>{
-          return(
-            <WalletHeader title='Transaction'/>
-          )
-         }
+          header: () => {
+            return <WalletHeader title="Transaction" />;
+          },
         }}
       />
       <Stack.Screen
         name="AllWallets"
         component={AllWallets}
-      options={{
-        header:()=>{
-          return(
-            <WalletHeader title='All Wallets'/>
-          )
-        }
-      }}
+        options={{
+          header: () => {
+            return <WalletHeader title="All Wallets" />;
+          },
+        }}
       />
       <Stack.Screen
         name="Biometric"

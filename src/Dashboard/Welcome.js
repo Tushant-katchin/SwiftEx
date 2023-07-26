@@ -107,7 +107,7 @@ const Welcome = (props) => {
       <SliderBox
         images={Slider.images}
         autoplay={true}
-        circleLoop={false}
+        circleLoop={true}
         ImageComponentStyle={style.imageStyle}
       />
       <View

@@ -6,6 +6,7 @@ import {
   Button,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -95,131 +96,49 @@ const ImportAccount = (props) => {
             props.navigation.navigate("Import Multi-Coin Wallet");
           }}
         >
-          <Card
-            style={{
-              width: wp(99),
-              height: hp(10),
-              backgroundColor: "white",
-              borderRadius: 10,
-            }}
-          >
-            <Card.Title
-              titleStyle={{ color: "black" }}
-              title={"Multi-Coin Wallet"}
-              left={LeftContent}
-            />
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-            >
-              <Title style={{ color: "#fff" }}></Title>
-            </Card.Content>
-          </Card>
+          <Image source={title_icon} style={style.img} />
+          <Text style={style.text}>Multi-Coin Wallet</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={style.Box3}
+          style={style.Box}
           onPress={() => {
             props.navigation.navigate("Import Binance");
           }}
         >
-          <Card
-            style={{
-              width: wp(99),
-              height: hp(10),
-              backgroundColor: "white",
-              borderRadius: 10,
-            }}
-          >
-            <Card.Title
-              titleStyle={{ color: "black" }}
-              title={"Binance Smart Chain"}
-              left={BnbLeftContent}
-            />
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-            >
-              <Title style={{ color: "#fff" }}></Title>
-            </Card.Content>
-          </Card>
+          <Image source={Bnbimage} style={style.img} />
+          <Text style={style.text}>Binance Smart Chain</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
-          style={style.Box2}
+          style={style.Box}
           onPress={() => {
             props.navigation.navigate("Import Ethereum");
           }}
         >
-          <Card
-            style={{
-              width: wp(99),
-              height: hp(10),
-              backgroundColor: "white",
-              borderRadius: 10,
-            }}
-          >
-            <Card.Title
-              titleStyle={{ color: "black" }}
-              title={"ethereum"}
-              left={EtherLeftContent}
-            />
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-            >
-              <Title style={{ color: "#fff" }}></Title>
-            </Card.Content>
-          </Card>
+          <Image source={Etherimage} style={style.img} />
+          <Text style={style.text}>ethereum</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={style.Box2}
+          style={style.Box}
           onPress={() => {
             props.navigation.navigate("Import Polygon");
           }}
         >
-          <Card
-            style={{
-              width: wp(99),
-              height: hp(10),
-              backgroundColor: "white",
-              borderRadius: 10,
-            }}
-          >
-            <Card.Title
-              titleStyle={{ color: "black" }}
-              title={"Polygon(Matic)"}
-              left={MaticLeftContent}
-            />
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-            >
-              <Title style={{ color: "#fff" }}></Title>
-            </Card.Content>
-          </Card>
+          <Image source={Maticimage} style={style.img} />
+          <Text style={style.text}>Polygon(Matic)</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
-          style={style.Box2}
+          style={style.Box}
           onPress={() => {
             props.navigation.navigate("Import Xrp");
           }}
         >
-          <Card
-            style={{
-              width: wp(99),
-              height: hp(10),
-              backgroundColor: "white",
-              borderRadius: 10,
-            }}
-          >
-            <Card.Title
-              titleStyle={{ color: "black" }}
-              title={"Xrp"}
-              left={XrpLeftContent}
-            />
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-            >
-              <Title style={{ color: "#fff" }}></Title>
-            </Card.Content>
-          </Card>
+          <Image source={Xrpimage} style={style.img} />
+
+          <Text style={style.text}>Xrp</Text>
         </TouchableOpacity>
       </View>
     </Animated.View>
@@ -230,12 +149,8 @@ export default ImportAccount;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
     backgroundColor: "white",
     height: hp(100),
-    width: wp(100),
-    alignItems: "center",
-    textAlign: "center",
   },
   welcomeText: {
     fontSize: 20,
@@ -274,40 +189,19 @@ const style = StyleSheet.create({
     backgroundColor: "white",
   },
   Box: {
-    height: hp("15%"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(1),
-    display: "flex",
+    flexDirection: "row",
     alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
+    marginHorizontal: wp(6),
+    marginTop: hp(3),
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    padding: 8,
+    borderColor: "#DADADA",
   },
-  Box2: {
-    height: hp("15%"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(1),
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
+  text: {
+    marginHorizontal: wp(4),
   },
-  Box3: {
-    height: hp("15%"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(2),
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
-    borderTopWidth: 1,
+  img: {
+    height: hp(4),
+    width: wp(8),
   },
 });
