@@ -140,7 +140,7 @@ const MyWallet = (props) => {
     });
   };
   useEffect(async ()=>{
-    const user = await AsyncStorageLib.getItem("user");
+    const user = await state.wallet.name
     setUser(user);
   },[])
 

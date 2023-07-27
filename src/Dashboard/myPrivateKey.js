@@ -24,7 +24,8 @@ const MyPrivateKey = (props) => {
     const state = useSelector((state)=>state)
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
-  const[ mnemonic,setMnemonic]= useState()
+  const[ mnemonic,setMnemonic]= useState([])
+  const[privateKey,setPrivateKey] = useState('')
   const[disable,setDisable]=useState(true)
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
@@ -45,10 +46,18 @@ const MyPrivateKey = (props) => {
       toValue: 1,
       duration: 1000,
     }).start();
+    let mnemonic =[]
+    mnemonic = await state.wallet.mnemonic.match(/.*?[\.\s]+?/g);
+    const privateKey = await state.wallet.privateKey
+    console.log("Muy mnemonic",mnemonic)
+    if(mnemonic!=null)
+    {
 
-    const mnemonic = await state.wallet.mnemonic.match(/.*?[\.\s]+?/g);
-    console.log("My mnemonic",mnemonic)
-    setMnemonic(mnemonic)
+      setMnemonic(mnemonic)
+    }else{
+     setPrivateKey(privateKey)
+      console.log(privateKey)
+    }
   }, []);
   
   const RenderItem = ({ item, index }) => {
@@ -86,21 +95,31 @@ const MyPrivateKey = (props) => {
           </Text>
         </View>
         <View style={{ marginTop: hp(3) }}>
-          <FlatList
-            data={mnemonic}
-            // data={props.route.params.wallet.wallet.mnemonic}
-            renderItem={RenderItem}
-            numColumns={3}
-            contentContainerStyle={{
-              alignSelf: "center",
+         {mnemonic.length>0?
+          
+           <FlatList
+           data={mnemonic}
+           // data={props.route.params.wallet.wallet.mnemonic}
+           renderItem={RenderItem}
+           numColumns={3}
+           contentContainerStyle={{
+             alignSelf: "center",
             }}
-          />
+            />
+            :<Text>{privateKey}</Text>
+          }
         </View>
         <View style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:10}}>
           <Button 
           onPress={async()=>{
             const mnemonic = await state.wallet.mnemonic
-            copyToClipboard(mnemonic)
+            if(mnemonic)
+            {
+
+              copyToClipboard(mnemonic)
+            }else{
+              copyToClipboard(privateKey)
+            }
           }}
           >Copy</Button>
         </View>

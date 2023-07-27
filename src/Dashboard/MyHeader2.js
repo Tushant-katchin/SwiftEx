@@ -440,7 +440,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       }}>
         <View style={styles.iconTextContainer}>
           <Icon name="graph" type={"simpleLine"} size={hp(3)} />
-          <Text style={{ marginHorizontal: hp(1) }}>
+          <Text style={{ marginHorizontal: hp(1),color:'black' }}>
             Market insights
           </Text>
         </View>

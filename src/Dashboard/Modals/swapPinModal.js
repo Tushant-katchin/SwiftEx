@@ -89,7 +89,7 @@ const SwapPinModal = ({
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
       setShowCompletedButton(true);
     } else {
       setShowCompletedButton(false);
@@ -138,7 +138,7 @@ const SwapPinModal = ({
             <ReactNativePinView
               inputSize={32}
               ref={pinView}
-              pinLength={4}
+              pinLength={6}
               buttonSize={60}
               onValueChange={(value) => setEnteredPin(value)}
               buttonAreaStyle={{

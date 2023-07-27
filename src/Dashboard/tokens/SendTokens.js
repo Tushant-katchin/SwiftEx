@@ -33,6 +33,7 @@ import { checkAddressValidity } from "../../utilities/web3utilities";
 import { isFloat, isInteger } from "../../utilities/utilities";
 import { alert } from "../reusables/Toasts";
 import Icon from "../../icon";
+import { WalletHeader } from "../header";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -257,6 +258,7 @@ const SendTokens = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
+      <WalletHeader title={props.route.params.token}/>
       <View style={{ backgroundColor: "white", height: hp(100) }}>
         <View style={style.inputView}>
           <TextInput
@@ -284,28 +286,27 @@ const SendTokens = (props) => {
           <TextInput
             value={amount}
             keyboardType="numeric"
-            // onChangeText={(input) => {
-            //   if (amount && address) {
-            //     setDisable(false);
-            //   } else {
-            //     setDisable(true);
-            //   }
-            //   console.log(input);
-            //   setAmount(input);
-            // }}
+            onChangeText={(input) => {
+              if (amount && address) {
+                setDisable(false);
+              } else {
+                setDisable(true);
+              }
+              console.log(input);
+              setAmount(input);
+            }}
             placeholder="Amount ETH"
             style={style.input}
           ></TextInput>
           <Pressable
+           
             onPress={() => {
-              console.log("fhhhhhhhhhhhhhhhh")
+              console.log("pressed", amount, balance);
+              setAmount(balance);
             }}
-            // onPress={() => {
-            //   setAmount(balance);
-            //   console.log("pressed", amount, balance);
-            // }}
           >
-            <Text  onPress={()=>{console.log("dkfk")}} style={{ color: "blue" }}>MAX</Text>
+            <Text  onPress={()=>{console.log("pressed", amount, balance);
+              setAmount(balance)}} style={{ color: "blue" }}>MAX</Text>
           </Pressable>
           <Text style={style.pasteText}>ETH</Text>
         </View>

@@ -160,7 +160,7 @@ const TransactionPinModal = ({
             <ReactNativePinView
               inputSize={32}
               ref={pinView}
-              pinLength={4}
+              pinLength={6}
               buttonSize={60}
               onValueChange={(value) => setEnteredPin(value)}
               buttonAreaStyle={{

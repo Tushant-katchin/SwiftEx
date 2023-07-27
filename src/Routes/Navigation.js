@@ -166,6 +166,7 @@ const AuthStack = () => (
       <Stack.Screen
         name="Wallet"
         component={Wallet}
+        
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -395,9 +396,8 @@ const AuthStack = () => (
         name="Send"
         component={SendTokens}
         options={{
-          header: () => {
-            return <WalletHeader title="Send ETH" />;
-          },
+          headerShown: false,
+
         }}
       />
 

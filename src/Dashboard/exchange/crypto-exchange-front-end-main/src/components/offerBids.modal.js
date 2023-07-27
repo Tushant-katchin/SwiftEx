@@ -151,14 +151,14 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
           <View style={styles.modalContainer}>
             
             <Text style={styles.textColor}>{modalMessage}</Text>
-            <View style={styles.yesnomainView}>
+            {/* <View style={styles.yesnomainView}>
               <TouchableOpacity style={styles.yesbtnContainer}>
                 <Text style={styles.textColor}>Yes</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.nobtnContainer}>
                 <Text style={styles.textColor}>No</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             {bids != "" ? (
               <View style={styles.container}>
@@ -198,7 +198,10 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                               "rgba(185, 116, 235, 1)",
                             ]}
                           >
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{
+                              setLoading(true);
+                              acceptBid(bid);
+                            }}>
                               <Text style={styles.textColor}>Accept Bid</Text>
                             </TouchableOpacity>
                           </LinearGradient>
@@ -250,11 +253,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
             ) : (
               <Text style={styles.textColor}>Loading...</Text>
             )}
-            {loading ? (
-              <ActivityIndicator size={"large"} color={"blue"} />
-            ) : (
-              <View></View>
-            )}
+            
           </View>
         </Modal2>
       </View>
