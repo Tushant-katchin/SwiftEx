@@ -135,7 +135,7 @@ export const OfferListViewHome = ({
   setPressed,
 }) => {
   const [open, setOpen] = useState(false);
-  
+
   return (
     <View style={{ backgroundColor: "#131E3A" }}>
       <LinearGradient

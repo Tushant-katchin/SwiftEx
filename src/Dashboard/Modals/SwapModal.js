@@ -12,6 +12,7 @@ import {
   Alert,
   ActivityIndicator,
   Keyboard,
+  Image,
 } from "react-native";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
@@ -35,6 +36,8 @@ import {
 } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
+
 import Modal2 from "react-native-modal";
 import TokenList from "../tokens/TokenList";
 import TokenHeader from "../tokens/TokenHeader";
@@ -49,6 +52,8 @@ import chooseSwap from "../tokens/chooseSwap.json";
 import { getSwapPrice } from "../tokens/pancakeSwap/pancakeFunctions";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import SwapPinModal from "./swapPinModal";
+import Xrpimage from "../../../assets/xrp.png";
+
 import {
   getBnbTokenBalance,
   getEthTokenBalance,
@@ -986,134 +991,151 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           setModalVisible(false);
         }}
       >
-        <View
-          style={{
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            height: "70%",
-            marginTop: "auto",
-            backgroundColor: "#131E3A",
-          }}
-        >
-          <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}>
-          <MaterialCommunityIcons
-            name="arrow-left"
-            size={20}
-            color={"white"}
-            style={{ padding: hp(2) }}
-            onPress={() => {
-              setModalVisible(!modalVisible);
-            }}
-          />
-          <Text
-            style={{
-              color: "white",
-              fontSize: 18,
-              fontWeight: "600",
-              textAlign: "center",
-              marginRight:wp(45)
-            }}
-          >
-            Swap
-          </Text>
-
+        <View style={styles.mainContainermodal}>
+          <View style={styles.leftView}>
+            <MaterialCommunityIcons
+              name="arrow-left"
+              size={20}
+              color={"black"}
+              style={{ padding: hp(2) }}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}
+            />
+            <Text style={styles.swapText}>Swap</Text>
           </View>
-          {/* <TokenHeader setVisible={setModalVisible} name={name} /> */}
-        
+          <View style={styles.cardBoxContainer}>
+            {/* <TokenHeader setVisible={setModalVisible} name={name} /> */}
 
-          <View
-            style={styles.cardmainContainer}
-            onStartShouldSetResponder={() => Keyboard.dismiss()}
-          >
-            <View style={styles.tokenView}>
-              <Text style={styles.color}>{coin0.name}</Text>
+            <View
+              style={styles.cardmainContainer}
+              onStartShouldSetResponder={() => Keyboard.dismiss()}
+            >
+              <View style={styles.tokenView}>
+                <Text style={{ color: "#C1BDBD" }}>You Pay</Text>
+                <Text style={{ color: "black" }}>{coin0.name}</Text>
+              </View>
+              <View style={styles.tokenView}>
+                <TextInput
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    setAmount(text);
+                  }}
+                  placeholder="0"
+                  placeholderTextColor={"gray"}
+                  style={styles.textinputCon}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginHorizontal: wp(5),
+                  }}
+                >
+                  <Image
+                    source={Xrpimage}
+                    style={{ height: hp(3), width: wp(6) }}
+                  />
+                  <Text style={{ marginRight: wp(13) }}>ETH</Text>
+                </View>
+
+                <AntDesign
+                  onPress={() => {
+                    setCoinType("0");
+                    setOpenChain(true);
+                  }}
+                  name={"right"}
+                  size={15}
+                  color={"gray"}
+                  style={{ marginRight: wp(10), marginLeft: -34 }}
+                />
+              </View>
+
+              <Text style={{color:"gray",marginHorizontal:wp(5)}}>
+                {" "}
+                Balance:
+                {balance ? (
+                  Number(balance).toFixed(2)
+                ) : (
+                  <Text style={{ color: "#C1BDBD" }}>0</Text>
+                )}
+              </Text>
+              <Text style={styles.color}></Text>
             </View>
-            <View style={styles.tokenView}>
-              <TextInput
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                  setAmount(text);
-                }}
-                placeholder="0"
-                placeholderTextColor={"gray"}
-                style={styles.textinputCon}
-              />
+
+            <View style={styles.swapiconView}>
               <Icon
-                onPress={() => {
-                  setCoinType("0");
-                  setOpenChain(true);
-                }}
-                name={"ios-chevron-forward-circle"}
-                size={30}
-                color={"black"}
+                name={"swap-vertical"}
+                size={15}
+                color={"#3574B6"}
+                style={{ alignSelf: "center", marginTop: hp(1) }}
               />
             </View>
-                <Text style={styles.color}> Balance:{balance ? Number(balance).toFixed(2) : 0}</Text>
-          </View>
 
-          <Icon
-            name={"swap-vertical"}
-            size={30}
-            color={"white"}
-            style={{ alignSelf: "center", marginTop: hp(1) }}
-          />
-
-          <View
-            style={styles.cardmainContainer1}
-            onStartShouldSetResponder={() => Keyboard.dismiss()}
-          >
-            <View style={styles.tokenView}>
-              <Text style={styles.color}> {coin1.name}</Text>
+            <View
+              style={styles.cardmainContainer1}
+              onStartShouldSetResponder={() => Keyboard.dismiss()}
+            >
+              <View style={styles.tokenView}>
+                <Text style={{ color: "#C1BDBD" }}>You Get</Text>
+                <Text style={{ color: "black" }}> {coin1.name}</Text>
+              </View>
+              <View style={styles.tokenView}>
+                <TextInput
+                  disabled={true}
+                  keyboardType="numeric"
+                  placeholder={trade ? `${trade.minimumAmountOut}` : `0`}
+                  onChangeText={(text) => {
+                    setAmount2(text);
+                  }}
+                  placeholderTextColor={"gray"}
+                  style={styles.txtInput}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginHorizontal: wp(5),
+                  }}
+                >
+                  <Image
+                    source={Xrpimage}
+                    style={{ height: hp(3), width: wp(6) }}
+                  />
+                  <Text style={{ marginRight: wp(13) }}>ETH</Text>
+                </View>
+                <AntDesign
+                  onPress={() => {
+                    setCoinType("1");
+                    setVisible(true);
+                  }}
+                  name={"right"}
+                  size={15}
+                  color={"grey"}
+                  style={styles.rightICon}
+                />
+              </View>
             </View>
-            <View style={styles.tokenView}>
-              <TextInput
-                disabled={true}
-                keyboardType="numeric"
-                placeholder={trade ? `${trade.minimumAmountOut}` : `0`}
-                onChangeText={(text) => {
-                  setAmount2(text);
-                }}
-                placeholderTextColor={"gray"}
-                style={{
-                  width: wp(50),
-                  padding: 4,
-                  height: hp(5),
-                  borderRadius: hp(1.4),
-                  backgroundColor: "white",
-                  borderWidth: StyleSheet.hairlineWidth * 2,
-                }}
-              />
-              <Icon
-                onPress={() => {
-                  setCoinType("1");
 
-                  setVisible(true);
-                }}
-                name={"ios-chevron-forward-circle"}
-                size={30}
-                color={"black"}
-              />
+            <View
+              style={{
+                alignContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ marginTop: 20, color: "red" }}>{message}</Text>
             </View>
           </View>
-
-          
-          <View
-            style={{
-              alignContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ marginTop: 20, color: "red" }}>{message}</Text>
-          </View>
-
           <TouchableOpacity
             style={{
-              backgroundColor: disable ? "grey" : "#000C66",
-              width: wp(50),
+              // backgroundColor: disable ? "grey" : "#000C66",
+              backgroundColor: "#3574B6",
+              width: wp(90),
               padding: hp(1),
               borderRadius: hp(0.6),
               alignItems: "center",
               alignSelf: "center",
+              marginTop: hp(8),
             }}
             disabled={disable}
             onPress={async () => {
@@ -1598,7 +1620,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               <Text style={{ marginTop: hp(2) }}>
                 slippageTolerance:{trade ? trade.slippageTolerance : 0} %
               </Text>
-              <Text style={{ marginTop: hp(2) }}>
+              <Text style={{ marginTop: hp(2), backgroundColor: "red" }}>
                 amount : {amount ? amount : 0} {coin0.name}
               </Text>
               <Text style={{ marginTop: hp(2) }}>
@@ -1666,6 +1688,61 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
 export default SwapModal;
 
 const styles = StyleSheet.create({
+  mainContainermodal: {
+    borderColor: "#C1BDBD",
+    backgroundColor: "white",
+    alignSelf: "center",
+    borderRadius: hp(1),
+    
+    borderWidth:StyleSheet.hairlineWidth*1,
+    borderColor:"gray",
+    height: hp(80),
+    width: wp(98),
+    marginTop: "auto",
+    // backgroundColor: "#131E3A",
+  },
+  cardBoxContainer: {
+    borderWidth: StyleSheet.hairlineWidth*1,
+    borderColor: "gray",
+    marginTop: hp(5),
+    width: wp(90),
+    alignSelf: "center",
+    borderRadius: hp(1),
+  },
+  swapText: {
+    color: "black",
+    fontSize: 18,
+    fontWeight: "600",
+    textAlign: "center",
+    marginRight: wp(45),
+  },
+  swapiconView: {
+    backgroundColor: "white",
+    height: hp(4),
+    width: wp(8),
+    borderRadius: hp(2),
+    // alignSelf: ""mar,
+    marginLeft: wp(73),
+
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "gray",
+    alignItems: "center",
+    position: "absolute",
+    marginTop: hp(16),
+  },
+  rightICon: { marginRight: wp(10), marginLeft: -34 },
+  txtInput: {
+    width: wp(50),
+    padding: 4,
+    height: hp(5),
+    borderRadius: hp(1.4),
+    backgroundColor: "white",
+  },
+  leftView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   Amount: {
     display: "flex",
     alignItems: "center",
@@ -1810,53 +1887,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   tokenView: {
-    padding: hp(2),
+    height: hp(5),
+    // marginVerticas: hp(2),
     flexDirection: "row",
     justifyContent: "space-between",
     alignSelf: "center",
     width: wp(80),
+    alignItems: "center",
   },
   cardmainContainer1: {
-    // backgroundColor:"red"
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    elevation: 4,
-    shadowRadius: wp(1),
-    overflow: "hidden",
-    shadowOpacity: 0.2,
-    shadowColor: "#000",
-    backgroundColor: "white",
-    borderColor: "rgba(238, 227, 232,1)",
-
     width: wp(93),
     borderRadius: hp(2),
     alignSelf: "center",
-    marginTop: hp(1),
+    // marginTop: hp(1),
   },
   cardmainContainer: {
     // backgroundColor:"red"
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    elevation: 4,
-    shadowRadius: wp(1),
-    overflow: "hidden",
-    shadowOpacity: 0.2,
-    shadowColor: "#000",
-    backgroundColor: "white",
-    borderColor: "rgba(238, 227, 232,1)",
+    // backgroundColor: "white",
 
     width: wp(93),
     borderRadius: hp(2),
     alignSelf: "center",
-    marginTop: hp(4),
+    // marginTop: hp(4),
   },
   color: {
-    color: "black",
-    margin:2
+    color: "#C1BDBD",
+    margin: 2,
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "gray",
+    padding: 10,
+    marginHorizontal: wp(5),
+    position: "relative",
+    marginBottom:hp(3)
   },
   textinputCon: {
     width: wp(50),
@@ -1864,6 +1926,5 @@ const styles = StyleSheet.create({
     height: hp(5),
     borderRadius: hp(1.4),
     backgroundColor: "white",
-    borderWidth: StyleSheet.hairlineWidth * 2,
   },
 });

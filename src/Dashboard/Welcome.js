@@ -108,6 +108,8 @@ const Welcome = (props) => {
         images={Slider.images}
         autoplay={true}
         circleLoop={true}
+        
+        autoplayInterval={3000}
         ImageComponentStyle={style.imageStyle}
       />
       <View

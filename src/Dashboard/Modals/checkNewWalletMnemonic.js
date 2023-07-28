@@ -94,7 +94,6 @@ const CheckNewWalletMnemonic = ({
     console.log(wallet);
   }, [fadeAnim, Spin]);
 
-  
 
 
   console.log("000000000000000", Wallet?.mnemonic);
@@ -205,9 +204,7 @@ const CheckNewWalletMnemonic = ({
             }}
           >
             <TouchableOpacity
-                          style={style.ButtonView}
-
-              
+              style={style.ButtonView}
               onPress={async () => {
                 setLoading(true);
                 try {
@@ -304,8 +301,7 @@ const CheckNewWalletMnemonic = ({
                 }
               }}
             >
-
-              <Text style={{color:"white"}}>Import</Text>
+              <Text style={{ color: "white" }}>Import</Text>
             </TouchableOpacity>
           </View>
         </View>

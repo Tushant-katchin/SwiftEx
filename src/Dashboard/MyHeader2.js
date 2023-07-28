@@ -413,21 +413,24 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           name={"swap-horizontal"}
           type={"ionicon"}
           title={"Swap"}
-          onPress={async () => {
-            const walletType = await AsyncStorageLib.getItem("walletType");
-            console.log(JSON.parse(walletType));
-            if (!JSON.parse(walletType))
-              return alert("please select a wallet first to swap tokens");
-            if (
-              JSON.parse(walletType) === "BSC" ||
-              JSON.parse(walletType) === "Ethereum" ||
-              JSON.parse(walletType) === "Multi-coin"
-            ) {
-              setModalVisible3(true);
-            } else {
-              alert("Swapping is only supported for Ethereum and Binance ");
-            }
+          onPress={()=>{
+            setModalVisible3(true)
           }}
+          // onPress={async () => {
+          //   const walletType = await AsyncStorageLib.getItem("walletType");
+          //   console.log(JSON.parse(walletType));
+          //   if (!JSON.parse(walletType))
+          //     return alert("please select a wallet first to swap tokens");
+          //   if (
+          //     JSON.parse(walletType) === "BSC" ||
+          //     JSON.parse(walletType) === "Ethereum" ||
+          //     JSON.parse(walletType) === "Multi-coin"
+          //   ) {
+          //     setModalVisible3(true);
+          //   } else {
+          //     alert("Swapping is only supported for Ethereum and Binance ");
+          //   }
+          // }}
         />
 
         <IconWithCircle
