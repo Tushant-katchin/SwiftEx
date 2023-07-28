@@ -178,7 +178,7 @@ const sendMatic = async (
 
   return info;
 };
-const sendXRP = async (privateKey, amount, addressTo, setLoading) => {
+const sendXRP = async (privateKey, amount, addressTo, balance,setLoading) => {
   console.log("started");
   console.log(privateKey);
   const Wallet = xrpl.Wallet.fromSecret(privateKey);
@@ -201,13 +201,31 @@ const sendXRP = async (privateKey, amount, addressTo, setLoading) => {
   console.log("Prepared transaction instructions:", prepared);
   console.log("Transaction cost:", xrpl.dropsToXrp(prepared.Fee), "XRP");
   console.log("Transaction expires after ledger:", max_ledger);
-  const signed = Wallet.sign(prepared);
-  console.log("Identifying hash:", signed.hash);
-  console.log("Signed blob:", signed.tx_blob);
+ // const signed = Wallet.sign(prepared);
+  
+  const fee = xrpl.dropsToXrp(prepared.Fee)
+  console.log('fee',fee)
+  if(Number(amount)===Number(balance)){
+    let Amount=Number(amount)-(Number(fee)+1).toFixed(6)
+    amount = Amount.toString()
+    console.log("XRP AMOUNT",amount)
+   }
+   const Prepared = await client
+    .autofill({
+      TransactionType: "Payment",
+      Account: Wallet.classicAddress,
+      Amount: xrpl.xrpToDrops(`${amount}`),
+      Destination: addressTo,
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+    const Signed = Wallet.sign(Prepared);
+
   const info = {
     type: "XRP",
-    fee: prepared.Fee,
-    rawTransaction: signed,
+    fee: Prepared.Fee,
+    rawTransaction: Signed,
     addressTo: addressTo,
     addressFrom: Wallet.classicAddress,
     amount: amount,
@@ -412,7 +430,7 @@ const SendCrypto = async (
             });
           });
         }else if(Token==='Multi-coin-Xrp'){
-          await sendXRP(privateKey, amount, addressTo, balance,setLoading).then(
+          await sendXRP(privateKey, amount, addressTo,balance,setLoading).then(
             (response) => {
               console.log(response);
               let info = response;

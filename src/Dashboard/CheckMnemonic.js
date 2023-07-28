@@ -497,6 +497,14 @@ const CheckMnemonic = (props) => {
             }}
           />
         </View>
+        <View style={{display:'flex',flexDirection:'row',alignContent:'center',alignItems:'center',justifyContent:'center'}}>
+            {Mnemonic.length>0?Mnemonic.map((item)=>{
+              console.log("mnemonic words",item)
+            return(
+              <Text style={{color:'black',textAlign:'center',fontStyle:'italic'}} >{item}</Text>
+            )
+           }):<Text style={{color:'black'}} >nothing added yet</Text>}
+          </View>
         {/* <TextInput
           style={style.textInput}
           onChangeText={(text) => {

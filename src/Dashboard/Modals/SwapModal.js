@@ -938,6 +938,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
       coin1.address &&
       coin0.address &&
       amount != 0 &&
+      Number(amount)<Number(balance)&&
       (inputValidation || inputValidation1)
     ) {
       setDisable(false);

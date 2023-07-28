@@ -106,24 +106,22 @@ try{
                 let LeftContent;
                 console.log(item.walletType);
                 if (item.walletType === "Ethereum") {
-                  LeftContent = (props) => (
-                    <Avatar.Image {...props} source={Etherimage} />
-                  );
+                  LeftContent = Etherimage
                 } else if (item.walletType === "BSC") {
-                  LeftContent = BnbLeftContent;
+                  LeftContent = Bnbimage;
                 } else if (item.walletType == "Xrp") {
-                  LeftContent = XrpLeftContent;
+                  LeftContent = Xrpimage;
                 } else if (item.walletType == "Matic") {
-                  LeftContent = MaticLeftContent;
+                  LeftContent = Maticimage ;
                 } else if (item.walletType === "Multi-coin") {
                   if (item.chainType === "Eth") {
-                    LeftContent = EtherLeftContent;
+                    LeftContent = Etherimage;
                   } else if (item.chainType === "BSC") {
-                    LeftContent = BnbLeftContent;
+                    LeftContent = Bnbimage;
                   } else if (item.chainType === "Matic") {
-                    LeftContent = MaticLeftContent;
+                    LeftContent = Maticimage;
                   } else if (item.chainType === "Xrp") {
-                    LeftContent = XrpLeftContent;
+                    LeftContent = Xrpimage
                   } else {
                     LeftContent = multiCoinLeftContent; //props => <Avatar.Image {...props}  source={{ uri: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850' }} />
                   }
@@ -155,7 +153,7 @@ try{
                       style={styles.flatView}
                     >
                       <Image
-                        source={Etherimage}
+                        source={LeftContent}
                         style={styles.img}
                       />
                       <View style={{ marginHorizontal: wp(3) }}>

@@ -481,14 +481,14 @@ const SwapPinModal = ({
                                       setLoader(false);
                                       setTradeVisible(false);
                                       setPinViewVisible(false);
-                                      return alert('error',response);
+                                      return alert('error',response.message);
                                     }
                                   } else {
                                     setLoading(false);
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',"server error");
+                                    return alert('error',response?response.message:"server error");
                                   }
                                 })
                                 .catch((e) => {

@@ -202,8 +202,16 @@ const NewWalletPrivateKey = ({
 
           <View style={{ width: wp(95) }}>
             <TouchableOpacity
-              style={style.ButtonView}
-              disabled={accountName ? false : true}
+              style={{
+                backgroundColor:accountName && !/\s/.test(accountName)? "#4CA6EA":'gray',
+                width: wp(55),
+                alignSelf: "center",
+                alignItems: "center",
+                borderRadius: 10,
+                marginTop: hp(1.5),
+                paddingVertical: hp(1.7)
+              }}
+              disabled={accountName && !/\s/.test(accountName) ? false : true}
               onPress={() => {
                 //setVisible(!visible)
                 let wallet = Wallet;

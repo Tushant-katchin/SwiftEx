@@ -391,7 +391,7 @@ export const BidsListView = ({ bids, getBids }) => {
                               />
                               <View style={{ margin: 5 }}>
                                 <Button
-                                  onPress={cancelBid(bid._id)}
+                                  onPress={()=>cancelBid(bid._id)}
                                   title="Cancel"
                                 ></Button>
                               </View>
@@ -400,7 +400,7 @@ export const BidsListView = ({ bids, getBids }) => {
                           {bid.status === BID_STATUS_ENUM.CANCELED && (
                             <Button
                               title="Re-Activate"
-                              onPress={cancelBid(bid._id)}
+                              onPress={()=>cancelBid(bid._id)}
                             ></Button>
                           )}
                         </View>

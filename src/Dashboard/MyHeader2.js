@@ -65,6 +65,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [balance, GetBalance] = useState(0.0);
   const [wallet, getWallet] = useState(walletState ? walletState : []);
   const [Type, setType] = useState("");
+  const [user, setUser] = useState()
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
   const [balanceUsd, setBalance] = useState(0.0);
@@ -344,12 +345,20 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     getBalanceInUsd(EthBalance, bnbBalance);
   }, [ethPrice, bnbPrice, EthBalance, bnbBalance, Type]);
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log(balanceUsd);
     //getEthPrice()
     getETHBNBPrice();
     getBalanceInUsd(EthBalance, bnbBalance);
+   
   }, []);
+  useEffect(async ()=>{
+    const user = await state.wallet.name
+    if(user)
+    {
+      setUser(user)
+    }
+  },[state.wallet.name])
 
   return (
     <View style={{ backgroundColor: "#fff" }}>
@@ -376,6 +385,13 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Text style={styles.dollartxt}>
           $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>
+        <Text style={{
+          color: "black",
+          textAlign: "center",
+          fontWeight: "10",
+          fontStyle:'italic',
+          fontSize: 20,
+        }}>{user?user:'main wallet'}</Text>
         
       </View>
       <View style={styles.buttons}>

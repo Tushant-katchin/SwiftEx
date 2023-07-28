@@ -287,6 +287,8 @@ const Passcode = (props) => {
                     const biometric = await AsyncStorage.getItem("Biometric");
                     if (biometric === "SET") {
                       useBiometrics(props.navigation);
+                    }else{
+                      alert('error','please enable biometrics from settings')
                     }
                 
                   }}
