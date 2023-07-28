@@ -147,31 +147,10 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
             setOpen(false);
           }}
         >
-<<<<<<< HEAD
-          <View style={styles.modalContainer}>
-            
-            <Text style={styles.textColor}>{modalMessage}</Text>
-            {/* <View style={styles.yesnomainView}>
-              <TouchableOpacity style={styles.yesbtnContainer}>
-                <Text style={styles.textColor}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.nobtnContainer}>
-                <Text style={styles.textColor}>No</Text>
-              </TouchableOpacity>
-            </View> */}
-=======
           {/* <View style={styles.modalContainer}> */}
 
           <Text style={styles.textColor}>{modalMessage}</Text>
-          <View style={styles.yesnomainView}>
-            <TouchableOpacity style={styles.yesbtnContainer}>
-              <Text style={styles.textColor}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nobtnContainer}>
-              <Text style={styles.textColor}>No</Text>
-            </TouchableOpacity>
-          </View>
->>>>>>> 0429b79c9f7b3a1276ea99ca67a1d4e9845fb098
+         
 
           {bids != "" ? (
             <View style={styles.container}>
@@ -215,10 +194,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                               "rgba(185, 116, 235, 1)",
                             ]}
                           >
-                            <TouchableOpacity onPress={()=>{
-                              setLoading(true);
-                              acceptBid(bid);
-                            }}>
+                            <TouchableOpacity>
                               <Text style={styles.textColor}>Accept Bid</Text>
                             </TouchableOpacity>
                           </LinearGradient>
@@ -261,19 +237,6 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                     <Text style={styles.bidText}>No bids found</Text>
                   </View>
                 )}
-<<<<<<< HEAD
-                {loading ? (
-                  <ActivityIndicator size={"large"} color={"blue"} />
-                ) : (
-                  <View></View>
-                )}
-              </View>
-            ) : (
-              <Text style={styles.textColor}>Loading...</Text>
-            )}
-            
-          </View>
-=======
               </ScrollView>
 
               {loading ? (
@@ -291,7 +254,6 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
             <View></View>
           )}
           {/* </View> */}
->>>>>>> 0429b79c9f7b3a1276ea99ca67a1d4e9845fb098
         </Modal2>
       </View>
     </>
