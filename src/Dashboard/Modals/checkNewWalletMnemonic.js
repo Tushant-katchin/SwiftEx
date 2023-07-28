@@ -122,20 +122,18 @@ const CheckNewWalletMnemonic = ({
     console.log(wallet);
   }, [fadeAnim, Spin]);
 
-  
-const data=[
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-  {mnemonic:"Hash"},
-
-]
+  const data = [
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+    { mnemonic: "Hash" },
+  ];
 
   console.log("000000000000000", Wallet?.mnemonic);
   const RenderItem = ({ item, index }) => {
@@ -237,9 +235,7 @@ const data=[
             }}
           >
             <TouchableOpacity
-                          style={style.ButtonView}
-
-              
+              style={style.ButtonView}
               onPress={async () => {
                 setLoading(true);
                 try {
@@ -336,8 +332,7 @@ const data=[
                 }
               }}
             >
-
-              <Text style={{color:"white"}}>Import</Text>
+              <Text style={{ color: "white" }}>Import</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -56,6 +56,7 @@ import {
   WalletHeader,
 } from "../Dashboard/header";
 import MyPrivateKey from "../Dashboard/myPrivateKey";
+import MarketChart from "../Dashboard/MarketChart";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -64,7 +65,7 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      //  initialRouteName="splash"
+      // initialRouteName="MarketChart"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
@@ -98,6 +99,7 @@ const AuthStack = () => (
         }}
       /> */}
 
+       
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -153,7 +155,17 @@ const AuthStack = () => (
           },
         }}
       />
-
+<Stack.Screen
+        name="MarketChart"
+        component={MarketChart}
+        options={{ 
+          header:()=>{
+            return(
+              <WalletHeader title='Market-Chart'/>
+            )
+          }
+        }}
+      />  
       <Stack.Screen
         name="OfferListView"
         component={OfferListView}

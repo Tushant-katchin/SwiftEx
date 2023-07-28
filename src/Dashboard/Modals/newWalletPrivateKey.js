@@ -190,9 +190,7 @@ const NewWalletPrivateKey = ({
           <TextInput
             style={style.input}
             value={accountName}
-            placeholder='Enter your account number'
             onChangeText={(text) => setAccountName(text)}
-            placeholderTextColor="black"
             autoCapitalize={"none"}
           />
 
@@ -335,8 +333,10 @@ const style = StyleSheet.create({
   input: {
     marginTop: hp(2),
     width: wp("70"),
-    height: hp(4),
+    height: hp(5),
+    borderRadius:hp(1),
     backgroundColor: "white",
+    paddingHorizontal:wp(4),
     alignSelf: "center",
     borderWidth: StyleSheet.hairlineWidth * 1,
   },
@@ -356,7 +356,7 @@ const style = StyleSheet.create({
   },
   ButtonView: {
     backgroundColor: "#4CA6EA",
-    width: wp(55),
+    width: wp(50),
     alignSelf: "center",
     alignItems: "center",
     borderRadius: 10,

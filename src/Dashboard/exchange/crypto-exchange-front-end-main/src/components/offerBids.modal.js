@@ -63,8 +63,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
         bidId: bid._id,
       });
       if (err) {
-        
-        alert('error',`${err.message}`);
+        alert("error", `${err.message}`);
         setLoading(false);
         return setModalMessage(`${err.message}`);
       }
@@ -73,7 +72,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
       setLoading(false);
       setOpen(false);
       setChange(false);
-      return alert('success',"Bid Accepted Successfully");
+      return alert("success", "Bid Accepted Successfully");
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -99,7 +98,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
       setModalMessage("success");
       setLoading(false);
       setOpen(false);
-      return alert('success',"Bid Cancelled Successfully");
+      return alert("success", "Bid Cancelled Successfully");
     } catch (err) {
       console.log(err);
       setModalMessage(err.message || "Something went wrong");
@@ -148,29 +147,33 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
             setOpen(false);
           }}
         >
-          <View style={styles.modalContainer}>
-            
-            <Text style={styles.textColor}>{modalMessage}</Text>
-            <View style={styles.yesnomainView}>
-              <TouchableOpacity style={styles.yesbtnContainer}>
-                <Text style={styles.textColor}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.nobtnContainer}>
-                <Text style={styles.textColor}>No</Text>
-              </TouchableOpacity>
-            </View>
+          {/* <View style={styles.modalContainer}> */}
 
-            {bids != "" ? (
-              <View style={styles.container}>
-                <Text style={styles.bidPrice}>
-                  {"1.4 Eth for 1,00,000 INR Unit Price!"}
-                </Text>
-                <View style={styles.bidContainer}>
-                  <Text style={styles.Text}>Bid Amount</Text>
-                  <Text style={styles.Text}>Bidder</Text>
-                  <Text style={styles.Text}>Status</Text>
-                  {self && <Text></Text>}
-                </View>
+          <Text style={styles.textColor}>{modalMessage}</Text>
+          <View style={styles.yesnomainView}>
+            <TouchableOpacity style={styles.yesbtnContainer}>
+              <Text style={styles.textColor}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.nobtnContainer}>
+              <Text style={styles.textColor}>No</Text>
+            </TouchableOpacity>
+          </View>
+
+          {bids != "" ? (
+            <View style={styles.container}>
+              <Text style={styles.bidPrice}>
+                {"1.4 Eth for 1,00,000 INR Unit Price!"}
+              </Text>
+              <View style={styles.bidContainer}>
+                <Text style={styles.Text}>Bid Amount</Text>
+                <Text style={styles.Text}>Bidder</Text>
+                <Text style={styles.Text}>Status</Text>
+                {self && <Text></Text>}
+              </View>
+              <ScrollView
+                style={{ height: "55%" }}
+                showsVerticalScrollIndicator={false}
+              >
                 {bids.length ? (
                   bids.map((bid, index) => (
                     <>
@@ -241,21 +244,23 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                     <Text style={styles.bidText}>No bids found</Text>
                   </View>
                 )}
-                {loading ? (
-                  <ActivityIndicator size={"large"} color={"blue"} />
-                ) : (
-                  <View></View>
-                )}
-              </View>
-            ) : (
-              <Text style={styles.textColor}>Loading...</Text>
-            )}
-            {loading ? (
-              <ActivityIndicator size={"large"} color={"blue"} />
-            ) : (
-              <View></View>
-            )}
-          </View>
+              </ScrollView>
+
+              {loading ? (
+                <ActivityIndicator size={"large"} color={"blue"} />
+              ) : (
+                <View></View>
+              )}
+            </View>
+          ) : (
+            <Text style={styles.textColor}>Loading...</Text>
+          )}
+          {loading ? (
+            <ActivityIndicator size={"large"} color={"blue"} />
+          ) : (
+            <View></View>
+          )}
+          {/* </View> */}
         </Modal2>
       </View>
     </>
@@ -265,10 +270,10 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: "#131E3A",
-    height: hp(35),
+    height: hp(70),
     borderRadius: 16,
     justifyContent: "center",
-    width: wp(75),
+    width: wp(90),
     alignSelf: "center",
     alignItems: "center",
   },
@@ -302,10 +307,14 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "#131E3A",
-    height: hp(45),
+    // height: hp(65),
     borderRadius: 16,
+    paddingBottom: 10,
+    justifyContent: "center",
+    // marginTop: hp(10),
     alignSelf: "center",
-    width: wp("80%"),
+    alignItems: "center",
+    width: wp("90%"),
   },
   scrollView: {
     width: wp(90),
@@ -330,7 +339,6 @@ const styles = StyleSheet.create({
   },
   Text: {
     color: "#fff",
-    textAlign: "center",
     width: wp(20),
     textAlign: "center",
   },
