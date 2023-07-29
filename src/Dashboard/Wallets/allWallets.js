@@ -161,7 +161,9 @@ const AllWallets = (props) => {
             console.log("My bsc balance" + balance);
           }
         } else if (JSON.parse(type) == "Xrp") {
-          const resp = await getXrpBal(address)
+          //const resp = await getXrpBal(address)
+          dispatch(getXrpBalance(state.wallet.xrp.address))
+
           .catch((e)=>{
             console.log(e)
           })
@@ -217,6 +219,7 @@ const AllWallets = (props) => {
           if (balance) {
             console.log("My bsc balance" + balance);
           }
+          dispatch(getXrpBalance(state.wallet.xrp.address))
         } else {
           const wallet = await state.wallet.address;
           console.log("hello" + wallet);
@@ -391,7 +394,7 @@ const AllWallets = (props) => {
                                 JSON.stringify(item.walletType)
                               );
                               dispatch(setWalletType(item.walletType));
-                            //  getBalance(state);
+                              getBalance(state);
                               alert("success","Wallet Selected " + item.name);
                             } else {
                               alert(

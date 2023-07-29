@@ -213,9 +213,16 @@ const SendTokens = (props) => {
     let inputValidation;
     let inputValidation1;
     let valid
+    let xrpInvalid
     console.log(props.route.params.token)
     if(props.route.params.token==='Multi-coin-Xrp' || walletType==='Xrp')
     {
+      if(balance<11)
+      {
+        xrpInvalid=true
+        setMessage("Your minnimum balance should be 10 to send XRP");
+
+      }
       valid = checkXrpAddress(address)
     }else{
       valid = checkAddressValidity(address);
@@ -229,6 +236,7 @@ const SendTokens = (props) => {
       balance &&
       address &&
       Number(amount)>0 &&
+      !xrpInvalid &&
       Number(amount) <= Number(balance) &&
       valid &&
       (inputValidation || inputValidation1)

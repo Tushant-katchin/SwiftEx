@@ -883,6 +883,16 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
     return response
   }
 
+  export const getXrpPrice = async ()=>{
+    const response =await fetch('https://min-api.cryptocompare.com/data/price?fsym=XRP&tsyms=USD')
+    .then((res)=>res.json())
+    .then((resJson)=>{
+      console.log("xrp Current price",resJson)
+      return resJson
+    })
+    return response
+  }
+
 
   export const getEtherBnbPrice = async (address,address2) => {
     const token = await AsyncStorageLib.getItem('token')

@@ -71,12 +71,12 @@ export const DropDown = ({
             : "Select"
         }
         searchPlaceholder="Search..."
-        value={Title === "Choose Asset" ? value : value2}
+        value={Title === "Assets" ? value : value2}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(input) => {
           let type;
-          if (Title === "Choose Asset") {
+          if (Title === "Assets") {
             type = "amount";
             // setNewOffer(newOffer)
             handleChange(input.value, "assetName");
@@ -88,7 +88,7 @@ export const DropDown = ({
             };
             setNewOffer(assetName);
             setValue(input.value);
-          } else if (Title === "Choose Currency") {
+          } else if (Title === "INR") {
             type = "pricePerUnit";
             handleChange(input.value, "currencyName");
             const assetName = {
@@ -180,13 +180,14 @@ const styles = StyleSheet.create({
   },
   container: {
     // backgroundColor: "white",
-    color: "black",
+    color: "white",
   },
   dropdown: {
     height: hp("7"),
     width: wp("40"),
     paddingHorizontal: 8,
     marginTop: hp("1"),
+    color:'white'
   },
   icon: {
     marginRight: 5,
@@ -205,11 +206,11 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
-    color: "black",
+    color: "white",
   },
   selectedTextStyle: {
     fontSize: 11,
-    color: "black",
+    color: "white",
   },
   iconStyle: {
     width: 20,

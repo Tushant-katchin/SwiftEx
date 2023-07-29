@@ -187,27 +187,23 @@ const sendXRP = async (privateKey, amount, addressTo, balance,setLoading) => {
   await client.connect();
   const wallet = await AsyncStorageLib.getItem("wallet");
   console.log(JSON.parse(wallet).address);
-  const prepared = await client
-    .autofill({
-      TransactionType: "Payment",
-      Account: Wallet.classicAddress,
-      Amount: xrpl.xrpToDrops(`${amount}`),
-      Destination: addressTo,
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-  const max_ledger = prepared.LastLedgerSequence;
-  console.log("Prepared transaction instructions:", prepared);
-  console.log("Transaction cost:", xrpl.dropsToXrp(prepared.Fee), "XRP");
-  console.log("Transaction expires after ledger:", max_ledger);
+  // const prepared = await client
+  //   .autofill({
+  //     TransactionType: "Payment",
+  //     Account: Wallet.classicAddress,
+  //     Amount: xrpl.xrpToDrops(`${amount}`),
+  //     Destination: addressTo,
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   });
+  
  // const signed = Wallet.sign(prepared);
   
-  const fee = xrpl.dropsToXrp(prepared.Fee)
-  console.log('fee',fee)
+  
   if(Number(amount)===Number(balance)){
-    let Amount=Number(amount)-(Number(fee)+1).toFixed(6)
-    amount = Amount.toString()
+    let Amount=Number(amount)-10
+    amount = Amount.toFixed(2).toString()
     console.log("XRP AMOUNT",amount)
    }
    const Prepared = await client
@@ -221,7 +217,10 @@ const sendXRP = async (privateKey, amount, addressTo, balance,setLoading) => {
       console.log(e);
     });
     const Signed = Wallet.sign(Prepared);
-
+    const max_ledger = Prepared.LastLedgerSequence;
+    console.log("Prepared transaction instructions:", Prepared);
+    console.log("Transaction cost:", xrpl.dropsToXrp(Prepared.Fee), "XRP");
+    console.log("Transaction expires after ledger:", max_ledger);
   const info = {
     type: "XRP",
     fee: Prepared.Fee,
@@ -343,6 +342,11 @@ const SendCrypto = async (
                 let finalAmount = Number(info.amount)+Number(fee)
                 info.finalAmount=finalAmount
                 setLoading(false);
+                if(Number(balance)<11)
+                {
+                  return alert("error","Your minnimum balance should be 10 to send xrp")
+
+                }
                 if(Number(finalAmount)>=Number(balance)){
                   return alert("error","You don't have enough balance to do this transaction")
                 }
@@ -439,6 +443,11 @@ const SendCrypto = async (
               let finalAmount = Number(info.amount)+Number(fee)
               info.finalAmount=finalAmount
               setLoading(false);
+              if(Number(balance)<11)
+              {
+                return alert("error","Your minnimum balance should be 10 to send xrp")
+
+              }
               if(Number(finalAmount)>=Number(balance)){
                 return alert("error","You don't have enough balance to do this transaction")
               }

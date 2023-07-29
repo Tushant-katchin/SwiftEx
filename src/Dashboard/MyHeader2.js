@@ -35,6 +35,7 @@ import {
   getEtherBnbPrice,
   getEthPrice,
   getBnbPrice,
+  getXrpPrice
 } from "../utilities/utilities";
 import { tokenAddresses } from "./constants";
 import { FaucetModal } from "./Modals/faucetModal";
@@ -51,6 +52,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const state2 = useSelector((state) => state.walletBalance);
   const EthBalance = useSelector((state) => state.EthBalance);
   const bnbBalance = useSelector((state) => state.walletBalance);
+  const xrpBalance = useSelector((state) => state.XrpBalance)
   const walletState = useSelector((state) => state.wallets);
   const type = useSelector((state) => state.walletType);
 
@@ -68,6 +70,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [user, setUser] = useState()
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
+  const [xrpPrice,setXrpPrice] = useState(0)
   const [balanceUsd, setBalance] = useState(0.0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // onPress={() => setModalVisible(true)}
@@ -224,6 +227,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             .catch((e) => {
               console.log(e);
             });
+            
+           
 
           const balance = await state.walletBalance;
           if (balance) {
@@ -270,13 +275,16 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
-  const getBalanceInUsd = (ethBalance, bnbBalance) => {
+  const getBalanceInUsd = (ethBalance, bnbBalance,xrpBalance) => {
     console.log("My wallet Type", Type);
-    console.log(ethBalance, bnbBalance);
-    const ethInUsd = ethBalance * ethPrice;
-    const bnbInUsd = bnbBalance * bnbPrice;
+    console.log(ethBalance, bnbBalance,xrpBalance,xrpPrice);
+    const ethInUsd = Number(ethBalance) * Number(ethPrice);
+    const bnbInUsd = Number(bnbBalance) * Number(bnbPrice);
+    const xrpInUsd = Number(xrpBalance) * Number(xrpPrice)
     console.log("Eth balance", ethInUsd);
     console.log("BNB balance", bnbInUsd);
+    console.log("Xrp balance", xrpInUsd);
+
     AsyncStorageLib.getItem("walletType").then((Type) => {
       console.log("Async type", Type);
       if (JSON.parse(Type) === "Ethereum") {
@@ -287,14 +295,16 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         const totalBalance = Number(bnbInUsd);
         setBalance(totalBalance.toFixed(1));
         return;
-      } else if (Type === "Xrp") {
-        setBalance(0.0);
+      } else if (JSON.parse(Type) === "Xrp") {
+        const totalBalance = Number(xrpInUsd);
+        console.log('Xrpl $',totalBalance)
+        setBalance(totalBalance.toFixed(1));
         return;
-      } else if (Type === "Matic") {
+      } else if (JSON.parse(Type) === "Matic") {
         setBalance(0.0);
         return;
       } else if (JSON.parse(Type) === "Multi-coin") {
-        const totalBalance = Number(ethInUsd) + Number(bnbInUsd);
+        const totalBalance = Number(ethInUsd) + Number(bnbInUsd)+Number(xrpInUsd);
         console.log(totalBalance);
         setBalance(totalBalance.toFixed(1));
         return;
@@ -322,6 +332,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       console.log("BNB price= ", response.USD);
       setBnbPrice(response.USD);
     });
+    await getXrpPrice().then((response)=>{
+      console.log('XRP price =', response.USD)
+      setXrpPrice(response.USD)
+    })
   };
 
   useEffect(async () => {
@@ -342,14 +356,14 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     console.log(balanceUsd);
     //getEthPrice()
     getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance);
-  }, [ethPrice, bnbPrice, EthBalance, bnbBalance, Type]);
+    getBalanceInUsd(EthBalance, bnbBalance,xrpBalance);
+  }, [ethPrice, bnbPrice, EthBalance, bnbBalance, xrpPrice,xrpBalance,Type,state.wallet.name]);
 
   useEffect(async () => {
     console.log(balanceUsd);
     //getEthPrice()
     getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance);
+    getBalanceInUsd(EthBalance, bnbBalance,xrpBalance);
    
   }, []);
   useEffect(async ()=>{

@@ -31,7 +31,7 @@ function InvestmentChart(setCurrentWallet) {
   const [maticBalance, getMaticBalance] = useState(0.00);
   const [ethBalance, getEthBalance] = useState(0.00);
   const EthBalance = useSelector((state) => state.EthBalance);
-  const BnbBalance = useSelector((state) => state.walletBalance);
+  const XrpBalance = useSelector((state) => state.XrpBalance);
   const walletState = useSelector((state) => state.wallets);
   const type = useSelector((state) => state.walletType);
 
@@ -173,7 +173,7 @@ function InvestmentChart(setCurrentWallet) {
       console.log(e)
     }
    // await GetBalance(await state)
-  }, [wallet.address,wallet.name,EthBalance,bnbBalance]);
+  }, [wallet.address,wallet.name,EthBalance,bnbBalance,XrpBalance]);
 
   let LeftContent = (props) => (
     <Avatar.Image

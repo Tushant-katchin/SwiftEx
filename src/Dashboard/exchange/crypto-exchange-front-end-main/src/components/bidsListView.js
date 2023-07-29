@@ -46,7 +46,8 @@ const UpdateBidModal = ({
   const offer = bid.offer;
   const toast = useToast();
   useEffect(() => {
-    getTxFeeData(offer.assetName);
+    console.log('Offer',offer)
+    getTxFeeData(offer.assetName,offer.chainId);
   }, []);
 
   const handleOpen = () => {
@@ -57,10 +58,11 @@ const UpdateBidModal = ({
     setOpen(false);
   };
 
-  const getTxFeeData = async (txName) => {
+  const getTxFeeData = async (txName,chainId) => {
+
     try {
       const { err, res: { gasPriceInUsd = TX_FEE_IN_USD } = {} } =
-        await authRequest(`/users/getTxFeeData/${txName}`, GET);
+        await authRequest(`/users/getTxFeeData/${txName}/${chainId}`, GET);
       if (err) return setModalMessage(`${err.status}: ${err.message}`);
 
       return setTxFeeInUsd(Number(gasPriceInUsd));
