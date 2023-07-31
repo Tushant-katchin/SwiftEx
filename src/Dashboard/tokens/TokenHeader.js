@@ -17,31 +17,10 @@ import {
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 
 const TokenHeader = ({ setVisible, name }) => {
-  if (Platform.OS === "android") {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-  }
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  const translation = useRef(new Animated.Value(0)).current;
-
-  useEffect(async () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-    }).start();
-
-    Animated.timing(translation, {
-      toValue: 1,
-      delay: 0.1,
-      useNativeDriver: true,
-    }).start();
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
-
+  
+ 
   return (
-    <Animated.View
+    <View
       style={{
         backgroundColor: "#131E3A",
         height: hp("7"),
@@ -85,7 +64,7 @@ const TokenHeader = ({ setVisible, name }) => {
           {name}
         </Text>
       </View>
-    </Animated.View>
+    </View>
   );
 };
 

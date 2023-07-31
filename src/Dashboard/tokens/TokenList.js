@@ -72,33 +72,9 @@ const TokenList = ({
   const dispatch = useDispatch();
 
   let LeftContent = (props) => <Avatar.Image {...props} source={title_icon} />;
-  let EtherLeftContent = (props) => (
-    <Avatar.Image {...props} source={Etherimage} />
-  );
-  let BnbLeftContent = (props) => <Avatar.Image {...props} source={Bnbimage} />;
-  let XrpLeftContent = (props) => <Avatar.Image {...props} source={Xrpimage} />;
-  let MaticLeftContent = (props) => (
-    <Avatar.Image {...props} source={Maticimage} />
-  );
+  
 
-  const Wallets = [
-    {
-      name: "ethereum",
-    },
-    {
-      name: "Binance smart chain",
-      LeftContent: Bnbimage,
-    },
-    {
-      name: "Xrp",
-      LeftContent: Xrpimage,
-    },
-    {
-      name: "Polygon(Matic)",
-      LeftContent: Maticimage,
-    },
-  ];
-
+  
   const fetchMoreData = () => {
     setLoading(true);
     const data = Data;
@@ -128,6 +104,81 @@ const TokenList = ({
   const ListCard = React.memo(({ item }) => {
     //console.log(item.symbol)
     //console.log(item)
+    let address;
+
+    if (walletType === "Ethereum") {
+      if (item.symbol === "WBTC") {
+        address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
+      } else if (item.symbol === "USDC") {
+        address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
+      } else if (item.symbol === "DAI") {
+        //0xdf1742fe5b0bfc12331d8eaec6b478dfdbd31464
+        address = "0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464";
+        //address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
+      } else if (item.symbol === "USDT") {
+        address = "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49";
+      } else if (item.symbol === "WETH") {
+        address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+      } else if (item.symbol === "UNI") {
+        address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+      } else {
+        address = toChecksumAddress(item.address);
+      }
+    } else if (walletType === "BSC") {
+      if (item.symbol === "USDT") {
+        address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
+      } else if (item.symbol === "ETH") {
+        address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
+      } else if (item.symbol === "DAI") {
+        address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
+      } else if (item.symbol === "WBNB") {
+        address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+      } else if (item.symbol === "BNB") {
+        address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+      } else if (item.symbol === "BUSD") {
+        address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
+      } else {
+        address = toChecksumAddress(item.address);
+      }
+    } else if (walletType === "Multi-coin") {
+      if (item.chainId === 1 || item.chainId === 5) {
+        setSwapType("ETH");
+        if (item.symbol === "WBTC") {
+          address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
+        } else if (item.symbol === "USDC") {
+          address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
+        } else if (item.symbol === "DAI") {
+          address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
+        } else if (item.symbol === "USDT") {
+          address = "0x7016353707A91BA5c9bd4D3098DBb730236df68c";
+        } else if (item.symbol === "WETH") {
+          address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+        } else if (item.symbol === "UNI") {
+          address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+        } else if (item.symbol === "ETH") {
+          address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+        } else {
+          address = toChecksumAddress(item.address);
+        }
+      } else if (item.chainId === 56) {
+        setSwapType("BSC");
+        if (item.symbol === "USDT") {
+          address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
+        } else if (item.symbol === "ETH") {
+          address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
+        } else if (item.symbol === "DAI") {
+          address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
+        } else if (item.symbol === "WBNB") {
+          address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+        } else if (item.symbol === "BNB") {
+          address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+        } else if (item.symbol === "BUSD") {
+          address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
+        } else {
+          address = toChecksumAddress(item.address);
+        }
+      }
+    }
     LeftContent = (props) => {
       return (
         <Avatar.Image {...props} source={{ uri: item.logoURI }} />
@@ -151,81 +202,8 @@ const TokenList = ({
           marginRight: 50,
         }}
         onPress={() => {
-          let address;
-
-          if (walletType === "Ethereum") {
-            if (item.symbol === "WBTC") {
-              address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
-            } else if (item.symbol === "USDC") {
-              address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
-            } else if (item.symbol === "DAI") {
-              //0xdf1742fe5b0bfc12331d8eaec6b478dfdbd31464
-              address = "0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464";
-              //address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
-            } else if (item.symbol === "USDT") {
-              address = "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49";
-            } else if (item.symbol === "WETH") {
-              address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
-            } else if (item.symbol === "UNI") {
-              address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
-            } else {
-              address = toChecksumAddress(item.address);
-            }
-          } else if (walletType === "BSC") {
-            if (item.symbol === "USDT") {
-              address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
-            } else if (item.symbol === "ETH") {
-              address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
-            } else if (item.symbol === "DAI") {
-              address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
-            } else if (item.symbol === "WBNB") {
-              address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-            } else if (item.symbol === "BNB") {
-              address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-            } else if (item.symbol === "BUSD") {
-              address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
-            } else {
-              address = toChecksumAddress(item.address);
-            }
-          } else if (walletType === "Multi-coin") {
-            if (item.chainId === 1 || item.chainId === 5) {
-              setSwapType("ETH");
-              if (item.symbol === "WBTC") {
-                address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
-              } else if (item.symbol === "USDC") {
-                address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
-              } else if (item.symbol === "DAI") {
-                address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
-              } else if (item.symbol === "USDT") {
-                address = "0x7016353707A91BA5c9bd4D3098DBb730236df68c";
-              } else if (item.symbol === "WETH") {
-                address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
-              } else if (item.symbol === "UNI") {
-                address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
-              } else if (item.symbol === "ETH") {
-                address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
-              } else {
-                address = toChecksumAddress(item.address);
-              }
-            } else if (item.chainId === 56) {
-              setSwapType("BSC");
-              if (item.symbol === "USDT") {
-                address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
-              } else if (item.symbol === "ETH") {
-                address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
-              } else if (item.symbol === "DAI") {
-                address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
-              } else if (item.symbol === "WBNB") {
-                address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-              } else if (item.symbol === "BNB") {
-                address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-              } else if (item.symbol === "BUSD") {
-                address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
-              } else {
-                address = toChecksumAddress(item.address);
-              }
-            }
-          }
+          setVisible(false);
+          console.log('pressed')
           if (coinType == "0") {
             setVisible(false);
             setCoin0({
@@ -250,11 +228,11 @@ const TokenList = ({
       >
         <Card
           style={{
-            width: wp(100),
+            width: wp(90),
             height: hp(10),
             backgroundColor: "white",
             borderRadius: 10,
-            marginLeft: wp(20),
+            marginLeft: wp(10),
             display: "flex",
           }}
         >
@@ -304,6 +282,7 @@ const TokenList = ({
           <FlatList
             style={{ marginTop: hp(9) }}
             contentContainerStyle={{ flexGrow: 1 }}
+            
             data={Data}
             renderItem={({ item }) => {
               return <ListCard item={item}  />;

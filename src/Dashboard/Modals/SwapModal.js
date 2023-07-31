@@ -883,8 +883,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     const walletType = await AsyncStorageLib.getItem("walletType");
 
     const address = await state.wallet.address;
-    console.log(coin0.address);
-    console.log(walletType);
+   
     if (JSON.parse(walletType) === "Ethereum") {
       if (coin0.symbol === "WETH") {
         console.log(await state.EthBalance);
