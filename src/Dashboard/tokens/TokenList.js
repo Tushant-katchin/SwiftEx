@@ -125,9 +125,14 @@ const TokenList = ({
     </View>
   );
 
-  const ListCard = React.memo(({ item, LeftContent }) => {
+  const ListCard = React.memo(({ item }) => {
     //console.log(item.symbol)
     //console.log(item)
+    LeftContent = (props) => {
+      return (
+        <Avatar.Image {...props} source={{ uri: item.logoURI }} />
+      );
+    };
     return (
       <TouchableOpacity
         key={item.address}
@@ -145,7 +150,7 @@ const TokenList = ({
           display: "flex",
           marginRight: 50,
         }}
-        onPress={async () => {
+        onPress={() => {
           let address;
 
           if (walletType === "Ethereum") {
@@ -222,21 +227,23 @@ const TokenList = ({
             }
           }
           if (coinType == "0") {
+            setVisible(false);
             setCoin0({
               name: item.name,
               address: address,
               symbol: item.symbol,
               ChainId: item.chainId,
+              logoUri:item.logoURI
             });
-            setVisible(false);
           } else {
+            setVisible(false);
             setCoin1({
               name: item.name,
               address: address,
               symbol: item.symbol,
               ChainId: item.chainId,
+              logoUri:item.logoURI
             });
-            setVisible(false);
           }
           console.log(address);
         }}
@@ -299,13 +306,7 @@ const TokenList = ({
             contentContainerStyle={{ flexGrow: 1 }}
             data={Data}
             renderItem={({ item }) => {
-              LeftContent = (props) => {
-                return (
-                  <Avatar.Image {...props} source={{ uri: item.logoURI }} />
-                );
-              };
-
-              return <ListCard item={item} LeftContent={LeftContent} />;
+              return <ListCard item={item}  />;
             }}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
@@ -314,7 +315,6 @@ const TokenList = ({
             ListEmptyComponent={renderEmpty}
             onEndReachedThreshold={0.1}
             onEndReached={fetchMoreData}
-            pagingEnabled={true}
           />
         )}
       </View>

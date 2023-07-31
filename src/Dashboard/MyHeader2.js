@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
-  Text,
+  
   View,
   LayoutAnimation,
   Platform,
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
 import FontAwesome from "react-native-vector-icons";
 import SendModal from "./Modals/SendModal";
@@ -477,9 +477,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             Market insights
           </Text>
         </View>
-        <View style={styles.iconTextContainer}>
-          <Icon name="cross" type={"entypo"} size={hp(3.6)} color="black" />
-        </View>
+        
       </TouchableOpacity>
     </View>
   );

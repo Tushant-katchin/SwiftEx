@@ -109,7 +109,7 @@ const CheckNewWalletMnemonic = ({
         style={{
           borderColor: "#D7D7D7",
           borderWidth: 0.5,
-          backgroundColor: item.selected ? "green" : "#F2F2F2",
+          backgroundColor: item.selected ? "#4CA6EA" : "#F2F2F2",
           width: wp(30),
           justifyContent: "center",
           paddingVertical: hp(2),

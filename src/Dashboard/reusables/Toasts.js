@@ -28,7 +28,7 @@ export function alert(type,message){
         Snackbar.show({
             text: message,
             duration: Snackbar.LENGTH_SHORT,
-            backgroundColor:'green',
+            backgroundColor:'#4CA6EA',
             
         });
     }else{
