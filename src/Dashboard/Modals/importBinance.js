@@ -85,6 +85,7 @@ const ImportBinanceWallet = ({
       setDisable(true)
     }
     
+
     if(accountName && (privateKey || mnemonic || json))
     {
       let valid
@@ -118,7 +119,7 @@ const ImportBinanceWallet = ({
       setMessage('')
     }
     },[mnemonic,privateKey,json,accountName])
-   
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}

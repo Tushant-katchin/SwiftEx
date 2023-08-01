@@ -33,7 +33,7 @@ const ImportMultiCoinWalletModal = ({
   setModalVisible,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [accountName, setAccountName] = useState();
+  const [accountName, setAccountName] = useState("");
   const [mnemonic, setMnemonic] = useState("");
   const [visible, setVisible] = useState(false);
   const [Wallet, setWallet] = useState();
@@ -144,7 +144,8 @@ const ImportMultiCoinWalletModal = ({
       setMessage('')
     }
     },[mnemonic,accountName])
-   
+  
+
 
   return (
     <Animated.View // Special animatable View

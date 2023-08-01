@@ -15,6 +15,8 @@ const copyToClipboard = (text) => {
   alert("Copied");
 };
 
+
+
 const useFirebaseCloudMessaging = (navigation) => {
   //const navigation = useNavigation()
   //const { getItem: getFcmToken, setItem: saveFcmToken } = useAsyncStorage('fcmToken')
@@ -31,13 +33,12 @@ const useFirebaseCloudMessaging = (navigation) => {
         .then(token => {
           console.log("Firebase Token",token)
           setFcmToken(token)
-          console.log("Firebase Token",token)
-          
-     if(token){
-        AsyncStorageLib.setItem('fcmtoken',JSON.stringify(token))
-      //  Alert.alert('firebase Token', token, [ {text: `copy`, onPress: () => copyToClipboard(token), style: 'cancel'}, {text: 'close alert', onPress: () => console.log('closed')}, ], { cancelable: true});
 
-     }
+          if(token){
+            AsyncStorageLib.setItem('fcmtoken',JSON.stringify(token))
+            //Alert.alert('firebase Token', token, [ {text: `copy`, onPress: () => copyToClipboard(token), style: 'cancel'}, {text: 'close alert', onPress: () => console.log('closed')}, ], { cancelable: true});
+          }
+
           //saveFcmToken(token)
         })
     }
@@ -67,6 +68,7 @@ const useFirebaseCloudMessaging = (navigation) => {
       AsyncStorageLib.setItem('fcmtoken',JSON.stringify(token))
       //Alert.alert('firebase Token', token, [ {text: `copy`, onPress: () => copyToClipboard(token), style: 'cancel'}, {text: 'close alert', onPress: () => console.log('closed')}, ], { cancelable: true});
     }
+        
     })
   }, [])
 
@@ -75,6 +77,7 @@ const useFirebaseCloudMessaging = (navigation) => {
      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage))
       console.log(remoteMessage.notification.body)
       console.log(remoteMessage.notification.title)
+
       SendNotification(remoteMessage.notification.title,remoteMessage.notification.body)
      // firebaseNotification(remoteMessage.notification.title,'MunziDapp','You have new Exchange updates',remoteMessage.notification.body)
     })
@@ -82,6 +85,7 @@ const useFirebaseCloudMessaging = (navigation) => {
       console.log('Message handled in the background!', remoteMessage);
       //firebaseNotification(remoteMessage.notification.title,'MunziDapp','You have new Exchange updates',remoteMessage.notification.body)
       SendNotification(remoteMessage.notification.title,remoteMessage.notification.body)
+
 
     });
 
@@ -121,6 +125,6 @@ const useFirebaseCloudMessaging = (navigation) => {
   }
 }
 
+
 export default useFirebaseCloudMessaging
 
-//W22WH7723B

@@ -4,6 +4,9 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import notifee from '@notifee/react-native';
 
 PushNotification.getChannels(function (channel_ids) {
+
+/*PushNotification.getChannels(function (channel_ids) {
+>>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
     console.log(channel_ids); // ['channel_id_1']
   });
 
@@ -29,7 +32,10 @@ PushNotification.getChannels(function (channel_ids) {
     },
     (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
   );
+<<<<<<< HEAD
 
+=======
+*/
 export default function PushNotifications(){
     const navigation = useNavigation()
         PushNotification.configure({
@@ -91,21 +97,32 @@ export const FirebaseSendNotification = async(title,message)=>{
 }
 
 
+// =======
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
 
-  export const firebaseNotification = (title,appName,submessage,message) => {
+//   export const firebaseNotification = (title,appName,submessage,message) => {
     
-    PushNotification.localNotification({
-        channelId: "1",
-      autoCancel: true,
-      bigText:
-        submessage,
-      subText: appName,
-      title: title,
-      message: message,
-      vibrate: true,
-      vibration: 300,
-      playSound: true,
-      soundName: 'default',
-      actions: '["Yes", "No"]'
-    })
-  }
+//     PushNotification.localNotification({
+//         channelId: "1",
+//       autoCancel: true,
+// <<<<<<< HEAD
+//       bigText:
+//         submessage,
+// =======
+//       bigText:submessage,
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
+//       subText: appName,
+//       title: title,
+//       message: message,
+//       vibrate: true,
+//       vibration: 300,
+//       playSound: true,
+//       soundName: 'default',
+// <<<<<<< HEAD
+//       actions: '["Yes", "No"]'
+// =======
+//       actions: ["Yes", "No"],
+//       invokeApp:false
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
+//     })
+//   }

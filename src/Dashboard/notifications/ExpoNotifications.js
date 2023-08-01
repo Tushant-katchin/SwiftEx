@@ -10,12 +10,21 @@ const copyToClipboard = (text) => {
 };
 
 /*Notifications.setNotificationHandler({
+=======
+import { Text, View, Button, Platform } from 'react-native';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+>>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
   }),
+<<<<<<< HEAD
 });*/
+
 
 // Can use this function below OR use Expo's Push Notification Tool from: https://expo.dev/notifications
 export async function sendPushNotification(expoPushToken) {
@@ -60,6 +69,8 @@ export async function registerForPushNotificationsAsync() {
       //Alert.alert('Push Token', token, [ {text: `copy`, onPress: () => copyToClipboard(token), style: 'cancel'}, {text: 'close alert', onPress: () => console.log('closed')}, ], { cancelable: true});
       
     }
+
+     
   } else {
     alert('Must use physical device for Push Notifications');
   }
