@@ -45,6 +45,8 @@ const NewWalletPrivateKey = ({
   const [visible, setVisible] = useState(false);
   const [newWallet, setNewWallet] = useState(false);
   const [data, setData] = useState();
+  const [user, setUser] = useState("");
+
 
   const [MnemonicVisible, setMnemonicVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -185,14 +187,29 @@ const NewWalletPrivateKey = ({
           {/* <Text selectable={true} style={style.welcomeText2}>
             {Wallet ? Wallet.mnemonic : ""}
           </Text> */}
-          <Text style={style.welcomeText2}> Account Name</Text>
+          {/* <Text style={style.welcomeText2}> Account Name</Text> */}
 
+
+          <View style={style.labelInputContainer}>
+          <Text style={style.label}>Account Name</Text>
           <TextInput
+            value={accountName}
+            onChangeText={(text) => {
+              setAccountName(text);
+            }}
+            style={{ width: wp("78%") }}
+            placeholder={user ? user : "Enter your account name"}
+            placeholderTextColor={"black"}
+          />
+        </View>
+
+          {/* <TextInput
+          placeholder="Enter your account name"
             style={style.input}
             value={accountName}
             onChangeText={(text) => setAccountName(text)}
             autoCapitalize={"none"}
-          />
+          /> */}
 
           <View style={{ width: wp(95) }}>
             <TouchableOpacity
@@ -313,7 +330,7 @@ const style = StyleSheet.create({
     fontSize: 14,
     color: "black",
     textAlign: "center",
-    marginTop: hp(5),
+    marginTop: hp(3),
   },
   Button: {
     marginTop: hp(0),
@@ -356,7 +373,7 @@ const style = StyleSheet.create({
   },
   ButtonView: {
     backgroundColor: "#4CA6EA",
-    width: wp(50),
+    width: wp(40),
     alignSelf: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -403,5 +420,29 @@ const style = StyleSheet.create({
   welcomeText: {
     color: "black",
     textAlign:'center'
+  },
+  labelInputContainer: {
+    position: "relative",
+    width: wp(90),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(6),
+    borderRadius: wp(2),
+    backgroundColor: "white",
+    borderWidth: 1,
+    paddingLeft: wp(3),
+    paddingVertical: hp(1.2),
+    borderColor: "#DADADA",
+  },
+  label: {
+    position: "absolute",
+    zIndex: 100,
+    backgroundColor: "white",
+    paddingHorizontal: 5,
+    left: 12,
+    color: "#4CA6EA",
+    top: -12,
   },
 });

@@ -16,7 +16,7 @@ import {
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { Animated, AppState } from "react-native";
-import title_icon from "../../assets/Wallet1.png";
+import walletImage from "../../assets/walletImage.png";
 import { LinearGradient } from "expo-linear-gradient";
 
 import {
@@ -63,7 +63,7 @@ const Wallet = ({ navigation }) => {
             marginLeft: wp(25),
             borderRadius: wp(10),
           }}
-          source={title_icon}
+          source={walletImage}
         />
         <View
           style={{

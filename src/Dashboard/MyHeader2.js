@@ -350,7 +350,12 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     getETHBNBPrice();
     getBalanceInUsd(EthBalance, bnbBalance);
   }, []);
-
+  var obj = {
+    amount: 100,
+    addressFrom: "Delhi",
+    addressTo: "Indore",
+    type: "Paid",
+  };
   return (
     <View style={{ backgroundColor: "#fff" }}>
       <View style={styles.headerContainer}>
@@ -376,7 +381,6 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Text style={styles.dollartxt}>
           $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>
-        
       </View>
       <View style={styles.buttons}>
         <IconWithCircle
@@ -384,6 +388,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           type={"antDesign"}
           title={"Send"}
           onPress={() => setModalVisible(!modalVisible)}
+          
         />
 
         <IconWithCircle
@@ -397,8 +402,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           name={"swap-horizontal"}
           type={"ionicon"}
           title={"Swap"}
-          onPress={()=>{
-            setModalVisible3(true)
+          onPress={() => {
+            setModalVisible3(true);
           }}
           // onPress={async () => {
           //   const walletType = await AsyncStorageLib.getItem("walletType");
@@ -438,14 +443,15 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         swapType={swapType}
       />
 
-      <TouchableOpacity style={styles.iconmainContainer} onPress={()=>{
-             navigation.navigate('Market')
-      }}>
+      <TouchableOpacity
+        style={styles.iconmainContainer}
+        onPress={() => {
+          navigation.navigate("Market");
+        }}
+      >
         <View style={styles.iconTextContainer}>
           <Icon name="graph" type={"simpleLine"} size={hp(3)} />
-          <Text style={{ marginHorizontal: hp(1) }}>
-            Market insights
-          </Text>
+          <Text style={{ marginHorizontal: hp(1) }}>Market insights</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <Icon name="cross" type={"entypo"} size={hp(3.6)} color="black" />
