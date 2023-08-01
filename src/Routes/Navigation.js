@@ -57,6 +57,7 @@ import {
 } from "../Dashboard/header";
 import MyPrivateKey from "../Dashboard/myPrivateKey";
 import MarketChart from "../Dashboard/MarketChart";
+import RecieveAddress from "../Dashboard/Modals/ReceiveAddress";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -65,7 +66,7 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="MarketChart"
+      // initialRouteName="Confirm Tx"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
@@ -98,8 +99,18 @@ const AuthStack = () => (
           },
         }}
       /> */}
+      {/* <Stack.Screen
+        name="RecieveAddress"
+        component={RecieveAddress}
+        options={{ 
+          header:()=>{
+            return(
+              <WalletHeader title='Market-Chart'/>
+            )
+          }
+        }}
+      />    */}
 
-       
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -155,17 +166,7 @@ const AuthStack = () => (
           },
         }}
       />
-<Stack.Screen
-        name="MarketChart"
-        component={MarketChart}
-        options={{ 
-          header:()=>{
-            return(
-              <WalletHeader title='Market-Chart'/>
-            )
-          }
-        }}
-      />  
+
       <Stack.Screen
         name="OfferListView"
         component={OfferListView}
@@ -205,11 +206,8 @@ const AuthStack = () => (
         name="CoinDetails"
         component={CoinDetails}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Coin-Detail" />;
           },
         }}
       />
@@ -401,11 +399,8 @@ const AuthStack = () => (
         name="Confirm Tx"
         component={ConfirmTransaction}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Confirm Tx" />;
           },
         }}
       />

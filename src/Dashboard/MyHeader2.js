@@ -414,6 +414,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           type={"antDesign"}
           title={"Send"}
           onPress={() => setModalVisible(!modalVisible)}
+          
         />
 
         <IconWithCircle
@@ -427,8 +428,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           name={"swap-horizontal"}
           type={"ionicon"}
           title={"Swap"}
-          onPress={()=>{
-            setModalVisible3(true)
+          onPress={() => {
+            setModalVisible3(true);
           }}
           // onPress={async () => {
           //   const walletType = await AsyncStorageLib.getItem("walletType");
@@ -468,9 +469,12 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         swapType={swapType}
       />
 
-      <TouchableOpacity style={styles.iconmainContainer} onPress={()=>{
-             navigation.navigate('Market')
-      }}>
+      <TouchableOpacity
+        style={styles.iconmainContainer}
+        onPress={() => {
+          navigation.navigate("Market");
+        }}
+      >
         <View style={styles.iconTextContainer}>
           <Icon name="graph" type={"simpleLine"} size={hp(3)} />
           <Text style={{ marginHorizontal: hp(1),color:'black' }}>

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Share,
   Clip,
+  Image,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -19,33 +20,38 @@ import { Avatar, Card, Title } from "react-native-paper";
 import Bnbimage from "../../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../../assets/ethereum.png";
 import maticImage from "../../../assets/matic.png";
-import xrpImage  from "../../../assets/xrp.png"
+import xrpImage from "../../../assets/xrp.png";
 import Modal from "react-native-modal";
 import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
 import Moralis from "moralis";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import SnackBar from 'react-native-snackbar-component'
+import SnackBar from "react-native-snackbar-component";
 import { checkPendingTransactions } from "../../utilities/web3utilities";
 import Header from "../reusables/Header";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
-const RippleAPI = require('ripple-lib').RippleAPI
+import Icon from "../../icon";
+const RippleAPI = require("ripple-lib").RippleAPI;
 
 const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   const state = useSelector((state) => state);
-  const WalletAddress = useSelector((state) => iconType==='Xrp' && state.wallet.xrp? state.wallet.xrp.address : state.wallet.address);
+  const WalletAddress = useSelector((state) =>
+    iconType === "Xrp" && state.wallet.xrp
+      ? state.wallet.xrp.address
+      : state.wallet.address
+  );
   const [selected, setSelected] = useState(false);
   const [selected1, setSelected1] = useState(false);
   const [selected2, setSelected2] = useState(false);
   const [qrvalue, setQrvalue] = useState("");
-  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [copiedText, setCopiedText] = useState("");
   const [transactions, setTransactions] = useState("");
-  const[newTx,setNewTx] = useState()
+  const [newTx, setNewTx] = useState();
   const dispatch = useDispatch();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   let EtherLeftContent = (props) => (
     <Avatar.Image {...props} source={Etherimage} size={50} />
@@ -77,17 +83,19 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         // dismissed
       }
     } catch (error) {
-      
-      alert("error",error.message);
+      alert("error", error.message);
     }
   };
 
   const copyToClipboard = () => {
-    Clipboard.setString(iconType==='Xrp' && state.wallet.xrp? state.wallet.xrp.address:state.wallet.address);
-    alert("success","Copied");
+    Clipboard.setString(
+      iconType === "Xrp" && state.wallet.xrp
+        ? state.wallet.xrp.address
+        : state.wallet.address
+    );
+    alert("success", "Copied");
   };
 
-  
   const saveTransactions = async (txData) => {
     const user = await state.user;
     let userTransactions = [];
@@ -127,18 +135,16 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   const findNewTransactions = async (transactions, allTransactions) => {
     const walletType = await AsyncStorageLib.getItem("walletType");
     let newArr = [];
-    const walletAddress = await state.wallet.address
+    const walletAddress = await state.wallet.address;
     let now = +new Date();
     var oneDay = 24 * 60 * 60 * 1000;
     //console.log('Retreiving all transactions from',  minTimestamp);
-
 
     allTransactions.filter(async (item, index) => {
       let found;
       let createdAt = +new Date(Date.parse(item.block_timestamp.toString()));
 
-      if(walletAddress){
-
+      if (walletAddress) {
         //console.log( item.to_address.toUpperCase() == (await state.wallet.address).toUpperCase(),item.hash);
       }
       for (let index = 0; index < transactions.length; index++) {
@@ -148,13 +154,25 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
       }
       console.log(found);
       if (!found) {
-        console.log("TX_Time = ",item.block_timestamp)
-        console.log("created at = ",now,createdAt )
+        console.log("TX_Time = ", item.block_timestamp);
+        console.log("created at = ", now, createdAt);
 
-        if(item.to_address.toUpperCase() == (await state.wallet.address).toUpperCase() && (now - createdAt) < oneDay){
-
+        if (
+          item.to_address.toUpperCase() ==
+            (await state.wallet.address).toUpperCase() &&
+          now - createdAt < oneDay
+        ) {
           newArr.push({
-            chainType: walletType==="BSC"?"BSC":walletType=="Ethereum"?"Eth":walletType=='Xrp'?"Xrp":walletType=='Matic'?"Matic":"Eth",
+            chainType:
+              walletType === "BSC"
+                ? "BSC"
+                : walletType == "Ethereum"
+                ? "Eth"
+                : walletType == "Xrp"
+                ? "Xrp"
+                : walletType == "Matic"
+                ? "Matic"
+                : "Eth",
             hash: item.hash,
             type: "receive",
             walletType: JSON.parse(walletType),
@@ -178,15 +196,15 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         if (data) {
           setTransactions(data.reverse());
           return data;
-        }else{
-          return []
+        } else {
+          return [];
         }
       }
     );
     return resp;
   };
 
-  const checkIncomingTx = async (transactions,chainId) => {
+  const checkIncomingTx = async (transactions, chainId) => {
     try {
       /* await Moralis.start({
         apiKey: "KRXC1pBilfY526QDwlrM1pINBUFgtZ2cLcSB8KYQyvlq3vHbrdknIZlfTK5DL1D0"
@@ -198,18 +216,17 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         });
       const allTx = response.raw.result;
       //  console.log(transactions);
-      console.log("Hi Tx",response.raw.result);
+      console.log("Hi Tx", response.raw.result);
 
       findNewTransactions(transactions, allTx).then((data) => {
         console.log(data);
         //let saved
         data.map((e) => {
           //console.log(e);
-          if(e){
+          if (e) {
             setTimeout(() => {
-              
-              setSnackbarVisible(true)
-              setNewTx(e)
+              setSnackbarVisible(true);
+              setNewTx(e);
             }, 0);
             /*saveTransactions(e)
             .then(()=>{
@@ -217,127 +234,119 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               
             })*/
           }
-         
-          
-
         });
-        
       });
     } catch (e) {
       console.error(e);
     }
   };
 
-  const getIncomingXrpTx = (allTransactions, walletType) =>{
-
-
-// This example connects to a public Test Net server
-const api = new RippleAPI({server: 'wss://s.altnet.rippletest.net:51233'})
-api.connect().then(async () => {
-  console.log('Connected')
-
-  const account_objects_request = {
-    "id": 2,
-    "command": "account_tx",
-    "account": await state.wallet.address,
-    "ledger_index_min": -1,
-    "ledger_index_max": -1,
-    "binary": false,
-    "limit": 2,
-    "forward": false
-  }
-
-  return api.connection.request(account_objects_request)
-}).then(response => {
-  let receiveTransactions =[]
-  let newRecTx =[]
-  //console.log("account_objects response:", response.transactions[0].tx, await state.wallet.address)
-  const allTx = response.transactions
-   allTx.map(async (item)=>{
-    console.log(item.tx)
-    if(item.tx.Destination===WalletAddress){
-      console.log(true)
-      receiveTransactions.push({
-        hash:item.tx.hash
-      })
-    }
-    //console.log(receiveTransactions)
-    
-  })
- 
-  console.log( receiveTransactions)
-  //console.log(allTransactions)
-  let found
-  let newArr=[]
-  receiveTransactions.filter((item)=>{
-    console.log(item)
-    for (let index = 0; index < allTransactions.length; index++) {
-      if (item.hash == allTransactions[index].hash) {
-        found = true;
-      }
-    }
-    console.log(found);
-    if (!found) {
-
-        newArr.push({
-          chainType: 'Xrp',
-          hash: item.hash,
-          type: "receive",
-          walletType: walletType,
-        });
-    
-    }
-  })
-  //console.log(newArr)
-  newArr.map((e) => {
-    console.log(e);
-    if(e){
-      setTimeout(() => {
-        
-        setSnackbarVisible(true)
-        setNewTx(e)
-      }, 0);
-    }
-  })
-  return newArr
-  
-// Disconnect and return
-}).then(() => {
-  api.disconnect().then(() => {
-    console.log('Disconnected')
-    process.exit()
-  })
-}).catch(console.error) }
-
-const getNewTransactions = async () =>{
-  try {
-        
-    getTransactions().then(async (res) => {
-      //console.log(res);
-      const walletType = await AsyncStorageLib.getItem("walletType");
-    console.log(JSON.parse(walletType))
-      if(JSON.parse(walletType)=="BSC"){
-
-        checkIncomingTx(res?res:[],"97");
-      }else if(JSON.parse(walletType)=="Ethereum"){
-        checkIncomingTx(res?res:[],"5");
-      }
-      else if(JSON.parse(walletType)=="Matic"){
-        checkIncomingTx(res?res:[],"0x13881");
-      }
-      else if(JSON.parse(walletType)=="Xrp"){
-        await getIncomingXrpTx(res?res:[],"Xrp")
-        
-      }
-      else{
-        //alert(`Saving receive tx for ${walletType} is  not supported yet`)
-        console.log(JSON.parse(walletType))
-      }
+  const getIncomingXrpTx = (allTransactions, walletType) => {
+    // This example connects to a public Test Net server
+    const api = new RippleAPI({
+      server: "wss://s.altnet.rippletest.net:51233",
     });
-  } catch (e) {
-    console.log(e);
-  }
-}
+    api
+      .connect()
+      .then(async () => {
+        console.log("Connected");
+
+        const account_objects_request = {
+          id: 2,
+          command: "account_tx",
+          account: await state.wallet.address,
+          ledger_index_min: -1,
+          ledger_index_max: -1,
+          binary: false,
+          limit: 2,
+          forward: false,
+        };
+
+        return api.connection.request(account_objects_request);
+      })
+      .then((response) => {
+        let receiveTransactions = [];
+        let newRecTx = [];
+        //console.log("account_objects response:", response.transactions[0].tx, await state.wallet.address)
+        const allTx = response.transactions;
+        allTx.map(async (item) => {
+          console.log(item.tx);
+          if (item.tx.Destination === WalletAddress) {
+            console.log(true);
+            receiveTransactions.push({
+              hash: item.tx.hash,
+            });
+          }
+          //console.log(receiveTransactions)
+        });
+
+        console.log(receiveTransactions);
+        //console.log(allTransactions)
+        let found;
+        let newArr = [];
+        receiveTransactions.filter((item) => {
+          console.log(item);
+          for (let index = 0; index < allTransactions.length; index++) {
+            if (item.hash == allTransactions[index].hash) {
+              found = true;
+            }
+          }
+          console.log(found);
+          if (!found) {
+            newArr.push({
+              chainType: "Xrp",
+              hash: item.hash,
+              type: "receive",
+              walletType: walletType,
+            });
+          }
+        });
+        //console.log(newArr)
+        newArr.map((e) => {
+          console.log(e);
+          if (e) {
+            setTimeout(() => {
+              setSnackbarVisible(true);
+              setNewTx(e);
+            }, 0);
+          }
+        });
+        return newArr;
+
+        // Disconnect and return
+      })
+      .then(() => {
+        api.disconnect().then(() => {
+          console.log("Disconnected");
+          process.exit();
+        });
+      })
+      .catch(console.error);
+  };
+
+  const getNewTransactions = async () => {
+    try {
+      getTransactions().then(async (res) => {
+        //console.log(res);
+        const walletType = await AsyncStorageLib.getItem("walletType");
+        console.log(JSON.parse(walletType));
+        if (JSON.parse(walletType) == "BSC") {
+          checkIncomingTx(res ? res : [], "97");
+        } else if (JSON.parse(walletType) == "Ethereum") {
+          checkIncomingTx(res ? res : [], "5");
+        } else if (JSON.parse(walletType) == "Matic") {
+          checkIncomingTx(res ? res : [], "0x13881");
+        } else if (JSON.parse(walletType) == "Xrp") {
+          await getIncomingXrpTx(res ? res : [], "Xrp");
+        } else {
+          //alert(`Saving receive tx for ${walletType} is  not supported yet`)
+          console.log(JSON.parse(walletType));
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -353,36 +362,28 @@ const getNewTransactions = async () =>{
     //  await check()
   }, []);
 
-  useEffect(async ()=>{
-   //await checkPendingTransactions(WalletAddress)
-  },[])
+  useEffect(async () => {
+    //await checkPendingTransactions(WalletAddress)
+  }, []);
   useFocusEffect(
     React.useCallback(() => {
       try {
-        
         getTransactions().then(async (res) => {
           //console.log(res);
           const walletType = await AsyncStorageLib.getItem("walletType");
-        console.log(JSON.parse(walletType))
-          if(JSON.parse(walletType)=="BSC"){
-
-            checkIncomingTx(res?res:[],"97");
-          }else if(JSON.parse(walletType)=="Ethereum"){
-            checkIncomingTx(res?res:[],"5");
-          }
-          else if(JSON.parse(walletType)=="Matic"){
-            checkIncomingTx(res?res:[],"0x13881");
-          }
-          else if(JSON.parse(walletType)=="Xrp"){
-            await getIncomingXrpTx(res?res:[],"Xrp")
-            
-          }
-          else if(JSON.parse(walletType)==='Multi-coin'){
-            
-          }
-          else{
+          console.log(JSON.parse(walletType));
+          if (JSON.parse(walletType) == "BSC") {
+            checkIncomingTx(res ? res : [], "97");
+          } else if (JSON.parse(walletType) == "Ethereum") {
+            checkIncomingTx(res ? res : [], "5");
+          } else if (JSON.parse(walletType) == "Matic") {
+            checkIncomingTx(res ? res : [], "0x13881");
+          } else if (JSON.parse(walletType) == "Xrp") {
+            await getIncomingXrpTx(res ? res : [], "Xrp");
+          } else if (JSON.parse(walletType) === "Multi-coin") {
+          } else {
             //alert(`Saving receive tx for ${walletType} is  not supported yet`)
-            console.log(JSON.parse(walletType))
+            console.log(JSON.parse(walletType));
           }
         });
       } catch (e) {
@@ -390,10 +391,10 @@ const getNewTransactions = async () =>{
       }
     }, [])
   );
-  
-  const closeModal = () =>{
-     setModalVisible(false)
-  }
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   return (
     <Animated.View // Special animatable View
@@ -410,143 +411,138 @@ const getNewTransactions = async () =>{
         backdropTransitionOutTiming={0}
         hideModalContentWhileAnimating
         statusBarTranslucent={true}
-        onBackdropPress={() => setModalVisible(false)}
+        style={style.modal}
         onBackButtonPress={() => {
           setModalVisible(false);
         }}
       >
-        <View style={style.Body}>
-          <ModalHeader Function={closeModal} name={'Address'} />
-          <TouchableOpacity style={style.Box3} onPress={() => {}}>
-            <Card
-              style={{
-                width: wp(90),
-                height: hp(70),
-                backgroundColor: "white",
-                borderRadius: 10,
-              }}
-            >
-              <Card.Title
-                titleStyle={{ color: "black" }}
-                title={iconType}
-                left={
-                  iconType === "BNB"
-                    ? BnbLeftContent
-                    : iconType === "ETH"
-                    ? EtherLeftContent
-                    :iconType ==="Xrp"
-                    ?xrpLeftContent
-                    : maticLeftContent
-                }
-              />
-              <Card.Content
-                style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-              >
-                <Title style={{ color: "#fff" }}></Title>
-              </Card.Content>
-            </Card>
+        <View
+          style={style.barCode}
+        >
+          <TouchableOpacity
+            style={style.flatView}
+          >
+            <Image
+              style={{ width: wp(10), height: hp(5) }}
+              source={
+                iconType === "BNB"
+                  ? Bnbimage
+                  : iconType === "ETH"
+                  ? Etherimage
+                  : iconType === "Xrp"
+                  ? xrpImage
+                  : maticImage
+              }
+            />
+
+            <Text style={{ marginHorizontal: wp(2), color: "#4169e1" }}>
+              {iconType}
+            </Text>
           </TouchableOpacity>
 
-          <QRCode
-            //QR code value
-            value={qrvalue ? qrvalue : "NA"}
-            //size of QR Code
-            size={250}
-            //Color of the QR Code (Optional)
-            color="black"
-            //Background Color of the QR Code (Optional)
-            backgroundColor="white"
-            //Logo of in the center of QR Code (Optional)
-            logo={{
-              url: "https://raw.githubusercontent.com/AboutReact/sampleresource/master/logosmalltransparen.png",
-            }}
-            //Center Logo size  (Optional)
-            logoSize={30}
-            //Center Logo margin (Optional)
-            logoMargin={2}
-            //Center Logo radius (Optional)
-            logoBorderRadius={15}
-            //Center Logo background (Optional)
-            logoBackgroundColor="yellow"
-          />
-          <Text style={{ marginTop: hp(3) }}>
-            Address: { WalletAddress ? WalletAddress : ""}
-          </Text>
-          <View style={style.Button}>
-            <TouchableOpacity
-              style={{
-                width: wp(14),
-                height: hp(7),
-                backgroundColor: selected ? "green" : "#D4F1F4",
-                marginTop: 10,
-                borderRadius: 20,
-                marginLeft: wp(-5),
-                margin: 10,
+          <View style={{ alignSelf: "center" ,marginTop:hp(1)}}>
+            <QRCode
+              //QR code value
+              value={qrvalue ? qrvalue : "NA"}
+              //size of QR Code
+              size={250}
+              //Color of the QR Code (Optional)
+              color="black"
+              //Background Color of the QR Code (Optional)
+              backgroundColor="white"
+              //Logo of in the center of QR Code (Optional)
+              logo={{
+                url: "https://raw.githubusercontent.com/AboutReact/sampleresource/master/logosmalltransparen.png",
               }}
+              //Center Logo size  (Optional)
+              logoSize={30}
+              //Center Logo margin (Optional)
+              logoMargin={2}
+              //Center Logo radius (Optional)
+              logoBorderRadius={15}
+              //Center Logo background (Optional)
+              // logoBackgroundColor="yellow"
+            />
+          </View>
+          <Text
+            style={style.addressTxt}
+          >
+            {WalletAddress ? WalletAddress : ""}
+          </Text>
+        </View>
+
+        <View
+          style={style.btnView}
+        >
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity
+              style={style.copyBtn}
               onPress={() => {
                 copyToClipboard();
                 setSelected(true);
                 setSelected1(false);
-               // setSnackbarVisible(true)
+                // setSnackbarVisible(true)
               }}
             >
-              <View
-                style={{
-                  alignItems: "center",
-                  alignContent: "center",
-                  marginTop: 12,
-                }}
-              >
-                <Text style={{ color: selected ? "white" : "black" }}>
-                  Copy
-                </Text>
-              </View>
+              <Icon
+                name="content-copy"
+                type={"materialCommunity"}
+                size={20}
+                color={"white"}
+              />
             </TouchableOpacity>
+            <Text style={style.btnTextColor}>Copy</Text>
+          </View>
+          <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              style={{
-                width: wp(14),
-                height: hp(7),
-                backgroundColor: selected1 ? "green" : "#D4F1F4",
-                marginTop: 10,
-                borderRadius: 20,
-                margin: 10,
-              }}
-              onPress={() => {
-                onShare();
-                setSelected1(true);
-                setSelected(false);
-              }}
+              style={style.amount}
             >
-              <View
-                style={{
-                  alignItems: "center",
-                  alignContent: "center",
-                  marginTop: 12,
-                }}
-              >
-                <Text style={{ color: selected1 ? "white" : "black" }}>
-                  Share
-                </Text>
-              </View>
+              <Icon name="tag" type={"Octicons"} size={20} color={"#4169e1"} />
             </TouchableOpacity>
+            <Text style={style.btnTextColor}>set Amount</Text>
           </View>
-          
+
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity
+             onPress={() => {
+              onShare();
+              setSelected1(true);
+              setSelected(false);
+            }}
+              style={style.amount}
+            >
+              <Icon name="share" type={"feather"} size={20} color={"#4169e1"} />
+            </TouchableOpacity>
+
+            <Text style={style.btnTextColor}>Sharse</Text>
           </View>
-      <SnackBar visible={snackbarVisible} position={'bottom'} textMessage="New Receive Tx Found. Proceed to save it"  
-          actionHandler={()=>{
-            console.log('pressed')
+        </View>
+
+        <SnackBar
+          visible={snackbarVisible}
+          position={"bottom"}
+          textMessage="New Receive Tx Found. Proceed to save it"
+          actionHandler={() => {
+            console.log("pressed");
             setTimeout(() => {
-              
-              console.log(newTx)    
-              saveTransactions(newTx) 
-              alert("success",'Tx Saved! Check Transactions page for more details about the Tx')
-              setSnackbarVisible(false)
-              setModalVisible(false)
-              
+              console.log(newTx);
+              saveTransactions(newTx);
+              alert(
+                "success",
+                "Tx Saved! Check Transactions page for more details about the Tx"
+              );
+              setSnackbarVisible(false);
+              setModalVisible(false);
+
               //navigation.navigate("Transactions")
             }, 0);
-          }} actionText="Proceed"/>
-          </Modal>
+          }}
+          actionText="Proceed"
+        /> 
+
+
+       
+      </Modal>
     </Animated.View>
   );
 };
@@ -555,17 +551,10 @@ export default RecieveAddress;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
     backgroundColor: "white",
-    height: hp(83),
-    width: wp(90),
-    alignItems: "center",
-    textAlign: "center",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderBottomEndRadius: 10,
-    borderBottomLeftRadius: 10,
-    zIndex: 100,
+    height: hp(90),
+    width: wp(95),
+    alignSelf: "center",
   },
   welcomeText: {
     fontSize: 20,
@@ -634,16 +623,76 @@ const style = StyleSheet.create({
     backgroundColor: "white",
   },
   Box3: {
-    height: hp("15%"),
+    height: hp("17%"),
     width: wp("75"),
     fontSize: 20,
     fontWeight: "200",
+    alignSelf: "center",
     color: "white",
     marginTop: hp(2),
-    display: "flex",
     alignItems: "center",
     alignContent: "center",
     backgroundColor: "white",
     borderTopWidth: 1,
   },
+  modal:{
+    backgroundColor: "#fff",
+    width: wp(100),
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  barCode:{
+    backgroundColor: "#fff",
+    height: hp(50),
+    borderRadius: hp(1),
+    width: wp(80),
+    justifyContent: "center",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    elevation: 4,
+    shadowRadius: wp(1),
+    overflow: "hidden",
+    shadowOpacity: 0.2,
+    shadowColor: "#000",
+    backgroundColor: "white",
+    borderColor: "rgba(238, 227, 232,1)",
+  },
+  flatView:{
+    flexDirection: "row",
+    marginHorizontal: wp(5),
+    padding: 10,
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  addressTxt:{
+    marginTop: hp(3),
+    width: wp(54),
+    alignSelf: "center",
+    color: "gray",
+  },
+  btnView:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(56),
+    marginTop: hp(3),
+  },
+  copyBtn:{
+                height: hp(6),
+                width: hp(6),
+                backgroundColor: "#4169e1",
+                borderRadius: hp(3),
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              amount:{
+                height: hp(6),
+                width: hp(6),
+                backgroundColor: "rgba(115, 167, 242, 0.2)",
+                borderRadius: hp(3),
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              btnTextColor:{ color: "#4169e1" }
 });

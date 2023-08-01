@@ -133,7 +133,7 @@ const Dashboard = ({ navigation }) => {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-            size = 33;
+            size = 25;
             if (route.name === "Home") {
               iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
               iconName = "ios-home-sharp";
@@ -167,7 +167,7 @@ const Dashboard = ({ navigation }) => {
               <Text
                 style={{
                   color: iconColor,
-                  fontSize: hp("2"),
+                  // fontSize: hp("1"),
                   textAlign: "center",
                   marginBottom: 10,
                 }}
@@ -181,9 +181,9 @@ const Dashboard = ({ navigation }) => {
           tabBarStyle: {
             position: "absolute",
             backgroundColor: "#4CA6EA",
-            height: hp("12"),
-            borderTopColor: "black",
-            borderTopWidth: 1,
+            height: hp("9"),
+            // borderTopColor: "black",
+            // borderTopWidth: 1,
           },
           headerTitleAlign: "center",
 
@@ -225,7 +225,7 @@ const Dashboard = ({ navigation }) => {
                   <Text>
                     <Ionicons
                       name={"wallet"}
-                      size={hp("5")}
+                      size={hp("3")}
                       color={iconColor}
                     />
                   </Text>
