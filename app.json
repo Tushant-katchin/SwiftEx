@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "simpleapp",
+    "slug": "simpleapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/title_icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tokenmunzi.munzi"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.tokenmunzi.munzi",
+      "softwareKeyboardLayoutMode": "pan",
+      "googleServicesFile": "./google-services.json"
+
+      
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5a84df33-6d1e-4c4d-a511-c60ceebeb97a"
+      }
+    }
+  }
+}
