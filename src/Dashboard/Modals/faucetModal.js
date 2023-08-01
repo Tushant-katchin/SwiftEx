@@ -16,6 +16,7 @@ import { useState } from "react";
 import { FaucetDropdown } from "../reusables/faucetDropdown";
 import { Linking } from "react-native";
 import { faucets } from "../constants";
+import { SendNotification } from "../notifications/pushController";
 
 export const FaucetModal = ({ showModal, setShowModal }) => {
   const [network, setNetwork] = useState("");
@@ -37,7 +38,11 @@ if (network === "BSC") {
   return (
     <Center>
       <Button
-        onPress={() => setShowModal(true)}
+        onPress={ () => {
+          //setShowModal(true)
+          console.log('pressed')
+       SendNotification('title','test')
+        }}
         style={{ backgroundColor: "#145DA0" }}
       >
         Test Faucet

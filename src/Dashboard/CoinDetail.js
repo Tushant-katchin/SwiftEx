@@ -65,17 +65,17 @@ export const CoinDetails = (props) => {
     return setStyle("rgba(0,153,51,0.8)");
   }
   useEffect(async () => {
-    await getchart(name.toUpperCase(), "30m");
-    chooseStyle(Percent);
+    await getChart(props?.route?.params?.data?.symbol.toUpperCase(), "30m");
+    chooseStyle(percent);
     //fetchKline()
   }, []);
   useEffect(async () => {
-    await getchart(name.toUpperCase(), timeFrame);
-    chooseStyle(Percent);
+    await getChart(props?.route?.params?.data?.symbol.toUpperCase(), timeFrame);
+    chooseStyle(percent);
     //fetchKline()
   }, [timeFrame]);
 
-  async function getchart(name, timeFrame) {
+  async function getChart(name, timeFrame) {
     if (timeFrame === "1h") {
       console.log(name);
       if (name === "USDT") {
@@ -228,7 +228,7 @@ export const CoinDetails = (props) => {
   }
 
   useEffect(() => {
-    getchart(props?.route?.params?.data?.symbol);
+    getchart(props?.route?.params?.data?.symbol,timeFrame);
   }, []);
 
   let LeftContent = (props) => {
@@ -238,7 +238,7 @@ export const CoinDetails = (props) => {
     props?.route?.params?.data?.price_change_24h > 0 ? "green" : "red";
   return (
     <ScrollView
-      contentContainerStyle={{ backgroundColor: "white", paddingBottom: 20 }}
+      contentContainerStyle={{ backgroundColor: "white", paddingBottom: 100 }}
     >
       {/* <View style={{flexDirection:"row",alignItems:"center",marginHorizontal:wp(7),marginTop:hp(2)}}>
   <Image source={{uri: image}} style={{height:hp(3),width:wp(6)}}/>
@@ -320,7 +320,7 @@ export const CoinDetails = (props) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.buttons}>
+      {/* <View style={styles.buttons}>
         <IconWithCircle name={"arrowup"} type={"antDesign"} title={"Send"} />
         <IconWithCircle
           name={"arrowdown"}
@@ -338,7 +338,7 @@ export const CoinDetails = (props) => {
           title={"More"}
           onPress={() => {}}
         />
-      </View>
+      </View> */}
       <Text style={styles.bitcoin} numberOfLines={3}>
         Bitcoin is a cryptocurrency and worldwide payment system. It is the
         first decentralized digital currency. as the system works without a It
@@ -356,7 +356,7 @@ export const CoinDetails = (props) => {
         </View>
       </View>
       <View style={styles.iconText}>
-        <Text>Wallet</Text>
+        <Text>Price</Text>
         <View style={styles.arrowText}>
           <Text>$ {props?.route?.params?.data?.current_price}</Text>
           <Icon name="arrow-up-right" type={"feather"} size={20} />
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   bitcoin: {
     width: wp(88),
     marginHorizontal: wp(5.3),
-    marginTop: hp(3),
+    marginTop: hp(5),
   },
   iconText: {
     flexDirection: "row",

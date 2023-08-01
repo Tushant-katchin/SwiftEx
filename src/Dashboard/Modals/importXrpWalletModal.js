@@ -115,17 +115,29 @@ const ImportXrpWalletModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(() => {
-    if (accountName && (mnemonic || privateKey)) {
-      let valid;
-      if (label === "mnemonic") {
+  useEffect(()=>{
+    if(!accountName)
+    {
+      setDisable(true)
+    }
+    if(accountName && (mnemonic ||  privateKey)){
+      let valid
+      if(label==='mnemonic'){
         const phrase = mnemonic.trimStart();
         const trimmedPhrase = phrase.trimEnd();
-        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
-        if (!valid) {
-          setMessage("Please enter a valid mnemonic");
-        } else {
-          setMessage("");
+        valid = utils.isValidMnemnic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
+        
+      }else if(label==='privateKey'){
+      
+       valid = utils.isValidSeed(privateKey)
+       if(!valid){
+         setMessage('Please enter a valid private key')
         }
       } else if (label === "privateKey") {
         valid = utils.isValidSeed(privateKey);
@@ -147,7 +159,8 @@ const ImportXrpWalletModal = ({
     } else {
       setMessage("");
     }
-  }, [mnemonic, privateKey]);
+  },[mnemonic,privateKey,accountName])
+
 
   return (
     <Animated.View // Special animatable View

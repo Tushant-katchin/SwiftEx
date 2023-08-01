@@ -117,17 +117,23 @@ const ImportMultiCoinWalletModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(() => {
-    if (accountName && mnemonic) {
-      let valid;
-      const phrase = mnemonic.trimStart();
-      const trimmedPhrase = phrase.trimEnd();
-      valid = ethers.utils.isValidMnemonic(trimmedPhrase);
-      if (!valid) {
-        setMessage("Please enter a valid mnemonic");
-      } else {
-        setMessage("");
-      }
+  useEffect(()=>{
+    if(!accountName)
+    {
+      setDisable(true)
+    }
+    if(accountName &&  mnemonic )
+    {
+      let valid
+        const phrase = mnemonic.trimStart();
+        const trimmedPhrase = phrase.trimEnd();
+        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+        if(!valid){
+          setMessage('Please enter a valid mnemonic')
+        }
+        else{
+          setMessage('')
+        }
 
       if (accountName && mnemonic && valid) {
         setDisable(false);
@@ -137,7 +143,9 @@ const ImportMultiCoinWalletModal = ({
     } else {
       setMessage("");
     }
-  }, [mnemonic]);
+    },[mnemonic,accountName])
+  
+
 
   return (
     <Animated.View // Special animatable View
@@ -171,27 +179,17 @@ const ImportMultiCoinWalletModal = ({
             />
           </View>
 
-          <View style={style.inputView}>
-            <TouchableOpacity
-              onPress={async () => {
-                // setText('abc')
-                Paste(setMnemonic);
-              }}
-            >
-              <Text style={style.paste}>Paste</Text>
-            </TouchableOpacity>
-            <Text>Phrase</Text>
-            <TextInput
-              style={style.input}
-              onChangeText={(text) => {
-                setMnemonic(text);
-              }}
-              placeholder={"Enter your secret phrase here"}
-            />
-          </View>
-
-          <Text style={style.text}>
-            Typically 12 (sometimes 18.24) words separated by single spaces
+          <TextInput
+            style={style.textInput}
+            value={mnemonic}
+            onChangeText={(text) => {
+              setMnemonic(text);
+            }}
+            placeholder={"Enter your secret phrase here"}
+          />
+          <Text style={{ margin: 5 }}>
+            Secret Phrases are typically 12(sometimes 16) words long.They are
+            also called mnemonic phrase.{" "}
           </Text>
           {loading ? (
             <ActivityIndicator size="large" color="green" />

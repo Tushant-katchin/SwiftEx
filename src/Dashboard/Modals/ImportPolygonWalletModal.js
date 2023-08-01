@@ -126,10 +126,16 @@ const ImportPolygonWalletModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(() => {
-    if (accountName && (privateKey || mnemonic || json)) {
-      let valid;
-      if (label === "mnemonic") {
+  useEffect(()=>{
+    if(!accountName)
+    {
+      setDisable(true)
+    }
+
+    if(accountName && (privateKey || mnemonic || json))
+    {
+      let valid
+      if(label==='mnemonic'){
         const phrase = mnemonic.trimStart();
         const trimmedPhrase = phrase.trimEnd();
         valid = ethers.utils.isValidMnemonic(trimmedPhrase);
@@ -155,7 +161,10 @@ const ImportPolygonWalletModal = ({
     } else {
       setMessage("");
     }
-  }, [mnemonic, privateKey, json]);
+    },[mnemonic,privateKey,json,accountName])
+
+
+
 
   return (
     <Animated.View // Special animatable View
