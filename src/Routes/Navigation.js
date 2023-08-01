@@ -58,6 +58,9 @@ import {
 import MyPrivateKey from "../Dashboard/myPrivateKey";
 import MarketChart from "../Dashboard/MarketChart";
 import RecieveAddress from "../Dashboard/Modals/ReceiveAddress";
+import ImportMultiCoinWalletModal from "../Dashboard/Modals/importMultiCoinWalletModal";
+import SelectWallet from "../Dashboard/Modals/SelectWallet";
+import TokenList from "../Dashboard/tokens/TokenList";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -66,7 +69,7 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="Confirm Tx"
+      // initialRouteName="TokenList"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
@@ -110,6 +113,18 @@ const AuthStack = () => (
           }
         }}
       />    */}
+      {/* <Stack.Screen
+        name="ImportMultiCoinWalletModal"
+        component={ImportMultiCoinWalletModal}
+        options={{ headerShown: false }}
+      /> */}
+
+  {/* <Stack.Screen
+        name="TokenList"
+        component={TokenList}
+        options={{ headerShown: false }}
+      /> */}
+
 
       <Stack.Screen
         name="SplashScreen"
@@ -245,6 +260,7 @@ const AuthStack = () => (
           //header: ({route}) => state.extended===false?Header1( getHeaderTitle(route), state):Header1(getHeaderTitle(route), state)
         }}
       />
+
 
       <Stack.Screen
         name="TxDetail"

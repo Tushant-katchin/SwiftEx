@@ -110,12 +110,7 @@ const ImportMunziWallet = (props) => {
         >
           <TouchableOpacity onPress={async ()=>{
            // setText('abc')
-           
-              
-              Paste(setMnemonic)
-             
-          
-            
+              Paste(setMnemonic)          
           }}>
           <Text style={style.paste}>Paste</Text>
           </TouchableOpacity>

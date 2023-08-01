@@ -35,6 +35,7 @@ import ImportMultiCoinWalletModal from "./importMultiCoinWalletModal";
 import ImportPolygonWalletModal from "./ImportPolygonWalletModal";
 import ImportXrpWalletModal from "./importXrpWalletModal";
 import ModalHeader from "../reusables/ModalHeader";
+import { WalletHeader } from "../header";
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
   const [MultiCoinModal, setMultiCoinMoodal] = useState(false);
@@ -115,6 +116,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
     >
       <View style={style.Body}>
         {/* <ModalHeader Function={closeModal}  name={'Import'}/> */}
+        <WalletHeader title="SelectWallet" />
         <TouchableOpacity
           style={style.Box}
           onPress={() => {
@@ -124,7 +126,6 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           <Image source={title_icon} />
           <Text style={style.text}> Multi-Coin Wallet </Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={style.Box}
           onPress={() => {
@@ -134,7 +135,6 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           <Image source={Bnbimage} style={style.img} />
           <Text style={style.text}>Binance Smart Chain</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={style.Box}
           onPress={() => {
@@ -144,7 +144,6 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           <Image source={Etherimage} style={style.img} />
           <Text style={style.text}>ethereum</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={style.Box}
           onPress={() => {
@@ -154,7 +153,6 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           <Image source={Maticimage} style={style.img} />
           <Text style={style.text}>Polygon(Matic)</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={style.Box}
           onPress={() => {
@@ -206,9 +204,9 @@ export default SelectWallet;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
-    height: hp(70),
+    height: hp(100),
     borderRadius: hp(1),
-    width: wp(95),
+    width: wp(100),
 
     alignSelf: "center",
   },
