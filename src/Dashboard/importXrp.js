@@ -29,7 +29,7 @@ import {
   setProvider,
   setWalletType,
 } from "../components/Redux/actions/auth";
-import { encryptFile } from "../utilities/utilities";
+import { encryptFile, Paste } from "../utilities/utilities";
 import DialogInput from "react-native-dialog-input";
 import { urls } from "./constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
@@ -51,7 +51,6 @@ const ImportXrp = (props) => {
   const [provider, setProvider] = useState("");
   const [disable, setDisable] = useState(true);
   const [message, setMessage] = useState("");
-  const [user, setUser] = useState("");
 
   const [text, setText] = useState("");
 
@@ -161,14 +160,46 @@ const ImportXrp = (props) => {
               setAccountName(text);
             }}
             style={{ width: wp("78%") }}
-            placeholder={user ? user : "Wallet 1"}
+            placeholder={accountName?accountName: "Wallet 1"}
             placeholderTextColor={"black"}
           />
         </View>
 
         <View style={style.inputView}>
+        <TouchableOpacity onPress={async ()=>{
+           // setText('abc')
+           
+            if (label === "privateKey") {
+              await Paste(setText)
+              .then((text)=>{
+                console.log(text)
+                setPrivateKey(text)
+              })
+
+            } else if (label === "mnemonic") {
+              
+              Paste(setText)
+              .then((text)=>{
+
+                setMnemonic(text)
+              })
+
+            } else if (label === "JSON") {
+              Paste(
+                setText
+              ).then((text)=>{
+
+                setJson(text)
+              })
+
+
+            } else {
+              return alert(`please input ${label} to proceed `);
+            }
+          }}>
           <Text style={style.paste}>Paste</Text>
-          <Text>Phrase</Text>
+          </TouchableOpacity>
+            <Text>Phrase</Text>
           <TextInput
             style={style.input}
             onChangeText={(text) => {

@@ -224,6 +224,8 @@ const Market = (props) => {
   const [percent, setPercent] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [updatedData,setUpdatedData] = useState([])
+  const[searchItem, setSearchItem]= useState('')
   const navigation = useNavigation();
   const fetchKline = async (
     setData,
@@ -249,6 +251,7 @@ const Market = (props) => {
 
           setLoading(false);
           setData(responseJson);
+          setUpdatedData(responseJson)
           //setTrades(responseJson.trades)
           setPrice(responseJson.current_price);
           setPercent(responseJson.price_change_percentage_24h);
@@ -297,9 +300,24 @@ const Market = (props) => {
         <View style={Styles.searchContainer}>
           <Icon name="search1" type="antDesign" size={hp(2.4)} />
           <TextInput
-            placeholder="Search or enter website url"
+            placeholder="Search Crypto"
             placeholderTextColor={"black"}
             style={Styles.input}
+            onChangeText={(input)=>{
+              setSearchItem(input)
+              let UpdatedData=[]
+              updatedData.filter((item)=>{
+                console.log(item.name.toLowerCase().includes(input.toLowerCase()))
+                if(item.name.toLowerCase().includes(input.toLowerCase()))
+                {
+                  UpdatedData.push(item)
+                }
+                
+                    setData(UpdatedData)
+                    return UpdatedData
+                  })
+                  
+            }}
           />
         </View>
 
@@ -334,7 +352,7 @@ const Market = (props) => {
                   >
                     <Image source={{ uri: image }} style={Styles.img} />
                     <View style={Styles.flatContainerText}>
-                      <Text style={Styles.textWidth}>{item.symbol}</Text>
+                      <Text >{item.name}</Text>
                       <Text>{`$ ${
                         item.current_price ? item.current_price.toFixed(2) : "0"
                       }`}</Text>

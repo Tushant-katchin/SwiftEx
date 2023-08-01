@@ -1047,6 +1047,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
     const walletType = await AsyncStorageLib.getItem("walletType");
     const walletAdress = await state.wallet.address;
     console.log(walletType);
+    console.log("assetname",assetName)
     if (assetName == "ETH") {
       if (
         JSON.parse(walletType) == "Ethereum" ||
@@ -1064,8 +1065,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       );
     } else if (assetName == "BNB") {
       if (
-        JSON.parse(walletType) !== "BNB" ||
-        JSON.parse(walletType) !== "Multi-coin"
+        JSON.parse(walletType) == "BNB" ||
+        JSON.parse(walletType) == "Multi-coin"
       ) {
         const balance = await state.walletBalance;
         console.log(balance);
@@ -1154,6 +1155,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
   };
 
   useEffect(() => {
+    console.log(newOffer)
     defaultTxFeeDataSetup();
     getAllAssets();
   }, []);
@@ -1163,7 +1165,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
   }, [transactionHash]);
 
   useEffect(() => {
-    getBalance(newOffer.assetName);
+    console.log(newOffer)
+    getBalance(newOffer.assetName)
   }, [newOffer.assetName]);
   useEffect(() => {
     enableValidation();
@@ -1182,7 +1185,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       animationOut="slideOutRight"
       animationInTiming={100}
       animationOutTiming={200}
-      isVisible={false}
+      isVisible={open}
       useNativeDriver={true}
       useNativeDriverForBackdrop={true}
       backdropTransitionOutTiming={0}
@@ -1212,13 +1215,13 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           }}
         >
           <Text style={styles.addingText}>Adding Offer</Text>
-          <Text style={{ color: "red" }}>{modalMessage}</Text>
+          <Text style={{ color: "white" }}>{modalMessage}</Text>
           {txMessage && (
             <View>
-              <Text>{txMessage}</Text>
+              <Text style={{ color: "white" }}>{txMessage}</Text>
               {txLink && (
                 <View>
-                  <Text>Click the link below to check transaction</Text>
+                  <Text style={{ color: "white" }}>Click the link below to check transaction</Text>
                   <TouchableOpacity
                     onPress={() => {
                       //Linking.openURL(txLink)
@@ -1251,11 +1254,11 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           >
             <View style={styles.dropdownContainer}>
               <View>
-                <Text style={styles.assetText}>Enter Asset Amount</Text>
+                <Text style={styles.assetText}>Select Asset</Text>
                 <DropDown
                   dropdownStyle={styles.dropdownText}
                   placeholderTextStyle={{ color: "white" }}
-                  Title="0.01 ASI"
+                  Title="Assets"
                   dropdownData={assetsOptions}
                   setNewOffer={setNewOffer}
                   newOffer={newOffer}
@@ -1284,7 +1287,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
             }}
           >
             <View style={styles.inputContainer}>
-              <Text style={styles.unitText}>Enter Unit Price</Text>
+              <Text style={styles.unitText}>Enter Amount</Text>
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"

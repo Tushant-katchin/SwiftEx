@@ -7,7 +7,7 @@ import {
   Button,
   Modal,
   FlatList,
-  TextInput,
+  
   TouchableOpacity,
   Alert,
   ActivityIndicator,
@@ -62,6 +62,7 @@ import { SwapEthForTokens } from "../tokens/swapFunctions";
 import { SwapTokensToTokens, UniSwap } from "../tokens/UniswapFunctions";
 import { useBiometricsForSwapTransaction } from "../../biometrics/biometric";
 import { alert } from "../reusables/Toasts";
+import { TextInput } from "react-native-paper";
 
 const SwapModal = ({ modalVisible, setModalVisible }) => {
   const [loading, setLoading] = useState(false);
@@ -88,12 +89,14 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     address: "",
     symbol: "",
     ChainId: "",
+    logoUri:""
   });
   const [coin1, setCoin1] = useState({
     name: "Token2",
     address: "",
     symbol: "",
     ChainId: "",
+    logoUri:""
   });
   const [tradePrice, setTradePrice] = useState({
     token1totoken2: "0",
@@ -880,8 +883,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     const walletType = await AsyncStorageLib.getItem("walletType");
 
     const address = await state.wallet.address;
-    console.log(coin0.address);
-    console.log(walletType);
+   
     if (JSON.parse(walletType) === "Ethereum") {
       if (coin0.symbol === "WETH") {
         console.log(await state.EthBalance);
@@ -943,6 +945,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
       coin1.address &&
       coin0.address &&
       amount != 0 &&
+      Number(amount)<Number(balance)&&
       (inputValidation || inputValidation1)
     ) {
       setDisable(false);
@@ -1005,7 +1008,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           </View>
           <View style={styles.cardBoxContainer}>
             {/* <TokenHeader setVisible={setModalVisible} name={name} /> */}
-
             <View
               style={styles.cardmainContainer}
               onStartShouldSetResponder={() => Keyboard.dismiss()}
@@ -1024,7 +1026,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   placeholderTextColor={"gray"}
                   style={styles.textinputCon}
                 />
-                <View
+               <TouchableOpacity
+                onPress={()=>{
+                  setCoinType("0");
+                  setOpenChain(true);
+                }}
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -1032,11 +1038,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   }}
                 >
                   <Image
-                    source={Xrpimage}
+                    source={{uri:coin0.logoUri?coin0.logoUri: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png'}}
                     style={{ height: hp(3), width: wp(6) }}
                   />
-                  <Text style={{ marginRight: wp(13) }}>ETH</Text>
-                </View>
+                  <Text style={{ marginRight: wp(13) }}>{coin0.symbol?coin0.symbol:'ETH'}</Text>
+                </TouchableOpacity>
 
                 <AntDesign
                   onPress={() => {
@@ -1090,7 +1096,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   placeholderTextColor={"gray"}
                   style={styles.txtInput}
                 />
-                <View
+                <TouchableOpacity
+                onPress={()=>{
+                  setCoinType("1");
+                    setVisible(true);
+                }}
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -1098,11 +1108,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   }}
                 >
                   <Image
-                    source={Xrpimage}
+                    source={{uri:coin1.logoUri?coin1.logoUri: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png '}}
                     style={{ height: hp(3), width: wp(6) }}
                   />
-                  <Text style={{ marginRight: wp(13) }}>ETH</Text>
-                </View>
+                  <Text style={{ marginRight: wp(13) }}>{coin1.symbol?coin1.symbol:'WBTC'}</Text>
+                </TouchableOpacity>
                 <AntDesign
                   onPress={() => {
                     setCoinType("1");
@@ -1128,7 +1138,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           <TouchableOpacity
             style={{
               // backgroundColor: disable ? "grey" : "#000C66",
-              backgroundColor: "#3574B6",
+              backgroundColor: disable ? "grey" : "#3574B6",
               width: wp(90),
               padding: hp(1),
               borderRadius: hp(0.6),

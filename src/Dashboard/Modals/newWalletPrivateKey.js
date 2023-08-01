@@ -43,7 +43,7 @@ const NewWalletPrivateKey = ({
 }) => {
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
-  const [newWallet, setNewWallet] = useState(false);
+  const [newWallet, setNewWallet] = useState(Wallet);
   const [data, setData] = useState();
   const [user, setUser] = useState("");
 
@@ -106,6 +106,8 @@ const NewWalletPrivateKey = ({
   const closeModal = () => {
     SetVisible(false);
   };
+  const mnemonic = Wallet?.mnemonic.match(/.*?[\.\s]+?/g);
+  console.log("My mnemonic", mnemonic);
 
   useEffect(async () => {
     Animated.timing(fadeAnim, {
@@ -114,10 +116,12 @@ const NewWalletPrivateKey = ({
     }).start();
 
     console.log(Wallet);
-  }, [fadeAnim]);
+    let wallet = Wallet
+    wallet.Mnemonic = mnemonic
+    setNewWallet(wallet)
+  }, []);
 
-  const mnemonic = Wallet?.mnemonic.match(/.*?[\.\s]+?/g);
-  console.log("My mnemonic", mnemonic);
+  
   const RenderItem = ({ item, index }) => {
     console.log("============------------", item);
     setData(data);
@@ -207,104 +211,45 @@ const NewWalletPrivateKey = ({
           placeholder="Enter your account name"
             style={style.input}
             value={accountName}
+            placeholder='Enter account name'
             onChangeText={(text) => setAccountName(text)}
             autoCapitalize={"none"}
           /> */}
 
           <View style={{ width: wp(95) }}>
             <TouchableOpacity
-              style={style.ButtonView}
-              disabled={accountName ? false : true}
+              style={{
+                backgroundColor:accountName && !/\s/.test(accountName)? "#4CA6EA":'gray',
+                width: wp(55),
+                alignSelf: "center",
+                alignItems: "center",
+                borderRadius: 10,
+                marginTop: hp(1.5),
+                paddingVertical: hp(1.7)
+              }}
+              disabled={accountName && !/\s/.test(accountName) ? false : true}
               onPress={() => {
                 //setVisible(!visible)
                 let wallet = Wallet;
                 wallet.accountName = accountName;
+                wallet.Mnemonic =mnemonic
                 setNewWallet(wallet);
+                console.log(newWallet)
                 setMnemonicVisible(true);
               }}
             >
               <Text style={{ color: "white" }}>Done</Text>
             </TouchableOpacity>
           </View>
-
-          <DialogInput
-            isDialogVisible={visible}
-            title={"Wallet password"}
-            message={"Please set your wallet password below"}
-            hintInput={"Enter Passsword here"}
-            submitInput={async (inputText) => {
-              setVisible(!visible);
-              if (!inputText) {
-                return alert("error", "please enter a password to continue");
-              } else {
-                const response = await saveUserDetails()
-                  .then((response) => {
-                    if (response === 400) {
-                      return;
-                    } else if (response === 401) {
-                      return;
-                    }
-                    const password = inputText;
-                    const encrypt = encryptFile(Wallet.privateKey, password);
-
-                    const accounts = {
-                      address: props.route.params.wallet.address,
-                      privateKey: encrypt,
-                      name: accountName,
-                      wallets: [],
-                    };
-                    let wallets = [];
-                    wallets.push(accounts);
-                    const allWallets = [
-                      {
-                        address: props.route.params.wallet.address,
-                        privateKey: encrypt,
-                        name: accountName,
-                      },
-                    ];
-                    AsyncStorageLib.setItem(
-                      `${accountName}-wallets`,
-                      JSON.stringify(allWallets)
-                    );
-                    AsyncStorageLib.setItem("user", accountName);
-
-                    dispatch(setUser(accountName));
-                    dispatch(
-                      setCurrentWallet(
-                        props.route.params.wallet.address,
-                        accountName,
-                        encrypt
-                      )
-                    );
-                    dispatch(AddToAllWallets(wallets, accountName));
-                    dispatch(getBalance(props.route.params.wallet.address));
-                    dispatch(setToken(response));
-                    dispatch(setWalletType("Xrp"));
-
-                    props.navigation.navigate("HomeScreen");
-                  })
-                  .catch((e) => {
-                    return alert(
-                      "error",
-                      "failed to create account. please try again"
-                    );
-                  });
-
-                // alert('success ' + accountName)
-                //props.navigation.navigate('HomeScreen')
-              }
-            }}
-            closeDialog={() => setVisible(!visible)}
-          ></DialogInput>
         </View>
-        <CheckNewWalletMnemonic
+        {MnemonicVisible &&(<CheckNewWalletMnemonic
           Wallet={newWallet}
           SetVisible={setMnemonicVisible}
           Visible={MnemonicVisible}
           setModalVisible={setModalVisible}
           SetPrivateKeyVisible={SetVisible}
           setNewWalletVisible={setNewWalletVisible}
-        />
+        />)}
       </Modal>
     </Animated.View>
   );

@@ -47,6 +47,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
         GET
       );
       if (err) return setModalMessage(`${err.message}`);
+      console.log(res.offerBids)
       setBids(res.offerBids);
     } catch (err) {
       console.log(err);
@@ -150,16 +151,8 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
           {/* <View style={styles.modalContainer}> */}
 
           <Text style={styles.textColor}>{modalMessage}</Text>
-          <View style={styles.yesnomainView}>
-            <TouchableOpacity style={styles.yesbtnContainer}>
-              <Text style={styles.textColor}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nobtnContainer}>
-              <Text style={styles.textColor}>No</Text>
-            </TouchableOpacity>
-          </View>
+         
 
-          {bids != "" ? (
             <View style={styles.container}>
               <Text style={styles.bidPrice}>
                 {"1.4 Eth for 1,00,000 INR Unit Price!"}
@@ -252,9 +245,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                 <View></View>
               )}
             </View>
-          ) : (
-            <Text style={styles.textColor}>Loading...</Text>
-          )}
+         
           {loading ? (
             <ActivityIndicator size={"large"} color={"blue"} />
           ) : (

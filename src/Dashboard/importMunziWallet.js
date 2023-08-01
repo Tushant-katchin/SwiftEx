@@ -24,7 +24,7 @@ import {
   setToken,
   setWalletType,
 } from "../components/Redux/actions/auth";
-import { encryptFile } from "../utilities/utilities";
+import { encryptFile, Paste } from "../utilities/utilities";
 import DialogInput from "react-native-dialog-input";
 import { urls } from "./constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
@@ -44,7 +44,6 @@ const ImportMunziWallet = (props) => {
   const [Wallet, setWallet] = useState();
   const [disable, setDisable] = useState(true);
   const [message, setMessage] = useState("");
-  const [user, setUser] = useState("");
 
   const dispatch = useDispatch();
 
@@ -102,17 +101,28 @@ const ImportMunziWallet = (props) => {
             value={accountName}
             onChangeText={(text) => setAccountName(text)}
             style={{ width: wp("78%") }}
-            placeholder={user ? user : "Wallet 1"}
+            placeholder={accountName?accountName: "Wallet 1"}
             placeholderTextColor={"black"}
           />
         </View>
         <View
           style={style.inputView}
         >
+          <TouchableOpacity onPress={async ()=>{
+           // setText('abc')
+           
+              
+              Paste(setMnemonic)
+             
+          
+            
+          }}>
           <Text style={style.paste}>Paste</Text>
+          </TouchableOpacity>
           <Text>Phrase</Text>
           <TextInput
             style={style.input}
+            value={mnemonic}
             onChangeText={(text) => {
               setMnemonic(text);
             }}

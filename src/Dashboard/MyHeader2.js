@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
-  Text,
+  
   View,
   LayoutAnimation,
   Platform,
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
 import FontAwesome from "react-native-vector-icons";
 import SendModal from "./Modals/SendModal";
@@ -35,6 +35,7 @@ import {
   getEtherBnbPrice,
   getEthPrice,
   getBnbPrice,
+  getXrpPrice
 } from "../utilities/utilities";
 import { tokenAddresses } from "./constants";
 import { FaucetModal } from "./Modals/faucetModal";
@@ -51,6 +52,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const state2 = useSelector((state) => state.walletBalance);
   const EthBalance = useSelector((state) => state.EthBalance);
   const bnbBalance = useSelector((state) => state.walletBalance);
+  const xrpBalance = useSelector((state) => state.XrpBalance)
   const walletState = useSelector((state) => state.wallets);
   const type = useSelector((state) => state.walletType);
 
@@ -65,8 +67,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [balance, GetBalance] = useState(0.0);
   const [wallet, getWallet] = useState(walletState ? walletState : []);
   const [Type, setType] = useState("");
+  const [user, setUser] = useState()
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
+  const [xrpPrice,setXrpPrice] = useState(0)
   const [balanceUsd, setBalance] = useState(0.0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // onPress={() => setModalVisible(true)}
@@ -223,6 +227,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             .catch((e) => {
               console.log(e);
             });
+            
+           
 
           const balance = await state.walletBalance;
           if (balance) {
@@ -269,13 +275,16 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
-  const getBalanceInUsd = (ethBalance, bnbBalance) => {
+  const getBalanceInUsd = (ethBalance, bnbBalance,xrpBalance) => {
     console.log("My wallet Type", Type);
-    console.log(ethBalance, bnbBalance);
-    const ethInUsd = ethBalance * ethPrice;
-    const bnbInUsd = bnbBalance * bnbPrice;
+    console.log(ethBalance, bnbBalance,xrpBalance,xrpPrice);
+    const ethInUsd = Number(ethBalance) * Number(ethPrice);
+    const bnbInUsd = Number(bnbBalance) * Number(bnbPrice);
+    const xrpInUsd = Number(xrpBalance) * Number(xrpPrice)
     console.log("Eth balance", ethInUsd);
     console.log("BNB balance", bnbInUsd);
+    console.log("Xrp balance", xrpInUsd);
+
     AsyncStorageLib.getItem("walletType").then((Type) => {
       console.log("Async type", Type);
       if (JSON.parse(Type) === "Ethereum") {
@@ -286,14 +295,16 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         const totalBalance = Number(bnbInUsd);
         setBalance(totalBalance.toFixed(1));
         return;
-      } else if (Type === "Xrp") {
-        setBalance(0.0);
+      } else if (JSON.parse(Type) === "Xrp") {
+        const totalBalance = Number(xrpInUsd);
+        console.log('Xrpl $',totalBalance)
+        setBalance(totalBalance.toFixed(1));
         return;
-      } else if (Type === "Matic") {
+      } else if (JSON.parse(Type) === "Matic") {
         setBalance(0.0);
         return;
       } else if (JSON.parse(Type) === "Multi-coin") {
-        const totalBalance = Number(ethInUsd) + Number(bnbInUsd);
+        const totalBalance = Number(ethInUsd) + Number(bnbInUsd)+Number(xrpInUsd);
         console.log(totalBalance);
         setBalance(totalBalance.toFixed(1));
         return;
@@ -321,6 +332,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       console.log("BNB price= ", response.USD);
       setBnbPrice(response.USD);
     });
+    await getXrpPrice().then((response)=>{
+      console.log('XRP price =', response.USD)
+      setXrpPrice(response.USD)
+    })
   };
 
   useEffect(async () => {
@@ -341,21 +356,24 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     console.log(balanceUsd);
     //getEthPrice()
     getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance);
-  }, [ethPrice, bnbPrice, EthBalance, bnbBalance, Type]);
+    getBalanceInUsd(EthBalance, bnbBalance,xrpBalance);
+  }, [ethPrice, bnbPrice, EthBalance, bnbBalance, xrpPrice,xrpBalance,Type,state.wallet.name]);
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log(balanceUsd);
     //getEthPrice()
     getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance);
+    getBalanceInUsd(EthBalance, bnbBalance,xrpBalance);
+   
   }, []);
-  var obj = {
-    amount: 100,
-    addressFrom: "Delhi",
-    addressTo: "Indore",
-    type: "Paid",
-  };
+  useEffect(async ()=>{
+    const user = await state.wallet.name
+    if(user)
+    {
+      setUser(user)
+    }
+  },[state.wallet.name])
+
   return (
     <View style={{ backgroundColor: "#fff" }}>
       <View style={styles.headerContainer}>
@@ -381,6 +399,14 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Text style={styles.dollartxt}>
           $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>
+        <Text style={{
+          color: "black",
+          textAlign: "center",
+          fontWeight: "10",
+          fontStyle:'italic',
+          fontSize: 20,
+        }}>{user?user:'main wallet'}</Text>
+        
       </View>
       <View style={styles.buttons}>
         <IconWithCircle
@@ -451,11 +477,11 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       >
         <View style={styles.iconTextContainer}>
           <Icon name="graph" type={"simpleLine"} size={hp(3)} />
-          <Text style={{ marginHorizontal: hp(1) }}>Market insights</Text>
+          <Text style={{ marginHorizontal: hp(1),color:'black' }}>
+            Market insights
+          </Text>
         </View>
-        <View style={styles.iconTextContainer}>
-          <Icon name="cross" type={"entypo"} size={hp(3.6)} color="black" />
-        </View>
+        
       </TouchableOpacity>
     </View>
   );

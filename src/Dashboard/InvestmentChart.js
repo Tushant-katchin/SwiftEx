@@ -21,16 +21,17 @@ import Maticimage from "../../assets/matic.png";
 import Xrpimage from "../../assets/xrp.png";
 import bnbimage from "../../assets/bnb-icon2_2x.png";
 import { GetBalance } from "../utilities/web3utilities";
+import { getXrpBalance } from "../components/Redux/actions/auth";
 
 function InvestmentChart(setCurrentWallet) {
   const state = useSelector((state) => state);
   const wallet = useSelector((state) => state.wallet);
   const [bnbBalance, getBnbBalance] = useState(0.00);
-  const [xrpBalance, getXrpBalance] = useState(0.00);
+  const [xrpBalance, GetXrpBalance] = useState(0.00);
   const [maticBalance, getMaticBalance] = useState(0.00);
   const [ethBalance, getEthBalance] = useState(0.00);
   const EthBalance = useSelector((state) => state.EthBalance);
-  const BnbBalance = useSelector((state) => state.walletBalance);
+  const XrpBalance = useSelector((state) => state.XrpBalance);
   const walletState = useSelector((state) => state.wallets);
   const type = useSelector((state) => state.walletType);
 
@@ -55,19 +56,22 @@ function InvestmentChart(setCurrentWallet) {
     const EthBalance = await state.EthBalance;
     const xrpBalance = await state.XrpBalance;
     const maticBalance = await state.MaticBalance;
+    const wallet = await state.wallet
+    console.log('wall',wallet.address)
     AsyncStorageLib.getItem("walletType").then(async (type) => {
+
       console.log(JSON.parse(type))
       if (JSON.parse(type) === "Ethereum") {
         if (EthBalance) {
           getEthBalance(Number(EthBalance).toFixed(2));
           getBnbBalance(0.00);
           getMaticBalance(0.00);
-          getXrpBalance(0.00);
+          GetXrpBalance(0.00);
         } else {
           getEthBalance(0.00);
           getBnbBalance(0.00);
           getMaticBalance(0.00);
-          getXrpBalance(0.00);
+          GetXrpBalance(0.00);
         }
       } else if (JSON.parse(type) === "BSC") {
         // provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
@@ -77,12 +81,29 @@ function InvestmentChart(setCurrentWallet) {
           getBnbBalance(Number(bal).toFixed(2));
           getEthBalance(0.00);
           getMaticBalance(0.00);
-          getXrpBalance(0.00);
+          GetXrpBalance(0.00);
         } else {
           getBnbBalance(0.00);
           getEthBalance(0.00);
           getMaticBalance(0.00);
-          getXrpBalance(0.00);
+          GetXrpBalance(0.00);
+        }
+      }else if (JSON.parse(type) === "Xrp") {
+        console.log('fetching')
+        // provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
+        // const balance = provider.getBalance(address)
+        // console.log('balance',balance)
+        if (xrpBalance) {
+          dispatch(getXrpBalance(wallet.address))
+          GetXrpBalance(xrpBalance)
+          getBnbBalance(0.00);
+          getEthBalance(0.00);
+          getMaticBalance(0.00);
+        } else {
+          getBnbBalance(0.00);
+          getEthBalance(0.00);
+          getMaticBalance(0.00);
+          GetXrpBalance(0.00);
         }
       } else if (JSON.parse(type) === "Multi-coin") {
         // provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
@@ -104,10 +125,19 @@ function InvestmentChart(setCurrentWallet) {
           getBnbBalance(0.00);
         }
         if (xrpBalance>=0) {
-         getXrpBalance(Number(xrpBalance).toFixed(2));
+          try{
+
+            dispatch(getXrpBalance(wallet.xrp.address))
+          }catch(e){
+            console.log(e)
+          }
+         
+         GetXrpBalance(Number(xrpBalance).toFixed(2));
+        
+         
           
           } else {
-          getXrpBalance(0.00);
+          GetXrpBalance(0.00);
         }
         if (maticBalance>=0) {
          getMaticBalance(Number(maticBalance).toFixed(2));
@@ -118,20 +148,32 @@ function InvestmentChart(setCurrentWallet) {
         getEthBalance(0.00);
         getBnbBalance(0.00);
         getMaticBalance(0.00);
-        getXrpBalance(0.00);
+        GetXrpBalance(0.00);
       }
     });
   }
 
   useEffect(async () => {
-    await getTokenBalance()
-    getEthBnbPrice();
+    try{
+
+      await getTokenBalance()
+      getEthBnbPrice();
+    }catch(e)
+    {
+      console.log(e)
+    }
   }, []);
 
   useEffect( async () => {
-    getTokenBalance();
+    try{
+
+      getTokenBalance();
+    }catch(e)
+    {
+      console.log(e)
+    }
    // await GetBalance(await state)
-  }, [wallet.address,wallet.name,EthBalance,bnbBalance]);
+  }, [wallet.address,wallet.name,EthBalance,bnbBalance,XrpBalance]);
 
   let LeftContent = (props) => (
     <Avatar.Image
@@ -208,7 +250,7 @@ function InvestmentChart(setCurrentWallet) {
                   fontWeight: "bold",
                 }}
               >
-                $ {ethPrice >= 0 ? ethPrice : 1300}
+                $ {4}
               </Text>
             </View>
           </View>
@@ -233,7 +275,7 @@ function InvestmentChart(setCurrentWallet) {
                   fontWeight: "bold",
                 }}
               >
-                $ {ethPrice >= 0 ? ethPrice : 1300}
+                $ {0.78}
               </Text>
             </View>
           </View>

@@ -15,6 +15,8 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
+import title_icon2 from "../../../assets/darkBlue.png";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -56,15 +58,11 @@ const AllWallets = (props) => {
   let wallet = [];
   const dispatch = useDispatch();
 
-  let LeftContent = (props) => <Avatar.Image {...props} source={title_icon} />;
-  let multiCoinLeftContent = (props) => (
-    <Avatar.Image {...props} source={title_icon} />
-  );
-  let EtherLeftContent = (props) => (
-    <Avatar.Image {...props} source={Etherimage} />
-  );
-  let BnbLeftContent = (props) => <Avatar.Image {...props} source={Bnbimage} />;
-  let XrpLeftContent = (props) => <Avatar.Image {...props} source={Xrpimage} />;
+  let LeftContent = title_icon2;
+  let multiCoinLeftContent = title_icon2
+  let EtherLeftContent = Etherimage
+  let BnbLeftContent = Bnbimage;
+  let XrpLeftContent = Xrpimage;
   let MaticLeftContent = (props) => (
     <Avatar.Image {...props} source={Maticimage} />
   );
@@ -163,7 +161,9 @@ const AllWallets = (props) => {
             console.log("My bsc balance" + balance);
           }
         } else if (JSON.parse(type) == "Xrp") {
-          const resp = await getXrpBal(address)
+          //const resp = await getXrpBal(address)
+          dispatch(getXrpBalance(state.wallet.xrp.address))
+
           .catch((e)=>{
             console.log(e)
           })
@@ -219,6 +219,7 @@ const AllWallets = (props) => {
           if (balance) {
             console.log("My bsc balance" + balance);
           }
+          dispatch(getXrpBalance(state.wallet.xrp.address))
         } else {
           const wallet = await state.wallet.address;
           console.log("hello" + wallet);
@@ -393,7 +394,7 @@ const AllWallets = (props) => {
                                 JSON.stringify(item.walletType)
                               );
                               dispatch(setWalletType(item.walletType));
-                            //  getBalance(state);
+                              getBalance(state);
                               alert("success","Wallet Selected " + item.name);
                             } else {
                               alert(
@@ -423,7 +424,7 @@ const AllWallets = (props) => {
                      alignItems:"center"
                     }}
                   >
-                    <Image source={title_icon}/>
+                    <Image style={style.img} source={LeftContent}/>
                     <Text style={{marginHorizontal:wp(3)}}
                       left={LeftContent}
                     >{item.name}</Text>
@@ -506,5 +507,10 @@ marginTop:hp(2)
     alignContent: "center",
     backgroundColor: "white",
     borderTopWidth: 1,
+  },
+  img:{
+    height: hp(5),
+    width: wp(9),
+    borderRadius: hp(3),
   },
 });

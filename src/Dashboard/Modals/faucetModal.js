@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Modal,
@@ -10,6 +10,7 @@ import {
   NativeBaseProvider,
   FormControl,
   Input,
+  View,
 } from "native-base";
 import { useState } from "react";
 import { FaucetDropdown } from "../reusables/faucetDropdown";
@@ -18,13 +19,28 @@ import { faucets } from "../constants";
 
 export const FaucetModal = ({ showModal, setShowModal }) => {
   const [network, setNetwork] = useState("");
+  const [url,setUrl] = useState('')
+
+  useEffect(()=>{
+ //setShowModal(false);
+ 
+if (network === "BSC") {
+  setUrl(faucets.bscFaucet)
+} else if (network === "Ethereum") {
+  setUrl(faucets.ethFaucetGoerli)
+} else if(network==='Matic') {
+  setUrl(faucets.polygonFaucet)
+}else{
+  setUrl(' ')
+}
+  },[network])
   return (
     <Center>
       <Button
         onPress={() => setShowModal(true)}
         style={{ backgroundColor: "#145DA0" }}
       >
-        Faucet
+        Test Faucet
       </Button>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="400px">
@@ -32,6 +48,9 @@ export const FaucetModal = ({ showModal, setShowModal }) => {
           <Modal.Header>Select Faucet Network</Modal.Header>
           <Modal.Body>
             <FaucetDropdown network={network} setNetwork={setNetwork} />
+            <View style={{display:'flex',alignContent:'center',alignItems:'center',marginTop:10}}>
+              <Text selectable={true} style={{textAlign:'center'}}>{url?url:'please select a network'}</Text>
+            </View>
           </Modal.Body>
           <Modal.Footer>
             <Button.Group space={2}>

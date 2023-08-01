@@ -595,6 +595,7 @@ async function AddToAllWallets(wallets, user) {
       allWallets.push({
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
+        mnemonic: wallets[0].mnemonic?wallets[0].mnemonic:'',
         address: wallets[0].address,
         classicAddress: wallets[0].classicAddress,
         walletType: wallets[0].walletType,
@@ -603,6 +604,7 @@ async function AddToAllWallets(wallets, user) {
       allWallets.push({
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
+        mnemonic: wallets[0].mnemonic?wallets[0].mnemonic:'',
         address: wallets[0].address,
         walletType: wallets[0].walletType,
       });

@@ -139,6 +139,10 @@ const MyWallet = (props) => {
       setBnbPrice(response.USD);
     });
   };
+  useEffect(async ()=>{
+    const user = await state.wallet.name
+    setUser(user);
+  },[])
 
   /*useEffect(() => {
     setLoading(true);

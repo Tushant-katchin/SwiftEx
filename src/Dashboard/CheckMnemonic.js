@@ -428,7 +428,7 @@ const CheckMnemonic = (props) => {
         style={{
           borderColor: "#D7D7D7",
           borderWidth: 0.5,
-          backgroundColor: item.selected ? "green" : "#F2F2F2",
+          backgroundColor: item.selected ? "#4CA6EA" : "#F2F2F2",
           width: wp(30),
           justifyContent: "center",
           paddingVertical: hp(2),
@@ -497,6 +497,34 @@ const CheckMnemonic = (props) => {
             }}
           />
         </View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {Mnemonic.length > 0 ? (
+            Mnemonic.map((item) => {
+              console.log("mnemonic words", item);
+              return (
+                <Text
+                  style={{
+                    color: "black",
+                    textAlign: "center",
+                    fontStyle: "italic",
+                  }}
+                >
+                  {item}
+                </Text>
+              );
+            })
+          ) : (
+            <Text style={{ color: "black" }}>nothing added yet</Text>
+          )}
+        </View>
         {/* <TextInput
           style={style.textInput}
           onChangeText={(text) => {
@@ -534,7 +562,7 @@ const CheckMnemonic = (props) => {
                   const accounts = {
                     address: props.route.params.wallet.address,
                     privateKey: props.route.params.wallet.privateKey,
-                    mnemonic:props.route.params.wallet.mnemonic,
+                    mnemonic: props.route.params.wallet.mnemonic,
                     name: props.route.params.wallet.accountName,
                     walletType: "Multi-coin",
                     xrp: {
@@ -550,7 +578,7 @@ const CheckMnemonic = (props) => {
                       address: props.route.params.wallet.address,
                       privateKey: props.route.params.wallet.privateKey,
                       name: props.route.params.wallet.accountName,
-                      mnemonic:props.route.params.wallet.mnemonic,
+                      mnemonic: props.route.params.wallet.mnemonic,
                       xrp: {
                         address: props.route.params.wallet.xrp.address,
                         privateKey: props.route.params.wallet.xrp.privateKey,
@@ -593,7 +621,7 @@ const CheckMnemonic = (props) => {
                       props.route.params.wallet.xrp.privateKey
                         ? props.route.params.wallet.xrp.privateKey
                         : "",
-                      walletType = "Multi-coin"
+                      (walletType = "Multi-coin")
                     )
                   );
                   dispatch(

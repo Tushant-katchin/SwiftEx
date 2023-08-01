@@ -239,6 +239,8 @@ export const HomeView = ({ setPressed }) => {
                   <TouchableOpacity
                     style={styles.PresssableBtn}
                     onPress={() => {
+                      console.log(walletType)
+                     // setOpen(true)
                       if (
                         walletType === "Ethereum" ||
                         walletType === "Multi-coin"
@@ -250,7 +252,7 @@ export const HomeView = ({ setPressed }) => {
                       }
                     }}
                   >
-                    <Text style={{ color: "#fff" }}>Bid On Offers!</Text>
+                    <Text style={{ color: "#fff" }}>Create Offer</Text>
                   </TouchableOpacity>
                   {/* </LinearGradient> */}
 

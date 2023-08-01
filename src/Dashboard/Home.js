@@ -210,7 +210,8 @@ const Dashboard = ({ navigation }) => {
           component={Wallet}
           options={{
             headerShown: true,
-            header: () => {
+            unmountOnBlur: true,
+             header: () => {
               return Header3("Wallet")
             },
             tabBarIcon: ({ focused }) => {

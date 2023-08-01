@@ -29,10 +29,11 @@ import { SendCrypto } from "./sendFunctions";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { urls } from "../constants";
-import { checkAddressValidity } from "../../utilities/web3utilities";
-import { isFloat, isInteger } from "../../utilities/utilities";
+import { checkAddressValidity, checkXrpAddress } from "../../utilities/web3utilities";
+import { isFloat, isInteger, Paste } from "../../utilities/utilities";
 import { alert } from "../reusables/Toasts";
 import Icon from "../../icon";
+import { WalletHeader } from "../header";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -156,7 +157,7 @@ const SendTokens = (props) => {
                   await dispatch(getXrpBalance(JSON.parse(wallet).address))
                     .then((res) => {
                       console.log(res.XrpBalance);
-                      setBalance(res.XrpBalance ? res.XrpBalance : 0);
+                      setBalance(res.XrpBalance );
                     })
                     .catch((e) => {
                       console.log(e);
@@ -211,7 +212,22 @@ const SendTokens = (props) => {
   useEffect(() => {
     let inputValidation;
     let inputValidation1;
-    const valid = checkAddressValidity(address);
+    let valid
+    let xrpInvalid
+    console.log(props.route.params.token)
+    if(props.route.params.token==='Multi-coin-Xrp' || walletType==='Xrp')
+    {
+      if(balance<11)
+      {
+        xrpInvalid=true
+        setMessage("Your minnimum balance should be 10 to send XRP");
+
+      }
+      valid = checkXrpAddress(address)
+    }else{
+      valid = checkAddressValidity(address);
+
+    }
     inputValidation = isFloat(amount);
     inputValidation1 = isInteger(amount);
     console.log(inputValidation, inputValidation1);
@@ -219,7 +235,9 @@ const SendTokens = (props) => {
       amount &&
       balance &&
       address &&
-      amount <= balance &&
+      Number(amount)>0 &&
+      !xrpInvalid &&
+      Number(amount) <= Number(balance) &&
       valid &&
       (inputValidation || inputValidation1)
     ) {
@@ -242,8 +260,8 @@ const SendTokens = (props) => {
     if (amount) {
       inputValidation = isFloat(amount);
       inputValidation1 = isInteger(amount);
-
-      if (amount > balance) {
+         console.log(amount,balance,JSON.stringify(balance)<JSON.stringify(amount))
+      if (Number(balance)<Number(amount)) {
         setMessage("Low Balance");
       } else if (!inputValidation && !inputValidation1) {
         setMessage("Please enter a valid amount");
@@ -257,9 +275,11 @@ const SendTokens = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
+      <WalletHeader title={props.route.params.token}/>
       <View style={{ backgroundColor: "white", height: hp(100) }}>
         <View style={style.inputView}>
           <TextInput
+          value={address}
             onChangeText={(input) => {
               if (input && address) {
                 setDisable(false);
@@ -273,7 +293,11 @@ const SendTokens = (props) => {
             style={style.input}
           ></TextInput>
           <Icon name="scan" type={"ionicon"} size={20} color={"blue"} />
+          <TouchableOpacity onPress={()=>{
+            Paste(setAddress)
+          }}>
           <Text style={style.pasteText}>PASTE</Text>
+          </TouchableOpacity>
         </View>
         <Text style={style.balance}>
           Available balance :-{" "}
@@ -284,30 +308,28 @@ const SendTokens = (props) => {
           <TextInput
             value={amount}
             keyboardType="numeric"
-            // onChangeText={(input) => {
-            //   if (amount && address) {
-            //     setDisable(false);
-            //   } else {
-            //     setDisable(true);
-            //   }
-            //   console.log(input);
-            //   setAmount(input);
-            // }}
-            placeholder="Amount ETH"
+            onChangeText={(input) => {
+              if (amount && address) {
+                setDisable(false);
+              } else {
+                setDisable(true);
+              }
+              console.log(input);
+              setAmount(input);
+            }}
+            placeholder="Amount"
             style={style.input}
           ></TextInput>
           <Pressable
+           
             onPress={() => {
-              console.log("fhhhhhhhhhhhhhhhh")
+              console.log("pressed", amount, balance);
+              setAmount(balance);
             }}
-            // onPress={() => {
-            //   setAmount(balance);
-            //   console.log("pressed", amount, balance);
-            // }}
           >
-            <Text  onPress={()=>{console.log("dkfk")}} style={{ color: "blue" }}>MAX</Text>
+            <Text  onPress={()=>{console.log("pressed", amount, balance);
+              setAmount(balance)}} style={{ color: "blue" }}>MAX</Text>
           </Pressable>
-          <Text style={style.pasteText}>ETH</Text>
         </View>
         {Loading ? (
           <View style={{ marginBottom: hp("-4") }}>
@@ -331,10 +353,24 @@ const SendTokens = (props) => {
               const token = props.route.params.token;
               const wallet = await AsyncStorageLib.getItem("Wallet");
               console.log(wallet);
-              if (amount && balance && amount > balance) {
+              if(token==='Multi-coin-Xrp')
+              {
+                const xrpAddress = await state.wallet.xrp.address
+                if(address==xrpAddress)
+                {
+                  return alert('error','address cannot be same as your address')
+
+                }
+              }
+              if(address== myAddress)
+              {
+                return alert('error','address cannot be same as your address')
+              }
+              if (amount && balance && Number(amount) > Number(balance)) {
                 setLoading(false);
                 console.log(amount, balance);
                 return alert(
+                  "error",
                   "You don't have enough balance to do this transaction "
                 );
               }

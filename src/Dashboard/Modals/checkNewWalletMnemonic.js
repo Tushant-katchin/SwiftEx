@@ -38,6 +38,7 @@ const CheckNewWalletMnemonic = ({
 
   const [mnemonic, setMnemonic] = useState("");
   const [Mnemonic, SetMnemonic] = useState([]);
+  const [data, setData] = useState();
 
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
@@ -52,60 +53,30 @@ const CheckNewWalletMnemonic = ({
     outputRange: ["0deg", "360deg"],
   });
 
-  async function saveUserDetails() {
-    let response;
-    const user = await AsyncStorageLib.getItem("user");
-    console.log(user);
-    const token = await AsyncStorageLib.getItem("token");
-    try {
-      response = await fetch(`http://${urls.testUrl}/user/saveUserDetails`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: token,
-          user: user,
-          walletAddress: Wallet.address,
-          accountName: Wallet.accountName,
-        }),
-      })
-        .then((response) => response.json())
-        .then(async (responseJson) => {
-          console.log(responseJson);
-          console.log(responseJson);
-          if (responseJson.responseCode === 200) {
-            alert("success");
-            return responseJson.responseCode;
-          } else if (responseJson.responseCode === 400) {
-            alert(
-              "account with same name already exists. Please use a different name"
-            );
-            return responseJson.responseCode;
-          } else {
-            alert("Unable to create account. Please try again");
-            return 401;
-          }
-        })
-        .catch((error) => {
-          setVisible(!visible);
-
-          alert(error);
-        });
-    } catch (e) {
-      setVisible(!visible);
-
-      console.log(e);
-      alert(e);
-    }
-    console.log(response);
-    return response;
-  }
-
+  
   const closeModal = () => {
     SetVisible(false);
   };
+
+  function func(a, b) {
+    return 0.5 - Math.random();
+  }
+
+  useEffect(() => {
+    console.log(Wallet)
+    let data = Wallet.Mnemonic.map((item) => {
+      let data = {
+        mnemonic: item,
+        selected: false,
+      };
+      return data;
+    });
+    console.log(data);
+    const newData = data.sort(func);
+    setData(newData);
+    console.log(newData)
+  }, []);
+
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -118,22 +89,12 @@ const CheckNewWalletMnemonic = ({
       duration: 2000,
       useNativeDriver: true,
     }).start();
-    const wallet = Wallet;
+    let wallet = Wallet;
+    console.log("mnemonic+++",Wallet.mnemonic)
     console.log(wallet);
   }, [fadeAnim, Spin]);
 
-  const data = [
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-    { mnemonic: "Hash" },
-  ];
+
 
   console.log("000000000000000", Wallet?.mnemonic);
   const RenderItem = ({ item, index }) => {
@@ -148,31 +109,31 @@ const CheckNewWalletMnemonic = ({
         style={{
           borderColor: "#D7D7D7",
           borderWidth: 0.5,
-          backgroundColor: item.selected ? "green" : "#F2F2F2",
+          backgroundColor: item.selected ? "#4CA6EA" : "#F2F2F2",
           width: wp(30),
           justifyContent: "center",
           paddingVertical: hp(2),
           paddingHorizontal: 3,
           position: "relative",
         }}
-        // onPress={() => {
-        //   console.log("pressed");
-        //   if (!item.selected) {
-        //     Data[index].selected = true;
-        //     newArray.push(item.mnemonic);
-        //     console.log(newArray);
-        //     SetMnemonic(newArray);
-        //     setData(Data);
-        //   } else {
-        //     Data[index].selected = false;
-        //     const data = newArray.filter((Item) => {
-        //       return Item != item.mnemonic;
-        //     });
-        //     console.log(data);
-        //     SetMnemonic(data);
-        //     setData(Data);
-        //   }
-        // }}
+        onPress={() => {
+          console.log("pressed");
+          if (!item.selected) {
+            Data[index].selected = true;
+            newArray.push(item.mnemonic);
+            console.log(newArray);
+            SetMnemonic(newArray);
+            setData(Data);
+          } else {
+            Data[index].selected = false;
+            const data = newArray.filter((Item) => {
+              return Item != item.mnemonic;
+            });
+            console.log(data);
+            SetMnemonic(data);
+            setData(Data);
+          }
+        }}
       >
         <Text style={style.itemText}>{item.mnemonic}</Text>
       </TouchableOpacity>
@@ -212,6 +173,14 @@ const CheckNewWalletMnemonic = ({
               }}
             />
           </View>
+          <View style={{display:'flex',flexDirection:'row',alignContent:'center',alignItems:'center',justifyContent:'center'}}>
+            {Mnemonic.length>0?Mnemonic.map((item)=>{
+              console.log("mnemonic words",item)
+            return(
+              <Text style={{color:'black',textAlign:'center',fontStyle:'italic'}} >{item}</Text>
+            )
+           }):<Text style={{color:'black'}} >nothing added yet</Text>}
+          </View>
 
           {/* <TextInput
             style={style.textInput}
@@ -241,7 +210,7 @@ const CheckNewWalletMnemonic = ({
                 try {
                   const user = await AsyncStorageLib.getItem("user");
 
-                  if (mnemonic === Wallet.mnemonic) {
+                  if (JSON.stringify(Mnemonic) === JSON.stringify(Wallet.Mnemonic)) {
                     /*const response = await saveUserDetails().then(async (response)=>{
                  if(response===400){
                    return 
@@ -281,7 +250,7 @@ const CheckNewWalletMnemonic = ({
                         address: Wallet.address,
                         privateKey: Wallet.privateKey,
                         name: Wallet.accountName,
-                        mnemonic: mnemonic,
+                        mnemonic: Wallet.mnemonic,
                         walletType: "Multi-coin",
                         xrp: {
                           address: Wallet.xrp.address,
