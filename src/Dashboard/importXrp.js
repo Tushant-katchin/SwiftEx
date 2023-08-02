@@ -76,11 +76,12 @@ const ImportXrp = (props) => {
   useEffect(() => {
     if (accountName && (mnemonic || privateKey)) {
       let valid;
-      utils.isValidMnemnic(mneminic)
+
       if (label === "mnemonic") {
         const phrase = mnemonic.trimStart();
         const trimmedPhrase = phrase.trimEnd();
         valid = utils.isValidMnemnic(trimmedPhrase);
+
         if (!valid) {
           setMessage("Please enter a valid mnemonic");
         } else {

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Image,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -36,6 +37,7 @@ import tokenList from "../tokens/tokenList.json";
 import chooseSwap from "../tokens/chooseSwap.json";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
+import { WalletHeader } from "../header";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 const { ChainId, Fetcher, WETH, Route } = require("@uniswap/sdk");
@@ -72,9 +74,7 @@ const TokenList = ({
   const dispatch = useDispatch();
 
   let LeftContent = (props) => <Avatar.Image {...props} source={title_icon} />;
-  
 
-  
   const fetchMoreData = () => {
     setLoading(true);
     const data = Data;
@@ -82,7 +82,7 @@ const TokenList = ({
     if (data) {
       console.log(data.length);
       setLoading(false);
-      setData([...Data,data])
+      setData([...Data, data]);
       setData(data);
       setPage(page + 1);
     }
@@ -180,30 +180,23 @@ const TokenList = ({
       }
     }
     LeftContent = (props) => {
-      return (
-        <Avatar.Image {...props} source={{ uri: item.logoURI }} />
-      );
+      return <Avatar.Image {...props} source={{ uri: item.logoURI }} />;
     };
     return (
       <TouchableOpacity
         key={item.address}
         style={{
-          height: hp("15%"),
-          width: wp("80"),
-          fontSize: 20,
-          fontWeight: "200",
-          color: "white",
-          marginTop: hp(0),
-          display: "flex",
+          flexDirection: "row",
+          borderBottomWidth: 0.3,
+          borderColor: "gray",
+          width: wp(90),
+          paddingVertical: hp(2),
           alignItems: "center",
-          alignContent: "center",
-          backgroundColor: "white",
-          display: "flex",
-          marginRight: 50,
+         
         }}
         onPress={() => {
           setVisible(false);
-          console.log('pressed')
+          console.log("pressed");
           if (coinType == "0") {
             setVisible(false);
             setCoin0({
@@ -211,7 +204,7 @@ const TokenList = ({
               address: address,
               symbol: item.symbol,
               ChainId: item.chainId,
-              logoUri:item.logoURI
+              logoUri: item.logoURI,
             });
           } else {
             setVisible(false);
@@ -220,39 +213,30 @@ const TokenList = ({
               address: address,
               symbol: item.symbol,
               ChainId: item.chainId,
-              logoUri:item.logoURI
+              logoUri: item.logoURI,
             });
           }
           console.log(address);
         }}
       >
-        <Card
+       
+
+        <Image source={title_icon} style={{ height: hp(4), width: wp(8) }} />
+        <View
           style={{
-            width: wp(90),
-            height: hp(10),
-            backgroundColor: "white",
-            borderRadius: 10,
-            marginLeft: wp(10),
-            display: "flex",
+            marginHorizontal: wp(4),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width:'80%',
           }}
         >
-          <Card.Title
-            titleStyle={{ color: "black" }}
-            title={item.name}
-            left={LeftContent}
-          />
-          <Card.Content
-            style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-          >
-            <Paragraph
-            style={{position:'absolute',marginLeft:wp(73),marginTop:hp(-5)}}
-            >0 {item.symbol}</Paragraph>
-            <Paragraph
-            style={{position:'absolute',marginLeft:wp(20),marginTop:hp(-3)}}
-            >{item.chainId==56?'bnb':"eth"}</Paragraph>
-          
-          </Card.Content>
-        </Card>
+          <View>
+            <Text>{item.name}</Text>
+            <Text style={{ color: "gray", fontSize: 12 }}>0 {item.symbol}</Text>
+          </View>
+          <Text>{item.chainId == 56 ? "bnb" : "eth"}</Text>
+        </View>
       </TouchableOpacity>
     );
   });
@@ -262,10 +246,9 @@ const TokenList = ({
   }, []);
 
   return (
-    <View 
-      style={{ width: wp(100) }}
-    >
-      <TokenHeader setVisible={setVisible} name={name} />
+    <View style={{ width: wp(100),height:hp(100) }}>
+      <WalletHeader title='Token-List'/>
+      {/* <TokenHeader setVisible={setVisible} name={name} /> */}
       <View style={style.Body}>
         <SearchComponent
           clampedScroll={clampedScroll}
@@ -282,10 +265,9 @@ const TokenList = ({
           <FlatList
             style={{ marginTop: hp(9) }}
             contentContainerStyle={{ flexGrow: 1 }}
-            
             data={Data}
             renderItem={({ item }) => {
-              return <ListCard item={item}  />;
+              return <ListCard item={item} />;
             }}
             initialNumToRender={10}
             maxToRenderPerBatch={10}

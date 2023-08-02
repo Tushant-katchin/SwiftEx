@@ -5,9 +5,10 @@ import {
   Text,
   View,
   Button,
+  TextInput,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { TextInput, Checkbox } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -23,7 +24,7 @@ import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import ModalHeader from "../reusables/ModalHeader";
-import {  utils } from "xrpl-accountlib"
+import { utils } from "xrpl-accountlib";
 import { alert } from "../reusables/Toasts";
 
 const ImportXrpWalletModal = ({
@@ -42,9 +43,9 @@ const ImportXrpWalletModal = ({
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
   const [text, setText] = useState("");
-  const [disable, setDisable] = useState(true)
-  const [ message, setMessage] = useState('')
- 
+  const [disable, setDisable] = useState(true);
+  const [message, setMessage] = useState("");
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -97,10 +98,9 @@ const ImportXrpWalletModal = ({
     return response;
   }
 
-  const closeModal = ()=>{
-    setWalletVisible(false)
-  }
-  
+  const closeModal = () => {
+    setWalletVisible(false);
+  };
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -139,23 +139,25 @@ const ImportXrpWalletModal = ({
        if(!valid){
          setMessage('Please enter a valid private key')
         }
-        else{
-          setMessage('')
+      } else if (label === "privateKey") {
+        valid = utils.isValidSeed(privateKey);
+        if (!valid) {
+          setMessage("Please enter a valid private key");
+        } else {
+          setMessage("");
         }
-      console.log(valid)
-      }else{
-        setMessage('')
+        console.log(valid);
+      } else {
+        setMessage("");
       }
-      
-      if( accountName && (mnemonic || privateKey) && valid)
-      {
-        setDisable(false)
+
+      if (accountName && (mnemonic || privateKey) && valid) {
+        setDisable(false);
+      } else {
+        setDisable(true);
       }
-      else{
-        setDisable(true)
-      }
-    }else{
-      setMessage('')
+    } else {
+      setMessage("");
     }
   },[mnemonic,privateKey,accountName])
 
@@ -178,125 +180,158 @@ const ImportXrpWalletModal = ({
         }}
       >
         <View style={style.Body}>
-          <ModalHeader Function={closeModal} name={'XRP'}/>
+          {/* <ModalHeader Function={closeModal} name={'XRP'}/> */}
+
+          <Text style={style.text}>XRP Wallet</Text>
+
           <View style={style.Button}>
-            <View style={{ margin: 2, width: wp(30), marginLeft: wp(15) }}>
-              <Button
-                title={"Mnemonic"}
-                color={label == "mnemonic" ? "green" : "grey"}
-                onPress={() => {
-                  setLabel("mnemonic");
-                  if (text) {
-                    setMnemonic(text);
-                  }
-                  setOptionVisible(false);
-                }}
-              ></Button>
-            </View>
-            <View style={{ margin: 2, width: wp(30) }}>
-              <Button
-                title={"privateKey"}
-                color={label == "privateKey" ? "green" : "grey"}
-                onPress={() => {
-                  setLabel("privateKey");
-                  if (text) {
-                    setPrivateKey(text);
-                  }
-                  setOptionVisible(true);
-                }}
-              ></Button>
-            </View>
-          </View>
-
-          <View style={{ display: "flex", alignContent: "flex-start" }}>
-            <Text style={style.welcomeText}>Name</Text>
-          </View>
-          <TextInput
-            style={style.input2}
-            theme={{ colors: { text: "black" } }}
-            value={accountName}
-            onChangeText={(text) => {
-              setAccountName(text);
-            }}
-            placeholderTextColor="black"
-            autoCapitalize={"none"}
-            placeholder="Wallet 1"
-          />
-
-          <TextInput
-            style={style.textInput}
-            onChangeText={(text) => {
-              if (label === "mnemonic") {
-                setMnemonic(text);
-                setText(text);
-              } else if (label === "privateKey") {
-                setPrivateKey(text);
-                setText(text);
-              } else {
-                return alert(`please input ${label} to proceed `);
+            <TouchableOpacity
+              style={
+                label == "mnemonic"
+                  ? { ...style.tabBtns, borderColor: "#4CA6EA" }
+                  : style.tabBtns
               }
-            }}
-            placeholder={
-              label === "privateKey"
-                ? "Enter your private Key here"
-                : label === "JSON"
-                ? "Enter your secret JSON Key here"
-                : "Enter your secret phrase here"
-            }
-          />
+              color={label == "mnemonic" ? "green" : "grey"}
+              onPress={() => {
+                setLabel("mnemonic");
+                if (text) {
+                  setMnemonic(text);
+                }
+                setOptionVisible(false);
+              }}
+            >
+              <Text style={{ color: label == "mnemonic" ? "#4CA6EA" : "grey" }}>
+                Mnemonic
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={
+                label == "privateKey"
+                  ? { ...style.tabBtns, borderColor: "#4CA6EA" }
+                  : style.tabBtns
+              }
+              title={"privateKey"}
+              color={label == "privateKey" ? "green" : "grey"}
+              onPress={() => {
+                setLabel("privateKey");
+                if (text) {
+                  setPrivateKey(text);
+                }
+                setOptionVisible(true);
+              }}
+            >
+              <Text
+                style={{ color: label == "privateKey" ? "#4CA6EA" : "grey" }}
+              >
+                PrivateKey
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={style.labelInputContainer}>
+            <Text style={style.label}>Name</Text>
+            <TextInput
+              value={accountName}
+              onChangeText={(text) => {
+                setAccountName(text);
+              }}
+              style={{ width: wp("78%") }}
+              placeholder={accountName ? accountName : "Wallet 1"}
+              placeholderTextColor={"black"}
+            />
+          </View>
+
+          <View style={style.inputView}>
+            <TouchableOpacity
+              onPress={async () => {
+                // setText('abc')
+                Paste(setMnemonic);
+              }}
+            >
+              <Text style={style.paste}>Paste</Text>
+            </TouchableOpacity>
+            <Text>Phrase</Text>
+            <TextInput
+              style={style.input}
+              onChangeText={(text) => {
+                if (label === "mnemonic") {
+                  setMnemonic(text);
+                  setText(text);
+                } else if (label === "privateKey") {
+                  setPrivateKey(text);
+                  setText(text);
+                } else {
+                  return alert(`please input ${label} to proceed `);
+                }
+              }}
+              placeholder={
+                label === "privateKey"
+                  ? "Enter your private Key here"
+                  : label === "JSON"
+                  ? "Enter your secret JSON Key here"
+                  : "Enter your secret phrase here"
+              }
+            />
+          </View>
 
           {loading ? (
             <ActivityIndicator size="large" color="green" />
           ) : (
             <Text> </Text>
           )}
-        <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
-        <Text style={{color:'red'}}>{message}</Text>
-        </View>
-          <View style={{ display:'flex',alignSelf:'center',width: wp(30), margin: 10 }}>
-            <Button
-              title={"Import"}
-              color={"blue"}
-              disabled={disable}
-              onPress={async () => {
-                const user = await AsyncStorageLib.getItem("user");
-                if (!accountName) {
-                  
-                  return alert("error","please enter an accountName to proceed");
-                }
-                setLoading(true);
-                if (label === "mnemonic") {
-                  try {
-                    console.log("mnemonic" + mnemonic);
-                    /*Wallet {
+          <View
+            style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "red" }}>{message}</Text>
+          </View>
+
+          <TouchableOpacity
+            style={style.btn}
+            disabled={disable}
+            onPress={async () => {
+              const user = await AsyncStorageLib.getItem("user");
+              if (!accountName) {
+                return alert("error", "please enter an accountName to proceed");
+              }
+              setLoading(true);
+              if (label === "mnemonic") {
+                try {
+                  console.log("mnemonic" + mnemonic);
+                  /*Wallet {
   "classicAddress": "rBF6yd1gkfBQ4DbgjjFb8eG2QNPHYGgyZH",
   "privateKey": "ED3C6A54C6B61A02CF1739FAA2E1D7CD2384CFB23ABE5B8C6C94E13552E196FA5C",
   "publicKey": "ED79A51B1B6CA6701A10143380A7B6520A23F900AE21F8CE2877BE62DAA84A7F17",
   "seed": "sEdTB7KBmtuNsMqGK5rTbUkgi5GXzWb",
 } */
 
-                    const phrase = mnemonic.trimStart();
-                    const trimmedPhrase = phrase.trimEnd();
+                  const phrase = mnemonic.trimStart();
+                  const trimmedPhrase = phrase.trimEnd();
 
-                    const xrpWalletFromM = xrpl.Wallet.fromMnemonic(trimmedPhrase);
-                    console.log(xrpWalletFromM);
-                    const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
-                    console.log(
-                      "\t===> seed Created from mnemonic",
-                      entropy.split("x")[1]
-                    );
-                    const xrpWallet = xrpl.Wallet.fromEntropy(
-                      entropy.split("x")[1]
-                    ); // This is suggested because we will get seeds also
-                    console.log(xrpWallet); // Produces different addresses
+                  const xrpWalletFromM =
+                    xrpl.Wallet.fromMnemonic(trimmedPhrase);
+                  console.log(xrpWalletFromM);
+                  const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
+                  console.log(
+                    "\t===> seed Created from mnemonic",
+                    entropy.split("x")[1]
+                  );
+                  const xrpWallet = xrpl.Wallet.fromEntropy(
+                    entropy.split("x")[1]
+                  ); // This is suggested because we will get seeds also
+                  console.log(xrpWallet); // Produces different addresses
 
-                    const privateKey = xrpWallet.seed;
-                    const wallet = {
-                      classicAddress: xrpWallet.classicAddress,
-                      address: xrpWallet.classicAddress,
-                      privateKey: privateKey,
-                    };
-                    /* const response = await saveUserDetails(wallet.address).then(async (response)=>{
+                  const privateKey = xrpWallet.seed;
+                  const wallet = {
+                    classicAddress: xrpWallet.classicAddress,
+                    address: xrpWallet.classicAddress,
+                    privateKey: privateKey,
+                  };
+                  /* const response = await saveUserDetails(wallet.address).then(async (response)=>{
                       if(response===400){
                         return 
                       }
@@ -312,91 +347,89 @@ const ImportXrpWalletModal = ({
 
 
                     })*/
-                    const accounts = {
+                  const accounts = {
+                    classicAddress: wallet.classicAddress,
+                    address: wallet.address,
+                    privateKey: privateKey,
+                    name: accountName,
+                    wallets: [],
+                  };
+                  let wallets = [];
+                  const data = await AsyncStorageLib.getItem(`${user}-wallets`)
+                    .then((response) => {
+                      console.log(response);
+                      JSON.parse(response).map((item) => {
+                        wallets.push(item);
+                      });
+                    })
+                    .catch((e) => {
+                      setWalletVisible(false);
+                      setVisible(false);
+                      setModalVisible(false);
+                      console.log(e);
+                    });
+
+                  //wallets.push(accounts)
+                  const allWallets = [
+                    {
                       classicAddress: wallet.classicAddress,
-                      address: wallet.address,
+                      address: wallet.classicAddress,
                       privateKey: privateKey,
                       name: accountName,
-                      wallets: [],
-                    };
-                    let wallets = [];
-                    const data = await AsyncStorageLib.getItem(
-                      `${user}-wallets`
-                    )
-                      .then((response) => {
-                        console.log(response);
-                        JSON.parse(response).map((item) => {
-                          wallets.push(item);
-                        });
-                      })
-                      .catch((e) => {
-                        setWalletVisible(false);
-                        setVisible(false);
-                        setModalVisible(false);
-                        console.log(e);
-                      });
+                      walletType: "Xrp",
+                      wallets: wallets,
+                    },
+                  ];
+                  // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                    //wallets.push(accounts)
-                    const allWallets = [
-                      {
-                        classicAddress: wallet.classicAddress,
-                        address: wallet.classicAddress,
-                        privateKey: privateKey,
-                        name: accountName,
-                        walletType: "Xrp",
-                        wallets: wallets,
-                      },
-                    ];
-                    // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
-
-                    dispatch(AddToAllWallets(allWallets, user))
-                    .then(
-                      (response) => {
-                        if (response) {
-                          if (response.status === "Already Exists") {
-                            alert("error","Account with same name already exists");
+                  dispatch(AddToAllWallets(allWallets, user)).then(
+                    (response) => {
+                      if (response) {
+                        if (response.status === "Already Exists") {
+                          alert(
+                            "error",
+                            "Account with same name already exists"
+                          );
+                          setLoading(false);
+                          return;
+                        } else if (response.status === "success") {
+                          setTimeout(() => {
                             setLoading(false);
-                            return;
-                          } else if (response.status === "success") {
-                            setTimeout(() => {
-                              setLoading(false);
-                              setWalletVisible(false);
-                              setVisible(false);
-                              setModalVisible(false);
-                              navigation.navigate("AllWallets");
-                            }, 0);
-                          } else {
-                            alert("error","failed please try again");
-                            return;
-                          }
+                            setWalletVisible(false);
+                            setVisible(false);
+                            setModalVisible(false);
+                            navigation.navigate("AllWallets");
+                          }, 0);
+                        } else {
+                          alert("error", "failed please try again");
+                          return;
                         }
                       }
-                    );
-                    
-                    // dispatch(getBalance(wallet.address))
-                    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                    }
+                  );
 
-                    
-                  } catch (e) {
-                    console.log(e);
-                    alert("error",e);
-                    setLoading(false);
-                    setWalletVisible(false);
-                    setVisible(false);
-                    setModalVisible(false);
-                  }
-                } else {
-                  try {
-                    console.log("hi" + privateKey);
-                    const walletPrivateKey = xrpl.Wallet.fromSecret(privateKey);
-                    console.log(walletPrivateKey);
-                    const privatekey = walletPrivateKey.seed;
-                    const wallet = {
-                      address: walletPrivateKey.classicAddress,
-                      privateKey: privatekey,
-                      classicAddress: walletPrivateKey.classicAddress,
-                    };
-                    /* const response = await saveUserDetails(wallet.address).then(async (response)=>{
+                  // dispatch(getBalance(wallet.address))
+                  //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                } catch (e) {
+                  console.log(e);
+                  alert("error", e);
+                  setLoading(false);
+                  setWalletVisible(false);
+                  setVisible(false);
+                  setModalVisible(false);
+                }
+              } else {
+                try {
+                  console.log("hi" + privateKey);
+                  const walletPrivateKey = xrpl.Wallet.fromSecret(privateKey);
+                  console.log(walletPrivateKey);
+                  const privatekey = walletPrivateKey.seed;
+                  const wallet = {
+                    address: walletPrivateKey.classicAddress,
+                    privateKey: privatekey,
+                    classicAddress: walletPrivateKey.classicAddress,
+                  };
+                  /* const response = await saveUserDetails(wallet.address).then(async (response)=>{
                       
                       if(response===400){
                         return 
@@ -413,89 +446,87 @@ const ImportXrpWalletModal = ({
 
 
                     })*/
-                    const accounts = {
+                  const accounts = {
+                    classicAddress: wallet.classicAddress,
+                    address: wallet.address,
+                    privateKey: privateKey,
+                    name: accountName,
+                    wallets: [],
+                  };
+                  let wallets = [];
+                  const data = await AsyncStorageLib.getItem(`${user}-wallets`)
+                    .then((response) => {
+                      console.log(response);
+                      JSON.parse(response).map((item) => {
+                        wallets.push(item);
+                      });
+                    })
+                    .catch((e) => {
+                      setWalletVisible(false);
+                      setVisible(false);
+                      setModalVisible(false);
+                      console.log(e);
+                    });
+
+                  //wallets.push(accounts)
+                  const allWallets = [
+                    {
                       classicAddress: wallet.classicAddress,
-                      address: wallet.address,
+                      address: wallet.classicAddress,
                       privateKey: privateKey,
                       name: accountName,
-                      wallets: [],
-                    };
-                    let wallets = [];
-                    const data = await AsyncStorageLib.getItem(
-                      `${user}-wallets`
-                    )
-                      .then((response) => {
-                        console.log(response);
-                        JSON.parse(response).map((item) => {
-                          wallets.push(item);
-                        });
-                      })
-                      .catch((e) => {
-                        setWalletVisible(false);
-                        setVisible(false);
-                        setModalVisible(false);
-                        console.log(e);
-                      });
+                      walletType: "Xrp",
+                      wallets: wallets,
+                    },
+                  ];
+                  // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                    //wallets.push(accounts)
-                    const allWallets = [
-                      {
-                        classicAddress: wallet.classicAddress,
-                        address: wallet.classicAddress,
-                        privateKey: privateKey,
-                        name: accountName,
-                        walletType: "Xrp",
-                        wallets: wallets,
-                      },
-                    ];
-                    // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
-
-                    dispatch(AddToAllWallets(allWallets, user))
-                    .then(
-                      (response) => {
-                        if (response) {
-                          if (response.status === "Already Exists") {
-                            alert("error","Account with same name already exists");
+                  dispatch(AddToAllWallets(allWallets, user)).then(
+                    (response) => {
+                      if (response) {
+                        if (response.status === "Already Exists") {
+                          alert(
+                            "error",
+                            "Account with same name already exists"
+                          );
+                          setLoading(false);
+                          return;
+                        } else if (response.status === "success") {
+                          setTimeout(() => {
                             setLoading(false);
-                            return;
-                          } else if (response.status === "success") {
-                            setTimeout(() => {
-                              setLoading(false);
-                              setWalletVisible(false);
-                              setVisible(false);
-                              setModalVisible(false);
-                              navigation.navigate("AllWallets");
-                            }, 0);
-                          } else {
-                            alert("error","failed please try again");
-                            return;
-                          }
+                            setWalletVisible(false);
+                            setVisible(false);
+                            setModalVisible(false);
+                            navigation.navigate("AllWallets");
+                          }, 0);
+                        } else {
+                          alert("error", "failed please try again");
+                          return;
                         }
                       }
-                    );
-                    
-                    // dispatch(getBalance(wallet.address))
-                    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                    }
+                  );
 
-
-                    
-                  } catch (e) {
-                    console.log(e);
-                    setLoading(false);
-                    setWalletVisible(false);
-                    setVisible(false);
-                    setModalVisible(false);
-                    alert("error",e);
-                  }
+                  // dispatch(getBalance(wallet.address))
+                  //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                } catch (e) {
+                  console.log(e);
+                  setLoading(false);
+                  setWalletVisible(false);
+                  setVisible(false);
+                  setModalVisible(false);
+                  alert("error", e);
                 }
+              }
 
-                setWalletVisible(false);
-                setVisible(false);
-                setModalVisible(false);
-                setLoading(false);
-              }}
-            ></Button>
-          </View>
+              setWalletVisible(false);
+              setVisible(false);
+              setModalVisible(false);
+              setLoading(false);
+            }}
+          >
+            <Text style={{ color: "white" }}>Import</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </Animated.View>
@@ -506,13 +537,13 @@ export default ImportXrpWalletModal;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
     backgroundColor: "white",
-    height: hp(90),
-    width: wp(90),
+    height: hp(80),
+    width: wp(100),
     textAlign: "center",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
+    alignSelf: "center",
+    marginTop:hp(5),
+    borderRadius:hp(1)
   },
 
   welcomeText: {
@@ -528,11 +559,12 @@ const style = StyleSheet.create({
     marginTop: hp(1),
   },
   Button: {
-    marginTop: hp(0),
-    display: "flex",
     flexDirection: "row",
-    alignContent: "space-around",
-    alignItems: "center",
+    justifyContent: "space-evenly",
+    width: wp(75),
+    marginTop: hp(3),
+    marginBottom: hp(3),
+    alignSelf: "center",
   },
   tinyLogo: {
     width: wp("5"),
@@ -555,39 +587,68 @@ const style = StyleSheet.create({
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "grey",
-    height: hp(20),
-    width: wp(85),
-    margin: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
 
-    elevation: 24,
-  },
-  input2: {
-    borderWidth: 1,
-    borderColor: "grey",
-    height: hp(5),
-    width: wp(85),
-    margin: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
+  labelInputContainer: {
+    position: "relative",
+    width: wp(90),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(3),
+    borderRadius: wp(2),
     backgroundColor: "white",
-
-    elevation: 24,
+    borderWidth: 1,
+    paddingLeft: wp(3),
+    paddingVertical: hp(1.2),
+    borderColor: "#DADADA",
   },
+  label: {
+    position: "absolute",
+    zIndex: 100,
+    backgroundColor: "white",
+    paddingHorizontal: 5,
+    left: 12,
+    color: "#4CA6EA",
+    top: -12,
+  },
+  inputView: {
+    borderWidth: 1,
+    width: wp(90),
+    alignSelf: "center",
+    padding: 10,
+    marginTop: hp(3),
+    borderRadius: hp(1),
+    borderColor: "#DADADA",
+  },
+  input: {
+    height: hp("5%"),
+    marginBottom: hp("2"),
+    color: "black",
+    marginTop: hp("2"),
+    width: wp("90"),
+    paddingRight: wp("7"),
+    backgroundColor: "white",
+  },
+  paste: { textAlign: "right", color: "#4CA6EA" },
+  btn: {
+    backgroundColor: "#4CA6EA",
+    paddingVertical: hp(1.6),
+    width: wp(90),
+    alignSelf: "center",
+    borderRadius: hp(1),
+    alignItems: "center",
+  },
+  tabBtns: {
+    borderBottomWidth: 1,
+    width: "26%",
+    alignItems: "center",
+    padding: 3,
+  },
+  text:{
+    textAlign:"center",
+    fontWeight:"700",
+    fontSize:15,
+    marginTop:hp(3)
+  }
 });
