@@ -221,7 +221,7 @@ const TokenList = ({
       >
        
 
-        <Image source={title_icon} style={{ height: hp(4), width: wp(8) }} />
+        <Image source={{uri:item.logoURI}} style={{ height: hp(4), width: wp(8) }} />
         <View
           style={{
             marginHorizontal: wp(4),

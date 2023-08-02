@@ -302,7 +302,7 @@ const ConfirmTransaction = (props) => {
           setDisable(true);
         }}
       >
-        <Text style={{ color: "white" }}>Send</Text>
+        <Text style={{ color: "white" }}>{Loading?<ActivityIndicator size={'small'} color={'white'}/>: 'Send'}</Text>
       </TouchableOpacity>
 
       <TransactionPinModal

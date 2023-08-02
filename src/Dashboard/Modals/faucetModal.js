@@ -39,9 +39,9 @@ if (network === "BSC") {
     <Center>
       <Button
         onPress={ () => {
-          //setShowModal(true)
-          console.log('pressed')
-       SendNotification('title','test')
+          setShowModal(true)
+         // console.log('pressed')
+       //SendNotification('title','test')
         }}
         style={{ backgroundColor: "#145DA0" }}
       >

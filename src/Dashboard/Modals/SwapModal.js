@@ -1629,7 +1629,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               <Text style={{ marginTop: hp(2) }}>
                 slippageTolerance:{trade ? trade.slippageTolerance : 0} %
               </Text>
-              <Text style={{ marginTop: hp(2), backgroundColor: "red" }}>
+              <Text style={{ marginTop: hp(2) }}>
                 amount : {amount ? amount : 0} {coin0.name}
               </Text>
               <Text style={{ marginTop: hp(2) }}>

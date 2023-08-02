@@ -234,11 +234,6 @@ const Settings = (props) => {
         />
         <Text style={styles.text}>Wallets</Text>
       </TouchableOpacity>
-      <Text
-        style={{ fontSize: hp(1.5), color: "black", marginHorizontal: wp(9) }}
-      >
-        Main Wallet 1
-      </Text>
       <View style={styles.bottomBorder}>
         <TouchableOpacity
           // onPress={() => {
