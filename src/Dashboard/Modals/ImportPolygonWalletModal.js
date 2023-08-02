@@ -127,6 +127,10 @@ const ImportPolygonWalletModal = ({
   }, [fadeAnim, Spin]);
 
   useEffect(()=>{
+    if(!accountName)
+    {
+      setDisable(true)
+    }
     if(accountName && (privateKey || mnemonic || json))
     {
       let valid
@@ -159,9 +163,9 @@ const ImportPolygonWalletModal = ({
     }else{
       setMessage('')
     }
-    },[mnemonic,privateKey,json])
+    },[mnemonic,privateKey,json,accountName])
 
-
+   
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}

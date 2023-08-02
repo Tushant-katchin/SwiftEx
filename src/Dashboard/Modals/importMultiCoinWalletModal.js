@@ -33,7 +33,7 @@ const ImportMultiCoinWalletModal = ({
   setModalVisible,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [accountName, setAccountName] = useState("");
+  const [accountName, setAccountName] = useState();
   const [mnemonic, setMnemonic] = useState("");
   const [visible, setVisible] = useState(false);
   const [Wallet, setWallet] = useState();
@@ -118,6 +118,10 @@ const ImportMultiCoinWalletModal = ({
   }, [fadeAnim, Spin]);
 
   useEffect(()=>{
+    if(!accountName)
+    {
+      setDisable(true)
+    }
     if(accountName &&  mnemonic )
     {
       let valid
@@ -139,9 +143,8 @@ const ImportMultiCoinWalletModal = ({
     }else{
       setMessage('')
     }
-    },[mnemonic])
-  
-
+    },[mnemonic,accountName])
+   
 
   return (
     <Animated.View // Special animatable View
@@ -177,6 +180,7 @@ const ImportMultiCoinWalletModal = ({
 
           <TextInput
             style={style.textInput}
+            value={mnemonic}
             onChangeText={(text) => {
               setMnemonic(text);
             }}

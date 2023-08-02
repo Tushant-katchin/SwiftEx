@@ -341,13 +341,14 @@ const Market = (props) => {
             data.map((item) => {
               const image = item.image;
               const color = item.price_change_24h > 0 ? "green" : "red";
+              let data = item
               return (
                 <ScrollView>
                   <TouchableOpacity
                     style={Styles.Container}
                     key={item.id}
                     onPress={() => {
-                      props.navigation.navigate("CoinDetails", { data });
+                      props.navigation.navigate("CoinDetails", { data:data });
                     }}
                   >
                     <Image source={{ uri: image }} style={Styles.img} />
