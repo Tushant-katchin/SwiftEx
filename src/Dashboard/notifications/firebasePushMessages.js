@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import notifee from '@notifee/react-native';
 
-PushNotification.getChannels(function (channel_ids) {
 
 /*PushNotification.getChannels(function (channel_ids) {
 >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
