@@ -13,6 +13,7 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
+import darkBlue from "../../../assets/darkBlue.png";
 import ReactNativePinView from "react-native-pin-view";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -40,7 +41,7 @@ const SwapPinModal = ({
   swapType,
   SaveTransaction,
   setLoading,
-  amount
+  amount,
 }) => {
   const state = useSelector((state) => state);
   const [status, setStatus] = useState("pinset");
@@ -116,16 +117,16 @@ const SwapPinModal = ({
         <View style={style.Body}>
           <Animated.Image
             style={{
-              width: wp("5"),
-              height: hp("5"),
+              width: wp("12"),
+              height: hp("12"),
               padding: 30,
               marginTop: hp(2),
               transform: [{ rotate: SpinValue }],
             }}
-            source={title_icon}
+            source={darkBlue}
           />
           <Text style={style.welcomeText}> Hi,</Text>
-          <Text style={style.welcomeText}>
+          <Text style={style.welcomeText1}>
             {" "}
             {status == "verify"
               ? "please re enter pin"
@@ -133,13 +134,14 @@ const SwapPinModal = ({
               ? "please enter your pin"
               : "Please create a pin"}
           </Text>
-          <View style={{ marginTop: hp(10) }}>
+          <View style={{ marginTop: hp(5) }}>
             {loader ? <SwapLoadingComponent /> : <View></View>}
+
             <ReactNativePinView
-              inputSize={32}
+              inputSize={25}
               ref={pinView}
               pinLength={6}
-              buttonSize={60}
+              buttonSize={45}
               onValueChange={(value) => setEnteredPin(value)}
               buttonAreaStyle={{
                 marginTop: 24,
@@ -171,7 +173,7 @@ const SwapPinModal = ({
 
                   if (JSON.parse(Pin) === enteredPin) {
                     try {
-                      setPinViewVisible(false)
+                      setPinViewVisible(false);
                       setLoader(true);
                       setLoading(true);
                       const walletType = await AsyncStorage.getItem(
@@ -193,9 +195,8 @@ const SwapPinModal = ({
                                 console.log(response);
                                 if (response) {
                                   if (response.code === 400) {
-                                    
                                     return alert(
-                                      'errro',
+                                      "errro",
                                       "server error please try again"
                                     );
                                   } else if (response.code === 401) {
@@ -216,7 +217,7 @@ const SwapPinModal = ({
                                         setModalVisible(false);
                                         setPinViewVisible(false);
                                         alert(
-                                          'success',
+                                          "success",
                                           "Your Tx Hash : " +
                                             response.tx.transactionHash
                                         );
@@ -226,7 +227,7 @@ const SwapPinModal = ({
                                         setLoading(false);
                                         setLoader(false);
                                         setPinViewVisible(false);
-                                        alert('error',e.message);
+                                        alert("error", e.message);
                                         console.log(e);
                                       });
                                   } else if (response.code === 404) {
@@ -234,20 +235,20 @@ const SwapPinModal = ({
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',"pair not found");
+                                    return alert("error", "pair not found");
                                   } else {
                                     setLoading(false);
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',response);
+                                    return alert("error", response);
                                   }
                                 } else {
                                   setLoading(false);
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
-                                  return alert('error',"server error");
+                                  return alert("error", "server error");
                                 }
                               })
                               .catch((e) => {
@@ -255,7 +256,7 @@ const SwapPinModal = ({
                                 setLoader(false);
                                 setTradeVisible(false);
                                 setPinViewVisible(false);
-                                alert('error',e.message);
+                                alert("error", e.message);
                                 console.log(e);
                               });
                           } else if (coin1.symbol === "WETH") {
@@ -287,7 +288,10 @@ const SwapPinModal = ({
                                         setTradeVisible(false);
                                         setModalVisible(false);
                                         setPinViewVisible(false);
-                                        alert('success',"Your Tx Hash : " + response.tx);
+                                        alert(
+                                          "success",
+                                          "Your Tx Hash : " + response.tx
+                                        );
                                         navigation.navigate("Transactions");
                                       })
                                       .catch((e) => {
@@ -295,14 +299,14 @@ const SwapPinModal = ({
                                         setLoader(false);
                                         setTradeVisible(false);
                                         setPinViewVisible(false);
-                                        alert('error',e.message);
+                                        alert("error", e.message);
                                         console.log(e);
                                       });
                                   } else if (response.code === 400) {
                                     setPinViewVisible(false);
                                     setLoader(false);
                                     return alert(
-                                      'error',
+                                      "error",
                                       "error while swapping. please try again"
                                     );
                                   } else if (response === 404) {
@@ -310,20 +314,20 @@ const SwapPinModal = ({
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',"pair not found");
+                                    return alert("error", "pair not found");
                                   } else {
                                     setLoading(false);
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',response);
+                                    return alert("error", response);
                                   }
                                 } else {
                                   setLoading(false);
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
-                                  return alert('error',"server error");
+                                  return alert("error", "server error");
                                 }
                               })
                               .catch((e) => {
@@ -331,7 +335,7 @@ const SwapPinModal = ({
                                 setLoader(false);
                                 setTradeVisible(false);
                                 setPinViewVisible(false);
-                                alert('error',e.message);
+                                alert("error", e.message);
                                 console.log(e);
                               });
                           } else {
@@ -364,7 +368,7 @@ const SwapPinModal = ({
                                           setModalVisible(false);
                                           setPinViewVisible(false);
                                           alert(
-                                            'sucess',
+                                            "sucess",
                                             "Your Tx Hash : " + response.tx
                                           );
                                           navigation.navigate("Transactions");
@@ -374,7 +378,7 @@ const SwapPinModal = ({
                                           setLoader(false);
                                           setTradeVisible(false);
                                           setPinViewVisible(false);
-                                          alert('error',e.message);
+                                          alert("error", e.message);
                                           console.log(e);
                                         });
                                   } else if (response === 404) {
@@ -382,20 +386,20 @@ const SwapPinModal = ({
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',"pair not found");
+                                    return alert("error", "pair not found");
                                   } else {
                                     setLoading(false);
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',response);
+                                    return alert("error", response);
                                   }
                                 } else {
                                   setLoading(false);
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
-                                  return alert('error',"server error");
+                                  return alert("error", "server error");
                                 }
                               })
                               .catch((e) => {
@@ -403,7 +407,7 @@ const SwapPinModal = ({
                                 setLoading(false);
                                 setTradeVisible(false);
                                 setPinViewVisible(false);
-                                alert('error',e.message);
+                                alert("error", e.message);
                                 console.log(e);
                               });
                           }
@@ -411,7 +415,7 @@ const SwapPinModal = ({
                           setLoading(false);
                           setLoader(false);
                           setPinViewVisible(false);
-                          alert('error',"no wallets found");
+                          alert("error", "no wallets found");
                         }
                       } else if (JSON.parse(walletType) === "BSC") {
                         const swap = await pancakeSwap(Wallet.privateKey);
@@ -436,7 +440,7 @@ const SwapPinModal = ({
                                     if (response.code === 400) {
                                       setPinViewVisible(false);
                                       return alert(
-                                        'error',
+                                        "error",
                                         "server error please try again"
                                       );
                                     } else if (response.code === 401) {
@@ -457,7 +461,7 @@ const SwapPinModal = ({
                                           setModalVisible(false);
                                           setPinViewVisible(false);
                                           alert(
-                                            'success',
+                                            "success",
                                             "Your Tx Hash : " +
                                               response.tx.transactionHash
                                           );
@@ -467,7 +471,7 @@ const SwapPinModal = ({
                                           setLoading(false);
                                           setLoader(false);
                                           setPinViewVisible(false);
-                                          alert('error',e.message);
+                                          alert("error", e.message);
                                           console.log(e);
                                         });
                                     } else if (response.code === 404) {
@@ -475,20 +479,25 @@ const SwapPinModal = ({
                                       setLoader(false);
                                       setTradeVisible(false);
                                       setPinViewVisible(false);
-                                      return alert('error',"pair not found");
+                                      return alert("error", "pair not found");
                                     } else {
                                       setLoading(false);
                                       setLoader(false);
                                       setTradeVisible(false);
                                       setPinViewVisible(false);
-                                      return alert('error',response.message);
+                                      return alert("error", response.message);
                                     }
                                   } else {
                                     setLoading(false);
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',response?response.message:"server error");
+                                    return alert(
+                                      "error",
+                                      response
+                                        ? response.message
+                                        : "server error"
+                                    );
                                   }
                                 })
                                 .catch((e) => {
@@ -496,7 +505,7 @@ const SwapPinModal = ({
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
-                                  alert('error',e.message);
+                                  alert("error", e.message);
                                   console.log(e);
                                 });
                             } else if (coin1.symbol === "WETH") {
@@ -511,7 +520,7 @@ const SwapPinModal = ({
                                   if (response) {
                                     if (response.code === 401) {
                                       console.log(
-                                        'success',
+                                        "success",
                                         "Your Tx Hash : " + response.tx
                                       );
                                       const type = "Swap";
@@ -530,7 +539,7 @@ const SwapPinModal = ({
                                           setPinViewVisible(false);
                                           setLoader(false);
                                           alert(
-                                            'success',
+                                            "success",
                                             "Your Tx Hash : " + response.tx
                                           );
                                           navigation.navigate("Transactions");
@@ -540,14 +549,14 @@ const SwapPinModal = ({
                                           setLoader(false);
                                           setTradeVisible(false);
                                           setPinViewVisible(false);
-                                          alert('error',e.message);
+                                          alert("error", e.message);
                                           console.log(e);
                                         });
                                     } else if (response.code === 400) {
                                       setPinViewVisible(false);
                                       setLoader(false);
                                       return alert(
-                                        'error',
+                                        "error",
                                         "error while swapping. please try again"
                                       );
                                     } else if (response === 404) {
@@ -555,20 +564,20 @@ const SwapPinModal = ({
                                       setLoader(false);
                                       setTradeVisible(false);
                                       setPinViewVisible(false);
-                                      return alert('error',"pair not found");
+                                      return alert("error", "pair not found");
                                     } else {
                                       setLoading(false);
                                       setLoader(false);
                                       setTradeVisible(false);
                                       setPinViewVisible(false);
-                                      return alert('error',response);
+                                      return alert("error", response);
                                     }
                                   } else {
                                     setLoading(false);
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',"server error");
+                                    return alert("error", "server error");
                                   }
                                 })
                                 .catch((e) => {
@@ -576,7 +585,7 @@ const SwapPinModal = ({
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
-                                  alert('error',e.message);
+                                  alert("error", e.message);
                                   console.log(e);
                                 });
                             } else {
@@ -609,7 +618,7 @@ const SwapPinModal = ({
                                             setModalVisible(false);
                                             setPinViewVisible(false);
                                             alert(
-                                              'error',
+                                              "error",
                                               "Your Tx Hash : " + response.tx
                                             );
                                             navigation.navigate("Transactions");
@@ -619,7 +628,7 @@ const SwapPinModal = ({
                                             setLoader(false);
                                             setTradeVisible(false);
                                             setPinViewVisible(false);
-                                            alert('error',e.message);
+                                            alert("error", e.message);
                                             console.log(e);
                                           });
                                     } else if (response === 404) {
@@ -627,20 +636,20 @@ const SwapPinModal = ({
                                       setLoader(false);
                                       setTradeVisible(false);
                                       setPinViewVisible(false);
-                                      return alert('error',"pair not found");
+                                      return alert("error", "pair not found");
                                     } else {
                                       setLoading(false);
                                       setLoader(false);
                                       setTradeVisible(false);
                                       setPinViewVisible(false);
-                                      return alert('error',response);
+                                      return alert("error", response);
                                     }
                                   } else {
                                     setLoading(false);
                                     setLoader(false);
                                     setTradeVisible(false);
                                     setPinViewVisible(false);
-                                    return alert('error',"server error");
+                                    return alert("error", "server error");
                                   }
                                 })
                                 .catch((e) => {
@@ -648,7 +657,7 @@ const SwapPinModal = ({
                                   setLoader(false);
                                   setTradeVisible(false);
                                   setPinViewVisible(false);
-                                  alert('error',e.message);
+                                  alert("error", e.message);
                                   console.log(e);
                                 });
                             }
@@ -656,7 +665,7 @@ const SwapPinModal = ({
                             setLoading(false);
                             setLoader(false);
                             setPinViewVisible(false);
-                            alert('error',"no wallets found");
+                            alert("error", "no wallets found");
                           }
                         } else if (swapType === "BSC") {
                           const swap = await pancakeSwap(Wallet.privateKey);
@@ -672,28 +681,24 @@ const SwapPinModal = ({
                       setLoader(false);
                       setTradeVisible(false);
                       setPinViewVisible(false);
-                      alert('error',e.message);
+                      alert("error", e.message);
                       console.log(e);
                     }
                   } else {
                     setLoader(false);
                     setLoading(false);
-                    alert('error',"invalid pin.please try again!");
+                    alert("error", "invalid pin.please try again!");
                   }
                 }
               }}
               customLeftButton={
                 showRemoveButton ? (
-                  <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
+                  <Icon name={"finger-print"} size={36} color={"gray"} />
                 ) : undefined
               }
               customRightButton={
                 showCompletedButton ? (
-                  <Icon
-                    name={"ios-chevron-forward-circle"}
-                    size={36}
-                    color={"#FFF"}
-                  />
+                  <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
                 ) : undefined
               }
             />
@@ -710,16 +715,24 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     backgroundColor: "#131E3A",
-    height: hp(95),
-    width: wp(90),
+    height: hp(75),
+    width: wp(95),
     alignItems: "center",
     textAlign: "center",
+    borderRadius: hp(2),
+    alignSelf: "center",
   },
   welcomeText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "200",
     color: "white",
-    marginTop: hp(5),
+    // marginTop: hp(2),
+  },
+  welcomeText1: {
+    fontSize: 16,
+    fontWeight: "200",
+    color: "white",
+    marginTop: hp(1),
   },
   welcomeText2: {
     fontSize: 20,

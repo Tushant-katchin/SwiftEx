@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { authRequest, POST, GET } from "../api";
-import { TextInput } from "react-native-paper";
 import { APP_FEE_PERCENTAGE, TX_FEE_IN_USD } from "../utils/constants";
 import {
   getRegistrationToken,
@@ -16,6 +15,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Linking,
+  TextInput,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -32,6 +32,7 @@ import { getCurrentChain } from "../utils/chainHandler";
 import { useSelector } from "react-redux";
 import { useToast } from "native-base";
 import { ShowToast } from "../../../../reusables/Toasts";
+import { LinearGradient } from "expo-linear-gradient";
 
 export const NewBidModal = ({ offer }) => {
   const state = useSelector((state) => state);
@@ -417,30 +418,30 @@ export const NewBidModal = ({ offer }) => {
           >
             <View
               style={{
-                display: "flex",
-                alignItems: "center",
+                // alignItems: "center",
                 height: hp(80),
-                width: wp(90),
-                backgroundColor: "white",
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
+                width: wp(95),
+                justifyContent:"center",
+                alignSelf:"center",
+                borderRadius:hp(1),
+                backgroundColor: "#131E3A",
+              
               }}
             >
-              <Text>
-                Bid on {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "}
-                <Text>{offer.currencyName} unit price</Text>
-              </Text>
-              <Text style={{ color: "red" }}>{modalMessage}</Text>
+              <Text style={{ color: "red",textAlign:"center" }}>{modalMessage}</Text>
               <View
                 style={{
-                  display: "flex",
                   alignContent: "center",
                   alignItems: "center",
-                  alignSelf: "center",
-                  width: wp(25),
-                  margin: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignSelf:"center",
+                  width: wp(70),
+                  marginTop:hp(1)
                 }}
               >
+                <Text style={style.textColor}>Select Currency</Text>
+
                 <SelectView
                   options={currencyData ? currencyData : []}
                   value={newBid.currencyName}
@@ -450,26 +451,27 @@ export const NewBidModal = ({ offer }) => {
                   selected={selected}
                 />
               </View>
-              <View>
+
+              <Text style={{ marginTop: hp(3), color: "white",marginHorizontal:wp(8)}}>
+                Bid on {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "} {offer.currencyName} unit price </Text>
+
+              <View style={{marginHorizontal:wp(12),marginTop:hp(2)}}>
                 <TextInput
+                  placeholderTextColor={"white"}
                   placeholder="Unit Price"
                   keyboardType="numeric"
                   value={newBid.pricePerUnit}
                   onChangeText={(e) => handleChange(e)}
-                  style={{ width: wp(50) }}
+                  style={{ width: wp(70) }}
                   // onChange={handleChange}
                 />
               </View>
-              <View
-                style={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  alignSelf: "center",
-                }}
-              >
-                <Text>Balance: {balance}</Text>
+
+              <View style={style.textView}>
+                <Text style={style.textColor}>Balance: </Text>
+                <Text style={style.textColor}>{balance}</Text>
               </View>
+
               <View
                 style={{
                   display: "flex",
@@ -481,7 +483,7 @@ export const NewBidModal = ({ offer }) => {
                 {breakDowns.convertedUnitPrice !== 0 &&
                   breakDowns.convertedUnitPrice && (
                     <>
-                      <Text>Converted Unit Price:</Text>
+                      <Text>Converted Unit dddPrice:</Text>
                       <Text>
                         {breakDowns.convertedUnitPrice}{" "}
                         <Text>{offer.currencyName}</Text>
@@ -489,40 +491,33 @@ export const NewBidModal = ({ offer }) => {
                     </>
                   )}
               </View>
-              <View
-                style={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  alignSelf: "center",
-                }}
-              >
-                <Text style={{ fontSize: 18 }}>Subtotal:</Text>
-                <Text>
+
+              <View style={style.textView}>
+                <Text style={style.textColor}>Subtotal:</Text>
+                <Text style={style.textColor}>
                   {breakDowns.subTotal} {newBid.currencyName}
                 </Text>
-                <Text style={{ fontSize: 18 }}>App Fee:</Text>
-                <View>
-                  <Text>{breakDowns.appFee} </Text>
-                  <Text>
+              </View>
+
+              <View style={style.textView}>
+                <Text style={style.textColor}>App Fee:</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={style.textColor}>{breakDowns.appFee} </Text>
+                  <Text style={style.textColor}>
                     {offer.currencyName} {100 * APP_FEE_PERCENTAGE} %
                   </Text>
                 </View>
-                <View
-                  style={{
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    alignSelf: "center",
-                  }}
-                >
-                  <Text>Transaction Fee:</Text>
-                  <Text>{txFeeInUsd / 2} USD</Text>
-                  <Text>
+              </View>
+
+              <View style={style.textView}>
+                <Text style={style.textColor}>Transaction Fee:</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={style.textColor}>{txFeeInUsd / 2} USD</Text>
+                  <Text style={style.textColor}>
                     {breakDowns.convertedTxFee && (
                       <>
                         (
-                        <Text>
+                        <Text style={style.textColor}>
                           {breakDowns.convertedTxFee} {newBid.currencyName}
                         </Text>
                         )
@@ -530,32 +525,44 @@ export const NewBidModal = ({ offer }) => {
                     )}
                   </Text>
                 </View>
-                <Text style={{ fontSize: 18 }}>Total:</Text>
-                <Text>
-                  {breakDowns.finalPayable} <Text>{newBid.currencyName}</Text>
-                </Text>
-                <Text>
-                  Note: The above totals are just estimations that can vary
-                  depending on currency rates.
+              </View>
+
+              <View style={style.textView}>
+                <Text style={style.textColor}> Total:</Text>
+                <Text style={style.textColor}>
+                  {breakDowns.finalPayable}{" "}
+                  <Text style={style.textColor}>{newBid.currencyName}</Text>
                 </Text>
               </View>
+
+              <Text style={style.noteText}>
+                <Text style={{color:"white",fontWeight:"700"}}>Note:</Text> The above totals are just estimations that can vary
+                depending on currency rates.
+              </Text>
+
               <View>
                 {loading ? (
                   <ActivityIndicator size="large" color="blue" />
                 ) : (
                   <View></View>
                 )}
-                <Button
-                  title="Bid"
-                  disabled={disable}
-                  onPress={() => {
-                    setLoading(true);
-                    handleSubmit();
-                  }}
-                  color="green"
+
+                <LinearGradient
+                  style={style.linearBtn}
+                  start={[1, 0]}
+                  end={[0, 1]}
+                  colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
                 >
-                  Bid
-                </Button>
+                  <TouchableOpacity
+                    disabled={disable}
+                    onPress={() => {
+                      setLoading(true);
+                      handleSubmit();
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>Yes, Place Bid!</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
               </View>
             </View>
           </Modal>
@@ -586,3 +593,41 @@ export const NewBidModal = ({ offer }) => {
     </>
   );
 };
+
+const style = StyleSheet.create({
+  textView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(70),
+    alignSelf:"center",
+    marginTop: hp(3.5),
+  },
+  textColor: {
+    color: "white",
+  },
+  noteText: {
+    textAlign: "center",
+    color: "white",
+    marginTop: hp(8),
+    width:wp(70),
+    alignSelf:"center"
+  },
+  bidBtn: {
+    marginTop: hp(4),
+    backgroundColor: "blue",
+    width: wp(40),
+    paddingVertical: hp(1.6),
+    alignItems: "center",
+  },
+  linearBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: wp(44),
+    alignSelf: "flex-end",
+    borderRadius: hp(1),
+    marginTop: hp(3),
+    alignSelf:"center",
+    height: hp(5),
+    // marginRight: wp(4),
+  },
+});
