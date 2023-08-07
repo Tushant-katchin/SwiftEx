@@ -1198,12 +1198,15 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
         setOpen(false);
       }}
     >
-      <View
-        style={{
-          height: hp(88),
+      <ScrollView
+      nestedScrollEnabled={true}
+        contentContainerStyle={{
+          // height: hp(88),
+          paddingBottom:hp(10),
           width: wp(90),
           backgroundColor: "#131E3A",
          borderRadius:10,
+         borderBottomLeftRadius:10,
           display: "flex",
           // alignItems: "center",
         }}
@@ -1389,7 +1392,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
          <Text style={{fontWeight:"700"}}>Note:</Text>  The above totals are just estimations that can vary depending on
           currency rates.
         </Text>
-      </View>
+
+      </ScrollView>
       {txLink && (
         <View>
           <SeeTransactions />
@@ -1470,7 +1474,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginVertical: hp(5),
     marginHorizontal: wp(17),
-    width:wp(56)
+    width:wp(58)
   },
   confirmButton:{
     alignItems:"center",
