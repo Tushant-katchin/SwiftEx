@@ -1237,7 +1237,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
             </View>
           )}
           {newOffer.pricePerUnit ? (
-            <Text>
+            <Text style={{color:'white'}}>
               {" "}
               Unit Price: {+newOffer.pricePerUnit.toFixed(2)}{" "}
               {newOffer.currencyName || "USD"}
@@ -1324,7 +1324,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
 
             <Text style={styles.textColor}>
               {breakDowns.subTotal}
-              {newOffer.currencyName} {'INR'}
+              {newOffer.currencyName} 
             </Text>
           </View>
           <View style={styles.subTotal}>
@@ -1351,7 +1351,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           <View style={styles.paybleContainer}>
             <Text style={styles.textColor}>Total:</Text>
             <Text style={styles.textColor}>
-              {breakDowns.finalPayable.toFixed(2)} {newOffer.currencyName} {'INR'}
+              {breakDowns.finalPayable.toFixed(2)} {newOffer.currencyName} 
             </Text>
           </View>
         </View>

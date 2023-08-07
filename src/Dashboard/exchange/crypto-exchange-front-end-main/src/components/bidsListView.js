@@ -418,7 +418,7 @@ export const BidsListView = ({ bids, getBids }) => {
 
               <SnackBar
                 visible={snackbarVisible}
-                position={"bottom"}
+                position={"top"}
                 textMessage="Bid is an exact match. Proceed to complete the transaction"
                 actionHandler={() => {
                   //Linking.openURL(paymentUrl)
