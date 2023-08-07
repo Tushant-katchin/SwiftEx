@@ -178,18 +178,28 @@ const ImportMultiCoinWalletModal = ({
             />
           </View>
 
-          <TextInput
-            style={style.textInput}
-            value={mnemonic}
-            onChangeText={(text) => {
-              setMnemonic(text);
-            }}
+
+          <View style={style.inputView}>
+            <TouchableOpacity
+              onPress={async () => {
+                // setText('abc')
+                Paste(setMnemonic);
+              }}
+            >
+              <Text style={style.paste}>Paste</Text>
+            </TouchableOpacity>
+            <Text>Phrase</Text>
+            <TextInput
             placeholder={"Enter your secret phrase here"}
-          />
-          <Text style={{ margin: 5 }}>
-            Secret Phrases are typically 12(sometimes 16) words long.They are
-            also called mnemonic phrase.{" "}
-          </Text>
+              style={style.input}
+              value={mnemonic}
+              onChangeText={(text) => {
+                setMnemonic(text);
+              }}
+            />
+          </View>
+
+
           {loading ? (
             <ActivityIndicator size="large" color="green" />
           ) : (
@@ -474,5 +484,23 @@ const style = StyleSheet.create({
     marginTop:hp(3),
     fontSize:15,
     fontWeight:"700"
-  }
+  },
+  inputView: {
+    borderWidth: 1,
+    width: wp(90),
+    alignSelf: "center",
+    padding: 10,
+    marginTop: hp(3),
+    borderRadius: hp(1),
+    borderColor: "#DADADA",
+  },
+  input: {
+    height: hp("5%"),
+    marginBottom: hp("2"),
+    color: "black",
+    marginTop: hp("2"),
+    width: wp("90"),
+    paddingRight: wp("7"),
+    backgroundColor: "white",
+  },
 });

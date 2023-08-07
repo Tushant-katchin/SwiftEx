@@ -931,7 +931,7 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    width: wp("22"),
+    width: wp("30"),
     borderRadius: 8,
     borderColor: "#407EC9",
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
@@ -952,11 +952,11 @@ const styles = StyleSheet.create({
     bottom: hp("8"),
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 13,
     color: "#fff",
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: 13,
     color: "#fff",
   },
   iconStyle: {

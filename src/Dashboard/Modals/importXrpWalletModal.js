@@ -231,6 +231,7 @@ const ImportXrpWalletModal = ({
 
           <View style={style.labelInputContainer}>
             <Text style={style.label}>Name</Text>
+        
             <TextInput
               value={accountName}
               onChangeText={(text) => {
@@ -241,6 +242,7 @@ const ImportXrpWalletModal = ({
               placeholderTextColor={"black"}
             />
           </View>
+
 
           <View style={style.inputView}>
             <TouchableOpacity

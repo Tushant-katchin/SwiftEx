@@ -7,8 +7,8 @@ import {
 import { useEffect, useState } from "react";
 import { GET, PATCH, authRequest } from "../api";
 import { convertCurrencies } from "../utils/currencyConversion";
-import { View, StyleSheet, ScrollView, Button } from "react-native";
-import { Input, Text, Box } from "native-base";
+import { View, StyleSheet, ScrollView, Button, TextInput } from "react-native";
+import { Text, Box } from "native-base";
 import Modal from "react-native-modal";
 import { DataTable } from "react-native-paper";
 import {
@@ -46,8 +46,8 @@ const UpdateBidModal = ({
   const offer = bid.offer;
   const toast = useToast();
   useEffect(() => {
-    console.log('Offer',offer)
-    getTxFeeData(offer.assetName,offer.chainId);
+    console.log("Offer", offer);
+    getTxFeeData(offer.assetName, offer.chainId);
   }, []);
 
   const handleOpen = () => {
@@ -58,8 +58,7 @@ const UpdateBidModal = ({
     setOpen(false);
   };
 
-  const getTxFeeData = async (txName,chainId) => {
-
+  const getTxFeeData = async (txName, chainId) => {
     try {
       const { err, res: { gasPriceInUsd = TX_FEE_IN_USD } = {} } =
         await authRequest(`/users/getTxFeeData/${txName}/${chainId}`, GET);
@@ -184,79 +183,131 @@ const UpdateBidModal = ({
             setOpen(false);
           }}
         >
-          <Box alignItems="center" backgroundColor={"white"}>
-            <Text>
-              Update your bid unit price with current value: {bid.pricePerUnit}{" "}
-              {bid.currencyName}
+          <View style={styles.modalView}>
+            <Text style={styles.addtxt}>Adding Offer</Text>
+            <View style={styles.assetText}>
+              <Text style={{ fontWeight: "700", color: "white" }}>
+                Enter Asset amount
+              </Text>
+              <TextInput
+                mx="3"
+                style={{
+                  borderBottomWidth: 1.5,
+                  borderColor: "#407EC9",
+                  width: wp(15),
+                  textAlign: "center",
+                }}
+                placeholder="0.01"
+                placeholderTextColor={"white"}
+                w="30%"
+                onChangeText={(text) => {
+                  let event = {
+                    value: text,
+                    name: "pricePerUnit",
+                  };
+                  handleChange(event);
+                }}
+                value={updatedBid.pricePerUnit}
+              />
+            </View>
+
+            <Text style={{ marginTop: hp(1), color: "white" }}>
+              Bid unit price with current value:
+              <Text bold>
+                {bid.pricePerUnit} {bid.currencyName}
+              </Text>
             </Text>
-            <Text>{modalMessage}</Text>
-            <Input
-              mx="3"
-              placeholder="Input"
-              w="30%"
-              onChangeText={(text) => {
-                let event = {
-                  value: text,
-                  name: "pricePerUnit",
-                };
-                handleChange(event);
-              }}
-              value={updatedBid.pricePerUnit}
-            />
+            <Text style={{ color: "red" }}>{modalMessage}</Text>
+
             <View style={{ display: "flex", flexDirection: "column" }}>
               <View>
                 {breakDowns.convertedUnitPrice !== 0 &&
                   breakDowns.convertedUnitPrice && (
                     <>
-                      <Text>Converted Unit Price:</Text>
-                      <Text>
+                      <Text style={styles.txt}>Converted Unit Price:</Text>
+                      <Text style={styles.txt}>
                         {breakDowns.convertedUnitPrice}{" "}
-                        <Text bold>{offer.currencyName}</Text>
+                        <Text bold style={styles.txt}>
+                          {offer.currencyName}
+                        </Text>
                       </Text>
                     </>
                   )}
-                <Text bold>Subtotal:</Text>
-                <Text>
-                  {breakDowns.subTotal} <Text>{bid.currencyName}</Text>
+              </View>
+              <View style={styles.textView}>
+                <Text bold style={styles.txt}>
+                  Subtotal:
                 </Text>
-                <Text bold>App Fee:</Text>
-                <Text>
-                  {breakDowns.appFee} <Text>{bid.currencyName}</Text> (
-                  <Text>{100 * APP_FEE_PERCENTAGE}%</Text>)
+                <Text style={styles.txt}>
+                  {breakDowns.subTotal}{" "}
+                  <Text style={styles.txt}>{bid.currencyName}</Text>
                 </Text>
-                <Text bold>Transaction Fee:</Text>
-                <Text>
+              </View>
+
+              <View style={styles.textView}>
+                <Text bold style={styles.txt}>
+                  App Fee:
+                </Text>
+                <Text style={styles.txt}>
+                  {breakDowns.appFee}{" "}
+                  <Text style={styles.txt}>{bid.currencyName}</Text> (
+                  <Text style={styles.txt}>{100 * APP_FEE_PERCENTAGE}%</Text>)
+                </Text>
+              </View>
+
+              <View style={styles.textView}>
+                <Text bold style={styles.txt}>
+                  Transaction Fee:
+                </Text>
+                <Text style={styles.txt}>
                   {txFeeInUsd / 2} <Text>USD</Text>{" "}
                   {breakDowns.convertedTxFee && (
                     <>
                       (
-                      <Text>
+                      <Text style={styles.txt}>
                         {breakDowns.convertedTxFee} {bid.currencyName}
                       </Text>
                       )
                     </>
                   )}
                 </Text>
-                <Text bold>Total:</Text>
-                <Text>
+              </View>
+
+              <View style={styles.textView}>
+                <Text bold style={styles.txt}>
+                  Total:
+                </Text>
+                <Text style={styles.txt}>
                   {breakDowns.finalPayable} <Text bold>{bid.currencyName}</Text>
                 </Text>
               </View>
             </View>
-            <View>
-              <Text bold>Note:</Text>
-              <Text>
-                {" "}
-                The above totals are just estimations that can vary depending on
-                currency rates.
-              </Text>
+
+            <View style={styles.btnView}>
+              <LinearGradient
+                style={styles.linearBtn}
+                start={[1, 0]}
+                end={[0, 1]}
+                colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
+              >
+                <TouchableOpacity onPress={updateBid} isLoading={loading}>
+                  <Text style={styles.txt}>Confirm</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+
+              <TouchableOpacity style={styles.cancelBtn}>
+                <Text style={{ color: "#D19292" }}>Cancel</Text>
+              </TouchableOpacity>
             </View>
-            <View>
-              <Btn onPress={updateBid} isLoading={loading}>
-                Update Bid
-              </Btn>
-            </View>
-          </Box>
+
+            <Text style={styles.noteTxt}>
+              <Text bold style={styles.txt}>
+                Note:
+              </Text>{" "}
+              The above totals are just estimations that can vary depending on
+              currency rates
+            </Text>
+          </View>
         </Modal>
       </View>
     </>
@@ -373,7 +424,15 @@ export const BidsListView = ({ bids, getBids }) => {
                           {bid.offer.currencyName}
                         </Text>
                         <Text style={styles.textColor}>{bid.issuerName}</Text>
-                        <Text style={{color:"#33B3EA",width:wp(10),textAlign:"center"}}>{bid.status}</Text>
+                        <Text
+                          style={{
+                            color: "#33B3EA",
+                            width: wp(10),
+                            textAlign: "center",
+                          }}
+                        >
+                          {bid.status}
+                        </Text>
                       </View>
                       {bid.offer.status === OFFER_STATUS_ENUM.ACTIVE && (
                         <View
@@ -393,7 +452,7 @@ export const BidsListView = ({ bids, getBids }) => {
                               />
                               <View style={{ margin: 5 }}>
                                 <Button
-                                  onPress={()=>cancelBid(bid._id)}
+                                  onPress={() => cancelBid(bid._id)}
                                   title="Cancel"
                                 ></Button>
                               </View>
@@ -402,7 +461,7 @@ export const BidsListView = ({ bids, getBids }) => {
                           {bid.status === BID_STATUS_ENUM.CANCELED && (
                             <Button
                               title="Re-Activate"
-                              onPress={()=>cancelBid(bid._id)}
+                              onPress={() => cancelBid(bid._id)}
                             ></Button>
                           )}
                         </View>
@@ -515,5 +574,63 @@ const styles = StyleSheet.create({
     borderRadius: hp(0.6),
     marginLeft: wp(2),
     padding: 3,
+  },
+  textView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(60),
+    marginTop: hp(2),
+  },
+  linearBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: wp(30),
+    alignSelf: "flex-end",
+    borderRadius: hp(1),
+    // marginTop: hp(3),
+    alignSelf: "center",
+    height: hp(5),
+    // marginRight: wp(4),
+  },
+  txt: {
+    color: "white",
+  },
+  modalView: {
+    backgroundColor: "#131E3A",
+    height: hp(70),
+    borderRadius: hp(1),
+    alignSelf: "center",
+    width: wp(90),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addtxt: { fontWeight: "700", color: "white", fontSize: 16 },
+  assetText: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(55),
+    justifyContent: "space-between",
+    marginTop: hp(2),
+  },
+  btnView: {
+    flexDirection: "row",
+    marginTop: hp(3),
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: wp(70),
+  },
+  cancelBtn: {
+    borderColor: "#D19292",
+    borderWidth: 1.5,
+    width: wp(30),
+    borderRadius: hp(1),
+    paddingVertical: hp(0.9),
+    alignItems: "center",
+  },
+  noteTxt: {
+    width: wp(70),
+    alignSelf: "center",
+    marginTop: hp(3),
+    color: "white",
   },
 });
