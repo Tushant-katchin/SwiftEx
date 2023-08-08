@@ -25,6 +25,9 @@ import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
+import { Paste } from "../../utilities/utilities";
+import * as Clipboard from "expo-clipboard";
+
 const xrpl = require("xrpl");
 
 const ImportMultiCoinWalletModal = ({
@@ -184,6 +187,7 @@ const ImportMultiCoinWalletModal = ({
               onPress={async () => {
                 // setText('abc')
                 Paste(setMnemonic);
+                
               }}
             >
               <Text style={style.paste}>Paste</Text>

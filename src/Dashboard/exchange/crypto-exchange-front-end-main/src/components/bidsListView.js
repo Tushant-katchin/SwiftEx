@@ -10,7 +10,7 @@ import { convertCurrencies } from "../utils/currencyConversion";
 import { View, StyleSheet, ScrollView, Button, TextInput } from "react-native";
 import { Text, Box } from "native-base";
 import Modal from "react-native-modal";
-import { DataTable } from "react-native-paper";
+import { ActivityIndicator, DataTable } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -22,7 +22,7 @@ import SnackBar from "react-native-snackbar-component";
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 
 const UpdateBidModal = ({
   bid,
@@ -194,6 +194,7 @@ const UpdateBidModal = ({
                 style={{
                   borderBottomWidth: 1.5,
                   borderColor: "#407EC9",
+                  color:'white',
                   width: wp(15),
                   textAlign: "center",
                 }}
@@ -290,12 +291,14 @@ const UpdateBidModal = ({
                 end={[0, 1]}
                 colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
               >
-                <TouchableOpacity onPress={updateBid} isLoading={loading}>
-                  <Text style={styles.txt}>Confirm</Text>
+                <TouchableOpacity onPress={updateBid} >
+                  <Text style={styles.txt}>{loading?<ActivityIndicator size={'small'} color="blue"/>:'Confirm'}</Text>
                 </TouchableOpacity>
               </LinearGradient>
 
-              <TouchableOpacity style={styles.cancelBtn}>
+              <TouchableOpacity style={styles.cancelBtn} onPress={()=>{
+                setOpen(false)
+              }}>
                 <Text style={{ color: "#D19292" }}>Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -353,7 +356,7 @@ export const BidsListView = ({ bids, getBids }) => {
                 if (data?.url?.includes(`offers?session_id`)) {
                   ///do if payment successfull
                   ShowToast(toast, "Payment Success");
-                  navigation("/Transactions");
+                  navigation.navigate("/Transactions");
                 }
 
                 if (data.url.includes("offers?payFailed=true")) {
@@ -495,18 +498,19 @@ export const BidsListView = ({ bids, getBids }) => {
                   </View>
                 )}
 
-                <SnackBar
-                  visible={snackbarVisible}
-                  position={"bottom"}
-                  textMessage="Bid is an exact match. Proceed to complete the transaction"
-                  actionHandler={() => {
-                    //Linking.openURL(paymentUrl)
-                    setTxModal(true);
-                    SeeTransactions();
-                    setSnackbarVisible(false);
-                  }}
-                  actionText="Proceed"
-                />
+              <SnackBar
+                visible={snackbarVisible}
+                position={"top"}
+                textMessage="Bid is an exact match. Proceed to complete the transaction"
+                actionHandler={() => {
+                  //Linking.openURL(paymentUrl)
+                  setTxModal(true);
+                  SeeTransactions();
+                  setSnackbarVisible(false);
+                }}
+                actionText="Proceed"
+              />
+
               </ScrollView>
               <SeeTransactions />
             </ScrollView>

@@ -205,7 +205,7 @@ export const HomeView = ({ setPressed }) => {
                 </View>
               </>
             ) : (
-              <Text style={styles.textColor}>No Messages!</Text>
+              null
             )}
           </View>
         </LinearGradient>

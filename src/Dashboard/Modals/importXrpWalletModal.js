@@ -26,6 +26,8 @@ import { useNavigation } from "@react-navigation/native";
 import ModalHeader from "../reusables/ModalHeader";
 import { utils } from "xrpl-accountlib";
 import { alert } from "../reusables/Toasts";
+import { Paste } from "../../utilities/utilities";
+import * as Clipboard from "expo-clipboard";
 
 const ImportXrpWalletModal = ({
   props,
@@ -247,8 +249,18 @@ const ImportXrpWalletModal = ({
           <View style={style.inputView}>
             <TouchableOpacity
               onPress={async () => {
+                const text = await Clipboard.getStringAsync();
+                console.log(text)
+                setText(text)
                 // setText('abc')
-                Paste(setMnemonic);
+                console.log(label)
+                if(label==='mnemonic')
+                {
+                  Paste(setMnemonic);
+                }else if(label==='privateKey'){
+                  Paste(setPrivateKey);
+                 // setText(text)
+                }
               }}
             >
               <Text style={style.paste}>Paste</Text>
@@ -256,6 +268,7 @@ const ImportXrpWalletModal = ({
             <Text>Phrase</Text>
             <TextInput
               style={style.input}
+              value={text}
               onChangeText={(text) => {
                 if (label === "mnemonic") {
                   setMnemonic(text);

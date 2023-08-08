@@ -1,0 +1,37 @@
+diff --git a/node_modules/react-native/scripts/.DS_Store b/node_modules/react-native/scripts/.DS_Store
+new file mode 100644
+index 0000000..5008ddf
+Binary files /dev/null and b/node_modules/react-native/scripts/.DS_Store differ
+diff --git a/node_modules/react-native/scripts/.packager.env b/node_modules/react-native/scripts/.packager.env
+new file mode 100644
+index 0000000..21a13cf
+--- /dev/null
++++ b/node_modules/react-native/scripts/.packager.env
+@@ -0,0 +1 @@
++export RCT_METRO_PORT=8081
+\ No newline at end of file
+diff --git a/node_modules/react-native/scripts/launchPackager.command b/node_modules/react-native/scripts/launchPackager.command
+deleted file mode 100755
+index 4a77481..0000000
+--- a/node_modules/react-native/scripts/launchPackager.command
++++ /dev/null
+@@ -1,19 +0,0 @@
+-#!/bin/bash
+-# Copyright (c) Facebook, Inc. and its affiliates.
+-#
+-# This source code is licensed under the MIT license found in the
+-# LICENSE file in the root directory of this source tree.
+-
+-# Set terminal title
+-echo -en "\\033]0;Metro\\a"
+-clear
+-
+-THIS_DIR=$(cd -P "$(dirname "$(readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)
+-
+-# shellcheck source=/dev/null
+-. "$THIS_DIR/packager.sh"
+-
+-if [[ -z "$CI" ]]; then
+-  echo "Process terminated. Press <enter> to close the window"
+-  read -r
+-fi

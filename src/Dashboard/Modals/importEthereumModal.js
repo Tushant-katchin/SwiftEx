@@ -33,6 +33,8 @@ import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
+import { Paste } from "../../utilities/utilities";
+import * as Clipboard from "expo-clipboard";
 
 const ImportEthereumModal = ({
   props,
@@ -220,7 +222,21 @@ const ImportEthereumModal = ({
             <TouchableOpacity
               onPress={async () => {
                 // setText('abc')
-                Paste(setMnemonic);
+                const text = await Clipboard.getStringAsync();
+                console.log(text)
+                setText(text)
+                // setText('abc')
+                console.log(label)
+                if(label==='mnemonic')
+                {
+                  Paste(setMnemonic);
+                }else if(label==='privateKey'){
+                  Paste(setPrivateKey);
+                 // setText(text)
+                }else if(label==='JSON'){
+                  Paste(setJson);
+                 // setText(text)
+                }
               }}
             >
               <Text style={style.paste}>Paste</Text>
