@@ -219,14 +219,6 @@ const ConfirmTransaction = (props) => {
   return (
     <View style={style.mainContainer}>
       <View style={style.BttView}>
-        <TouchableOpacity
-          onPress={(e) => {
-            console.log("=====================", e);
-          }}
-          style={style.downloadBtn}
-        >
-          <Icon name="download" type={"feather"} size={20} />
-        </TouchableOpacity>
         <Text style={{ marginHorizontal: wp(3) }}>
           {props?.route?.params?.info?.amount}
           {/* -100 BTT */}

@@ -493,14 +493,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             </TouchableOpacity>
             <Text style={style.btnTextColor}>Copy</Text>
           </View>
-          <View style={{ alignItems: "center" }}>
-            <TouchableOpacity
-              style={style.amount}
-            >
-              <Icon name="tag" type={"Octicons"} size={20} color={"#4169e1"} />
-            </TouchableOpacity>
-            <Text style={style.btnTextColor}>set Amount</Text>
-          </View>
+          
 
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
@@ -514,7 +507,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               <Icon name="share" type={"feather"} size={20} color={"#4169e1"} />
             </TouchableOpacity>
 
-            <Text style={style.btnTextColor}>Sharse</Text>
+            <Text style={style.btnTextColor}>Share</Text>
           </View>
         </View>
 

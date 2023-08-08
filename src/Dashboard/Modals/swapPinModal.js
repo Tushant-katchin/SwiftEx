@@ -693,12 +693,12 @@ const SwapPinModal = ({
               }}
               customLeftButton={
                 showRemoveButton ? (
-                  <Icon name={"finger-print"} size={36} color={"gray"} />
+                  <Icon name={"ios-backspace"} size={36} color={"gray"} />
                 ) : undefined
               }
               customRightButton={
                 showCompletedButton ? (
-                  <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
+                  <Icon name={"ios-chevron-forward-circle"} size={36} color={"#FFF"} />
                 ) : undefined
               }
             />

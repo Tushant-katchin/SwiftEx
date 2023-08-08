@@ -737,7 +737,7 @@ const _getAssetsOptions = (assetsList) =>
 export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
   const state = useSelector((state) => state);
   const navigation = useNavigation();
-  const [modalMessage, setModalMessage] = useState("");
+  const [modalMessage, setModalMessage] = useState("hhhhhhhhhhhhhhhhhhh");
   const [seeTx, openTx] = useState(false);
   const [isRefetchingTxFee, setIsRefetchingTxFee] = useState(false);
   const [txFeeInUsd, setTxFeeInUsd] = useState(TX_FEE_IN_USD);
@@ -1145,7 +1145,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       newOffer.amount &&
       newOffer.currencyName &&
       newOffer.pricePerUnit &&
-      newOffer.amount < balance
+      Number(newOffer.amount) < Number(balance)
     ) {
       setDisable(false);
     } else {
@@ -1172,7 +1172,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
     enableValidation();
   }, [newOffer]);
   useEffect(() => {
-    if (newOffer.amount >= balance) {
+    if (Number(newOffer.amount) >= Number(balance)) {
       setModalMessage("low balance");
     } else {
       setModalMessage("");
@@ -1215,7 +1215,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           }}
         >
           <Text style={styles.addingText}>Adding Offer</Text>
-          <Text style={{ color: "white" }}>{modalMessage}</Text>
+          <Text style={{ color: "white" }}>{modalMessage.slice(0,100)}</Text>
           {txMessage && (
             <View>
               <Text style={{ color: "white" }}>{txMessage}</Text>
