@@ -78,6 +78,13 @@ export const ConnectToWallet = ({ setMessage }) => {
 </View>
   )
 }
+export const CHAIN_ID_TO_TX_TYPE = {
+   5: 2,
+   11155111: 2,
+   97: 0,
+   80001: 2,
+ }
+
 
 export const isWalletConnected = () => window.isWeb3Connected
 export const getWeb3Provider = () =>
@@ -87,15 +94,15 @@ export const transfer = (tokenAddress, receiver, amount, sender, senderAddress,c
   const provider = CHAIN_ID_TO_PROVIDER[chainId]
 
   if (tokenAddress === CHAIN_NATIVE_CURRENCY)
-  return _transferEth(receiver, amount, sender, provider)
+  return _transferEth(receiver, amount, sender, provider,chainId)
 
   
-  return _transferEthToken(tokenAddress, receiver, amount,provider)
+  return _transferEthToken(tokenAddress, receiver, amount,provider,chainId)
 }
 
 // <------------------------------< Helpers >------------------------------>
 
-const _transferEth = async (receiver, amount,sender, provider) => {
+const _transferEth = async (receiver, amount,sender, provider,chainId) => {
   
   try {
     const wallet = new ethers.Wallet(sender, provider)
@@ -104,6 +111,7 @@ const _transferEth = async (receiver, amount,sender, provider) => {
     const rawTx = {
       to: receiver,
       value: ethers.utils.parseEther(amount.toString()),
+      type: CHAIN_ID_TO_TX_TYPE[chainId],
     }
 
     const populatedTx = await wallet.populateTransaction(rawTx)
@@ -122,7 +130,7 @@ const _transferEth = async (receiver, amount,sender, provider) => {
   }
 }
 
-const _transferEthToken = async (tokenAddress, receiver, amount, provider) => {
+const _transferEthToken = async (tokenAddress, receiver, amount, provider,chainId) => {
   try {
     
     const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
@@ -138,7 +146,8 @@ const _transferEthToken = async (tokenAddress, receiver, amount, provider) => {
 
     const rawTx = await tokenContract.populateTransaction.transfer(
       receiver,
-      amountInWei
+      amountInWei,
+       { type: CHAIN_ID_TO_TX_TYPE[chainId] }
     )
     const populatedTx = await wallet.populateTransaction(rawTx)
     const signedTx = await wallet.signTransaction(populatedTx)
