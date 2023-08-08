@@ -1203,6 +1203,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
         contentContainerStyle={{
           // height: hp(88),
           paddingBottom:hp(10),
+          paddingVertical:hp(5),
           width: wp(90),
           backgroundColor: "#131E3A",
          borderRadius:10,
@@ -1392,6 +1393,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
          <Text style={{fontWeight:"700"}}>Note:</Text>  The above totals are just estimations that can vary depending on
           currency rates.
         </Text>
+       
 
       </ScrollView>
       {txLink && (
@@ -1429,7 +1431,7 @@ const styles = StyleSheet.create({
   assetText: {
     color: "#fff",
     fontSize: hp(2),
-    width: wp(20),
+    width: wp(25),
   },
   currencyText: {
     color: "#fff",

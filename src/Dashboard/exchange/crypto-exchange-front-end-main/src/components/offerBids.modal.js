@@ -118,7 +118,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
         <TouchableOpacity
           style={{
             width: wp(16),
-            marginHorizontal: wp(4),
+            marginLeft: wp(4),
             height: hp(3),
             backgroundColor: "#010C66",
             borderRadius: 6,

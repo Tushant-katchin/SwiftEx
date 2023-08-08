@@ -148,7 +148,7 @@ const UpdateBidModal = ({
   return (
     <>
       <View>
-        <View style={{ margin: 5 }}>
+        <View style={{ marginHorizontal:wp(5) }}>
           <Button
             title="Update"
             onPress={() => {
@@ -393,6 +393,7 @@ export const BidsListView = ({ bids, getBids }) => {
             colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
           >
             <ScrollView nestedScrollEnabled horizontal>
+
               <ScrollView nestedScrollEnabled={true}>
                 <View style={styles.tableHeader}>
                   <Text style={styles.AssetText}>Asset Amount</Text>
@@ -439,11 +440,11 @@ export const BidsListView = ({ bids, getBids }) => {
                           <Text
                             style={{
                               color: "#33B3EA",
-                              // width: wp(10),
+                              width: wp(20),
                               // textAlign: "center",
                               // color: "#fff",
                               // width: wp(16),
-                              marginHorizontal: 10,
+                              // marginHorizontal: 10,
                               textAlign: "center",
                             }}
                           >
@@ -475,10 +476,13 @@ export const BidsListView = ({ bids, getBids }) => {
                               </>
                             )}
                             {bid.status === BID_STATUS_ENUM.CANCELED && (
-                              <Button
+                              <View style={{marginHorizontal:wp(4)}}>
+                                 <Button
                                 title="Re-Activate"
                                 onPress={() => cancelBid(bid._id)}
                               ></Button>
+                                </View>
+                             
                             )}
                           </View>
                         )}

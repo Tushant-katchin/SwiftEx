@@ -2,6 +2,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeView } from "./pages/home";
 import { ProfileView } from "./pages/profile";
 import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from "react-native-responsive-screen";
@@ -24,7 +28,7 @@ export function ExchangeNavigation() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          size = 33;
+          size = 25;
           if (route.name === "/") {
             iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
             iconName = "ios-home-sharp";
@@ -52,13 +56,9 @@ export function ExchangeNavigation() {
         tabBarActiveTintColor: "blue",
         tabBarInactiveTintColor: "white",
         tabBarStyle: {
-          position: "absolute",
+          // position: "absolute",
           backgroundColor: "white",
-          height: heightPercentageToDP("12"),
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          borderTopColor: "black",
-          borderTopWidth: 1,
+          height:hp(9),
           backgroundColor:"#4CA6EA",
 
         },

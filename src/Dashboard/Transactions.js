@@ -84,8 +84,6 @@ try{
     await getTransactions();
   }, []);
 
- 
-
   return (
     <View
       style={{
@@ -106,13 +104,13 @@ try{
                 let LeftContent;
                 console.log(item.walletType);
                 if (item.walletType === "Ethereum") {
-                  LeftContent = Etherimage
+                  LeftContent = Etherimage;
                 } else if (item.walletType === "BSC") {
                   LeftContent = Bnbimage;
                 } else if (item.walletType == "Xrp") {
                   LeftContent = Xrpimage;
                 } else if (item.walletType == "Matic") {
-                  LeftContent = Maticimage ;
+                  LeftContent = Maticimage;
                 } else if (item.walletType === "Multi-coin") {
                   if (item.chainType === "Eth") {
                     LeftContent = Etherimage;
@@ -121,7 +119,7 @@ try{
                   } else if (item.chainType === "Matic") {
                     LeftContent = Maticimage;
                   } else if (item.chainType === "Xrp") {
-                    LeftContent = Xrpimage
+                    LeftContent = Xrpimage;
                   } else {
                     LeftContent = multiCoinLeftContent; //props => <Avatar.Image {...props}  source={{ uri: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850' }} />
                   }
@@ -149,18 +147,11 @@ try{
                       props.navigation.navigate("TxDetail", { data });
                     }}
                   >
-                    <View
-                      style={styles.flatView}
-                    >
-                      <Image
-                        source={LeftContent}
-                        style={styles.img}
-                      />
+                    <View style={styles.flatView}>
+                      <Image source={LeftContent} style={styles.img} />
                       <View style={{ marginHorizontal: wp(3) }}>
                         <Text>{item.type}</Text>
-                        <Text
-                          style={styles.text}
-                        >
+                        <Text style={styles.text} numberOfLines={1}>
                           {item.hash}
                         </Text>
                       </View>
@@ -287,7 +278,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
   },
-  flatView:{
+  flatView: {
     width: wp(90),
     padding: hp(1),
     flexDirection: "row",
@@ -296,16 +287,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
     borderColor: "gray",
     marginTop: hp(2),
-    alignItems:"center"
+    alignItems: "center",
   },
-  img:{
+  img: {
     height: hp(5),
     width: wp(9),
     borderRadius: hp(3),
   },
-  text:{
-  color: "gray",
-  fontSize: 12,
-  marginVertical: hp(0.5),
-}
+  text: {
+    color: "gray",
+    fontSize: 12,
+    width: wp(75),
+    marginVertical: hp(0.5),
+  },
 });

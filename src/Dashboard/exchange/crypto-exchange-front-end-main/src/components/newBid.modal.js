@@ -382,9 +382,9 @@ export const NewBidModal = ({ offer }) => {
           <TouchableOpacity
             style={{
               width: wp(15),
-              height: hp(3),
+              paddingVertical: hp(0.3),
               backgroundColor: "blue",
-              borderRadius: 10,
+              borderRadius: 4,
               alignItems: "center",
             }}
             onPress={() => {
@@ -421,23 +421,24 @@ export const NewBidModal = ({ offer }) => {
                 // alignItems: "center",
                 height: hp(80),
                 width: wp(95),
-                justifyContent:"center",
-                alignSelf:"center",
-                borderRadius:hp(1),
+                justifyContent: "center",
+                alignSelf: "center",
+                borderRadius: hp(1),
                 backgroundColor: "#131E3A",
-              
               }}
             >
-              <Text style={{ color: "red",textAlign:"center" }}>{modalMessage}</Text>
+              <Text style={{ color: "red", textAlign: "center" }}>
+                {modalMessage}
+              </Text>
               <View
                 style={{
                   alignContent: "center",
                   alignItems: "center",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  alignSelf:"center",
+                  alignSelf: "center",
                   width: wp(70),
-                  marginTop:hp(1)
+                  marginTop: hp(1),
                 }}
               >
                 <Text style={style.textColor}>Select Currency</Text>
@@ -452,10 +453,18 @@ export const NewBidModal = ({ offer }) => {
                 />
               </View>
 
-              <Text style={{ marginTop: hp(3), color: "white",marginHorizontal:wp(8)}}>
-                Bid on {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "} {offer.currencyName} unit price </Text>
+              <Text
+                style={{
+                  marginTop: hp(3),
+                  color: "white",
+                  marginHorizontal: wp(8),
+                }}
+              >
+                Bid on {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "}
+                {offer.currencyName} unit price{" "}
+              </Text>
 
-              <View style={{marginHorizontal:wp(12),marginTop:hp(2)}}>
+              <View style={{ marginHorizontal: wp(12), marginTop: hp(2) }}>
                 <TextInput
                   placeholderTextColor={"white"}
                   placeholder="Unit Price"
@@ -536,8 +545,9 @@ export const NewBidModal = ({ offer }) => {
               </View>
 
               <Text style={style.noteText}>
-                <Text style={{color:"white",fontWeight:"700"}}>Note:</Text> The above totals are just estimations that can vary
-                depending on currency rates.
+                <Text style={{ color: "white", fontWeight: "700" }}>Note:</Text>{" "}
+                The above totals are just estimations that can vary depending on
+                currency rates.
               </Text>
 
               <View>
@@ -599,7 +609,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(70),
-    alignSelf:"center",
+    alignSelf: "center",
     marginTop: hp(3.5),
   },
   textColor: {
@@ -609,8 +619,8 @@ const style = StyleSheet.create({
     textAlign: "center",
     color: "white",
     marginTop: hp(8),
-    width:wp(70),
-    alignSelf:"center"
+    width: wp(70),
+    alignSelf: "center",
   },
   bidBtn: {
     marginTop: hp(4),
@@ -626,7 +636,7 @@ const style = StyleSheet.create({
     alignSelf: "flex-end",
     borderRadius: hp(1),
     marginTop: hp(3),
-    alignSelf:"center",
+    alignSelf: "center",
     height: hp(5),
     // marginRight: wp(4),
   },
