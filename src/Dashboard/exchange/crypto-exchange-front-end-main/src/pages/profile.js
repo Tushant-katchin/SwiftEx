@@ -115,7 +115,12 @@ export const FieldView = ({
       {type === "kyc" ? (
         <>
           <Text style={styles.KYC}>
-            KYC STATUS {value === false ? "FALSE" : "true"}
+            KYC STATUS {value === false ? "FALSE" : <Icon
+                    name={"check-outline"}
+                    type={"materialCommunity"}
+                    color={"#008C62"}
+                    style={styles.checkImg}
+                  />}
           </Text>
           {value === true ? (
             <>
