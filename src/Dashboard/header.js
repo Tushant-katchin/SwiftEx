@@ -12,9 +12,9 @@ import darkBlue from "../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { width } from "@mui/system";
 
-export const ExchangeHeader = () => {
+export const ExchangeHeader = (props) => {
   const navigation = useNavigation();
-
+  const { isLogOut = true } = props;
   return (
     <View style={styles.headerContainer}>
       <Icon
@@ -27,20 +27,24 @@ export const ExchangeHeader = () => {
         }}
       />
       <Text style={{ color: "#fff", fontWeight: "700" }}>Exchange</Text>
-      <View style={{ alignItems: "center" }}>
-        <Icon
-          name={"logout"}
-          type={"materialCommunity"}
-          size={20}
-          color={"#E96A6A"}
-          onPress={() => {
-            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            AsyncStorage.removeItem(LOCAL_TOKEN);
-            navigation.navigate("Settings");
-          }}
-        />
-        <Text style={{ color: "#E96A6A" }}>Logout</Text>
-      </View>
+      {isLogOut ? (
+        <View style={{ alignItems: "center" }}>
+          <Icon
+            name={"logout"}
+            type={"materialCommunity"}
+            size={20}
+            color={"#E96A6A"}
+            onPress={() => {
+              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+              AsyncStorage.removeItem(LOCAL_TOKEN);
+              navigation.navigate("Settings");
+            }}
+          />
+          <Text style={{ color: "#E96A6A" }}>Logout</Text>
+        </View>
+      ) : (
+        <Text style={{ width: "10%" }}>{""}</Text>
+      )}
     </View>
   );
 };
@@ -62,7 +66,6 @@ export const WalletHeader = (props) => {
       />
       <Text style={styles.text1}>{title}</Text>
       <View style={{ alignItems: "center" }}>
-       
         <Text style={{ color: "#E96A6A" }}>{title1}</Text>
       </View>
     </View>
@@ -70,7 +73,7 @@ export const WalletHeader = (props) => {
 };
 
 export const ExchangeHeaderIcon = (props) => {
-  const { title } = props;
+  const { title, isLogOut=true  } = props;
   const navigation = useNavigation();
 
   return (
@@ -94,7 +97,8 @@ export const ExchangeHeaderIcon = (props) => {
         <Image source={darkBlue} style={styles.logoImg} />
       </View>
       <Text style={styles.text}>{title}</Text>
-      <View style={{ alignItems: "center" }}>
+
+      { isLogOut ? <View style={{ alignItems: "center" }}>
         <Icon
           name={"logout"}
           type={"materialCommunity"}
@@ -107,7 +111,7 @@ export const ExchangeHeaderIcon = (props) => {
           }}
         />
         <Text style={{ color: "#E96A6A" }}>Logout</Text>
-      </View>
+      </View> :  <Text style={{ width: "10%" }}>{""}</Text>}
     </View>
   );
 };

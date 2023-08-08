@@ -72,8 +72,8 @@ export const TransactionsListView = ({
                   ///do if payment successfull
                   setOpen(false);
                   setUpdateTx(true);
-                  
-                  alert('success',"Payment Successful");
+
+                  alert("success", "Payment Successful");
                   navigation.navigate("/offers");
                   fetchTxPageData();
                 }
@@ -82,7 +82,7 @@ export const TransactionsListView = ({
                   ///do if payment is cancelled
                   setOpen(false);
                   setUpdateTx(true);
-                  alert('error',"Payment failed. Please try again");
+                  alert("error", "Payment failed. Please try again");
                   fetchTxPageData();
                 }
               }}
@@ -130,24 +130,26 @@ export const TransactionsListView = ({
                       <Text style={styles.textColor}>{tx.totalPrice}</Text>
                       <Text style={styles.textColor}>{tx.currency}</Text>
                       {tx.status !== "SUCCEEDED" && (
-                        
                         <Text style={styles.statusColor}>{tx.status}</Text>
                       )}
 
-                     
                       <SeeTransactions tx={txLink} />
                     </View>
                     {tx.status === "PAYMENT_PENDING" && (
-                        <View>
-<TouchableOpacity style={styles.procedBtn}
- onPress={() => {
-                              console.log(tx.sessionUrl);
-                              setTxLink(tx.sessionUrl);
-                              setOpen(true);
-                            }}>
-  <Text style={{color:"white",fontSize:12}}>Proceed to pay</Text>
-</TouchableOpacity>
-                          {/* <Button
+                      <View>
+                        <TouchableOpacity
+                          style={styles.procedBtn}
+                          onPress={() => {
+                            console.log(tx.sessionUrl);
+                            setTxLink(tx.sessionUrl);
+                            setOpen(true);
+                          }}
+                        >
+                          <Text style={{ color: "white", fontSize: 12 }}>
+                            Proceed to pay
+                          </Text>
+                        </TouchableOpacity>
+                        {/* <Button
                             title="Proceed to pay"
                             onPress={() => {
                               console.log(tx.sessionUrl);
@@ -155,25 +157,26 @@ export const TransactionsListView = ({
                               setOpen(true);
                             }}
                           ></Button> */}
-                        </View>
-                      )}
+                      </View>
+                    )}
 
-                      {tx.status === "SUCCEEDED" && (
-                        <Button
-                          title="See Tx"
-                          onPress={() => {
-                            console.log(tx.cryptoTxHash);
-                            setTxLink(
-                              `${CHAIN_ID_TO_SCANNER[tx.chainId]}/tx/${
-                                tx.cryptoTxHash
-                              }`
-                            );
-                            setOpen(true);
-                          }}
-                        >
-                          See tx
-                        </Button>
-                      )}
+                    {tx.status === "SUCCEEDED" && (
+                      <TouchableOpacity
+                        style={styles.procedBtn}
+                        title="See Tx"
+                        onPress={() => {
+                          console.log(tx.cryptoTxHash);
+                          setTxLink(
+                            `${CHAIN_ID_TO_SCANNER[tx.chainId]}/tx/${
+                              tx.cryptoTxHash
+                            }`
+                          );
+                          setOpen(true);
+                        }}
+                      >
+                        <Text style={{ color: "white" }}> See tx</Text>
+                      </TouchableOpacity>
+                    )}
                   </ScrollView>
                 ))}
               </>
@@ -422,7 +425,6 @@ export const TransactionView = () => {
               onPressOffer={() => {
                 setRoute("OFFERS");
               }}
-              
             />
             {route == "BID" && (
               <View>
@@ -557,14 +559,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: hp(5),
   },
-  procedBtn:{
-    backgroundColor:"#010C66",
-    width:wp(26),
-    padding:8,
-    alignItems:"center",
-    borderRadius:6,
-    marginLeft:wp(5)
-  }
+  procedBtn: {
+    backgroundColor: "#010C66",
+    width: wp(26),
+    padding: 8,
+    alignItems: "center",
+    borderRadius: 6,
+    marginLeft: wp(5),
+  },
 });
 
 /* 

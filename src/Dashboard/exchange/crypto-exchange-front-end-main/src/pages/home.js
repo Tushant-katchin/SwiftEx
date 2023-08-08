@@ -438,6 +438,7 @@ const styles = StyleSheet.create({
     borderRadius: hp(0.8),
     marginBottom: hp(2),
     alignItems: "center",
+    marginTop:hp(2)
   },
   addofferText: {
     flexDirection: "row",

@@ -395,88 +395,104 @@ export const BidsListView = ({ bids, getBids }) => {
             end={[0, 1]}
             colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
           >
-            <View style={styles.tableHeader}>
-              <Text style={styles.AssetText}>Asset Amount</Text>
-              <Text style={styles.AssetText}>Bid Unit Price</Text>
-              <Text style={styles.AssetText}>Bid Currency</Text>
-              <Text style={styles.AssetText}>Offer Unit Price</Text>
-              <Text style={styles.AssetText}>Offer Currency</Text>
-              <Text style={styles.AssetText}>Offer Issuer</Text>
-              <Text
-                style={{ color: "#fff", width: wp(10), textAlign: "center" }}
-              >
-                Status
-              </Text>
-            </View>
-            <ScrollView nestedScrollEnabled={true}>
-              {bids.length ? (
-                <>
-                  {bids.map((bid, index) => (
-                    <View>
-                      <View key={bid._id} style={styles.mainDataContainer}>
-                        <Text style={styles.textColor}>
-                          {" "}
-                          {bid.offer.assetName}
-                        </Text>
-                        <Text style={styles.textColor}>{bid.offer.amount}</Text>
-                        <Text style={styles.textColor}>{bid.currencyName}</Text>
-                        <Text style={styles.textColor}>
-                          {bid.offer.pricePerUnit}
-                        </Text>
-                        <Text style={styles.textColor}>
-                          {bid.offer.currencyName}
-                        </Text>
-                        <Text style={styles.textColor}>{bid.issuerName}</Text>
-                        <Text
-                          style={{
-                            color: "#33B3EA",
-                            width: wp(10),
-                            textAlign: "center",
-                          }}
-                        >
-                          {bid.status}
-                        </Text>
-                      </View>
-                      {bid.offer.status === OFFER_STATUS_ENUM.ACTIVE && (
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            margin: 2,
-                          }}
-                        >
-                          {bid.status === BID_STATUS_ENUM.ACTIVE && (
-                            <>
-                              <UpdateBidModal
-                                bid={bid}
-                                getBids={getBids}
-                                setSnackbarVisible={setSnackbarVisible}
-                                setPaymentUrl={setPaymentUrl}
-                              />
-                              <View style={{ margin: 5 }}>
-                                <Button
-                                  onPress={() => cancelBid(bid._id)}
-                                  title="Cancel"
-                                ></Button>
-                              </View>
-                            </>
-                          )}
-                          {bid.status === BID_STATUS_ENUM.CANCELED && (
-                            <Button
-                              title="Re-Activate"
-                              onPress={() => cancelBid(bid._id)}
-                            ></Button>
-                          )}
-                        </View>
-                      )}
-                    </View>
-                  ))}
-                </>
-              ) : (
-                <View>
-                  <Text style={styles.showText}>No Offers to show !</Text>
+            <ScrollView nestedScrollEnabled horizontal>
+              <ScrollView nestedScrollEnabled={true}>
+                <View style={styles.tableHeader}>
+                  <Text style={styles.AssetText}>Asset Amount</Text>
+                  <Text style={styles.AssetText}>Bid Unit Price</Text>
+                  <Text style={styles.AssetText}>Bid Currency</Text>
+                  <Text style={styles.AssetText}>Offer Unit Price</Text>
+                  <Text style={styles.AssetText}>Offer Currency</Text>
+                  <Text style={styles.AssetText}>Offer Issuer</Text>
+                  <Text
+                    style={{
+                      color: "#fff",
+                      width: wp(20),
+                      textAlign: "center",
+                    }}
+                  >
+                    Status
+                  </Text>
                 </View>
-              )}
+                {bids.length ? (
+                  <>
+                    {bids.map((bid, index) => (
+                      <View>
+                        <ScrollView
+                          horizontal={true}
+                          key={bid._id}
+                          contentContainerStyle={styles.mainDataContainer}
+                        >
+                          <Text style={styles.textColor}>
+                            {bid.offer.assetName}
+                          </Text>
+                          <Text style={styles.textColor}>
+                            {bid.offer.amount}
+                          </Text>
+                          <Text style={styles.textColor}>
+                            {bid.currencyName}
+                          </Text>
+                          <Text style={styles.textColor}>
+                            {bid.offer.pricePerUnit}
+                          </Text>
+                          <Text style={styles.textColor}>
+                            {bid.offer.currencyName}
+                          </Text>
+                          <Text style={styles.textColor}>{bid.issuerName}</Text>
+                          <Text
+                            style={{
+                              color: "#33B3EA",
+                              // width: wp(10),
+                              // textAlign: "center",
+                              // color: "#fff",
+                              // width: wp(16),
+                              marginHorizontal: 10,
+                              textAlign: "center",
+                            }}
+                          >
+                            {bid.status}
+                          </Text>
+                        </ScrollView>
+                        {bid.offer.status === OFFER_STATUS_ENUM.ACTIVE && (
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              margin: 2,
+                            }}
+                          >
+                            {bid.status === BID_STATUS_ENUM.ACTIVE && (
+                              <>
+                                <UpdateBidModal
+                                  bid={bid}
+                                  getBids={getBids}
+                                  setSnackbarVisible={setSnackbarVisible}
+                                  setPaymentUrl={setPaymentUrl}
+                                />
+                                <View style={{ margin: 5 }}>
+                                  <Button
+                                    onPress={() => cancelBid(bid._id)}
+                                    title="Cancel"
+                                  ></Button>
+                                </View>
+                              </>
+                            )}
+                            {bid.status === BID_STATUS_ENUM.CANCELED && (
+                              <Button
+                                title="Re-Activate"
+                                onPress={() => cancelBid(bid._id)}
+                              ></Button>
+                            )}
+                          </View>
+                        )}
+                      </View>
+                    ))}
+                  </>
+                ) : (
+                  <View>
+                    <Text style={styles.showText}>No Offers to show !</Text>
+                  </View>
+                )}
 
               <SnackBar
                 visible={snackbarVisible}
@@ -490,8 +506,10 @@ export const BidsListView = ({ bids, getBids }) => {
                 }}
                 actionText="Proceed"
               />
+
+              </ScrollView>
+              <SeeTransactions />
             </ScrollView>
-            <SeeTransactions />
           </LinearGradient>
         </View>
       </>
@@ -515,14 +533,15 @@ const styles = StyleSheet.create({
     width: wp(100),
   },
   tableHeader: {
-    width: wp(95),
+    // width: wp(95),
     alignSelf: "center",
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
     borderColor: "#EE96DF",
     paddingVertical: hp(1),
+    margin: 10,
   },
   table: {
     display: "flex",
@@ -540,12 +559,13 @@ const styles = StyleSheet.create({
   },
   AssetText: {
     color: "#fff",
-    width: wp(12),
+    width: wp(20),
+    // marginHorizontal: 10,
     textAlign: "center",
   },
   linearStyle1: {
     width: wp(95),
-    height: hp(33),
+    height: hp(44),
     marginBottom: hp(3),
     marginVertical: hp(2),
     borderRadius: 10,
@@ -557,17 +577,26 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
   },
   textColor: {
+    // color: "#fff",
+    // width: wp(10),
+    // textAlign: "center",
     color: "#fff",
-    width: wp(10),
+    width: wp(20),
     textAlign: "center",
   },
   mainDataContainer: {
+    // flexDirection: "row",
+    // justifyContent: "space-between",
+    // // width: wp(95),
+    // alignItems: "center",
+    // alignSelf: "center",
+    // marginTop: hp(1),
+    alignSelf: "center",
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: wp(95),
-    alignItems: "center",
-    alignSelf: "center",
-    marginTop: hp(1),
+    paddingVertical: hp(1),
+    margin: 10,
   },
   cancelBtn: {
     width: wp(17),

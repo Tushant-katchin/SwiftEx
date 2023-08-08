@@ -119,12 +119,11 @@ const AuthStack = () => (
         options={{ headerShown: false }}
       /> */}
 
-  {/* <Stack.Screen
+      {/* <Stack.Screen
         name="TokenList"
         component={TokenList}
         options={{ headerShown: false }}
       /> */}
-
 
       <Stack.Screen
         name="SplashScreen"
@@ -196,7 +195,6 @@ const AuthStack = () => (
       <Stack.Screen
         name="Wallet"
         component={Wallet}
-        
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -261,16 +259,12 @@ const AuthStack = () => (
         }}
       />
 
-
       <Stack.Screen
         name="TxDetail"
         component={TxDetail}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <ExchangeHeaderIcon isLogOut={false} title="Tx-Detail" />;
           },
         }}
       />
@@ -407,7 +401,6 @@ const AuthStack = () => (
         component={SendTokens}
         options={{
           headerShown: false,
-
         }}
       />
 
@@ -455,11 +448,10 @@ const AuthStack = () => (
         name="exchangeLogin"
         component={ExchangeLogin}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return (
+              <ExchangeHeaderIcon title="Exchange-Login" isLogOut={false} />
+            );
           },
         }}
       />
@@ -467,11 +459,10 @@ const AuthStack = () => (
         name="exchangeRegister"
         component={ExchangeRegister}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return (
+              <ExchangeHeaderIcon isLogOut={false} title="Exchange-Register" />
+            );
           },
         }}
       />
