@@ -471,7 +471,7 @@ export const NewBidModal = ({ offer }) => {
                   keyboardType="numeric"
                   value={newBid.pricePerUnit}
                   onChangeText={(e) => handleChange(e)}
-                  style={{ width: wp(70) }}
+                  style={{ width: wp(70),color:'white' }}
                   // onChange={handleChange}
                 />
               </View>
