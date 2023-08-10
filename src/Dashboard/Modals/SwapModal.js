@@ -7,7 +7,7 @@ import {
   Button,
   Modal,
   FlatList,
-  
+  TextInput,
   TouchableOpacity,
   Alert,
   ActivityIndicator,
@@ -62,7 +62,6 @@ import { SwapEthForTokens } from "../tokens/swapFunctions";
 import { SwapTokensToTokens, UniSwap } from "../tokens/UniswapFunctions";
 import { useBiometricsForSwapTransaction } from "../../biometrics/biometric";
 import { alert } from "../reusables/Toasts";
-import { TextInput } from "react-native-paper";
 
 const SwapModal = ({ modalVisible, setModalVisible }) => {
   const [loading, setLoading] = useState(false);
@@ -89,14 +88,14 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     address: "",
     symbol: "",
     ChainId: "",
-    logoUri:""
+    logoUri: "",
   });
   const [coin1, setCoin1] = useState({
     name: "Token2",
     address: "",
     symbol: "",
     ChainId: "",
-    logoUri:""
+    logoUri: "",
   });
   const [tradePrice, setTradePrice] = useState({
     token1totoken2: "0",
@@ -883,7 +882,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     const walletType = await AsyncStorageLib.getItem("walletType");
 
     const address = await state.wallet.address;
-   
+
     if (JSON.parse(walletType) === "Ethereum") {
       if (coin0.symbol === "WETH") {
         console.log(await state.EthBalance);
@@ -945,7 +944,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
       coin1.address &&
       coin0.address &&
       amount != 0 &&
-      Number(amount)<Number(balance)&&
+      Number(amount) < Number(balance) &&
       (inputValidation || inputValidation1)
     ) {
       setDisable(false);
@@ -1026,11 +1025,11 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   placeholderTextColor={"gray"}
                   style={styles.textinputCon}
                 />
-               <TouchableOpacity
-                onPress={()=>{
-                  setCoinType("0");
-                  setOpenChain(true);
-                }}
+                <TouchableOpacity
+                  onPress={() => {
+                    setCoinType("0");
+                    setOpenChain(true);
+                  }}
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -1038,10 +1037,16 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   }}
                 >
                   <Image
-                    source={{uri:coin0.logoUri?coin0.logoUri: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png'}}
+                    source={{
+                      uri: coin0.logoUri
+                        ? coin0.logoUri
+                        : "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+                    }}
                     style={{ height: hp(3), width: wp(6) }}
                   />
-                  <Text style={{ marginRight: wp(13) }}>{coin0.symbol?coin0.symbol:'ETH'}</Text>
+                  <Text style={{ marginRight: wp(13) }}>
+                    {coin0.symbol ? coin0.symbol : "ETH"}
+                  </Text>
                 </TouchableOpacity>
 
                 <AntDesign
@@ -1056,7 +1061,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                 />
               </View>
 
-              <Text style={{color:"gray",marginHorizontal:wp(5)}}>
+              <Text style={{ color: "gray", marginHorizontal: wp(5) }}>
                 {" "}
                 Balance:
                 {balance ? (
@@ -1097,10 +1102,10 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   style={styles.txtInput}
                 />
                 <TouchableOpacity
-                onPress={()=>{
-                  setCoinType("1");
+                  onPress={() => {
+                    setCoinType("1");
                     setVisible(true);
-                }}
+                  }}
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -1108,10 +1113,16 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
                   }}
                 >
                   <Image
-                    source={{uri:coin1.logoUri?coin1.logoUri: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png '}}
+                    source={{
+                      uri: coin1.logoUri
+                        ? coin1.logoUri
+                        : "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png ",
+                    }}
                     style={{ height: hp(3), width: wp(6) }}
                   />
-                  <Text style={{ marginRight: wp(13) }}>{coin1.symbol?coin1.symbol:'WBTC'}</Text>
+                  <Text style={{ marginRight: wp(13) }}>
+                    {coin1.symbol ? coin1.symbol : "WBTC"}
+                  </Text>
                 </TouchableOpacity>
                 <AntDesign
                   onPress={() => {
@@ -1146,6 +1157,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               alignSelf: "center",
               marginTop: hp(8),
             }}
+         
             disabled={disable}
             onPress={async () => {
               //setVisible(true)
@@ -1591,7 +1603,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             />
           </View>
         </Modal2>
-
+        {/* /.......................THis is Confirm model..................../ */}
         <Modal2
           animationIn="slideInRight"
           animationOut="slideOutRight"
@@ -1607,72 +1619,65 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             setTradeVisible(false);
           }}
         >
-          <View
-            style={{
-              height: hp(50),
-              width: wp(70),
-              backgroundColor: "#ddd",
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-              marginTop: hp(5),
-              left: wp(10),
-            }}
-          >
-            <View
-              style={{
-                display: "flex",
-                alignItems: "center",
-                alignContent: "center",
-                marginTop: hp(10),
+          <View style={styles.modelView}>
+            <View style={styles.modelmainContainer}>
+              <Text style={styles.headingColor}>Slip Page Tolerance</Text>
+              <Text style={styles.colon}>:</Text>
+              <Text style={styles.textColor}>
+                {trade ? trade.slippageTolerance : 0} %
+              </Text>
+            </View>
+
+            <View style={styles.modelmainContainer}>
+              <Text style={styles.headingColor}>Amount</Text>
+              <Text style={styles.colon}>:</Text>
+              <Text style={styles.textColor}>
+                {amount ? amount : 0} {coin0.name}
+              </Text>
+            </View>
+
+            <View style={styles.modelmainContainer}>
+              <Text style={styles.headingColor}>You get</Text>
+              <Text style={styles.colon}>:</Text>
+              <Text style={styles.textColor}>
+                {" "}
+                {trade ? trade.minimumAmountOut : 0} {coin1.name}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              disabled={loading === true ? true : false}
+              style={styles.addButton3}
+              onPress={() => {
+                setTimeout(async () => {
+                  const biometric = await AsyncStorageLib.getItem("Biometric");
+                  console.log("Biometric =", biometric);
+                  if (biometric === "SET") {
+                    try {
+                      await useBiometricsForSwapTransaction(swapTokens);
+                      return;
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                  if (Number(amount) >= Number(balance)) {
+                    return alert(
+                      "error",
+                      "You Don't have enough balance to do this transaction"
+                    );
+                  }
+                  setPinViewVisible(true);
+                }, 0);
               }}
             >
-              <Text style={{ marginTop: hp(2) }}>
-                slippageTolerance:{trade ? trade.slippageTolerance : 0} %
+              <Text style={styles.addButtonText}>
+                {loading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  "Confirm"
+                )}
               </Text>
-              <Text style={{ marginTop: hp(2) }}>
-                amount : {amount ? amount : 0} {coin0.name}
-              </Text>
-              <Text style={{ marginTop: hp(2) }}>
-                {" "}
-                You get : {trade ? trade.minimumAmountOut : 0} {coin1.name}
-              </Text>
-
-              <TouchableOpacity
-                disabled={loading === true ? true : false}
-                style={styles.addButton3}
-                onPress={() => {
-                  setTimeout(async () => {
-                    const biometric = await AsyncStorageLib.getItem(
-                      "Biometric"
-                    );
-                    console.log("Biometric =", biometric);
-                    if (biometric === "SET") {
-                      try {
-                        await useBiometricsForSwapTransaction(swapTokens);
-                        return;
-                      } catch (e) {
-                        console.log(e);
-                      }
-                    }
-                    if (Number(amount) >= Number(balance)) {
-                      return alert(
-                        "error",
-                        "You Don't have enough balance to do this transaction"
-                      );
-                    }
-                    setPinViewVisible(true);
-                  }, 0);
-                }}
-              >
-                <Text style={styles.addButtonText}>
-                  {loading ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    "Confirm"
-                  )}
-                </Text>
-              </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <SwapPinModal
@@ -1702,16 +1707,60 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignSelf: "center",
     borderRadius: hp(1),
-    
-    borderWidth:StyleSheet.hairlineWidth*1,
-    borderColor:"gray",
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "gray",
     height: hp(80),
     width: wp(98),
     marginTop: "auto",
     // backgroundColor: "#131E3A",
   },
+  modelView: {
+    height: hp(45),
+    width: wp(90),
+    alignSelf: "center",
+    alignItems: "center",
+    backgroundColor: "#131E3A",
+    borderRadius: hp(1),
+    justifyContent: "center",
+    borderWidth: StyleSheet.hairlineWidth * 2,
+    borderColor: "white",
+  },
+  modelmainContainer: {
+    flexDirection: "row",
+    marginTop: hp(5),
+    width: wp(80),
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  colon: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  textColor: {
+    color: "white",
+    fontSize: 12,
+    width: wp(15),
+  },
+  headingColor: {
+    width: wp(35),
+    color: "white",
+    fontSize: 14.5,
+    fontWeight: "700",
+    textDecorationLine: "underline",
+    textAlign: "left",
+  },
+  headingColor2: {
+    width: wp(35),
+    color: "white",
+    fontSize: 14.5,
+    fontWeight: "700",
+    textAlign: "center",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: "#fff",
+  },
   cardBoxContainer: {
-    borderWidth: StyleSheet.hairlineWidth*1,
+    borderWidth: StyleSheet.hairlineWidth * 1,
     borderColor: "gray",
     marginTop: hp(5),
     width: wp(90),
@@ -1845,18 +1894,17 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   addButton3: {
-    top: hp(5),
-    backgroundColor: "#000C66",
-    width: wp(40),
-    height: 70,
-    borderRadius: 5,
+    // backgroundColor: "#000C66",
+    backgroundColor: "#53A3EA",
+    width: wp(30),
+    paddingVertical: hp(1),
     alignItems: "center",
-    justifyContent: "center",
-    elevation: 8,
+    alignSelf: "center",
+    borderRadius: hp(1),
+    marginTop: hp(8),
   },
   addButtonText: {
     color: "#fff",
-    fontSize: 18,
   },
   container: {
     backgroundColor: "#ddd",
@@ -1927,7 +1975,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: wp(5),
     position: "relative",
-    marginBottom:hp(3)
+    marginBottom: hp(3),
   },
   textinputCon: {
     width: wp(50),

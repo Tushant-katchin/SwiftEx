@@ -104,14 +104,15 @@ const Welcome = (props) => {
     // </Animated.View>
 
     <View style={style.imageContainer}>
+
       <SliderBox
         images={Slider.images}
-        autoplay={true}
-        circleLoop={true}
-        
-        autoplayInterval={3000}
+        autoplay
+        circleLoop
+        // autoplayInterval={3000}
         ImageComponentStyle={style.imageStyle}
       />
+      
       <View
         style={{
           position: "absolute",

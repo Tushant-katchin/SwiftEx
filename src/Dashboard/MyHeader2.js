@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
-  
   View,
   LayoutAnimation,
   Platform,
@@ -35,7 +34,7 @@ import {
   getEtherBnbPrice,
   getEthPrice,
   getBnbPrice,
-  getXrpPrice
+  getXrpPrice,
 } from "../utilities/utilities";
 import { tokenAddresses } from "./constants";
 import { FaucetModal } from "./Modals/faucetModal";
@@ -52,7 +51,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const state2 = useSelector((state) => state.walletBalance);
   const EthBalance = useSelector((state) => state.EthBalance);
   const bnbBalance = useSelector((state) => state.walletBalance);
-  const xrpBalance = useSelector((state) => state.XrpBalance)
+  const xrpBalance = useSelector((state) => state.XrpBalance);
   const walletState = useSelector((state) => state.wallets);
   const type = useSelector((state) => state.walletType);
 
@@ -67,10 +66,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [balance, GetBalance] = useState(0.0);
   const [wallet, getWallet] = useState(walletState ? walletState : []);
   const [Type, setType] = useState("");
-  const [user, setUser] = useState()
+  const [user, setUser] = useState();
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
-  const [xrpPrice,setXrpPrice] = useState(0)
+  const [xrpPrice, setXrpPrice] = useState(0);
   const [balanceUsd, setBalance] = useState(0.0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // onPress={() => setModalVisible(true)}
@@ -227,8 +226,6 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             .catch((e) => {
               console.log(e);
             });
-            
-           
 
           const balance = await state.walletBalance;
           if (balance) {
@@ -275,12 +272,12 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
-  const getBalanceInUsd = (ethBalance, bnbBalance,xrpBalance) => {
+  const getBalanceInUsd = (ethBalance, bnbBalance, xrpBalance) => {
     console.log("My wallet Type", Type);
-    console.log(ethBalance, bnbBalance,xrpBalance,xrpPrice);
+    console.log(ethBalance, bnbBalance, xrpBalance, xrpPrice);
     const ethInUsd = Number(ethBalance) * Number(ethPrice);
     const bnbInUsd = Number(bnbBalance) * Number(bnbPrice);
-    const xrpInUsd = Number(xrpBalance) * Number(xrpPrice)
+    const xrpInUsd = Number(xrpBalance) * Number(xrpPrice);
     console.log("Eth balance", ethInUsd);
     console.log("BNB balance", bnbInUsd);
     console.log("Xrp balance", xrpInUsd);
@@ -297,14 +294,15 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         return;
       } else if (JSON.parse(Type) === "Xrp") {
         const totalBalance = Number(xrpInUsd);
-        console.log('Xrpl $',totalBalance)
+        console.log("Xrpl $", totalBalance);
         setBalance(totalBalance.toFixed(1));
         return;
       } else if (JSON.parse(Type) === "Matic") {
         setBalance(0.0);
         return;
       } else if (JSON.parse(Type) === "Multi-coin") {
-        const totalBalance = Number(ethInUsd) + Number(bnbInUsd)+Number(xrpInUsd);
+        const totalBalance =
+          Number(ethInUsd) + Number(bnbInUsd) + Number(xrpInUsd);
         console.log(totalBalance);
         setBalance(totalBalance.toFixed(1));
         return;
@@ -332,10 +330,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       console.log("BNB price= ", response.USD);
       setBnbPrice(response.USD);
     });
-    await getXrpPrice().then((response)=>{
-      console.log('XRP price =', response.USD)
-      setXrpPrice(response.USD)
-    })
+    await getXrpPrice().then((response) => {
+      console.log("XRP price =", response.USD);
+      setXrpPrice(response.USD);
+    });
   };
 
   useEffect(async () => {
@@ -356,23 +354,30 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     console.log(balanceUsd);
     //getEthPrice()
     getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance,xrpBalance);
-  }, [ethPrice, bnbPrice, EthBalance, bnbBalance, xrpPrice,xrpBalance,Type,state.wallet.name]);
+    getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
+  }, [
+    ethPrice,
+    bnbPrice,
+    EthBalance,
+    bnbBalance,
+    xrpPrice,
+    xrpBalance,
+    Type,
+    state.wallet.name,
+  ]);
 
   useEffect(async () => {
     console.log(balanceUsd);
     //getEthPrice()
     getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance,xrpBalance);
-   
+    getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
   }, []);
-  useEffect(async ()=>{
-    const user = await state.wallet.name
-    if(user)
-    {
-      setUser(user)
+  useEffect(async () => {
+    const user = await state.wallet.name;
+    if (user) {
+      setUser(user);
     }
-  },[state.wallet.name])
+  }, [state.wallet.name]);
 
   return (
     <View style={{ backgroundColor: "#fff" }}>
@@ -399,14 +404,17 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Text style={styles.dollartxt}>
           $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>
-        <Text style={{
-          color: "black",
-          textAlign: "center",
-          fontWeight: "10",
-          fontStyle:'italic',
-          fontSize: 20,
-        }}>{user?user:'main wallet'}</Text>
-        
+        <Text
+          style={{
+            color: "black",
+            textAlign: "center",
+            fontWeight: "10",
+            fontStyle: "italic",
+            fontSize: 20,
+          }}
+        >
+          {user ? user : "main wallet"}
+        </Text>
       </View>
       <View style={styles.buttons}>
         <IconWithCircle
@@ -414,7 +422,6 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           type={"antDesign"}
           title={"Send"}
           onPress={() => setModalVisible(!modalVisible)}
-          
         />
 
         <IconWithCircle
@@ -428,24 +435,21 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           name={"swap-horizontal"}
           type={"ionicon"}
           title={"Swap"}
-          onPress={() => {
-            setModalVisible3(true);
+          onPress={async () => {
+            const walletType = await AsyncStorageLib.getItem("walletType");
+            console.log(JSON.parse(walletType));
+            if (!JSON.parse(walletType))
+              return alert("please select a wallet first to swap tokens");
+            if (
+              JSON.parse(walletType) === "BSC" ||
+              JSON.parse(walletType) === "Ethereum" ||
+              JSON.parse(walletType) === "Multi-coin"
+            ) {
+              setModalVisible3(true);
+            } else {
+              alert("Swapping is only supported for Ethereum and Binance ");
+            }
           }}
-          // onPress={async () => {
-          //   const walletType = await AsyncStorageLib.getItem("walletType");
-          //   console.log(JSON.parse(walletType));
-          //   if (!JSON.parse(walletType))
-          //     return alert("please select a wallet first to swap tokens");
-          //   if (
-          //     JSON.parse(walletType) === "BSC" ||
-          //     JSON.parse(walletType) === "Ethereum" ||
-          //     JSON.parse(walletType) === "Multi-coin"
-          //   ) {
-          //     setModalVisible3(true);
-          //   } else {
-          //     alert("Swapping is only supported for Ethereum and Binance ");
-          //   }
-          // }}
         />
 
         <IconWithCircle
@@ -477,11 +481,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       >
         <View style={styles.iconTextContainer}>
           <Icon name="graph" type={"simpleLine"} size={hp(3)} />
-          <Text style={{ marginHorizontal: hp(1),color:'black' }}>
+          <Text style={{ marginHorizontal: hp(1), color: "black" }}>
             Market insights
           </Text>
         </View>
-        
       </TouchableOpacity>
     </View>
   );

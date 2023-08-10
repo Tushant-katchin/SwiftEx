@@ -107,7 +107,7 @@
     "react-native-get-random-values": "~1.7.0",
     "react-native-image-avatars": "^1.1.6",
     "react-native-image-base64": "^0.1.4",
-    "react-native-image-slider-box": "^2.0.7",
+    "react-native-image-slider-box": "^1.1.24",
     "react-native-level-fs": "^3.0.0",
     "react-native-modal": "^12.1.0",
     "react-native-nav": "^2.0.2",
