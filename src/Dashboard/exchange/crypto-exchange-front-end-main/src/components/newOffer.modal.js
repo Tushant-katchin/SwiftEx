@@ -844,7 +844,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
     } catch (err) {
       console.log(err);
       alert("error", err.message ? err.message : "transaction failed");
-      setModalMessage(err.message || "Something went wrong");
+      setModalMessage("Something went wrong");
       setOpen(false);
     }
   };
@@ -886,7 +886,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       if (txHash) setTransactionHash(txHash);
       if (err) {
         alert("error", err.message ? err.message : "transaction failed");
-        throw new Error(err.message || "transaction failed");
+        throw new Error( "transaction failed");
       }
 
       const newOfferBody = {
@@ -898,7 +898,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
     } catch (err) {
       console.log(err);
       alert("error", err.message ? err.message : "transaction failed");
-      setModalMessage(err.message || "transaction failed");
+      setModalMessage("transaction failed");
     } finally {
       getOffersData();
       setIsSubmitting(false);
@@ -1022,7 +1022,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       return setAssetsList(res);
     } catch (err) {
       console.log(err);
-      setModalMessage(err.message || "Something went wrong");
+      setModalMessage("Something went wrong");
     }
   };
 
@@ -1037,7 +1037,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       return name;
     } catch (err) {
       console.log(err);
-      setModalMessage(err.message || "Something went wrong");
+      setModalMessage("Something went wrong");
     }
   };
 
@@ -1233,7 +1233,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
                       openTx(true);
                     }}
                   >
-                    <Text style={{ color: "blue" }}>
+                    <Text style={{ color: "#4CA6EA" }}>
                       Click here to check tx status
                     </Text>
                   </TouchableOpacity>
