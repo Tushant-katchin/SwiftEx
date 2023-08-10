@@ -694,8 +694,6 @@
             />
 */
 
-
-
 import { useEffect, useState, useMemo } from "react";
 import { authRequest, GET, POST } from "../api";
 import { GOERLI_ETHERSCAN, TX_FEE_IN_USD } from "../utils/constants";
@@ -836,8 +834,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       if (err) {
         setModalMessage(`${err.status}: ${err.message}`);
         setOpen(false);
-        
-        return alert('error',err.message ? err.message : "transaction failed");
+
+        return alert("error", err.message ? err.message : "transaction failed");
       } else {
         setOpen(false);
         ShowToast(toast, "New Offer Created Successfully");
@@ -845,7 +843,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       }
     } catch (err) {
       console.log(err);
-      alert('error',err.message ? err.message : "transaction failed");
+      alert("error", err.message ? err.message : "transaction failed");
       setModalMessage(err.message || "Something went wrong");
       setOpen(false);
     }
@@ -887,7 +885,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       if (err) throw new Error(err.message || "transaction failed");
       if (txHash) setTransactionHash(txHash);
       if (err) {
-        alert('error',err.message ? err.message : "transaction failed");
+        alert("error", err.message ? err.message : "transaction failed");
         throw new Error(err.message || "transaction failed");
       }
 
@@ -899,7 +897,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       await submitNewOffer(newOfferBody);
     } catch (err) {
       console.log(err);
-      alert('error',err.message ? err.message : "transaction failed");
+      alert("error", err.message ? err.message : "transaction failed");
       setModalMessage(err.message || "transaction failed");
     } finally {
       getOffersData();
@@ -1047,7 +1045,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
     const walletType = await AsyncStorageLib.getItem("walletType");
     const walletAdress = await state.wallet.address;
     console.log(walletType);
-    console.log("assetname",assetName)
+    console.log("assetname", assetName);
     if (assetName == "ETH") {
       if (
         JSON.parse(walletType) == "Ethereum" ||
@@ -1155,7 +1153,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
   };
 
   useEffect(() => {
-    console.log(newOffer)
+    console.log(newOffer);
     defaultTxFeeDataSetup();
     getAllAssets();
   }, []);
@@ -1165,8 +1163,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
   }, [transactionHash]);
 
   useEffect(() => {
-    console.log(newOffer)
-    getBalance(newOffer.assetName)
+    console.log(newOffer);
+    getBalance(newOffer.assetName);
   }, [newOffer.assetName]);
   useEffect(() => {
     enableValidation();
@@ -1198,16 +1196,16 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
         setOpen(false);
       }}
     >
-      <ScrollView
-      nestedScrollEnabled={true}
-        contentContainerStyle={{
-          // height: hp(88),
-          paddingBottom:hp(10),
-          paddingVertical:hp(5),
-          width: wp(90),
+      <View
+        style={{
+          height: hp(96),
+          // paddingBottom:hp(10),
+          paddingVertical: hp(3),
+          width: wp(95),
           backgroundColor: "#131E3A",
-         borderRadius:10,
-         borderBottomLeftRadius:10,
+          borderRadius: 10,
+          borderBottomLeftRadius: 10,
+          alignSelf: "center",
           display: "flex",
           // alignItems: "center",
         }}
@@ -1219,13 +1217,16 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           }}
         >
           <Text style={styles.addingText}>Adding Offer</Text>
-          <Text style={{ color: "white" }}>{modalMessage.slice(0,100)}</Text>
+
+          <Text style={{ color: "white" }}>{modalMessage.slice(0, 100)}</Text>
           {txMessage && (
             <View>
               <Text style={{ color: "white" }}>{txMessage}</Text>
               {txLink && (
                 <View>
-                  <Text style={{ color: "white" }}>Click the link below to check transaction</Text>
+                  <Text style={{ color: "white" }}>
+                    Click the link below to check transaction
+                  </Text>
                   <TouchableOpacity
                     onPress={() => {
                       //Linking.openURL(txLink)
@@ -1241,7 +1242,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
             </View>
           )}
           {newOffer.pricePerUnit ? (
-            <Text style={{color:'white'}}>
+            <Text style={{ color: "white" }}>
               {" "}
               Unit Price: {+newOffer.pricePerUnit.toFixed(2)}{" "}
               {newOffer.currencyName || "USD"}
@@ -1318,7 +1319,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
         <View
           style={{
             display: "flex",
-            alignSelf:"center",
+            alignSelf: "center",
             marginTop: hp(2),
           }}
         >
@@ -1328,7 +1329,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
 
             <Text style={styles.textColor}>
               {breakDowns.subTotal}
-              {newOffer.currencyName} 
+              {newOffer.currencyName}
             </Text>
           </View>
           <View style={styles.subTotal}>
@@ -1355,26 +1356,26 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           <View style={styles.paybleContainer}>
             <Text style={styles.textColor}>Total:</Text>
             <Text style={styles.textColor}>
-              {breakDowns.finalPayable.toFixed(2)} {newOffer.currencyName} 
+              {breakDowns.finalPayable.toFixed(2)} {newOffer.currencyName}
             </Text>
           </View>
         </View>
         <View style={styles.Buttons}>
           <View>
-            <LinearGradient 
-            style={styles.confirmButton}
-            start={[1,0]}
-            end={[0,1]}
-            colors={["rgba(70, 169, 234, 1)","rgba(185, 116, 235, 1)"]}>
-            <TouchableOpacity
-              disabled={disable}
-              onPress={handleSubmit}
-              color="green"
+            <LinearGradient
+              style={styles.confirmButton}
+              start={[1, 0]}
+              end={[0, 1]}
+              colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
             >
-              <Text style={styles.textColor}>Confirm</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                disabled={disable}
+                onPress={handleSubmit}
+                color="green"
+              >
+                <Text style={styles.textColor}>Confirm</Text>
+              </TouchableOpacity>
             </LinearGradient>
-           
           </View>
           {loading ? (
             <ActivityIndicator size="small" color="blue" />
@@ -1382,20 +1383,19 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
             <View></View>
           )}
           <View>
-            <TouchableOpacity  
-            style={styles.cancelButton}
-             onPress={() => setOpen(false)} >
-              <Text  style={styles.cancelText}>Cancel</Text>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setOpen(false)}
+            >
+              <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
         <Text style={styles.noteText}>
-         <Text style={{fontWeight:"700"}}>Note:</Text>  The above totals are just estimations that can vary depending on
-          currency rates.
+          <Text style={{ fontWeight: "700" }}>Note:</Text> The above totals are
+          just estimations that can vary depending on currency rates.
         </Text>
-       
-
-      </ScrollView>
+      </View>
       {txLink && (
         <View>
           <SeeTransactions />
@@ -1426,7 +1426,7 @@ const styles = StyleSheet.create({
     fontSize: hp(3),
     borderRadius: 0,
     borderWidth: 0,
-    marginVertical:hp(2)
+    marginVertical: hp(1),
   },
   assetText: {
     color: "#fff",
@@ -1462,12 +1462,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(60),
-    marginTop:hp(1)
+    marginTop: hp(1),
   },
   balance: {
     color: "#fff",
-    textAlign:"center",
-    marginVertical:hp(2)
+    textAlign: "center",
+    marginVertical: hp(2),
   },
   textColor: {
     color: "#fff",
@@ -1476,43 +1476,41 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginVertical: hp(5),
     marginHorizontal: wp(17),
-    width:wp(58)
+    width: wp(58),
   },
-  confirmButton:{
-    alignItems:"center",
-    width:wp(23),
-    paddingVertical:hp(0.7),
-    borderRadius:6
+  confirmButton: {
+    alignItems: "center",
+    width: wp(23),
+    paddingVertical: hp(0.7),
+    borderRadius: 6,
   },
-  cancelButton:{
-    alignItems:"center",
-    borderWidth:StyleSheet.hairlineWidth*1,
-    borderColor:"#EA979A",
-    width:wp(23),
-    paddingVertical:hp(0.7),
-    borderRadius:6
-
+  cancelButton: {
+    alignItems: "center",
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "#EA979A",
+    width: wp(23),
+    paddingVertical: hp(0.7),
+    borderRadius: 6,
   },
-  paybleContainer:{
+  paybleContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(60),
-    marginTop:hp(4)
+    marginTop: hp(4),
   },
-  Buttons:{
-    flexDirection:"row",
-    alignItems:"center",
-    marginTop:hp(3),
-    justifyContent:"space-between",
-    alignSelf:"center",
-    width:wp(58)
+  Buttons: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp(3),
+    justifyContent: "space-between",
+    alignSelf: "center",
+    width: wp(58),
   },
-  cancelText:{
-    color:"#EA979A"
+  cancelText: {
+    color: "#EA979A",
   },
-  transactionColor:{
-    color:"#fff",
+  transactionColor: {
+    color: "#fff",
     // marginHorizontal:wp(10)
-  }
- 
+  },
 });
