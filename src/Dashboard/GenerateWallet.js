@@ -5,6 +5,7 @@ import {
   View,
   Button,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { TextInput, Checkbox, Switch } from "react-native-paper";
 import {
@@ -21,6 +22,7 @@ const GenerateWallet = (props) => {
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -50,46 +52,29 @@ const GenerateWallet = (props) => {
       style={{ opacity: fadeAnim }}
     >
       <View style={style.Body}>
-        <Animated.Image
-          style={{
-            width: wp("15"),
-            height: hp("15"),
-            padding: 30,
-            marginTop: hp(10),
-          }}
-          source={darkBlue}
-        />
+        <Text style={style.headingText}> Back up your wallet now!</Text>
 
-        <Text style={style.welcomeText}> Back up you wallet now </Text>
-        <Text style={style.welcomeText}>
-          In the next page , you will see your secret phrase
+        <Text style={style.nextText}>
+          In the next step you will see Secret Phrase that allows you to recover
+          a wallet.
         </Text>
-        <View
-          style={{ display: "flex", flexDirection: "row", marginTop: hp(5) }}
-        >
-          <Text style={style.welcomeText2}>
-            If i loose my private key , my funds will be lost
+        <Animated.Image style={style.logoStyle} source={darkBlue} />
+
+        <View style={style.textview}>
+          <Text style={style.txtStyle}>
+            If I lose my private key , my funds will be lost
           </Text>
-          <View style={{ marginLeft: 10 }}>
-            <Switch
-              value={Checked}
-              onValueChange={() => setCheckBox(!Checked)}
-            />
-          </View>
+          <Switch value={Checked} onValueChange={() => setCheckBox(!Checked)} />
         </View>
 
-        <View
-          style={{ display: "flex", flexDirection: "row", marginTop: hp(5) }}
-        >
-          <Text style={style.welcomeText2}>
-            If i share my private key , my funds can get stolen
+        <View style={style.textview}>
+          <Text style={style.txtStyle}>
+            If I share my private key , my funds can get stolen
           </Text>
-          <View style={{ marginLeft: 10 }}>
-            <Switch
-              value={Checked2}
-              onValueChange={() => setCheckBox2(!Checked2)}
-            />
-          </View>
+          <Switch
+            value={Checked2}
+            onValueChange={() => setCheckBox2(!Checked2)}
+          />
         </View>
         {loading ? (
           <ActivityIndicator size="large" color="white" />
@@ -97,42 +82,56 @@ const GenerateWallet = (props) => {
           <Text> </Text>
         )}
 
-        <View style={style.Button}>
-          <Button
-            title={"Continue"}
-            color={"green"}
-            disabled={loading ? true : Checked && Checked2 ? false : true}
-            onPress={() => {
-              setLoading(true);
-              setTimeout(() => {
-                dispatch(Generate_Wallet2()).then((response) => {
-                  if (response) {
-                    if (response.status === "success") {
-                      setLoading(false);
+        <TouchableOpacity
+          style={
+            Checked && Checked2
+              ? style.btnview
+              : { ...style.btnview, backgroundColor: "gray" }
+          }
+          disabled={loading ? true : Checked && Checked2 ? false : true}
+          // disabled={disable ? true : false}
 
-                      console.log(response.wallet);
-                      const wallet = {
-                        wallet: response.wallet,
-                      };
-                      console.log(wallet)
-                      props.navigation.navigate("PrivateKey", {
-                        wallet,
-                      });
-                    } else {
-                      setLoading(false);
-                      
-                      alert("error","wallet generation failed. Please try again");
-                    }
+          onPress={() => {
+            setLoading(true);
+            setTimeout(() => {
+              dispatch(Generate_Wallet2()).then((response) => {
+                if (response) {
+                  if (response.status === "success") {
+                    setLoading(false);
+
+                    console.log(response.wallet);
+                    const wallet = {
+                      wallet: response.wallet,
+                    };
+                    console.log(wallet);
+                    props.navigation.navigate("PrivateKey", {
+                      wallet,
+                    });
                   } else {
                     setLoading(false);
 
-                    alert("error","Wallet creation failed . Please try again");
+                    alert(
+                      "error",
+                      "wallet generation failed. Please try again"
+                    );
                   }
-                });
-              }, 1);
-            }}
-          ></Button>
-        </View>
+                } else {
+                  setLoading(false);
+
+                  alert("error", "Wallet creation failed . Please try again");
+                }
+              });
+            }, 1);
+          }}
+        >
+          <Text
+            style={
+              Checked && Checked2 ? { color: "white" } : { color: "#D3D3D3" }
+            }
+          >
+            Continue
+          </Text>
+        </TouchableOpacity>
       </View>
     </Animated.View>
   );
@@ -148,18 +147,17 @@ const style = StyleSheet.create({
     width: wp(100),
     alignItems: "center",
     textAlign: "center",
+    // justifyContent:"center"
   },
   welcomeText: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: "200",
     color: "white",
     marginTop: hp(5),
   },
   welcomeText2: {
     fontSize: 15,
-    fontWeight: "200",
     color: "white",
-    marginTop: hp(1),
   },
   Button: {
     marginTop: hp(10),
@@ -181,8 +179,52 @@ const style = StyleSheet.create({
     marginBottom: hp("2"),
     color: "black",
     marginTop: hp("2"),
-    width: wp("70"),
+    width: wp("65"),
     paddingRight: wp("7"),
     backgroundColor: "white",
+  },
+  txtStyle: {
+    color: "white",
+    textAlign: "center",
+    width: wp(58),
+    textAlign: "left",
+    fontSize: 15,
+  },
+  textview: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: hp(5),
+    width: wp(80),
+    justifyContent: "space-between",
+    marginTop: hp(6),
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  btnview: {
+    backgroundColor: "#4CA6EA",
+    width: wp(80),
+    paddingVertical: hp(2),
+    alignItems: "center",
+    borderRadius: hp(1),
+    alignSelf: "center",
+    marginTop: hp(10),
+  },
+  headingText: {
+    fontWeight: "700",
+    fontSize: 18,
+    color: "white",
+    marginTop: hp(6),
+  },
+  logoStyle: {
+    width: wp("25"),
+    height: hp("25"),
+    padding: 30,
+    marginTop: hp(6),
+  },
+  nextText: {
+    marginTop: hp(3),
+    textAlign: "left",
+    color: "white",
+    width: wp(80),
   },
 });

@@ -354,6 +354,7 @@ import {
   ActivityIndicator,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -480,13 +481,13 @@ const CheckMnemonic = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-      <View style={style.Body}>
+      <ScrollView contentContainerStyle={style.Body}>
         <Text style={style.verifyText}>Verify Secret Phrase</Text>
         <Text style={style.wordText}>
           Tap the words to put them next to each other in the correct order.
         </Text>
 
-        <View style={{ marginTop: hp(15) }}>
+        <View style={{ marginTop: hp(8) }}>
           <FlatList
             data={data}
             // data={props.route.params.wallet.wallet.mnemonic}
@@ -499,11 +500,19 @@ const CheckMnemonic = (props) => {
         </View>
         <View
           style={{
-            display: "flex",
+            marginTop:hp(3),
+            // display: "flex",
+            flexWrap: "wrap",
             flexDirection: "row",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
+            // backgroundColor: "red",
+            // alignContent: "center",
+            // alignSelf: "center",
+            // alignItems: "center",
+            // justifyContent: "center",
+            marginLeft:wp(6),
+
+            // width: wp(40),
+            
           }}
         >
           {Mnemonic.length > 0 ? (
@@ -513,8 +522,12 @@ const CheckMnemonic = (props) => {
                 <Text
                   style={{
                     color: "black",
-                    textAlign: "center",
-                    fontStyle: "italic",
+                    marginHorizontal:4,
+                    borderWidth:StyleSheet.hairlineWidth*1,
+marginTop:hp(2),
+alignItems:"center",
+padding:hp(1)
+                    // width:wp(50)
                   }}
                 >
                   {item}
@@ -522,7 +535,7 @@ const CheckMnemonic = (props) => {
               );
             })
           ) : (
-            <Text style={{ color: "black" }}>nothing added yet</Text>
+            <Text style={{ color: "black",textAlign:"center" ,alignSelf:"center"}}>Nothing added yet</Text>
           )}
         </View>
         {/* <TextInput
@@ -535,9 +548,8 @@ const CheckMnemonic = (props) => {
         {loading ? (
           <ActivityIndicator size="large" color="green" />
         ) : (
-          <Text> </Text>
+          <Text></Text>
         )}
-        <View style={{ width: wp(95), margin: 10 }}>
           <TouchableOpacity
             style={style.ButtonView}
             onPress={async () => {
@@ -651,8 +663,7 @@ const CheckMnemonic = (props) => {
           >
             <Text style={{ color: "white" }}>Done</Text>
           </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
     </Animated.View>
   );
 };
@@ -753,7 +764,7 @@ const style = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
-    marginTop: hp(20),
+    marginTop: hp(6),
   },
   pressable: {
     borderColor: "#D7D7D7",
