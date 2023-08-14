@@ -30,6 +30,7 @@ import { SwapEthForTokens } from "../tokens/swapFunctions";
 import { SwapTokensToTokens, UniSwap } from "../tokens/UniswapFunctions";
 import { SwapLoadingComponent } from "../../utilities/loadingComponent";
 import { alert } from "../reusables/Toasts";
+import { getAllBalances } from "../../utilities/web3utilities";
 const SwapPinModal = ({
   pinViewVisible,
   setPinViewVisible,
@@ -216,6 +217,7 @@ const SwapPinModal = ({
                                         setTradeVisible(false);
                                         setModalVisible(false);
                                         setPinViewVisible(false);
+                                        getAllBalances(state,dispatch)
                                         alert(
                                           "success",
                                           "Your Tx Hash : " +
@@ -292,6 +294,8 @@ const SwapPinModal = ({
                                           "success",
                                           "Your Tx Hash : " + response.tx
                                         );
+                                        getAllBalances(state,dispatch)
+
                                         navigation.navigate("Transactions");
                                       })
                                       .catch((e) => {
@@ -371,6 +375,8 @@ const SwapPinModal = ({
                                             "sucess",
                                             "Your Tx Hash : " + response.tx
                                           );
+                                          getAllBalances(state,dispatch)
+
                                           navigation.navigate("Transactions");
                                         })
                                         .catch((e) => {
@@ -424,6 +430,8 @@ const SwapPinModal = ({
                         setModalVisible(false);
                         setTradeVisible(false);
                         setPinViewVisible(false);
+                        getAllBalances(state,dispatch)
+
                       } else if (JSON.parse(walletType) === "Multi-coin") {
                         if (swapType === "ETH") {
                           if (Wallet) {
@@ -465,6 +473,8 @@ const SwapPinModal = ({
                                             "Your Tx Hash : " +
                                               response.tx.transactionHash
                                           );
+                                          getAllBalances(state,dispatch)
+
                                           navigation.navigate("Transactions");
                                         })
                                         .catch((e) => {
@@ -542,6 +552,8 @@ const SwapPinModal = ({
                                             "success",
                                             "Your Tx Hash : " + response.tx
                                           );
+                                          getAllBalances(state,dispatch)
+
                                           navigation.navigate("Transactions");
                                         })
                                         .catch((e) => {
@@ -621,6 +633,8 @@ const SwapPinModal = ({
                                               "error",
                                               "Your Tx Hash : " + response.tx
                                             );
+                                            getAllBalances(state,dispatch)
+
                                             navigation.navigate("Transactions");
                                           })
                                           .catch((e) => {
@@ -674,6 +688,8 @@ const SwapPinModal = ({
                           setModalVisible(false);
                           setTradeVisible(false);
                           setPinViewVisible(false);
+                          getAllBalances(state,dispatch)
+
                         }
                       }
                     } catch (e) {

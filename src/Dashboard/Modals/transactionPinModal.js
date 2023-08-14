@@ -32,6 +32,7 @@ import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import { CommonActions } from "@react-navigation/native";
 import { useToast } from "native-base";
 import { alert, ShowToast } from "../reusables/Toasts";
+import { getAllBalances } from "../../utilities/web3utilities";
 
 const TransactionPinModal = ({
   pinViewVisible,
@@ -223,6 +224,7 @@ const TransactionPinModal = ({
                           setLoader(false);
                           setDisable(false);
                           setPinViewVisible(false);
+                          getAllBalances(state,dispatch)
                           Navigate();
                           navigation.navigate("Transactions");
                         } catch (e) {
@@ -261,6 +263,7 @@ const TransactionPinModal = ({
                           setLoader(false);
                           setDisable(false);
                           setPinViewVisible(false);
+                          getAllBalances(state,dispatch)
                           Navigate();
                           navigation.navigate("Transactions");
                         } catch (e) {
@@ -299,6 +302,7 @@ const TransactionPinModal = ({
                           setLoader(false);
                           setDisable(false);
                           setPinViewVisible(false);
+                          getAllBalances(state,dispatch)
                           Navigate();
                           navigation.navigate("Transactions");
                         } catch (e) {
@@ -335,6 +339,7 @@ const TransactionPinModal = ({
                         console.log(tx);
                         setLoader(false);
                         setPinViewVisible(false);
+                        getAllBalances(state,dispatch)
                         Navigate();
                         navigation.navigate("Transactions");
                       } catch (e) {
