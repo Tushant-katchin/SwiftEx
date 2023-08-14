@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   Pressable,
+  ScrollView,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -65,7 +66,7 @@ const PrivateKey = (props) => {
   };
 
   return (
-    <View style={{ backgroundColor: "white", height: hp(100) }}>
+    <ScrollView contentContainerStyle={{ backgroundColor: "white", height: hp(100),marginBottom:hp(15) }}>
       <Animated.View // Special animatable View
         style={{ opacity: fadeAnim }}
       >
@@ -164,7 +165,7 @@ const PrivateKey = (props) => {
 
         {/* </View> */}
       </Animated.View>
-    </View>
+    </ScrollView>
   );
 };
 

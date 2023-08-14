@@ -1159,7 +1159,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             }}
          
             disabled={disable}
-            onPress={async () => {
+           onPress={async () => {
               //setVisible(true)
               setLoading2(true);
               console.log(coin1.address);
@@ -1518,7 +1518,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               } catch (e) {
                 setLoading2(false);
               }
-            }}
+            }} 
           >
             <Text style={styles.addButtonText}>
               {loading2 ? (
@@ -1648,6 +1648,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             <TouchableOpacity
               disabled={loading === true ? true : false}
               style={styles.addButton3}
+             
               onPress={() => {
                 setTimeout(async () => {
                   const biometric = await AsyncStorageLib.getItem("Biometric");
@@ -1715,8 +1716,8 @@ const styles = StyleSheet.create({
     // backgroundColor: "#131E3A",
   },
   modelView: {
-    height: hp(45),
-    width: wp(90),
+    paddingVertical:hp(5),
+    width: wp(93),
     alignSelf: "center",
     alignItems: "center",
     backgroundColor: "#131E3A",
@@ -1740,7 +1741,7 @@ const styles = StyleSheet.create({
   textColor: {
     color: "white",
     fontSize: 12,
-    width: wp(15),
+    width: wp(17),
   },
   headingColor: {
     width: wp(35),
