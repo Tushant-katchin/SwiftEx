@@ -38,7 +38,7 @@ import { alert } from "../reusables/Toasts";
 const ChooseTokens = ({ setModalVisible }) => {
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [walletType, setWalletType] = useState(false);
 
   const navigation = useNavigation();
 
@@ -79,7 +79,10 @@ const ChooseTokens = ({ setModalVisible }) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  useEffect(() => {
+  useEffect(async () => {
+    const walletType = await AsyncStorageLib.getItem("walletType");
+    const Type = JSON.parse(walletType);
+    setWalletType(Type)
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -103,19 +106,21 @@ const ChooseTokens = ({ setModalVisible }) => {
       <ScrollView>
         <View style={style.Body}>
           <TouchableOpacity
-            style={style.Box3}
+            style={walletType==='BSC'||walletType==='Multi-coin'?style.Box3:style.disableBox}
             onPress={async () => {
-              setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
+              console.log(Type)
               if (Type === "BSC" || Type ==='Multi-coin') {
-              
+                setModalVisible(false);
+
               let token = "BNB";
               navigation.navigate("Send", {
                 token: token,
               });
             }else{
-              
+              //setModalVisible(false);
+
               return alert("error",'Please select a bnb wallet')
             }
             }}
@@ -129,11 +134,11 @@ const ChooseTokens = ({ setModalVisible }) => {
           <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
-              setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
               if (Type === "Ethereum" || Type ==='Multi-coin') {
-              
+                setModalVisible(false);
+
               let token = "Ethereum";
               navigation.navigate("Send", {
                 token: token,
@@ -155,11 +160,10 @@ const ChooseTokens = ({ setModalVisible }) => {
           <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
-              setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
               if (Type === "Matic" || Type ==='Multi-coin') {
-              
+                setModalVisible(false);
               let token = "Matic";
               navigation.navigate("Send", {
                 token: token,
@@ -185,18 +189,22 @@ const ChooseTokens = ({ setModalVisible }) => {
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
               if (Type === "Multi-coin") {
+                setModalVisible(false);
                 let token = "Multi-coin-Xrp";
                 navigation.navigate("Send", {
                   token: token,
                 });
                 return;
               } else if (Type === "Xrp") {
+                setModalVisible(false);
+
                 let token = "Xrp";
                 navigation.navigate("Send", {
                   token: token,
                 });
                 return
               }else{
+                
                 return alert("error",'Please select xrp wallet')
               }
             }}
@@ -299,6 +307,15 @@ const style = StyleSheet.create({
     width: wp(90),
     borderWidth:1,
     borderColor:"#E0E0E0",
+    borderRadius: hp(1),  
+    backgroundColor:"#F0F8FF",
+    paddingVertical: hp(1.5),
+    marginTop: hp(2),
+  },
+  disableBox: {
+    width: wp(90),
+    borderWidth:1,
+    borderColor:"grey",
     borderRadius: hp(1),  
     backgroundColor:"#F0F8FF",
     paddingVertical: hp(1.5),

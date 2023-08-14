@@ -4,7 +4,8 @@ import Moralis from 'moralis';
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
-import { getBalance, getEthBalance, getMaticBalance } from "../components/Redux/actions/auth";
+import { getBalance, getEthBalance, getMaticBalance, getXrpBalance } from "../components/Redux/actions/auth";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
 const xrpl = require("xrpl");
 
 export const watchEtherTransfers = ()=> {
@@ -125,4 +126,107 @@ export const checkXrpAddress = (address)=>{
     dispatch(getEthBalance(address))
     dispatch(getMaticBalance(address))
     dispatch(getBalance(address))
+   // dispatch(getXrpBalance(address))
   }
+
+  export const getAllBalances = async (state,dispatch) => {
+    try {
+      const wallet = await AsyncStorageLib.getItem("wallet");
+      const xrpAddress = await state.wallet.xrp.address?await state.wallet.xrp.address:''
+      const address = (await state.wallet.address)
+        ? await state.wallet.address
+        : "";
+
+      AsyncStorageLib.getItem("walletType").then(async (type) => {
+        console.log("hi" + JSON.parse(type));
+        if (!state.wallet.address) {
+          console.log('no wallet selected');
+        } else if (JSON.parse(type) == "Matic") {
+          await dispatch(getMaticBalance(address))
+            .then(async (res) => {
+              let bal = await AsyncStorageLib.getItem("MaticBalance");
+              console.log(bal);
+              if (res) {
+                console.log(res);
+              } else {
+                console.log("coudnt get balance");
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        } else if (JSON.parse(type) == "Ethereum") {
+          dispatch(getEthBalance(address))
+            .then(async (e) => {
+              const Eth = await e.EthBalance;
+              let bal = await AsyncStorageLib.getItem("EthBalance");
+
+              if (Eth) {
+                console.log(res);
+              } else {
+                console.log("coudnt get balance");
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        } else if (JSON.parse(type) == "BSC") {
+          const balance = await state.walletBalance;
+          if (balance) {
+            console.log(res);
+          }
+        } else if (JSON.parse(type) == "Xrp") {
+          console.log("entering xrp balance");
+          try {
+            const resp = dispatch(getXrpBalance(address))
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          } catch (e) {
+            console.log(e);
+          }
+          //await getXrpBal(address)
+          /* await getXrpBal(address)
+          .catch((e)=>{
+            console.log(e)
+          })*/
+        } else if (JSON.parse(type) == "Multi-coin") {
+
+          dispatch(getMaticBalance(address))
+            
+          dispatch(getEthBalance(address))
+            
+          dispatch(getBalance(address))
+            
+          dispatch(getXrpBalance(xrpAddress))
+         
+        } else {
+          console.log('error')
+         // setType("");
+          /*const wallet = await state.wallet.address;
+
+          if (wallet) {
+            await dispatch(getBalance(wallet))
+              .then(async () => {
+                const bal = await state.walletBalance;
+
+                if (bal) {
+                  GetBalance(bal);
+                } else {
+                  GetBalance(0);
+                }
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          }*/
+          //alert('No wallet selected')
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };

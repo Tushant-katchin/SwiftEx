@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "katchwallet",
-    "slug": "katchwallet",
+    "name": "SwiftEx",
+    "slug": "swiftex",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,16 +28,15 @@
       "package": "com.tokenmunzi.munzi",
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json"
-
-      
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "5a84df33-6d1e-4c4d-a511-c60ceebeb97a"
+        "projectId": "888c7e00-7e91-4150-ad77-aae9b5ab2ab3"
       }
-    }
+    },
+    "owner": "swiftex"
   }
 }

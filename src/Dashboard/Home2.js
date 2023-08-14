@@ -68,7 +68,7 @@ const Home2 = ({ navigation }) => {
       AsyncStorageLib.getItem("walletType").then(async (type) => {
         console.log("hi" + JSON.parse(type));
         if (!state.wallet.address) {
-          console.log(res);
+          console.log('no wallet selected');
         } else if (JSON.parse(type) == "Matic") {
           await dispatch(getMaticBalance(address))
             .then(async (res) => {
