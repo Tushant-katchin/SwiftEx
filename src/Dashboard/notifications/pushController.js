@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import PushNotification from "react-native-push-notification";
 //import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import notifee from '@notifee/react-native';
+//import notifee from '@notifee/react-native';
 
 export default function PushNotifications(){
         PushNotification.configure({
@@ -65,26 +65,26 @@ export default function PushNotifications(){
 //   }
 
 // <<<<<<< HEAD
-  export const SendNotification = async(title,message)=>{
-    await notifee.requestPermission()
+  // export const SendNotification = async(title,message)=>{
+  //   await notifee.requestPermission()
 
-    // Create a channel (required for Android)
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    });
+  //   // Create a channel (required for Android)
+  //   const channelId = await notifee.createChannel({
+  //     id: 'default',
+  //     name: 'Default Channel',
+  //   });
 
-    // Display a notification
-    await notifee.displayNotification({
-      title: title,
-      body: message,
-      android: {
-        channelId,
-        smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-        // pressAction is needed if you want the notification to open the app when pressed
-        pressAction: {
-          id: 'default',
-        },
-      },
-    });
-  }
+  //   // Display a notification
+  //   await notifee.displayNotification({
+  //     title: title,
+  //     body: message,
+  //     android: {
+  //       channelId,
+  //       smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+  //       // pressAction is needed if you want the notification to open the app when pressed
+  //       pressAction: {
+  //         id: 'default',
+  //       },
+  //     },
+  //   });
+  // }
