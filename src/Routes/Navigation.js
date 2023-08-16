@@ -124,7 +124,12 @@ const AuthStack = () => (
         component={TokenList}
         options={{ headerShown: false }}
       /> */}
-
+{/* 
+<Stack.Screen
+        name="SelectWallet"
+        component={SelectWallet}
+        options={{ headerShown: false }}
+      /> */}
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}

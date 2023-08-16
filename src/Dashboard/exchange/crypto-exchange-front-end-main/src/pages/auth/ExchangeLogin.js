@@ -17,6 +17,7 @@ import {
 } from "react-native-responsive-screen";
 import { Button, ActivityIndicator, Image, Platform } from "react-native";
 import title_icon from "../../../../../../../assets/title_icon.png";
+import darkBlue from "../../../../../../../assets/darkBlue.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
 import PhoneInput from "react-native-phone-number-input";
@@ -93,8 +94,8 @@ export const ExchangeLogin = (props) => {
       setIsOtpSent(false);
       setMessage("");
       navigation.navigate("exchange");
-      
-      alert("success","success");
+
+      alert("success", "success");
     } catch (err) {
       setMessage(err.message);
     } finally {
@@ -171,16 +172,24 @@ export const ExchangeLogin = (props) => {
       >
         {isOtpSent === false ? (
           <View style={styles.content}>
-            <View>
-              <Image style={styles.tinyLogo} source={title_icon} />
-            </View>
+            <View style={{ marginTop: hp(3), borderRadius: hp(2) }}>
+              <Image style={styles.tinyLogo} source={darkBlue} />
 
-            <Text style={styles.text}>Welcome Back!</Text>
-            <Text style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}>
-              Login to your account
-            </Text>
-            <View style={{ marginTop: 30 }}>
+              <Text style={styles.text}>Welcome Back!</Text>
+              <Text
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 16,
+                  textAlign: "center",
+                  marginTop: hp(1),
+                  marginBottom: hp(3),
+                }}
+              >
+                Login to your account
+              </Text>
               <PhoneInput
+                textContainerStyle={{ paddingVertical: hp(1) }}
+                textInputStyle={{ paddingVertical: hp(0.1) }}
                 ref={phoneInput}
                 defaultValue={value}
                 defaultCode="IN"
@@ -195,6 +204,38 @@ export const ExchangeLogin = (props) => {
                 withDarkTheme
                 withShadow
               />
+              <LinearGradient
+                colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.button}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setLoading(true);
+                    const checkValid = phoneInput.current?.isValidNumber(value);
+                    console.log(checkValid);
+                    if (checkValid) {
+                      try {
+                        setMessage("Your number is valid");
+                        submitPhoneNumber();
+                      } catch (e) {
+                        console.log(e);
+                        alert("error", e);
+                      }
+                    } else {
+                      setMessage("Your number is invalid");
+                      setLoading(false);
+                    }
+                    setShowMessage(true);
+                    setValid(checkValid ? checkValid : false);
+
+                    console.log(checkValid);
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Login</Text>
+                </TouchableOpacity>
+              </LinearGradient>
             </View>
             <View style={{ marginTop: 10 }}>
               {showMessage ? (
@@ -212,42 +253,6 @@ export const ExchangeLogin = (props) => {
               <Text> </Text>
             )}
 
-            <View style={styles.btn}>
-              <LinearGradient
-                colors={["#12c2e9", "#c471ed", "#f64f59"]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.button}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    setLoading(true);
-                    const checkValid = phoneInput.current?.isValidNumber(value);
-                    console.log(checkValid)
-                    if (checkValid) {
-                      try {
-                        setMessage("Your number is valid");
-                        submitPhoneNumber();
-                      } catch (e) {
-                        console.log(e);
-                        alert('error',e);
-
-                      }
-                    } else {
-                      setMessage("Your number is invalid");
-                      setLoading(false)
-
-                    }
-                    setShowMessage(true);
-                    setValid(checkValid ? checkValid : false);
-
-                    console.log(checkValid);
-                  }}
-                >
-                  <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-              </LinearGradient>
-            </View>
             <View style={styles.lowerbox}>
               <TouchableOpacity
                 onPress={() => {
@@ -345,7 +350,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     justifyContent: "space-evenly",
-    marginTop: hp("10"),
+    // marginTop: hp("10"),
     color: "white",
   },
   inp: {
@@ -371,13 +376,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#FFFFFF",
-    marginBottom: wp("5"),
-    fontSize: hp("5"),
+    fontSize: 20,
+    fontWeight: "700",
+    // paddingVertical: 10,
+    textAlign: "center",
   },
   tinyLogo: {
-    width: wp("5"),
-    height: hp("5"),
-    padding: 30,
+    width: wp("13"),
+    height: hp("13"),
+    marginTop: hp(5),
+    alignSelf: "center",
   },
   icon: {
     display: "flex",
@@ -393,9 +401,11 @@ const styles = StyleSheet.create({
     paddingLeft: wp("2"),
   },
   button: {
-    paddingVertical: hp("2"),
-    paddingHorizontal: wp("2"),
-    borderRadius: wp("10"),
+    marginTop: hp(10),
+    width: wp(80),
+    borderRadius: hp(1),
+    paddingVertical: hp(1.5),
+    alignItems: "center",
   },
   buttonText: {
     color: "#fff",
@@ -403,8 +413,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   lowerbox: {
-    marginTop: hp(20),
-    height: 100,
+    marginTop: hp(33),
+    height: 60,
     width: 400,
     backgroundColor: "#003166",
     borderTopLeftRadius: 30,
@@ -415,7 +425,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   lowerboxtext: {
-    fontSize: 20,
+    fontSize: 14,
     color: "#FFFFFF",
     textAlign: "center",
     alignSelf: "center",

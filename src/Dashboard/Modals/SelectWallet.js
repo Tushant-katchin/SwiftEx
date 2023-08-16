@@ -14,6 +14,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
+import darkBlue from "../../../assets/darkBlue.png"
 import title_icon from "../../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -118,13 +119,13 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
         {/* <ModalHeader Function={closeModal}  name={'Import'}/> */}
         <WalletHeader title="SelectWallet" />
         <TouchableOpacity
-          style={style.Box}
+          style={style.Box2}
           onPress={() => {
             setMultiCoinMoodal(true);
           }}
         >
-          <Image source={title_icon} />
-          <Text style={style.text}> Multi-Coin Wallet </Text>
+          <Image source={darkBlue} style={style.darkBlueimg}/>
+          <Text style={style.text1}> Multi-Coin Wallet </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}
@@ -256,7 +257,16 @@ const style = StyleSheet.create({
     padding: 10,
     marginTop: hp(3),
   },
-
+  Box2: {
+    alignSelf: "center",
+    width: wp(90),
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "#C1BDBD",
+    // padding: 4,
+    marginTop: hp(3),
+  },
   img: {
     height: hp(5),
     width: wp(10),
@@ -264,4 +274,11 @@ const style = StyleSheet.create({
   text: {
     marginHorizontal: wp(4),
   },
+  text1: {
+    marginHorizontal: wp(0.5),
+  },
+  darkBlueimg:{
+    height: hp(7),
+    width: wp(14),
+  }
 });
