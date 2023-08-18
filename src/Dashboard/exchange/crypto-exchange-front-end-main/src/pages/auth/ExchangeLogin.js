@@ -65,7 +65,7 @@ export const ExchangeLogin = (props) => {
         return setMessage("phone number is required to proceed");
       }
 
-      console.log(formattedValue);
+      console.log('formatted value',formattedValue);
       const { err } = await login({ phoneNumber: `${formattedValue}` });
       if (err) {
         return setMessage(err.message);
@@ -74,6 +74,7 @@ export const ExchangeLogin = (props) => {
       setMessage("OTP is sent");
       setIsOtpSent(true);
     } catch (err) {
+      console.log(err)
       setMessage(err.message);
     } finally {
       setLoading(false);
