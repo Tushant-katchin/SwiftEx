@@ -6,11 +6,11 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
+  TextInput,
   DeviceEventEmitter,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { TextInput } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -272,7 +272,7 @@ export const ExchangeLogin = (props) => {
         ) : (
           <View style={styles.content}>
             <View>
-              <Image style={styles.tinyLogo} source={title_icon} />
+              <Image style={styles.tinyLogo} source={darkBlue} />
             </View>
 
             <Text style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}>
@@ -310,12 +310,11 @@ export const ExchangeLogin = (props) => {
               <Text> </Text>
             )}
 
-            <View style={styles.btn}>
               <LinearGradient
-                colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                colors={["#12c2e9", "#c471ed"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 1 }}
-                style={styles.button}
+                style={styles.verifyBtn}
               >
                 <TouchableOpacity
                   onPress={() => {
@@ -326,7 +325,6 @@ export const ExchangeLogin = (props) => {
                   <Text style={styles.buttonText}>Verify</Text>
                 </TouchableOpacity>
               </LinearGradient>
-            </View>
           </View>
         )}
       </View>
@@ -336,15 +334,14 @@ export const ExchangeLogin = (props) => {
 
 const styles = StyleSheet.create({
   input: {
-    height: hp("5%"),
-    marginBottom: hp("2"),
+    paddingVertical:hp(1),
+    paddingLeft:wp(7),
     color: "#fff",
-    marginTop: hp("2"),
-    width: wp("70"),
-    paddingRight: wp("7"),
-    backgroundColor: "#131E3A",
-    borderRadius: wp("20"),
-    marginLeft: wp("10"),
+    width: wp("84"),
+    borderRadius:hp(1),
+    borderWidth:StyleSheet.hairlineWidth*2,
+    borderColor:"gray"
+    
   },
   content: {
     display: "flex",
@@ -354,14 +351,7 @@ const styles = StyleSheet.create({
     // marginTop: hp("10"),
     color: "white",
   },
-  inp: {
-    borderWidth: 2,
-    marginTop: hp("5"),
-    color: "#FFF",
-    borderRadius: 20,
-    borderColor: "#808080",
-    width: wp("90"),
-  },
+ 
   btn: {
     marginTop: hp("10"),
     width: wp("80"),
@@ -411,7 +401,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 18,
   },
   lowerbox: {
     marginTop: hp(33),
@@ -449,4 +439,11 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 1,
   },
+  verifyBtn:{
+    backgroundColor:"red",
+    width:wp(85),
+    paddingVertical:hp(1),
+    borderRadius:hp(1),
+    marginTop:hp(10)
+  }
 });
