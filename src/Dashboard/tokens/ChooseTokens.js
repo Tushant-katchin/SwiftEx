@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  Pressable,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -33,12 +34,15 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import TokenHeader from "./TokenHeader";
 import { alert } from "../reusables/Toasts";
+import Icon from "../../icon";
 
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const ChooseTokens = ({ setModalVisible }) => {
+  
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [walletType, setWalletType] = useState(false);
+  const [ visible , setVisible] = useState(false)
 
   const navigation = useNavigation();
 
@@ -100,8 +104,11 @@ const ChooseTokens = ({ setModalVisible }) => {
       style={{ opacity: fadeAnim ,  
     }}
     >
+   
+
+      <Icon type={'entypo'}  name='cross' color={"white"} size={24} style={style.crossIcon}  onPress={()=>{setModalVisible(false)}}/>
       {/* <TokenHeader setVisible={setModalVisible} name={'Choose Wallet'}/> */}
-      <Text style={{marginTop:hp(4),fontSize:16,color:"#4CA6EA",textAlign:"center"}}>Choose Wallet</Text>
+      <Text style={{fontSize:16,color:"#4CA6EA",textAlign:"center"}}>Choose Wallet</Text>
 
       <ScrollView>
         <View style={style.Body}>
@@ -237,7 +244,6 @@ const style = StyleSheet.create({
     bottom: 0,
     height: hp(50),
     alignSelf:"center",
-
     width: wp(100),
     alignItems: "center",
     textAlign: "center",
@@ -321,4 +327,8 @@ const style = StyleSheet.create({
     paddingVertical: hp(1.5),
     marginTop: hp(2),
   },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.5)
+  }
 });

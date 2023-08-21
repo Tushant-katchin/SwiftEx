@@ -55,7 +55,7 @@ const MyWallet = (props) => {
   const [ethBalance, setEthBalance] = useState(0);
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   let LeftContent = (props) => (
     <Avatar.Image
       {...props}
@@ -139,10 +139,10 @@ const MyWallet = (props) => {
       setBnbPrice(response.USD);
     });
   };
-  useEffect(async ()=>{
-    const user = await state.wallet.name
+  useEffect(async () => {
+    const user = await state.wallet.name;
     setUser(user);
-  },[])
+  }, []);
 
   /*useEffect(() => {
     setLoading(true);
@@ -157,17 +157,20 @@ const MyWallet = (props) => {
     <View style={styles.mainView}>
       <View style={styles.labelInputContainer}>
         <Text style={styles.label}>Name</Text>
-        <TextInput style={{ width: wp("78%") }} placeholder={user?user:"Main Wallet 1"} placeholderTextColor={'black'}/>
+        <TextInput
+          style={{ width: wp("78%") }}
+          placeholder={user ? user : "Main Wallet 1"}
+          placeholderTextColor={"black"}
+        />
       </View>
 
       <View>
-        <View
-          style={styles.mainContainer}
-        >
-          <TouchableOpacity style={styles.iconContainer}
-          onPress={()=>{
-            setVisible(true)
-          }}
+        <View style={styles.mainContainer}>
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => {
+              setVisible(!visible);
+            }}
           >
             <Icon name="document-text-sharp" type={"ionicon"} size={20} />
             <Text style={styles.secretText}>Show Secret Phrase</Text>
@@ -177,10 +180,17 @@ const MyWallet = (props) => {
           </View>
         </View>
       </View>
-        <Text style={styles.text}>
-        If you lose access to this device,your funds will be lost,unless you back up!
-        </Text>
-        <GetPrivateKeyModal visible={visible} setVisible={setVisible}/>
+      <Text style={styles.text}>
+        If you lose access to this device,your funds will be lost,unless you
+        back up!
+      </Text>
+      <GetPrivateKeyModal
+        visible={visible}
+        setVisible={setVisible}
+        onCrossPress={() => {
+          setVisible(false);
+        }}
+      />
     </View>
     // <View style={styles.container}>
     //   <View style={styles.content}>
@@ -518,20 +528,24 @@ const styles = StyleSheet.create({
     color: "#4CA6EA",
     top: -12,
   },
-  mainContainer:{
+  mainContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(100),
-    alignSelf:"center",
-    marginTop:hp(4),
-    alignItems:"center",
-    borderWidth:1,
-    borderColor:"#DADADA",
-    paddingVertical:hp(1.7),
+    alignSelf: "center",
+    marginTop: hp(4),
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#DADADA",
+    paddingVertical: hp(1.7),
   },
-  mainView:{ backgroundColor: "white", height: hp(100) },
-  iconContainer:{flexDirection:"row",alignItems:"center",marginLeft:wp(4)},
-  text:{color:"gray",marginHorizontal:wp(4),marginTop:hp(3)},
-  rightIcon:{marginRight:wp(3)},
-  secretText:{marginHorizontal:wp(3)}
+  mainView: { backgroundColor: "white", height: hp(100) },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: wp(4),
+  },
+  text: { color: "gray", marginHorizontal: wp(4), marginTop: hp(3) },
+  rightIcon: { marginRight: wp(3) },
+  secretText: { marginHorizontal: wp(3) },
 });

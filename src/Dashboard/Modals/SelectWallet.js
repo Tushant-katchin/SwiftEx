@@ -167,11 +167,13 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
       <View>
         <ImportBinanceWallet
           Visible={BscWallet}
+          onCrossPress={()=>{setBscWalletVisible(false)}}
           setWalletVisible={setBscWalletVisible}
           setModalVisible={setVisible}
           setVisible={setVisible}
         />
         <ImportEthereumModal
+        onCrossPress={()=>{setEthereumWallet(false)}}
           Visible={EthereumWallet}
           setWalletVisible={setEthereumWallet}
           setModalVisible={setVisible}
@@ -179,18 +181,21 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
         />
         <ImportMultiCoinWalletModal
           Visible={MultiCoinModal}
+          onCrossPress={()=>{setMultiCoinMoodal(false)}}
           setWalletVisible={setMultiCoinMoodal}
           setModalVisible={setVisible}
           setVisible={setVisible}
         />
         <ImportPolygonWalletModal
           Visible={PolygonWallet}
+          onCrossPress={()=>{setPolygonwallet(false)}}
           setWalletVisible={setPolygonwallet}
           setModalVisible={setVisible}
           setVisible={setVisible}
         />
         <ImportXrpWalletModal
           Visible={XrpWallet}
+          onCrossPress={()=>{setXrpWallet(false)}}
           setWalletVisible={setXrpWallet}
           setModalVisible={setVisible}
           setVisible={setVisible}

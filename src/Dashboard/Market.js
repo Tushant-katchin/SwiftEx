@@ -295,7 +295,7 @@ const Market = (props) => {
  
 
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View style={{backgroundColor:"white"}}>
       <View style={{ height: hp(100) }}>
         <View style={Styles.searchContainer}>
           <Icon name="search1" type="antDesign" size={hp(2.4)} />
@@ -323,16 +323,16 @@ const Market = (props) => {
 
         <View style={Styles.iconwithTextContainer1}>
           <Text style={{ color: "gray" }}>New DApps</Text>
-          <Icon
+          {/* <Icon
             name={"arrowright"}
             type={"antDesign"}
             size={hp(3)}
             color={"gray"}
-          />
+          /> */}
         </View>
         <ScrollView
           alwaysBounceVertical={true}
-          style={{ marginBottom: hp(2) }}
+        contentContainerStyle={{ marginBottom: hp(2) }}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -394,6 +394,7 @@ const Styles = StyleSheet.create({
     marginTop: hp(3),
     alignItems: "center",
     flexDirection: "row",
+    
   },
   flatContainerText: {
     marginHorizontal: wp(4),

@@ -52,7 +52,7 @@ const GenerateWallet = (props) => {
       style={{ opacity: fadeAnim }}
     >
       <View style={style.Body}>
-        <Text style={style.headingText}> Back up your wallet now!</Text>
+        <Text style={style.headingText}> Back up your walletkk now!</Text>
 
         <Text style={style.nextText}>
           In the next step you will see Secret Phrase that allows you to recover

@@ -35,6 +35,7 @@ import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
 import { Paste } from "../../utilities/utilities";
 import * as Clipboard from "expo-clipboard";
+import Icon from "../../icon";
 
 const ImportEthereumModal = ({
   props,
@@ -138,7 +139,7 @@ const ImportEthereumModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={"Ethereum"} /> */}
-
+<Icon type={'entypo'} name='cross' color={'gray'} size={24}  style={style.crossIcon}/>
           <Text style={style.text}>Ethereum</Text>
 
           <View style={style.Button}>
@@ -615,8 +616,8 @@ export default ImportEthereumModal;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
-    height: hp(80),
-    width: wp(100),
+    height: hp(75),
+    width: wp(97),
     borderRadius:hp(1),
     textAlign: "center",
     alignSelf: "center",
@@ -757,8 +758,12 @@ const style = StyleSheet.create({
   },
   text:{
     textAlign:"center",
-    marginTop:hp(3),
+    marginTop:hp(1),
     fontSize:15,
     fontWeight:"700"
+  },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1)
   }
 });

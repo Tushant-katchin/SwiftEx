@@ -24,8 +24,9 @@ import { alert } from "../reusables/Toasts";
 import { LinearGradient } from "expo-linear-gradient";
 import darkBlue from "../../../assets/darkBlue.png";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "../../icon";
 
-export const GetPrivateKeyModal = ({  visible, setVisible }) => {
+export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -66,6 +67,7 @@ export const GetPrivateKeyModal = ({  visible, setVisible }) => {
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={visible}
+        
         statusBarTranslucent={true}
         useNativeDriver={true}
         useNativeDriverForBackdrop={true}
@@ -77,12 +79,13 @@ export const GetPrivateKeyModal = ({  visible, setVisible }) => {
         }}
       >
         <View style={style.Body}>
+          <Icon type={'entypo'} name='cross' color={'gray'} size={24} onPress={onCrossPress} style={style.crossIcon}/>
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
           <Animated.Image
             style={{
               width: wp("12"),
               height: hp("12"),
-              padding: 30,
+              // padding: 30,
             }}
             source={darkBlue}
           />
@@ -163,7 +166,9 @@ export default GetPrivateKeyModal;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "#131E3A",
-    height: hp(68),
+    paddingTop:hp(1),
+    paddingBottom:hp(4),
+    // height: hp(68),
     justifyContent: "center",
     borderRadius: hp(2),
     width: wp(90),
@@ -212,7 +217,12 @@ const style = StyleSheet.create({
     alignSelf: "center",
     paddingHorizontal: wp(3),
     borderRadius: hp(0.8),
+    marginTop:hp(2),
     marginBottom: hp(2),
     alignItems: "center",
   },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1)
+  }
 });

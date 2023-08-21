@@ -226,6 +226,7 @@ export const OfferListViewHome = ({
                           </ScrollView>
                           <View style={styles.seeBidStyle}>
                             <OfferBidsView
+                            onCrossPress={()=>{setChange(false)}}
                               offer={offer}
                               self={self}
                               setChange={setChange}

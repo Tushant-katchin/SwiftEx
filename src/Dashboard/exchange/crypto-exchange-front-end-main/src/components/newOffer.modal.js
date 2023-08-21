@@ -728,11 +728,12 @@ import { DAI, USDT, WBTC } from "../utils/assetAddress";
 import { useToast } from "native-base";
 import { alert, ShowToast } from "../../../../reusables/Toasts";
 import { LinearGradient } from "expo-linear-gradient";
+import Icon from "../../../../../icon";
 
 const _getAssetsOptions = (assetsList) =>
   assetsList.map(({ name }) => ({ label: name, value: name }));
 
-export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
+export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress }) => {
   const state = useSelector((state) => state);
   const navigation = useNavigation();
   const [modalMessage, setModalMessage] = useState("hhhhhhhhhhhhhhhhhhh");
@@ -968,7 +969,6 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
       );
     }
   };
-
   const SeeTransactions = () => {
     return (
       <View>
@@ -1210,6 +1210,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData }) => {
           // alignItems: "center",
         }}
       >
+        <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={styles.crossIcon} onPress={onCrossPress}/>
         <View
           style={{
             display: "flex",
@@ -1513,4 +1514,8 @@ const styles = StyleSheet.create({
     color: "#fff",
     // marginHorizontal:wp(10)
   },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1)
+  }
 });

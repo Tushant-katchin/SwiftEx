@@ -375,7 +375,8 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
         <View
           style={{
             backgroundColor: "#131E3A",
-            height: hp(70),
+            paddingTop:hp(1),
+            paddingBottom:hp(12),
             marginTop: hp(20),
             width: wp(95),
             borderRadius: hp(2),

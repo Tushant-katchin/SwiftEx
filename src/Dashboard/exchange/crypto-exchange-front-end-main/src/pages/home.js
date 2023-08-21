@@ -259,6 +259,7 @@ export const HomeView = ({ setPressed }) => {
                   <NewOfferModal
                     user={profile}
                     open={open}
+                    onCrossPress={()=>{setOpen(false)}}
                     setOpen={setOpen}
                     getOffersData={getOffersData}
                   />

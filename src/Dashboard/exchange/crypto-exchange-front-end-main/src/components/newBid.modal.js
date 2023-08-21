@@ -33,8 +33,9 @@ import { useSelector } from "react-redux";
 import { useToast } from "native-base";
 import { ShowToast } from "../../../../reusables/Toasts";
 import { LinearGradient } from "expo-linear-gradient";
+import Icon from "../../../../../icon";
 
-export const NewBidModal = ({ offer }) => {
+export const NewBidModal = ({ offer, onCrossPress }) => {
   const state = useSelector((state) => state);
   const [modalMessage, setModalMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -419,7 +420,8 @@ export const NewBidModal = ({ offer }) => {
             <View
               style={{
                 // alignItems: "center",
-                height: hp(80),
+                // height: hp(80),
+                paddingBottom: hp(5),
                 width: wp(95),
                 justifyContent: "center",
                 alignSelf: "center",
@@ -427,7 +429,23 @@ export const NewBidModal = ({ offer }) => {
                 backgroundColor: "#131E3A",
               }}
             >
-              <Text style={{ color: "red", textAlign: "center" }}>
+              <Icon
+                type={"entypo"}
+                name="cross"
+                color={"white"}
+                size={24}
+                style={style.crossIcon}
+                onPress={() => {
+                  setOpen(false);
+                }}
+              />
+              <Text
+                style={{
+                  color: "red",
+                  textAlign: "center",
+                  paddingVertical: hp(1),
+                }}
+              >
                 {modalMessage}
               </Text>
               <View
@@ -457,24 +475,27 @@ export const NewBidModal = ({ offer }) => {
                 style={{
                   marginTop: hp(3),
                   color: "white",
-                  marginHorizontal: wp(8),
+                  marginHorizontal: wp(12),
                 }}
               >
                 Bid on {offer.amount} {offer.assetName} for {offer.pricePerUnit}{" "}
                 {offer.currencyName} unit price{" "}
               </Text>
 
-              <View style={{ marginHorizontal: wp(12), marginTop: hp(2) }}>
-                <TextInput
-                  placeholderTextColor={"white"}
-                  placeholder="Unit Price"
-                  keyboardType="numeric"
-                  value={newBid.pricePerUnit}
-                  onChangeText={(e) => handleChange(e)}
-                  style={{ width: wp(70),color:'white' }}
-                  // onChange={handleChange}
-                />
-              </View>
+              <TextInput
+                placeholderTextColor={"white"}
+                placeholder="Unit Price"
+                keyboardType="numeric"
+                value={newBid.pricePerUnit}
+                onChangeText={(e) => handleChange(e)}
+                style={{
+                  width: wp(20),
+                  color: "white",
+                  marginHorizontal: wp(12),
+                  marginTop: hp(1),
+                }}
+                // onChange={handleChange}
+              />
 
               <View style={style.textView}>
                 <Text style={style.textColor}>Balance: </Text>
@@ -486,16 +507,24 @@ export const NewBidModal = ({ offer }) => {
                   display: "flex",
                   alignContent: "center",
                   alignItems: "center",
+                  flexDirection: "row",
+                  width: wp(70),
                   alignSelf: "center",
+                  justifyContent: "space-between",
+                  paddingTop: hp(1.5),
                 }}
               >
                 {breakDowns.convertedUnitPrice !== 0 &&
                   breakDowns.convertedUnitPrice && (
                     <>
-                      <Text>Converted Unit dddPrice:</Text>
-                      <Text>
+                      <Text style={{ color: "white" }}>
+                        Converted Unit dddPrice:
+                      </Text>
+                      <Text style={{ color: "white" }}>
                         {breakDowns.convertedUnitPrice}{" "}
-                        <Text>{offer.currencyName}</Text>
+                        <Text style={{ color: "white" }}>
+                          {offer.currencyName}
+                        </Text>
                       </Text>
                     </>
                   )}
@@ -610,7 +639,7 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
     width: wp(70),
     alignSelf: "center",
-    marginTop: hp(3.5),
+    marginTop: hp(3),
   },
   textColor: {
     color: "white",
@@ -639,5 +668,9 @@ const style = StyleSheet.create({
     alignSelf: "center",
     height: hp(5),
     // marginRight: wp(4),
+  },
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1.4),
   },
 });

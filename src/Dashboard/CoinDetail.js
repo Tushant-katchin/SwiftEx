@@ -12,6 +12,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import * as shape from "d3-shape";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -30,9 +31,11 @@ import MarketChart from "./MarketChart";
 import { urls } from "./constants";
 import IconWithCircle from "../Screens/iconwithCircle";
 import Icon from "../icon";
-import { LineChart, XAxis } from "react-native-svg-charts";
+import { AreaChart, Grid, LineChart, XAxis } from "react-native-svg-charts";
 
 export const CoinDetails = (props) => {
+ 
+
   const [trades, setTrades] = useState();
   const [percent, setPercent] = useState(1);
   console.log(props?.route?.params?.data);
@@ -195,6 +198,9 @@ export const CoinDetails = (props) => {
     }
   }
 
+
+
+
   const data = [
     150, 130, 140, 135, 149, 158, 125, 105, 155, 153, 153, 144, 150, 160, 80,
   ];
@@ -228,7 +234,7 @@ export const CoinDetails = (props) => {
   }
 
   useEffect(() => {
-    getchart(props?.route?.params?.data?.symbol,timeFrame);
+    getchart(props?.route?.params?.data?.symbol, timeFrame);
   }, []);
 
   let LeftContent = (props) => {
@@ -245,6 +251,70 @@ export const CoinDetails = (props) => {
   <Avatar.Image {...props} source={{ uri: image }} />
   <Text style={{marginHorizontal:wp(3)}}>wallet:{props?.route?.params?.data?.name}</Text>
 </View> */}
+
+      <View style={styles.btnView}>
+        <TouchableOpacity
+          style={
+            pressed == "1"
+              ? {
+                  ...styles.tabBtns,
+                  borderColor: "#4CA6EA",
+                  backgroundColor: "#4CA6EA",
+                }
+              : styles.tabBtns
+          }
+          // title="1h" color={pressed==='1'?'green':'grey'}
+          onPress={() => {
+            setPressed("1");
+            setTimeData(["10m", "20m", "30m", "40m", "50m", "60m"]);
+            setTimeFrame("1h");
+          }}
+        >
+          <Text style={{ color: pressed == "1" ? "#fff" : "grey" }}>1h</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={
+            pressed == "2"
+              ? {
+                  ...styles.tabBtns,
+                  borderColor: "#4CA6EA",
+                  backgroundColor: "#4CA6EA",
+                }
+              : styles.tabBtns
+          }
+          // title="12h"
+          // color={pressed === "2" ? "green" : "grey"}
+          onPress={() => {
+            setPressed("2");
+            setTimeData(["2h", "4h", "6h", "8h", "10h", "12h"]);
+            setTimeFrame("12h");
+          }}
+        >
+          <Text style={{ color: pressed == "2" ? "#fff" : "grey" }}>12h</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={
+            pressed == "3"
+              ? {
+                  ...styles.tabBtns,
+                  borderColor: "#4CA6EA",
+                  backgroundColor: "#4CA6EA",
+                }
+              : styles.tabBtns
+          }
+          // title="1d"
+          // color={pressed === "3" ? "green" : "grey"}
+          onPress={() => {
+            setPressed("3");
+            setTimeData(["2h", "4h", "8h", "12h", "18h", "24h"]);
+            setTimeFrame("1d");
+          }}
+        >
+          <Text style={{ color: pressed == "3" ? "#fff" : "grey" }}>3d</Text>
+        </TouchableOpacity>
+      </View>
 
       <XAxis
         style={styles.xAxis}
@@ -266,126 +336,66 @@ export const CoinDetails = (props) => {
         contentInset={{ top: 10, bottom: 10 }}
       />
 
-      <View style={styles.btnView}>
-        <TouchableOpacity
-          style={
-            pressed == "1"
-              ? { ...styles.tabBtns, borderColor: "#4CA6EA" }
-              : styles.tabBtns
-          }
-          // title="1h" color={pressed==='1'?'green':'grey'}
-          onPress={() => {
-            setPressed("1");
-            setTimeData(["10m", "20m", "30m", "40m", "50m", "60m"]);
-            setTimeFrame("1h");
-          }}
-        >
-          <Text style={{ color: pressed == "1" ? "#4CA6EA" : "grey" }}>1h</Text>
-        </TouchableOpacity>
+      {/* <AreaChart
+        style={{
+          height: hp(30),
+          width: wp(90),
+          alignSelf: "center",
+          marginTop: hp(6),
+        }}
+        // data={NewData}
+        data={Data ? Data : data}
+        contentInset={{ top: 30, bottom: 30 }}
+        curve={shape.curveNatural}
+        svg={{ fill: "rgba(134, 65, 244, 0.8)" }}
+      >
+        <Grid />
+      </AreaChart> */}
 
-        <TouchableOpacity
-          style={
-            pressed == "2"
-              ? { ...styles.tabBtns, borderColor: "#4CA6EA" }
-              : styles.tabBtns
-          }
-          // title="12h"
-          // color={pressed === "2" ? "green" : "grey"}
-          onPress={() => {
-            setPressed("2");
-            setTimeData(["2h", "4h", "6h", "8h", "10h", "12h"]);
-            setTimeFrame("12h");
-          }}
-        >
-          <Text style={{ color: pressed == "2" ? "#4CA6EA" : "grey" }}>
-            12h
-          </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={
-            pressed == "3"
-              ? { ...styles.tabBtns, borderColor: "#4CA6EA" }
-              : styles.tabBtns
-          }
-          // title="1d"
-          // color={pressed === "3" ? "green" : "grey"}
-          onPress={() => {
-            setPressed("3");
-            setTimeData(["2h", "4h", "8h", "12h", "18h", "24h"]);
-            setTimeFrame("1d");
-          }}
-        >
-          <Text style={{ color: pressed == "3" ? "#4CA6EA" : "grey" }}>3d</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* <View style={styles.buttons}>
-        <IconWithCircle name={"arrowup"} type={"antDesign"} title={"Send"} />
-        <IconWithCircle
-          name={"arrowdown"}
-          type={"antDesign"}
-          title={"Receive"}
-        />
-        <IconWithCircle
-          name={"credit-card-outline"}
-          type={"materialCommunity"}
-          title={"Buy"}
-        />
-        <IconWithCircle
-          name={"more-vertical"}
-          type={"feather"}
-          title={"More"}
-          onPress={() => {}}
-        />
-      </View> */}
-      <Text style={styles.bitcoin} numberOfLines={3}>
-        Bitcoin is a cryptocurrency and worldwide payment system. It is the
-        first decentralized digital currency. as the system works without a It
-        is the first decentralized digital currency. as the system works without
-        a
-      </Text>
-
-      <View style={styles.iconText}>
-        <Text> Last 24h:</Text>
-        <View style={styles.arrowText}>
-          <Text>
-            {props?.route?.params?.data?.price_change_percentage_24h}%
-          </Text>
-          <Icon name="arrow-up-right" type={"feather"} size={20} />
+      <View style={{ marginTop: hp(9) }}>
+        <View style={styles.iconText}>
+          <Text> Last 24h:</Text>
+          <View style={styles.arrowText}>
+            <Text>
+              {props?.route?.params?.data?.price_change_percentage_24h}%
+            </Text>
+            <Icon name="arrow-up-right" type={"feather"} size={20} />
+          </View>
         </View>
-      </View>
-      <View style={styles.iconText}>
-        <Text>Price</Text>
-        <View style={styles.arrowText}>
-          <Text>$ {props?.route?.params?.data?.current_price}</Text>
-          <Icon name="arrow-up-right" type={"feather"} size={20} />
+        <View style={styles.iconText}>
+          <Text>USD</Text>
+          <View style={styles.arrowText}>
+            <Text>$ {props?.route?.params?.data?.current_price}</Text>
+            <Icon name="arrow-up-right" type={"feather"} size={20} />
+          </View>
         </View>
-      </View>
 
-      <View style={styles.iconText}>
-        <Text>Market Cap : </Text>
-        <Text> ${props?.route?.params?.data?.market_cap}</Text>
-      </View>
+        <View style={styles.iconText}>
+          <Text>Market Cap : </Text>
+          <Text> ${props?.route?.params?.data?.market_cap}</Text>
+        </View>
 
-      <View style={styles.iconText}>
-        <Text>Total Supply :</Text>
-        <Text>${props?.route?.params?.data?.total_supply}</Text>
-      </View>
+        <View style={styles.iconText}>
+          <Text>Total Supply :</Text>
+          <Text>${props?.route?.params?.data?.total_supply}</Text>
+        </View>
 
-      <View style={styles.iconText}>
-        <Text> 24H high :</Text>
-        <Text>${props?.route?.params?.data?.high_24h} </Text>
-      </View>
+        <View style={styles.iconText}>
+          <Text> 24H high :</Text>
+          <Text>${props?.route?.params?.data?.high_24h} </Text>
+        </View>
 
-      <View style={styles.iconText}>
-        <Text>24H low :</Text>
-        <Text>${props?.route?.params?.data?.low_24h}</Text>
-      </View>
+        <View style={styles.iconText}>
+          <Text> 24H low :</Text>
+          <Text>${props?.route?.params?.data?.low_24h}</Text>
+        </View>
 
-      <View style={styles.iconText}>
-        <Text> All Time High :</Text>
-        <Text>${props?.route?.params?.data?.ath}</Text>
+        <View style={styles.iconText}>
+          <Text> All Time High :</Text>
+          <Text>${props?.route?.params?.data?.ath}</Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -420,10 +430,12 @@ const styles = StyleSheet.create({
     width: wp(90),
   },
   tabBtns: {
-    borderBottomWidth: 1,
-    width: "23%",
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "gray",
+    width: wp(20),
     alignItems: "center",
-    padding: 3,
+    padding: 5,
+    borderRadius: hp(1.5),
   },
   btnView: {
     display: "flex",
@@ -431,7 +443,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    width: wp(55),
+    width: wp(80),
     marginTop: hp(2),
     justifyContent: "space-between",
   },

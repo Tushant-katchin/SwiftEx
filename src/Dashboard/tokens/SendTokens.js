@@ -197,11 +197,11 @@ const SendTokens = (props) => {
       duration: 1000,
     }).start();
     try {
-      console.log(props.route.params.token);
+      console.log(props?.route?.params?.token);
       const Type = await AsyncStorageLib.getItem("walletType");
       setWallettype(JSON.parse(Type));
 
-      await Balance(props.route.params.token).catch((e) => {
+      await Balance(props?.route?.params?.token).catch((e) => {
         console.log(e);
       });
     } catch (e) {
@@ -214,8 +214,8 @@ const SendTokens = (props) => {
     let inputValidation1;
     let valid
     let xrpInvalid
-    console.log(props.route.params.token)
-    if(props.route.params.token==='Multi-coin-Xrp' || walletType==='Xrp')
+    console.log(props?.route?.params?.token)
+    if(props?.route?.params?.token==='Multi-coin-Xrp' || walletType==='Xrp')
     {
       if(balance<11)
       {
@@ -275,7 +275,7 @@ const SendTokens = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-      <WalletHeader title={props.route.params.token}/>
+      {/* <WalletHeader title={props.route.params.token}/> */}
       <View style={{ backgroundColor: "white", height: hp(100) }}>
         <View style={style.inputView}>
           <TextInput
@@ -346,72 +346,72 @@ const SendTokens = (props) => {
             disabled={disable}
             color="blue"
             title="Send"
-            onPress={async () => {
-              console.log(walletType);
-              let privateKey;
-              const myAddress = await state.wallet.address;
-              const token = props.route.params.token;
-              const wallet = await AsyncStorageLib.getItem("Wallet");
-              console.log(wallet);
-              if(token==='Multi-coin-Xrp')
-              {
-                const xrpAddress = await state.wallet.xrp.address
-                if(address==xrpAddress)
-                {
-                  return alert('error','address cannot be same as your address')
+  //           onPress={async () => {
+  //             console.log(walletType);
+  //             let privateKey;
+  //             const myAddress = await state.wallet.address;
+  //             const token = props.route.params.token;
+  //             const wallet = await AsyncStorageLib.getItem("Wallet");
+  //             console.log(wallet);
+  //             if(token==='Multi-coin-Xrp')
+  //             {
+  //               const xrpAddress = await state.wallet.xrp.address
+  //               if(address==xrpAddress)
+  //               {
+  //                 return alert('error','address cannot be same as your address')
 
-                }
-              }
-              if(address== myAddress)
-              {
-                return alert('error','address cannot be same as your address')
-              }
-              if (amount && balance && Number(amount) > Number(balance)) {
-                setLoading(false);
-                console.log(amount, balance);
-                return alert(
-                  "error",
-                  "You don't have enough balance to do this transaction "
-                );
-              }
+  //               }
+  //             }
+  //             if(address== myAddress)
+  //             {
+  //               return alert('error','address cannot be same as your address')
+  //             }
+  //             if (amount && balance && Number(amount) > Number(balance)) {
+  //               setLoading(false);
+  //               console.log(amount, balance);
+  //               return alert(
+  //                 "error",
+  //                 "You don't have enough balance to do this transaction "
+  //               );
+  //             }
 
-              if (token === "Multi-coin-Xrp") {
-                privateKey = (await state.wallet.xrp.privateKey)
-                  ? await state.wallet.xrp.privateKey
-                  : JSON.parse(wallet).xrp.privateKey;
-              } else {
-                privateKey = (await state.wallet.privateKey)
-                  ? await state.wallet.privateKey
-                  : JSON.parse(wallet).privateKey;
-              }
-              console.log(privateKey);
-              /* if(balance<amount){
-    console.log(balance,amount)
-    return alert('You dont have enough balance to do this transaction')
-  }*/
+  //             if (token === "Multi-coin-Xrp") {
+  //               privateKey = (await state.wallet.xrp.privateKey)
+  //                 ? await state.wallet.xrp.privateKey
+  //                 : JSON.parse(wallet).xrp.privateKey;
+  //             } else {
+  //               privateKey = (await state.wallet.privateKey)
+  //                 ? await state.wallet.privateKey
+  //                 : JSON.parse(wallet).privateKey;
+  //             }
+  //             console.log(privateKey);
+  //             /* if(balance<amount){
+  //   console.log(balance,amount)
+  //   return alert('You dont have enough balance to do this transaction')
+  // }*/
 
-              if (
-                walletType &&
-                token &&
-                myAddress &&
-                privateKey &&
-                amount &&
-                address
-              ) {
-                await SendCrypto(
-                  address,
-                  amount,
-                  privateKey,
-                  balance,
-                  setLoading,
-                  walletType,
-                  setDisable,
-                  myAddress,
-                  token,
-                  navigation
-                );
-              }
-            }}
+  //             if (
+  //               walletType &&
+  //               token &&
+  //               myAddress &&
+  //               privateKey &&
+  //               amount &&
+  //               address
+  //             ) {
+  //               await SendCrypto(
+  //                 address,
+  //                 amount,
+  //                 privateKey,
+  //                 balance,
+  //                 setLoading,
+  //                 walletType,
+  //                 setDisable,
+  //                 myAddress,
+  //                 token,
+  //                 navigation
+  //               );
+  //             }
+  //           }}
           ></Button>
         </View>
       </View>

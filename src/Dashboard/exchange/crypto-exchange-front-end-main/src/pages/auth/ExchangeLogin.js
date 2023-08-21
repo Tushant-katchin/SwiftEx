@@ -10,6 +10,7 @@ import {
   DeviceEventEmitter,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -90,12 +91,15 @@ export const ExchangeLogin = (props) => {
         phoneNumber: `${formattedValue}`,
         otp: otp,
       });
-      if (err) return setMessage(err.message);
-      setIsOtpSent(false);
-      setMessage("");
-      navigation.navigate("exchange");
-
-      alert("success", "success");
+      if (err) {
+        setMessage(err.message);
+        setOtp(null);
+      } else {
+        setIsOtpSent(false);
+        setMessage("");
+        navigation.navigate("exchange");
+        alert("success", "success");
+      }
     } catch (err) {
       setMessage(err.message);
     } finally {
@@ -165,9 +169,9 @@ export const ExchangeLogin = (props) => {
   }, [isOtpSent]);
 
   return (
-    <>
+    <ScrollView style={styles.container}>
       <View
-        style={styles.container}
+        // style={styles.container}
         onStartShouldSetResponder={() => Keyboard.dismiss()}
       >
         {isOtpSent === false ? (
@@ -236,10 +240,16 @@ export const ExchangeLogin = (props) => {
                   <Text style={{ color: "white" }}>Login</Text>
                 </TouchableOpacity>
               </LinearGradient>
-            </View>
-            <View style={{ marginTop: 10 }}>
               {showMessage ? (
-                <Text style={{ color: "white" }}>{Message}</Text>
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    marginTop: hp(2),
+                  }}
+                >
+                  {Message}
+                </Text>
               ) : (
                 <Text></Text>
               )}
@@ -309,38 +319,37 @@ export const ExchangeLogin = (props) => {
               <Text> </Text>
             )}
 
-              <LinearGradient
-                colors={["#12c2e9", "#c471ed"]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.verifyBtn}
+            <LinearGradient
+              colors={["#12c2e9", "#c471ed"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.verifyBtn}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setLoading("true");
+                  submitOtp();
+                }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    setLoading("true");
-                    submitOtp();
-                  }}
-                >
-                  <Text style={styles.buttonText}>Verify</Text>
-                </TouchableOpacity>
-              </LinearGradient>
+                <Text style={styles.buttonText}>Verify</Text>
+              </TouchableOpacity>
+            </LinearGradient>
           </View>
         )}
       </View>
-    </>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    paddingVertical:hp(1),
-    paddingLeft:wp(7),
+    paddingVertical: hp(1),
+    paddingLeft: wp(7),
     color: "#fff",
     width: wp("84"),
-    borderRadius:hp(1),
-    borderWidth:StyleSheet.hairlineWidth*2,
-    borderColor:"gray"
-    
+    borderRadius: hp(1),
+    borderWidth: StyleSheet.hairlineWidth * 2,
+    borderColor: "gray",
   },
   content: {
     display: "flex",
@@ -350,7 +359,7 @@ const styles = StyleSheet.create({
     // marginTop: hp("10"),
     color: "white",
   },
- 
+
   btn: {
     marginTop: hp("10"),
     width: wp("80"),
@@ -404,7 +413,7 @@ const styles = StyleSheet.create({
   },
   lowerbox: {
     marginTop: hp(33),
-    height: 60,
+    height: hp(6),
     width: 400,
     backgroundColor: "#003166",
     borderTopLeftRadius: 30,
@@ -415,7 +424,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   lowerboxtext: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#FFFFFF",
     textAlign: "center",
     alignSelf: "center",
@@ -438,11 +447,11 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 1,
   },
-  verifyBtn:{
-    backgroundColor:"red",
-    width:wp(85),
-    paddingVertical:hp(1),
-    borderRadius:hp(1),
-    marginTop:hp(10)
-  }
+  verifyBtn: {
+    backgroundColor: "red",
+    width: wp(85),
+    paddingVertical: hp(1),
+    borderRadius: hp(1),
+    marginTop: hp(10),
+  },
 });

@@ -25,6 +25,7 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
+import Icon from "../../icon";
 const CheckNewWalletMnemonic = ({
   Wallet,
   Visible,
@@ -32,6 +33,7 @@ const CheckNewWalletMnemonic = ({
   setModalVisible,
   SetPrivateKeyVisible,
   setNewWalletVisible,
+  onCrossPress
 }) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -157,6 +159,7 @@ const CheckNewWalletMnemonic = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Check Mnemonic'}/> */}
+          <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} onPress={onCrossPress}/>
           <Text style={style.verifyText}>Verify Secret Phrase</Text>
           <Text style={style.wordText}>
             Tap the words to put them next to each other in the correct order.
@@ -173,13 +176,13 @@ const CheckNewWalletMnemonic = ({
               }}
             />
           </View>
-          <View style={{display:'flex',flexDirection:'row',alignContent:'center',alignItems:'center',justifyContent:'center'}}>
+          <View style={{display:'flex',flexDirection:'row',flexWrap:"wrap",alignItems:"center",marginTop:hp(2)}}>
             {Mnemonic.length>0?Mnemonic.map((item)=>{
               console.log("mnemonic words",item)
             return(
-              <Text style={{color:'black',textAlign:'center',fontStyle:'italic'}} >{item}</Text>
+              <Text style={{color:'black',textAlign:'center',fontStyle:'italic',marginTop:hp(1),margin:10,}} >{item}</Text>
             )
-           }):<Text style={{color:'black'}} >nothing added yet</Text>}
+           }):<Text style={{color:'black',marginTop:hp(4),marginHorizontal:wp(6)}} >nothing added yet</Text>}
           </View>
 
           {/* <TextInput
@@ -399,7 +402,7 @@ const style = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
-    marginTop: hp(4),
+    marginTop: hp(1),
   },
   wordText: {
     color: "black",
@@ -420,6 +423,10 @@ const style = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
-    marginTop: hp(10),
+    marginTop: hp(6),
   },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.5)
+  }
 });

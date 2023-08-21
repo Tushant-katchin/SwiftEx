@@ -35,12 +35,14 @@ import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
 import { Paste } from "../../utilities/utilities";
 import * as Clipboard from "expo-clipboard";
+import Icon from "../../icon";
 
 const ImportBinanceWallet = ({
   props,
   setWalletVisible,
   Visible,
   setModalVisible,
+  onCrossPress
 }) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -138,7 +140,7 @@ const ImportBinanceWallet = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Binance'}/> */}
-
+<Icon type={'entypo'} name='cross' color={'gray'} size={24} onPress={onCrossPress} style={style.crossIcon}/>
           <Text style={style.text}>Binance Wallet</Text>
           <View style={style.Button}>
             <TouchableOpacity
@@ -638,8 +640,8 @@ export default ImportBinanceWallet;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
-    height: hp(80),
-    width: wp(100),
+    height: hp(75),
+    width: wp(97),
     textAlign: "center",
     alignSelf: "center",
     borderRadius:hp(1),
@@ -748,6 +750,10 @@ const style = StyleSheet.create({
     textAlign:"center",
     fontSize:15,
     fontWeight:"700",
-    marginTop:hp(3)
+    marginTop:hp(1)
+  },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1)
   }
 });

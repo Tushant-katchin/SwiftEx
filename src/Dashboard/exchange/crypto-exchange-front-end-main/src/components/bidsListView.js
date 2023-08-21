@@ -23,12 +23,14 @@ import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native";
+import Icon from "../../../../../icon";
 
 const UpdateBidModal = ({
   bid,
   getBids,
   setSnackbarVisible,
   setPaymentUrl,
+  onCrossPress,
 }) => {
   const [modalMessage, setModalMessage] = useState("");
   const [updatedBid, setUpdatedBid] = useState({ pricePerUnit: "" });
@@ -148,7 +150,7 @@ const UpdateBidModal = ({
   return (
     <>
       <View>
-        <View style={{ marginHorizontal:wp(5) }}>
+        <View style={{ marginHorizontal: wp(5) }}>
           <Button
             title="Update"
             onPress={() => {
@@ -184,6 +186,16 @@ const UpdateBidModal = ({
           }}
         >
           <View style={styles.modalView}>
+            <Icon
+              type={"entypo"}
+              name="cross"
+              color={"gray"}
+              size={24}
+              style={styles.crossIcon}
+              onPress={() => {
+                setOpen(false);
+              }}
+            />
             <Text style={styles.addtxt}>Adding Offer</Text>
             <View style={styles.assetText}>
               <Text style={{ fontWeight: "700", color: "white" }}>
@@ -194,7 +206,7 @@ const UpdateBidModal = ({
                 style={{
                   borderBottomWidth: 1.5,
                   borderColor: "#407EC9",
-                  color:'white',
+                  color: "white",
                   width: wp(15),
                   textAlign: "center",
                 }}
@@ -291,14 +303,23 @@ const UpdateBidModal = ({
                 end={[0, 1]}
                 colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
               >
-                <TouchableOpacity onPress={updateBid} >
-                  <Text style={styles.txt}>{loading?<ActivityIndicator size={'small'} color="blue"/>:'Confirm'}</Text>
+                <TouchableOpacity onPress={updateBid}>
+                  <Text style={styles.txt}>
+                    {loading ? (
+                      <ActivityIndicator size={"small"} color="blue" />
+                    ) : (
+                      "Confirm"
+                    )}
+                  </Text>
                 </TouchableOpacity>
               </LinearGradient>
 
-              <TouchableOpacity style={styles.cancelBtn} onPress={()=>{
-                setOpen(false)
-              }}>
+              <TouchableOpacity
+                style={styles.cancelBtn}
+                onPress={() => {
+                  setOpen(false);
+                }}
+              >
                 <Text style={{ color: "#D19292" }}>Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -396,7 +417,6 @@ export const BidsListView = ({ bids, getBids }) => {
             colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
           >
             <ScrollView nestedScrollEnabled horizontal>
-
               <ScrollView nestedScrollEnabled={true}>
                 <View style={styles.tableHeader}>
                   <Text style={styles.AssetText}>Asset Amount</Text>
@@ -479,13 +499,12 @@ export const BidsListView = ({ bids, getBids }) => {
                               </>
                             )}
                             {bid.status === BID_STATUS_ENUM.CANCELED && (
-                              <View style={{marginHorizontal:wp(4)}}>
-                                 <Button
-                                title="Re-Activate"
-                                onPress={() => cancelBid(bid._id)}
-                              ></Button>
-                                </View>
-                             
+                              <View style={{ marginHorizontal: wp(4) }}>
+                                <Button
+                                  title="Re-Activate"
+                                  onPress={() => cancelBid(bid._id)}
+                                ></Button>
+                              </View>
                             )}
                           </View>
                         )}
@@ -498,19 +517,18 @@ export const BidsListView = ({ bids, getBids }) => {
                   </View>
                 )}
 
-              <SnackBar
-                visible={snackbarVisible}
-                position={"top"}
-                textMessage="Bid is an exact match. Proceed to complete the transaction"
-                actionHandler={() => {
-                  //Linking.openURL(paymentUrl)
-                  setTxModal(true);
-                  SeeTransactions();
-                  setSnackbarVisible(false);
-                }}
-                actionText="Proceed"
-              />
-
+                <SnackBar
+                  visible={snackbarVisible}
+                  position={"top"}
+                  textMessage="Bid is an exact match. Proceed to complete the transaction"
+                  actionHandler={() => {
+                    //Linking.openURL(paymentUrl)
+                    setTxModal(true);
+                    SeeTransactions();
+                    setSnackbarVisible(false);
+                  }}
+                  actionText="Proceed"
+                />
               </ScrollView>
               <SeeTransactions />
             </ScrollView>
@@ -633,7 +651,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: "#131E3A",
-    height: hp(70),
+    paddingTop: hp(2),
+    paddingBottom: hp(5),
+    // height: hp(70),
     borderRadius: hp(1),
     alignSelf: "center",
     width: wp(90),
@@ -668,5 +688,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: hp(3),
     color: "white",
+  },
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1.2),
   },
 });

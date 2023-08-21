@@ -27,6 +27,7 @@ import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
 import { Paste } from "../../utilities/utilities";
 import * as Clipboard from "expo-clipboard";
+import Icon from "../../icon";
 
 const xrpl = require("xrpl");
 
@@ -35,6 +36,7 @@ const ImportMultiCoinWalletModal = ({
   setWalletVisible,
   Visible,
   setModalVisible,
+  onCrossPress
 }) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState();
@@ -168,7 +170,7 @@ const ImportMultiCoinWalletModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Multi-Coin'}/> */}
-
+<Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} onPress={onCrossPress}/>
 <Text style={style.coinText}>Multi Coin Wallet</Text>
           <View style={style.labelInputContainer}>
             <Text style={style.label}>Name</Text>
@@ -370,8 +372,8 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     backgroundColor: "white",
-    height: hp(80),
-    width: wp(100),
+    height: hp(75),
+    width: wp(97),
     textAlign: "center",
     borderRadius:hp(1),
     alignSelf: "center",
@@ -485,7 +487,7 @@ const style = StyleSheet.create({
   paste: { textAlign: "right", color: "#4CA6EA" },
   coinText:{
     textAlign:"center",
-    marginTop:hp(3),
+    marginTop:hp(1.5),
     fontSize:15,
     fontWeight:"700"
   },
@@ -507,4 +509,8 @@ const style = StyleSheet.create({
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.5)
+  }
 });
