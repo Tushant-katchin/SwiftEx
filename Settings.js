@@ -209,6 +209,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
+import ToggleSwitch from "toggle-switch-react-native";
 import { Switch } from "react-native-paper";
 import { REACT_APP_LOCAL_TOKEN } from "./src/Dashboard/exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import Icon from "./src/icon";
@@ -239,33 +240,49 @@ const Settings = (props) => {
           // onPress={() => {
           //   props.navigation.navigate("Transactions");
           // }}
-          style={styles.accountBox}
+          style={styles.accountBox1}
         >
+          <View style={{flexDirection:"row",alignItems:"center"}}>
+
           <Icon name="moon-o" type={"fa"} size={hp(2)} color="black" />
           <Text style={styles.text}>Dark Mode</Text>
-          <View style={styles.switchContainer}>
+          </View>
+
+          <ToggleSwitch
+            isOn={Checked}
+            onColor="green"
+            offColor="gray"
+            labelStyle={{ color: "black", fontWeight: "900" }}
+            size="small"
+            onToggle={() => {
+              setCheckBox(!Checked);
+            }}
+            // onToggle={(isOff) => console.log("changed to : ", isOff)}
+          />
+
+          {/* <View style={styles.switchContainer}>
             <Switch            
               value={Checked}
               onValueChange={() => setCheckBox(!Checked)}
               style={styles.Switchbtn}
             />
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
         style={styles.accountBox}
-         onPress={async () => {
-           const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-           const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
-           console.log(token);
+        onPress={async () => {
+          const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+          const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+          console.log(token);
 
-           if (token) {
-             props.navigation.navigate("exchange");
-           } else {
-             props.navigation.navigate("exchangeLogin");
-           }
-         }}
+          if (token) {
+            props.navigation.navigate("exchange");
+          } else {
+            props.navigation.navigate("exchangeLogin");
+          }
+        }}
       >
         <Icon type={"fa"} name="exchange" size={hp(2)} color="black" />
         <Text style={styles.text}>Exchange</Text>
@@ -285,27 +302,22 @@ const Settings = (props) => {
         />
         <Text style={styles.text}>Contacts</Text>
       </TouchableOpacity> */}
-         <TouchableOpacity
-         style={styles.accountBox}
-           onPress={() => {
-             //alert("coming soon");
-             props.navigation.navigate("Biometric");
-
-           }}
-         >
-           <Icon
-             type={"ionicon"}
-             name="finger-print"
-             size={hp(2)}
-             color="black"/>
-           <Text style={styles.text}>Biometric Authenticaton</Text>
-         </TouchableOpacity>
-       
       <TouchableOpacity
         style={styles.accountBox}
         onPress={() => {
-           props.navigation.navigate('Transactions')
-           //alert("coming soon");
+          //alert("coming soon");
+          props.navigation.navigate("Biometric");
+        }}
+      >
+        <Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" />
+        <Text style={styles.text}>Biometric Authenticaton</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => {
+          props.navigation.navigate("Transactions");
+          //alert("coming soon");
         }}
       >
         <Icon type={"fa"} name="dollar" size={hp(2)} color="black" />
@@ -318,7 +330,7 @@ const Settings = (props) => {
             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
             //AsyncStorageLib.removeItem('user')
             AsyncStorageLib.removeItem(LOCAL_TOKEN);
-             props.navigation.navigate("Passcode");
+            props.navigation.navigate("Passcode");
             /* dispatch(logout()).then((res)=>{
       }).catch((e)=>{
         console.log(e)
@@ -418,18 +430,28 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
+  accountBox1:{
+    width: wp(90),
+    flexDirection: "row",
+    marginHorizontal: wp(6),
+    justifyContent:"space-between",
+    borderRadius: 20,
+    marginTop: hp(5),
+    textAlign: "center",
+    display: "flex",
+    alignItems: "center",
+  },
   bottomBorder: {
     borderBottomWidth: 1,
     borderColor: "gray",
     paddingBottom: hp(3),
   },
-  switchContainer:{
-    marginHorizontal:hp(24),
-borderRadius:hp(20),
-borderWidth:1,
-borderColor:"gray",
-backgroundColor:"#EBE8FC",
-
+  switchContainer: {
+    marginHorizontal: hp(24),
+    borderRadius: hp(20),
+    borderWidth: 1,
+    borderColor: "gray",
+    backgroundColor: "#EBE8FC",
   },
   Switchbtn: {
     height: hp(4.5),

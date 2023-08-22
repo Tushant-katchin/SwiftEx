@@ -18,7 +18,13 @@ import { OFFER_STATUS_ENUM } from "../utils/constants";
 import { PATCH } from "../api";
 import { LinearGradient } from "expo-linear-gradient";
 import { alert } from "../../../../reusables/Toasts";
-export const OfferBidsView = ({ offer, self = false, setChange }) => {
+import Icon from "../../../../../icon";
+export const OfferBidsView = ({
+  offer,
+  self = false,
+  setChange,
+  onCrossPress,
+}) => {
   const [modalMessage, setModalMessage] = useState("");
   const [bids, setBids] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,7 +53,7 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
         GET
       );
       if (err) return setModalMessage(`${err.message}`);
-      console.log(res.offerBids)
+      console.log(res.offerBids);
       setBids(res.offerBids);
     } catch (err) {
       console.log(err);
@@ -151,72 +157,50 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
           {/* <View style={styles.modalContainer}> */}
 
           <Text style={styles.textColor}>{modalMessage}</Text>
-         
 
-            <View style={styles.container}>
-              <Text style={styles.bidPrice}>
-                {"1.4 Eth for 1,00,000 INR Unit Price!"}
-              </Text>
-              <View style={styles.bidContainer}>
-                <Text style={styles.Text}>Bid Amount</Text>
-                <Text style={styles.Text}>Bidder</Text>
-                <Text style={styles.Text}>Status</Text>
-                {self && <Text></Text>}
-              </View>
-              <ScrollView
-                style={{ height: "55%" }}
-                showsVerticalScrollIndicator={false}
-              >
-                {bids.length ? (
-                  bids.map((bid, index) => (
-                    <>
-                      <View key={bid._id} style={styles.bidContainer2}>
-                        <Text style={styles.Text}>{bid.pricePerUnit}</Text>
-                        <Text style={styles.Text}>
-                          {bid.user.firstName} {bid.user.lastName}
-                        </Text>
-                        <Text style={styles.Text}>{bid.status}</Text>
-                      </View>
+          <View style={styles.container}>
+            <Icon
+              type={"entypo"}
+              name="cross"
+              size={24}
+              color={"gray"}
+              style={styles.crossIcon}
+              onPress={() => {
+                setOpen(false);
+              }}
+            />
+            <Text style={styles.bidPrice}>
+              {"1.4 Eth for 1,00,000 INR Unit Price!"}
+            </Text>
+            <View style={styles.bidContainer}>
+              <Text style={styles.Text}>Bid Amount</Text>
+              <Text style={styles.Text}>Bidder</Text>
+              <Text style={styles.Text}>Status</Text>
+              {self && <Text></Text>}
+            </View>
+            <ScrollView
+              style={{ height: "55%" }}
+              showsVerticalScrollIndicator={false}
+            >
+              {bids.length ? (
+                bids.map((bid, index) => (
+                  <>
+                    <View key={bid._id} style={styles.bidContainer2}>
+                      <Text style={styles.Text}>{bid.pricePerUnit}</Text>
+                      <Text style={styles.Text}>
+                        {bid.user.firstName} {bid.user.lastName}
+                      </Text>
+                      <Text style={styles.Text}>{bid.status}</Text>
+                    </View>
 
-                      {self && !offer.winnerBid ? (
-                        <View>
-                          <LinearGradient
-                            //loading={isSubmitting}
-                            onPress={async () => {
-                              setLoading(true);
-                              acceptBid(bid);
-                            }}
-                            style={styles.linearBtn}
-                            start={[1, 0]}
-                            end={[0, 1]}
-                            colors={[
-                              "rgba(70, 169, 234, 1)",
-                              "rgba(185, 116, 235, 1)",
-                            ]}
-                          >
-                            <TouchableOpacity>
-                              <Text style={styles.textColor}>Accept Bid</Text>
-                            </TouchableOpacity>
-                          </LinearGradient>
-                        </View>
-                      ) : self &&
-                        bid._id === offer.winnerBid &&
-                        offer.status === OFFER_STATUS_ENUM.MATCHED ? (
-                        <View>
-                          <Button
-                            title={"Cancel bid"}
-                            color={"#4CA6EA"}
-                            //loading={isCancelling}
-                            onPress={async () => {
-                              setLoading(true);
-                              cancelBid();
-                            }}
-                          >
-                            Cancel Bid
-                          </Button>
-                        </View>
-                      ) : (
+                    {self && !offer.winnerBid ? (
+                      <View>
                         <LinearGradient
+                          //loading={isSubmitting}
+                          onPress={async () => {
+                            setLoading(true);
+                            acceptBid(bid);
+                          }}
                           style={styles.linearBtn}
                           start={[1, 0]}
                           end={[0, 1]}
@@ -226,26 +210,57 @@ export const OfferBidsView = ({ offer, self = false, setChange }) => {
                           ]}
                         >
                           <TouchableOpacity>
-                            <Text style={styles.textColor}>No Actions</Text>
+                            <Text style={styles.textColor}>Accept Bid</Text>
                           </TouchableOpacity>
                         </LinearGradient>
-                      )}
-                    </>
-                  ))
-                ) : (
-                  <View>
-                    <Text style={styles.bidText}>No bids found</Text>
-                  </View>
-                )}
-              </ScrollView>
-
-              {loading ? (
-                <ActivityIndicator size={"large"} color={"blue"} />
+                      </View>
+                    ) : self &&
+                      bid._id === offer.winnerBid &&
+                      offer.status === OFFER_STATUS_ENUM.MATCHED ? (
+                      <View>
+                        <Button
+                          title={"Cancel bid"}
+                          color={"#4CA6EA"}
+                          //loading={isCancelling}
+                          onPress={async () => {
+                            setLoading(true);
+                            cancelBid();
+                          }}
+                        >
+                          Cancel Bid
+                        </Button>
+                      </View>
+                    ) : (
+                      <LinearGradient
+                        style={styles.linearBtn}
+                        start={[1, 0]}
+                        end={[0, 1]}
+                        colors={[
+                          "rgba(70, 169, 234, 1)",
+                          "rgba(185, 116, 235, 1)",
+                        ]}
+                      >
+                        <TouchableOpacity>
+                          <Text style={styles.textColor}>No Actions</Text>
+                        </TouchableOpacity>
+                      </LinearGradient>
+                    )}
+                  </>
+                ))
               ) : (
-                <View></View>
+                <View>
+                  <Text style={styles.bidText}>No bids found</Text>
+                </View>
               )}
-            </View>
-         
+            </ScrollView>
+
+            {loading ? (
+              <ActivityIndicator size={"large"} color={"blue"} />
+            ) : (
+              <View></View>
+            )}
+          </View>
+
           {loading ? (
             <ActivityIndicator size={"large"} color={"blue"} />
           ) : (
@@ -375,5 +390,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginTop: hp(2),
     marginHorizontal: wp(5),
+  },
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1.5),
   },
 });

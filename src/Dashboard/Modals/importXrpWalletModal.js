@@ -28,12 +28,14 @@ import { utils } from "xrpl-accountlib";
 import { alert } from "../reusables/Toasts";
 import { Paste } from "../../utilities/utilities";
 import * as Clipboard from "expo-clipboard";
+import Icon from "../../icon";
 
 const ImportXrpWalletModal = ({
   props,
   setWalletVisible,
   Visible,
   setModalVisible,
+  onCrossPress
 }) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -183,7 +185,7 @@ const ImportXrpWalletModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'XRP'}/> */}
-
+<Icon type={'entypo'} name='cross'  size={24} color={'gray'} onPress={onCrossPress} style={style.crossIcon}/>
           <Text style={style.text}>XRP Wallet</Text>
 
           <View style={style.Button}>
@@ -553,8 +555,8 @@ export default ImportXrpWalletModal;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
-    height: hp(80),
-    width: wp(100),
+    height: hp(75),
+    width: wp(97),
     textAlign: "center",
     alignSelf: "center",
     marginTop:hp(5),
@@ -664,6 +666,10 @@ const style = StyleSheet.create({
     textAlign:"center",
     fontWeight:"700",
     fontSize:15,
-    marginTop:hp(3)
+    // marginTop:hp(3)
+  },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.5)
   }
 });

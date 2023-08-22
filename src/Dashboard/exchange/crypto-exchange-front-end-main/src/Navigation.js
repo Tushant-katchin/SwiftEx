@@ -23,8 +23,9 @@ export function ExchangeNavigation() {
     <Tab.Navigator
       // initialRouteName="/"
       activeColor="#f0edf6"
+      
       // inactiveColor="#3e2465"
-      barStyle={{ backgroundColor: "#fff" }}
+      barStyle={{ backgroundColor: "#fff", }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -100,7 +101,8 @@ export function ExchangeNavigation() {
       />
      
       <Tab.Screen
-        name="profile"
+        name="Profile"
+        
         component={ProfileView}
         options={{
           headerShown: true,

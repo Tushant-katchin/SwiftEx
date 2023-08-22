@@ -31,6 +31,7 @@ import RecieveAddress from "./ReceiveAddress";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
+import Icon from "../../icon";
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const RecieveModal = ({ modalVisible, setModalVisible }) => {
   const [visible, setVisible] = useState(false);
@@ -83,7 +84,9 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Receive'}/> */}
-          <Text style={{marginTop:hp(4),fontSize:16,color:"#4CA6EA"}}>Receive</Text>
+          <Icon type={'entypo'}  name='cross' color={"white"} size={24} style={style.crossIcon}  onPress={()=>{setModalVisible(false)}}/>
+
+          <Text style={{fontSize:16,color:"#4CA6EA"}}>Receive</Text>
           <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
@@ -214,7 +217,8 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     backgroundColor: "#131E3A",
-    height: hp(83),
+    // paddingTop:hp(2),
+    paddingBottom:hp(12),
     width: wp(95),
     borderRadius:hp(2),
     alignItems: "center",
@@ -290,4 +294,8 @@ const style = StyleSheet.create({
     paddingVertical: hp(1.5),
     marginTop: hp(2),
   },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1)
+  }
 });

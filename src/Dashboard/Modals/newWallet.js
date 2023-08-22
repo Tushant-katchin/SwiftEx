@@ -23,8 +23,9 @@ import { alert } from "../reusables/Toasts";
 //import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import darkBlue from "../../../assets/darkBlue.png";
+import Icon from "../../icon";
 
-const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
+const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisible }) => {
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -55,7 +56,6 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
-
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -77,7 +77,8 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
         }}
       >
         <View style={style.Body}>
-          {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
+          <Icon type={'entypo'} name='cross' size={24} color={"white"} style={style.crossIcon} onPress={onCrossPress}/>
+          <View style={{alignSelf:"center",alignItems:"center"}}>
           <Animated.Image
             style={{
               width: wp("12"),
@@ -181,9 +182,13 @@ const NewWalletModal = ({ props, visible, setVisible, setModalVisible }) => {
               <Text style={{ color: "white" }}>Continue</Text>
             </Pressable>
           </LinearGradient>
+          </View>
+          {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
+          
         </View>
         <NewWalletPrivateKey
           Wallet={Wallet}
+          onCrossPress={()=>{setNewWalletPrivateKey(false)}}
           SetVisible={setNewWalletPrivateKey}
           Visible={newWalletPrivateKey}
           setModalVisible={setModalVisible}
@@ -199,11 +204,13 @@ export default NewWalletModal;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "#131E3A",
-    height: hp(68),
+    paddingTop:hp(1),
+    paddingBottom:hp(8),
     justifyContent: "center",
     borderRadius: hp(2),
-    width: wp(90),
-    alignItems: "center",
+    width: wp(94),
+    // alignItems: "center",
+    alignSelf:"center",
     textAlign: "center",
   },
   welcomeText: {
@@ -249,6 +256,11 @@ const style = StyleSheet.create({
     paddingHorizontal: wp(3),
     borderRadius: hp(0.8),
     marginBottom: hp(2),
+    marginTop:hp(3),
     alignItems: "center",
   },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1)
+  }
 });

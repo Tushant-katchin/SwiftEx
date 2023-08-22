@@ -138,6 +138,7 @@ const Wallet = ({ navigation }) => {
       />
       <NewWalletModal
         visible={newWalletModal}
+        onCrossPress={()=>{setNewWalletModal(false)}}
         setVisible={setNewWalletModal}
         setModalVisible={setModalVisible}
       />

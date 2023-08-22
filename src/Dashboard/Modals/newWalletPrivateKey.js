@@ -40,6 +40,7 @@ const NewWalletPrivateKey = ({
   SetVisible,
   setModalVisible,
   setNewWalletVisible,
+  onCrossPress
 }) => {
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
@@ -157,14 +158,14 @@ const NewWalletPrivateKey = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Private Key'}/> */}
-
+<Icon type={'entypo'} name={'cross'} color={'gray'} size={24} style={style.croosIcon} onPress={onCrossPress}/>
           <Text style={style.backupText}>Backup Mneumonic Phrase</Text>
           <Text style={style.welcomeText1}>
             Please select the menumonic in order to ensure the backup is
             correct.
           </Text>
 
-          <View style={{ marginTop: hp(4) }}>
+          <View style={{ marginTop: hp(3) }}>
             <FlatList
               data={mnemonic}
               renderItem={RenderItem}
@@ -245,6 +246,7 @@ const NewWalletPrivateKey = ({
         {MnemonicVisible &&(<CheckNewWalletMnemonic
           Wallet={newWallet}
           SetVisible={setMnemonicVisible}
+          onCrossPress={()=>{setMnemonicVisible(false)}}
           Visible={MnemonicVisible}
           setModalVisible={setModalVisible}
           SetPrivateKeyVisible={SetVisible}
@@ -260,10 +262,13 @@ export default NewWalletPrivateKey;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
-    height: hp(90),
+    // paddingVertical:hp(2),
+    // height: hp(90),
     borderRadius: hp(2),
     width: wp(95),
     alignSelf: "center",
+    paddingBottom:hp(2),
+    marginTop:hp(3)
   },
   welcomeText: {
     fontSize: 20,
@@ -339,13 +344,12 @@ const style = StyleSheet.create({
     fontSize: 17,
     color: "black",
     marginLeft: 20,
-    marginTop: hp(3),
-    marginBottom: hp(2),
+    marginBottom: hp(1),
   },
   welcomeText1: {
     marginLeft: wp(4.7),
     color: "gray",
-    marginLeft: wp(4),
+    // marginLeft: wp(4),
     width: wp(90),
   },
   dotView: {
@@ -353,7 +357,7 @@ const style = StyleSheet.create({
     alignItems: "center",
     width: wp(90),
     marginLeft: 18,
-    marginTop: hp(4),
+    marginTop: hp(3),
   },
   dotView1: {
     flexDirection: "row",
@@ -373,7 +377,7 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     alignSelf: "center",
-    marginTop: hp(6),
+    marginTop: hp(4),
     borderRadius: wp(2),
     backgroundColor: "white",
     borderWidth: 1,
@@ -390,4 +394,8 @@ const style = StyleSheet.create({
     color: "#4CA6EA",
     top: -12,
   },
+  croosIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.2)
+  }
 });

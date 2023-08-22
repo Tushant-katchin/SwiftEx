@@ -36,6 +36,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Icon from "react-native-vector-icons/Ionicons";
+import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 
@@ -64,7 +65,7 @@ import { SwapTokensToTokens, UniSwap } from "../tokens/UniswapFunctions";
 import { useBiometricsForSwapTransaction } from "../../biometrics/biometric";
 import { alert } from "../reusables/Toasts";
 
-const SwapModal = ({ modalVisible, setModalVisible }) => {
+const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [balance, setBalance] = useState("");
@@ -975,7 +976,6 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
     }
   }, [amount]);
 
-
   return (
     <View
       // style={{ marginTop: hp(50) }}
@@ -1159,7 +1159,9 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
               alignSelf: "center",
               marginTop: hp(8),
             }}
-          
+            // onPress={() => {
+            //   setTradeVisible(true);
+            // }}
             disabled={disable}
              onPress={async () => {
                 //setVisible(true)
@@ -1542,7 +1544,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           backdropTransitionOutTiming={0}
           hideModalContentWhileAnimating
           onBackButtonPress={() => {
-            //setShowModal(!showModal);
+            // setShowModal(!showModal);
             setOpenChain(false);
           }}
         >
@@ -1605,7 +1607,7 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
             />
           </View>
         </Modal2>
-        {/* /.......................THis is Confirm model..................../ */}
+        {/* /.......................This is Confirm model..................../ */}
         <Modal2
           animationIn="slideInRight"
           animationOut="slideOutRight"
@@ -1622,44 +1624,43 @@ const SwapModal = ({ modalVisible, setModalVisible }) => {
           }}
         >
           <View style={styles.modelView}>
+            <Entypo
+              name="cross"
+              color={"gray"}
+              size={24}
+              style={styles.crossIcon}
+              onPress={() => {
+                setTradeVisible(false);
+              }}
+            />
             <View style={styles.modelmainContainer}>
               <Text style={styles.headingColor}>Slip Page Tolerance</Text>
               <Text style={styles.colon}>:</Text>
               <ScrollView horizontal>
-              <Text style={styles.textColor}>
-                {trade ? trade.slippageTolerance : 0} %
-              </Text>
-
+                <Text style={styles.textColor}>
+                  {trade ? trade.slippageTolerance : 0} %
+                </Text>
               </ScrollView>
-           
             </View>
 
             <View style={styles.modelmainContainer}>
               <Text style={styles.headingColor}>Amount</Text>
               <Text style={styles.colon}>:</Text>
-              <ScrollView horizontal >
-
-              <Text style={styles.textColor} numberOfLines={1}>
-              
-
-                {amount ? amount : 0} {coin0.name}
-              </Text>
+              <ScrollView horizontal>
+                <Text style={styles.textColor} numberOfLines={1}>
+                  {amount ? amount : 0} {coin0.name}
+                </Text>
               </ScrollView>
-             
             </View>
 
             <View style={styles.modelmainContainer}>
               <Text style={styles.headingColor}>You get</Text>
               <Text style={styles.colon}>:</Text>
               <ScrollView horizontal>
-              <Text
-                style={styles.textColor}
-                numberOfLines={1}
-              >
-                {trade ? trade.minimumAmountOut : 0} {coin1.name}
-              </Text>
+                <Text style={styles.textColor} numberOfLines={1}>
+                  {trade ? trade.minimumAmountOut : 0} {coin1.name}
+                </Text>
               </ScrollView>
-             
             </View>
 
             <TouchableOpacity
@@ -1732,7 +1733,8 @@ const styles = StyleSheet.create({
     // backgroundColor: "#131E3A",
   },
   modelView: {
-    paddingVertical: hp(5),
+    paddingTop: hp(1),
+    paddingBottom: hp(5),
     width: wp(93),
     alignSelf: "center",
     alignItems: "center",
@@ -1753,7 +1755,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "700",
-    marginHorizontal:wp(10)
+    marginHorizontal: wp(10),
   },
   textColor: {
     color: "white",
@@ -2001,5 +2003,9 @@ const styles = StyleSheet.create({
     height: hp(5),
     borderRadius: hp(1.4),
     backgroundColor: "white",
+  },
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1),
   },
 });
