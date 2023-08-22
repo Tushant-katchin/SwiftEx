@@ -26,6 +26,7 @@ import { login, verifyLoginOtp } from "../../api";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import RNOtpVerify from "react-native-otp-verify";
 import { alert } from "../../../../../reusables/Toasts";
+import { ExchangeHeaderIcon } from "../../../../../header";
 
 export const ExchangeLogin = (props) => {
   const [value, setValue] = useState("");
@@ -169,175 +170,181 @@ export const ExchangeLogin = (props) => {
   }, [isOtpSent]);
 
   return (
-    <ScrollView style={styles.container}>
-      <View
-        // style={styles.container}
-        onStartShouldSetResponder={() => Keyboard.dismiss()}
-      >
-        {isOtpSent === false ? (
-          <View style={styles.content}>
-            <View style={{ marginTop: hp(3), borderRadius: hp(2) }}>
-              <Image style={styles.tinyLogo} source={darkBlue} />
+    <>
+    <ExchangeHeaderIcon title="Exchange-Login" isLogOut={false} />
+      <ScrollView style={styles.container}>
+        <View
+          // style={styles.container}
+          onStartShouldSetResponder={() => Keyboard.dismiss()}
+        >
+          {isOtpSent === false ? (
+            <View style={styles.content}>
+              <View style={{ marginTop: hp(3), borderRadius: hp(2) }}>
+                <Image style={styles.tinyLogo} source={darkBlue} />
 
-              <Text style={styles.text}>Welcome Back!</Text>
+                <Text style={styles.text}>Welcome Back!</Text>
+                <Text
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: 16,
+                    textAlign: "center",
+                    marginTop: hp(1),
+                    marginBottom: hp(3),
+                  }}
+                >
+                  Login to your account
+                </Text>
+                <PhoneInput
+                  textContainerStyle={{ paddingVertical: hp(1) }}
+                  textInputStyle={{ paddingVertical: hp(0.1) }}
+                  ref={phoneInput}
+                  defaultValue={value}
+                  defaultCode="IN"
+                  layout="first"
+                  autoFocus={false}
+                  onChangeText={(text) => {
+                    setValue(text);
+                  }}
+                  onChangeFormattedText={(text) => {
+                    setFormattedValue(text);
+                  }}
+                  withDarkTheme
+                  withShadow
+                />
+                <LinearGradient
+                  colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.button}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      setLoading(true);
+                      const checkValid =
+                        phoneInput.current?.isValidNumber(value);
+                      console.log(checkValid);
+                      if (checkValid) {
+                        try {
+                          setMessage("Your number is valid");
+                          submitPhoneNumber();
+                        } catch (e) {
+                          console.log(e);
+                          alert("error", e);
+                        }
+                      } else {
+                        setMessage("Your number is invalid");
+                        setLoading(false);
+                      }
+                      setShowMessage(true);
+                      setValid(checkValid ? checkValid : false);
+
+                      console.log(checkValid);
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>Login</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+                {showMessage ? (
+                  <Text
+                    style={{
+                      color: "white",
+                      textAlign: "center",
+                      marginTop: hp(2),
+                    }}
+                  >
+                    {Message}
+                  </Text>
+                ) : (
+                  <Text></Text>
+                )}
+              </View>
+
+              {loading ? (
+                <View style={{ marginTop: 10 }}>
+                  <ActivityIndicator size="large" color="white" />
+                </View>
+              ) : (
+                <Text> </Text>
+              )}
+
+              <View style={styles.lowerbox}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("exchangeRegister");
+                  }}
+                >
+                  <Text style={styles.lowerboxtext}>
+                    <Text style={{ color: "#78909c" }}>
+                      Don't have an account?
+                    </Text>{" "}
+                    Register now
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.content}>
+              <View>
+                <Image style={styles.tinyLogo} source={darkBlue} />
+              </View>
+
               <Text
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 16,
-                  textAlign: "center",
-                  marginTop: hp(1),
-                  marginBottom: hp(3),
-                }}
+                style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}
               >
-                Login to your account
+                Please Enter the OTP
               </Text>
-              <PhoneInput
-                textContainerStyle={{ paddingVertical: hp(1) }}
-                textInputStyle={{ paddingVertical: hp(0.1) }}
-                ref={phoneInput}
-                defaultValue={value}
-                defaultCode="IN"
-                layout="first"
-                autoFocus={false}
-                onChangeText={(text) => {
-                  setValue(text);
-                }}
-                onChangeFormattedText={(text) => {
-                  setFormattedValue(text);
-                }}
-                withDarkTheme
-                withShadow
-              />
+              <View style={styles.inp}>
+                <TextInput
+                  placeholderTextColor="#FFF"
+                  style={styles.input}
+                  theme={{ colors: { text: "white" } }}
+                  value={otp}
+                  placeholder={"OTP"}
+                  onChangeText={(text) => {
+                    console.log(text);
+                    setOtp(text);
+                  }}
+                  autoComplete={"sms-otp"}
+                  textContentType={"oneTimeCode"}
+                  keyboardType={"number-pad"}
+                  maxLength={6}
+                />
+              </View>
+
+              <View style={{ marginTop: 10 }}>
+                {showMessage ? (
+                  <Text style={{ color: "white" }}>{Message}</Text>
+                ) : (
+                  <Text></Text>
+                )}
+              </View>
+
+              {loading ? (
+                <ActivityIndicator size="large" color="white" />
+              ) : (
+                <Text> </Text>
+              )}
+
               <LinearGradient
-                colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                colors={["#12c2e9", "#c471ed"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 1 }}
-                style={styles.button}
+                style={styles.verifyBtn}
               >
                 <TouchableOpacity
                   onPress={() => {
-                    setLoading(true);
-                    const checkValid = phoneInput.current?.isValidNumber(value);
-                    console.log(checkValid);
-                    if (checkValid) {
-                      try {
-                        setMessage("Your number is valid");
-                        submitPhoneNumber();
-                      } catch (e) {
-                        console.log(e);
-                        alert("error", e);
-                      }
-                    } else {
-                      setMessage("Your number is invalid");
-                      setLoading(false);
-                    }
-                    setShowMessage(true);
-                    setValid(checkValid ? checkValid : false);
-
-                    console.log(checkValid);
+                    setLoading("true");
+                    submitOtp();
                   }}
                 >
-                  <Text style={{ color: "white" }}>Login</Text>
+                  <Text style={styles.buttonText}>Verify</Text>
                 </TouchableOpacity>
               </LinearGradient>
-              {showMessage ? (
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    marginTop: hp(2),
-                  }}
-                >
-                  {Message}
-                </Text>
-              ) : (
-                <Text></Text>
-              )}
             </View>
-
-            {loading ? (
-              <View style={{ marginTop: 10 }}>
-                <ActivityIndicator size="large" color="white" />
-              </View>
-            ) : (
-              <Text> </Text>
-            )}
-
-            <View style={styles.lowerbox}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("exchangeRegister");
-                }}
-              >
-                <Text style={styles.lowerboxtext}>
-                  <Text style={{ color: "#78909c" }}>
-                    Don't have an account?
-                  </Text>{" "}
-                  Register now
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.content}>
-            <View>
-              <Image style={styles.tinyLogo} source={darkBlue} />
-            </View>
-
-            <Text style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}>
-              Please Enter the OTP
-            </Text>
-            <View style={styles.inp}>
-              <TextInput
-                placeholderTextColor="#FFF"
-                style={styles.input}
-                theme={{ colors: { text: "white" } }}
-                value={otp}
-                placeholder={"OTP"}
-                onChangeText={(text) => {
-                  console.log(text);
-                  setOtp(text);
-                }}
-                autoComplete={"sms-otp"}
-                textContentType={"oneTimeCode"}
-                keyboardType={"number-pad"}
-                maxLength={6}
-              />
-            </View>
-
-            <View style={{ marginTop: 10 }}>
-              {showMessage ? (
-                <Text style={{ color: "white" }}>{Message}</Text>
-              ) : (
-                <Text></Text>
-              )}
-            </View>
-
-            {loading ? (
-              <ActivityIndicator size="large" color="white" />
-            ) : (
-              <Text> </Text>
-            )}
-
-            <LinearGradient
-              colors={["#12c2e9", "#c471ed"]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.verifyBtn}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  setLoading("true");
-                  submitOtp();
-                }}
-              >
-                <Text style={styles.buttonText}>Verify</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          )}
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

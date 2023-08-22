@@ -43,7 +43,9 @@ const VerifyActionButtonView = ({ onSubmit, status }) => {
   }
 
   if (status === VERIFICATION_STATUS.UNVERIFIED) {
-    return <Button title="veirfy" color={"blue"} onPress={onSubmit}></Button>;
+    return <TouchableOpacity style={styles.resend1} onPress={onSubmit}>
+      <Text style={{color:"white",fontSize:12}}>Verify</Text>
+    </TouchableOpacity>;
     //  <View style={{ flexDirection: "row", marginLeft: wp(10) }}>
     //   <Icon
     //     type={"materialCommunity"}
@@ -62,7 +64,9 @@ const VerifyActionButtonView = ({ onSubmit, status }) => {
 
   if (status === VERIFICATION_STATUS.OTP_SENT) {
     return (
-      <Button title="Resend OTP" color={"blue"} onPress={onSubmit}></Button>
+      <TouchableOpacity style={styles.resend} onPress={onSubmit}>
+        <Text style={{ color: "white", fontSize: 12 }}>Resend OTP</Text>
+      </TouchableOpacity>
     );
   }
 
@@ -115,12 +119,17 @@ export const FieldView = ({
       {type === "kyc" ? (
         <>
           <Text style={styles.KYC}>
-            KYC STATUS {value === false ? "FALSE" : <Icon
-                    name={"check-outline"}
-                    type={"materialCommunity"}
-                    color={"#008C62"}
-                    style={styles.checkImg}
-                  />}
+            KYC STATUS{" "}
+            {value === false ? (
+              "FALSE"
+            ) : (
+              <Icon
+                name={"check-outline"}
+                type={"materialCommunity"}
+                color={"#008C62"}
+                style={styles.checkImg}
+              />
+            )}
           </Text>
           {value === true ? (
             <>
@@ -265,9 +274,9 @@ const EmailView = ({ value, isVerified, emailStyle }) => {
         ) : isOtpSubmiting ? (
           <ActivityIndicator size={"small"} color={"blue"} />
         ) : (
-          <Button title="Submit" onPress={submitOtp}>
-            submit
-          </Button>
+          <TouchableOpacity style={styles.submitBtn} onPress={submitOtp}>
+            <Text>Submit</Text>
+          </TouchableOpacity>
         )}
       </View>
     );
@@ -347,7 +356,7 @@ export const ProfileView = (props) => {
   const [message, setMessage] = useState("");
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     fetchProfileData();
   }, []);
@@ -367,7 +376,6 @@ export const ProfileView = (props) => {
       setIsLoading(false);
     }
   };
-
 
   const fetchProfileData = async () => {
     try {
@@ -548,8 +556,12 @@ export const ProfileView = (props) => {
                   return (
                     <View style={styles.activeTextConatiner}>
                       <Text style={styles.amountText}>{item.bank_name}</Text>
-                      <Text style={styles.amountText}>{item.account_holder_name}</Text>
-                      <Text style={styles.amountText}>{item.available_payout_methods[0]}</Text>
+                      <Text style={styles.amountText}>
+                        {item.account_holder_name}
+                      </Text>
+                      <Text style={styles.amountText}>
+                        {item.available_payout_methods[0]}
+                      </Text>
                       <Text style={styles.amountText}>{item.country}</Text>
                       <Text style={styles.amountText}>{item.currency}</Text>
                     </View>
@@ -572,6 +584,11 @@ export const ProfileView = (props) => {
               colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
             >
               <TouchableOpacity
+                style={{
+                  paddingVertical: hp(1),
+                  width: wp(50),
+                  alignItems: "center",
+                }}
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}
@@ -580,6 +597,9 @@ export const ProfileView = (props) => {
               </TouchableOpacity>
             </LinearGradient>
             <NewAccountModal
+              onCrossIcon={() => {
+                setModalVisible(false);
+              }}
               isVisible={modalVisible}
               onPress={() => {
                 setModalVisible(!modalVisible);
@@ -621,7 +641,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     height: hp(100),
     width: wp(100),
-    marginBottom:hp(10)
   },
   fieldView: {
     display: "flex",
@@ -759,7 +778,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: hp(1),
     alignSelf: "center",
-    marginTop:hp(1)
+    marginTop: hp(1),
   },
   statustext: {
     width: wp(20),
@@ -806,19 +825,19 @@ const styles = StyleSheet.create({
   enableText: {
     color: "#CBBBDC",
     fontSize: hp(1.5),
-    margin:5
+    margin: 5,
   },
   enableContainer: {
-    display:'flex',
-    flexDirection:'row',
+    display: "flex",
+    flexDirection: "row",
     marginHorizontal: wp(5),
     marginVertical: hp(2),
-    justifyContent:'space-evenly'
+    justifyContent: "space-evenly",
   },
   payoutText: {
     color: "#CBBBDC",
     fontSize: hp(1.5),
-    margin:5
+    margin: 5,
   },
   borderStyle: {
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
@@ -836,7 +855,6 @@ const styles = StyleSheet.create({
   addacountBtn: {
     alignItems: "center",
     justifyContent: "center",
-    height: hp(4.5),
     width: wp(50),
     alignSelf: "center",
     marginTop: hp(3),
@@ -880,6 +898,31 @@ const styles = StyleSheet.create({
   KYC: {
     color: "#fff",
   },
+  submitBtn: {
+    backgroundColor: "#659DEA",
+    // alignSelf: "flex-end",
+    alignItems: "center",
+    width: wp(20),
+    paddingVertical: hp(0.7),
+    borderRadius: hp(1),
+    marginLeft: wp(30),
+  },
+  resend: {
+    backgroundColor: "blue",
+    width: wp(24),
+    alignItems: "center",
+    borderRadius: hp(1),
+    padding: hp(1),
+    marginTop: hp(1),
+  },
+  resend1:{
+    backgroundColor: "blue",
+    width: wp(20),
+    alignItems: "center",
+    borderRadius: hp(1),
+    padding: hp(0.7),
+    marginTop: hp(1),
+  }
 });
 
 // import React from "react";

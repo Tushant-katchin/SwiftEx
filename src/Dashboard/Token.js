@@ -50,11 +50,18 @@ const DATA = [
     percenteg: "1.97%",
     uri: require("../../assets/bnb-icon2_2x.png"),
   },
+  {
+    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+    title1: "BTC",
+    title: "$27,330.32+",
+    percenteg: "1.97%",
+    uri: require("../../assets/bnb-icon2_2x.png"),
+  },
 ];
 
 const Token = () => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {DATA.map((item) => {
         return (
           <View style={styles.mainContainer}>
@@ -103,7 +110,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor:"red"
+    // backgroundColor: "#fff",
   },
   item: {
     backgroundColor: "#f9c2ff",

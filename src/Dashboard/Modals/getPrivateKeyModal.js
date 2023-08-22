@@ -59,7 +59,7 @@ export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
 
   return (
     <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim }}
+      style={{ opacity: fadeAnim}}
     >
       <Modal
         animationIn="slideInUp"
@@ -67,7 +67,7 @@ export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={visible}
-        
+
         statusBarTranslucent={true}
         useNativeDriver={true}
         useNativeDriverForBackdrop={true}
@@ -78,6 +78,7 @@ export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
           setVisible(false);
         }}
       >
+
         <View style={style.Body}>
           <Icon type={'entypo'} name='cross' color={'gray'} size={24} onPress={onCrossPress} style={style.crossIcon}/>
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
@@ -167,6 +168,7 @@ const style = StyleSheet.create({
   Body: {
     backgroundColor: "#131E3A",
     paddingTop:hp(1),
+    alignSelf:"center",
     paddingBottom:hp(4),
     // height: hp(68),
     justifyContent: "center",

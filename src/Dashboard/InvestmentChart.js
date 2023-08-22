@@ -186,8 +186,7 @@ function InvestmentChart(setCurrentWallet) {
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
 
   return (
-    <View>
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:hp(55)}}>
         <View style={styles.flatlistContainer}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image source={bnbimage} style={styles.img} />
@@ -289,8 +288,10 @@ function InvestmentChart(setCurrentWallet) {
             {xrpBalance ? xrpBalance : 0} XRP
           </Text>
         </View>
+
+
+        
       </ScrollView>
-    </View>
   );
 }
 
@@ -299,7 +300,7 @@ export default InvestmentChart;
 const styles = StyleSheet.create({
   flatlistContainer: {
     flexDirection: "row",
-    marginVertical: hp(3),
+    marginVertical: hp(5),
     width: "80%",
     justifyContent: "space-between",
     alignItems: "center",

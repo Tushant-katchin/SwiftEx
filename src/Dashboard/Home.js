@@ -23,7 +23,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/src/Navigation";
 import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
-import { ExchangeHeaderApp} from "./reusables/ExchangeHeader";
+import { ExchangeHeaderApp } from "./reusables/ExchangeHeader";
 import { AppHeader } from "./reusables/AppHeader";
 import { ExchangeHeaderIcon } from "./header";
 
@@ -37,9 +37,7 @@ const Dashboard = ({ navigation }) => {
   const dispatch = useDispatch();
   //let state = store.getState()
   console.log(state);
-  const [token, setToken] = useState('')
-  
-
+  const [token, setToken] = useState("");
 
   const updateState = () => {
     let data = store.getState();
@@ -116,14 +114,13 @@ const Dashboard = ({ navigation }) => {
   //   console.log(data);
   // }, []);
 
-  useEffect(async ()=>{
+  useEffect(async () => {
     const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
     const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
     console.log(token);
 
-    setToken(token)
-
-  })
+    setToken(token);
+  });
 
   return (
     <>
@@ -151,7 +148,9 @@ const Dashboard = ({ navigation }) => {
               iconName = "ios-settings-sharp";
             }
             if (route.name === "Exchange") {
-              iconName = focused ? "swap-vertical-outline" : "swap-vertical-outline";
+              iconName = focused
+                ? "swap-vertical-outline"
+                : "swap-vertical-outline";
               iconName = "swap-vertical-outline";
             }
 
@@ -193,11 +192,8 @@ const Dashboard = ({ navigation }) => {
         <Tab.Screen
           name="Home"
           component={Home2}
-          
           options={{
             header: () =>
-            
-            
               state.extended === false
                 ? Header1("Home", state)
                 : Header2("Home", state),
@@ -211,8 +207,8 @@ const Dashboard = ({ navigation }) => {
           options={{
             headerShown: true,
             unmountOnBlur: true,
-             header: () => {
-              return Header3("Wallet")
+            header: () => {
+              return Header3("Wallet");
             },
             tabBarIcon: ({ focused }) => {
               let iconName;
@@ -232,8 +228,6 @@ const Dashboard = ({ navigation }) => {
                 </View>
               );
             },
-           
-            
           }}
         />
 
@@ -244,19 +238,19 @@ const Dashboard = ({ navigation }) => {
             header: () => Header3("Market"),
             headerShown: true,
             unmountOnBlur: true,
-            
           }}
         />
-         <Tab.Screen
+        <Tab.Screen
           name="Exchange"
-          component={token?ExchangeNavigation:ExchangeLogin}
+          component={token ? ExchangeNavigation : ExchangeLogin}
           options={{
-            header: () => {null},
+            header: () => {
+              null;
+            },
             headerShown: true,
             display: "none",
             tabBarStyle: { display: "none" },
           }}
-          
         />
         <Tab.Screen
           name="Settings"

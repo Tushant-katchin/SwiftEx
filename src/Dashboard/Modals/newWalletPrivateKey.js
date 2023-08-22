@@ -263,7 +263,7 @@ const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
     // paddingVertical:hp(2),
-    // height: hp(90),
+    height: hp(90),
     borderRadius: hp(2),
     width: wp(95),
     alignSelf: "center",

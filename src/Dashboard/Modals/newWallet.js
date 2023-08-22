@@ -6,6 +6,7 @@ import {
   Button,
   ActivityIndicator,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import { TextInput, Checkbox, Switch } from "react-native-paper";
 import {
@@ -145,7 +146,8 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
             }
             style={style.PresssableBtn}
           >
-            <Pressable
+            <TouchableOpacity
+            style={{width:wp(30),alignItems:"center"}}
               disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
                 setLoading(true);
@@ -180,7 +182,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
               }}
             >
               <Text style={{ color: "white" }}>Continue</Text>
-            </Pressable>
+            </TouchableOpacity>
           </LinearGradient>
           </View>
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}

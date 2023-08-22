@@ -240,7 +240,9 @@ export const OfferBidsView = ({
                           "rgba(185, 116, 235, 1)",
                         ]}
                       >
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                        style={{width:wp(23),alignItems:"center",paddingVertical:hp(0.8)}}
+                        >
                           <Text style={styles.textColor}>No Actions</Text>
                         </TouchableOpacity>
                       </LinearGradient>
@@ -379,11 +381,10 @@ const styles = StyleSheet.create({
   linearBtn: {
     alignItems: "center",
     justifyContent: "center",
-    width: wp(26),
+    width: wp(23),
     alignSelf: "flex-end",
     borderRadius: hp(1),
     marginTop: hp(3),
-    height: hp(5),
     marginRight: wp(4),
   },
   bidText: {
