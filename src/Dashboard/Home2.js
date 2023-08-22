@@ -228,6 +228,14 @@ const Home2 = ({ navigation }) => {
 
     return wallet;
   };
+
+    // setTimeout(()=>{
+    //   getAllBalance().catch((e) => {
+    //     console.log(e);
+    //   });
+    // },10000)
+  
+
   const renderTabBar = (props) => (
     <TabBar
       {...props}
