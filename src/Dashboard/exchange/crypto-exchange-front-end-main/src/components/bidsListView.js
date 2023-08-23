@@ -151,12 +151,14 @@ const UpdateBidModal = ({
     <>
       <View>
         <View style={{ marginHorizontal: wp(5) }}>
-          <Button
-            title="Update"
+          <TouchableOpacity
+            style={styles.updateBtn}
             onPress={() => {
               handleOpen();
             }}
-          />
+          >
+            <Text style={{ color: "white" }}>Update</Text>
+          </TouchableOpacity>
         </View>
 
         {/* <TouchableOpacity
@@ -490,21 +492,23 @@ export const BidsListView = ({ bids, getBids }) => {
                                   setSnackbarVisible={setSnackbarVisible}
                                   setPaymentUrl={setPaymentUrl}
                                 />
-                                <View style={{ margin: 5 }}>
-                                  <Button
-                                    onPress={() => cancelBid(bid._id)}
-                                    title="Cancel"
-                                  ></Button>
-                                </View>
+                                <TouchableOpacity
+                                  style={styles.updateBtn}
+                                  onPress={() => cancelBid(bid._id)}
+                                >
+                                  <Text style={{ color: "white" }}>Cancel</Text>
+                                </TouchableOpacity>
                               </>
                             )}
                             {bid.status === BID_STATUS_ENUM.CANCELED && (
-                              <View style={{ marginHorizontal: wp(4) }}>
-                                <Button
-                                  title="Re-Activate"
-                                  onPress={() => cancelBid(bid._id)}
-                                ></Button>
-                              </View>
+                              <TouchableOpacity
+                                style={styles.updateBtn1}
+                                onPress={() => cancelBid(bid._id)}
+                              >
+                                <Text style={{ color: "white" }}>
+                                  Re-Activate
+                                </Text>
+                              </TouchableOpacity>
                             )}
                           </View>
                         )}
@@ -693,4 +697,20 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     padding: hp(1.2),
   },
+  updateBtn: {
+    backgroundColor: "#4CA6EA",
+    width: wp(22),
+    padding: 5,
+    alignItems: "center",
+    borderRadius: hp(1),
+  },
+  updateBtn1:{
+    backgroundColor: "#4CA6EA",
+    width: wp(22),
+    padding: 5,
+    alignItems: "center",
+    borderRadius: hp(1),
+    marginHorizontal:wp(6) ,
+    alignSelf:"center"
+  }
 });

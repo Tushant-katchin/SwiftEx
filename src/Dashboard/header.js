@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import Icon from "../icon";
 import {
@@ -54,7 +54,9 @@ export const WalletHeader = (props) => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.walletContainer}>
+    <TouchableOpacity style={styles.walletContainer} onPress={() => {
+      navigation.goBack();
+    }}>
       <Icon
         name={"left"}
         type={"antDesign"}
@@ -68,7 +70,7 @@ export const WalletHeader = (props) => {
       <View style={{ alignItems: "center" }}>
         <Text style={{ color: "#E96A6A" }}>{title1}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -77,7 +79,7 @@ export const ExchangeHeaderIcon = (props) => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.headerContainer1}>
+    <TouchableOpacity style={styles.headerContainer1}>
       <View
         style={{
           justifyContent: "space-around",
@@ -112,7 +114,7 @@ export const ExchangeHeaderIcon = (props) => {
         />
         <Text style={{ color: "#E96A6A" }}>Logout</Text>
       </View> :  <Text style={{ width: "10%" }}>{""}</Text>}
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -203,7 +205,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     flexDirection: "row",
-    paddingVertical: hp(1.8),
+    paddingVertical: hp(2),
     width: wp(100),
     paddingHorizontal: wp(2),
   },

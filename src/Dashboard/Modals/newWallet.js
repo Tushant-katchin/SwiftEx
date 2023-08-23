@@ -66,8 +66,10 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
         animationOut="slideOutRight"
         animationInTiming={500}
         animationOutTiming={650}
+        style={{}}
+        
         isVisible={visible}
-        statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         useNativeDriver={true}
         useNativeDriverForBackdrop={true}
         backdropTransitionOutTiming={0}

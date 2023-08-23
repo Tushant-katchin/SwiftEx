@@ -419,7 +419,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
           setModalVisible(false);
         }}
       >
-        <View
+        <TouchableOpacity
           onPress={() => {
             setModalVisible(false);
           }}
@@ -442,7 +442,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               setModalVisible(false);
             }}
           />
-        </View>
+        </TouchableOpacity>
         <View style={style.barCode}>
           <TouchableOpacity style={style.flatView}>
             <Image

@@ -5,7 +5,7 @@ import {
   View,
   Button,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { TextInput, Checkbox, Switch } from "react-native-paper";
 import {
@@ -26,11 +26,11 @@ import darkBlue from "../../../assets/darkBlue.png";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "../../icon";
 
-export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
+export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -59,7 +59,7 @@ export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
 
   return (
     <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim}}
+      style={{ opacity: fadeAnim }}
     >
       <Modal
         animationIn="slideInUp"
@@ -67,8 +67,7 @@ export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={visible}
-
-        statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         useNativeDriver={true}
         useNativeDriverForBackdrop={true}
         backdropTransitionOutTiming={0}
@@ -78,9 +77,15 @@ export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
           setVisible(false);
         }}
       >
-
         <View style={style.Body}>
-          <Icon type={'entypo'} name='cross' color={'gray'} size={24} onPress={onCrossPress} style={style.crossIcon}/>
+          <Icon
+            type={"entypo"}
+            name="cross"
+            color={"gray"}
+            size={24}
+            onPress={onCrossPress}
+            style={style.crossIcon}
+          />
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
           <Animated.Image
             style={{
@@ -141,16 +146,19 @@ export const GetPrivateKeyModal = ({  visible, setVisible,onCrossPress }) => {
           <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
-            colors={ Checked && Checked2 ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]:["gray","gray"]}
+            colors={
+              Checked && Checked2
+                ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]
+                : ["gray", "gray"]
+            }
             style={style.PresssableBtn}
           >
             <TouchableOpacity
-               //disabled={loading ? true : Checked && Checked2 ? false : true}
+              disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
-                //setLoading(true);
-                setVisible(false)
-                navigation.navigate('My PrivateKey')
-                
+                // setLoading(true);
+                setVisible(false);
+                navigation.navigate("My PrivateKey");
               }}
             >
               <Text>Continue</Text>
@@ -167,10 +175,9 @@ export default GetPrivateKeyModal;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "#131E3A",
-    paddingTop:hp(1),
-    alignSelf:"center",
-    paddingBottom:hp(4),
-    // height: hp(68),
+    paddingTop: hp(1),
+    alignSelf: "center",
+    paddingBottom: hp(4),
     justifyContent: "center",
     borderRadius: hp(2),
     width: wp(90),
@@ -219,12 +226,12 @@ const style = StyleSheet.create({
     alignSelf: "center",
     paddingHorizontal: wp(3),
     borderRadius: hp(0.8),
-    marginTop:hp(2),
+    marginTop: hp(2),
     marginBottom: hp(2),
     alignItems: "center",
   },
-  crossIcon:{
-    alignSelf:"flex-end",
-    padding:hp(1)
-  }
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1),
+  },
 });
