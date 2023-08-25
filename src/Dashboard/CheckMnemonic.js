@@ -481,7 +481,7 @@ const CheckMnemonic = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-      <ScrollView contentContainerStyle={style.Body}>
+      <View style={style.Body}>
         <Text style={style.verifyText}>Verify Secret Phrase</Text>
         <Text style={style.wordText}>
           Tap the words to put them next to each other in the correct order.
@@ -663,7 +663,7 @@ padding:hp(1)
           >
             <Text style={{ color: "white" }}>Done</Text>
           </TouchableOpacity>
-      </ScrollView>
+      </View>
     </Animated.View>
   );
 };

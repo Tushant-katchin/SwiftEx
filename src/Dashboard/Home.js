@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
+import { View, Text, StyleSheet, Button, Image, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "../components/Redux/actions/auth";
 import Home2 from "./Home2";
@@ -180,7 +180,7 @@ const Dashboard = ({ navigation }) => {
           tabBarStyle: {
             position: "absolute",
             backgroundColor: "#4CA6EA",
-            height: hp("9"),
+            height: Platform.OS == 'android' ?  hp("9") : hp("11")
             // borderTopColor: "black",
             // borderTopWidth: 1,
           },
