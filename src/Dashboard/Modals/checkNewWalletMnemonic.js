@@ -423,7 +423,7 @@ const style = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
-    marginTop: hp(6),
+    marginTop: hp(3),
   },
   crossIcon:{
     alignSelf:"flex-end",

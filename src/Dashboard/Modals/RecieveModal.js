@@ -84,9 +84,18 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Receive'}/> */}
-          <Icon type={'entypo'}  name='cross' color={"white"} size={24} style={style.crossIcon}  onPress={()=>{setModalVisible(false)}}/>
+          <Icon
+            type={"entypo"}
+            name="cross"
+            color={"white"}
+            size={24}
+            style={style.crossIcon}
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          />
 
-          <Text style={{fontSize:16,color:"#4CA6EA"}}>Receive</Text>
+          <Text style={{ fontSize: 16, color: "#4CA6EA" }}>Receive</Text>
           <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
@@ -100,9 +109,8 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
                 }, 0);
 
                 setIconType("BNB");
-              }else{
-                
-                alert("error",'Please select BNB wallet to recieve BNB')
+              } else {
+                alert("error", "Please select BNB wallet to recieve BNB");
               }
             }}
           >
@@ -117,16 +125,23 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
           <TouchableOpacity
             style={style.Box3}
-            onPress={async() => {
-              const walletType = await AsyncStorageLib.getItem('walletType')
-              if(JSON.parse(walletType)==="Ethereum"|| JSON.parse(walletType)==="eth" || JSON.parse(walletType)==="Multi-coin"){
-              setTimeout(() => {
-                setVisible(true);
-              }, 0);
-              setIconType("ETH");
-            }else{
-              alert('error','please select ETH wallet to recieve ETH tokens')
-            }
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              if (
+                JSON.parse(walletType) === "Ethereum" ||
+                JSON.parse(walletType) === "eth" ||
+                JSON.parse(walletType) === "Multi-coin"
+              ) {
+                setTimeout(() => {
+                  setVisible(true);
+                }, 0);
+                setIconType("ETH");
+              } else {
+                alert(
+                  "error",
+                  "please select ETH wallet to recieve ETH tokens"
+                );
+              }
             }}
           >
             <View style={style.flatView}>
@@ -142,16 +157,22 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
           <TouchableOpacity
             style={style.Box3}
-            onPress={async() => {
-              const walletType = await AsyncStorageLib.getItem('walletType')
-              if(JSON.parse(walletType)==="Matic" || JSON.parse(walletType)==="Multi-coin"){
-              setTimeout(() => {
-                setVisible(true);
-              }, 0);
-              setIconType("Matic");
-            }else{
-              alert('error','please select a polygon wallet to recieve matic')
-            }
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              if (
+                JSON.parse(walletType) === "Matic" ||
+                JSON.parse(walletType) === "Multi-coin"
+              ) {
+                setTimeout(() => {
+                  setVisible(true);
+                }, 0);
+                setIconType("Matic");
+              } else {
+                alert(
+                  "error",
+                  "please select a polygon wallet to recieve matic"
+                );
+              }
             }}
           >
             <View style={style.flatView}>
@@ -165,16 +186,19 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
           <TouchableOpacity
             style={style.Box3}
-            onPress={async() => {
-              const walletType = await AsyncStorageLib.getItem('walletType')
-              if(JSON.parse(walletType)==="Xrp" || JSON.parse(walletType)==='Multi-coin'){
-              setTimeout(() => {
-                setVisible(true);
-              }, 0);
-              setIconType("Xrp");
-            }else{
-              alert('error','please select an xrp wallet to recieve xrp')
-            }
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              if (
+                JSON.parse(walletType) === "Xrp" ||
+                JSON.parse(walletType) === "Multi-coin"
+              ) {
+                setTimeout(() => {
+                  setVisible(true);
+                }, 0);
+                setIconType("Xrp");
+              } else {
+                alert("error", "please select an xrp wallet to recieve xrp");
+              }
             }}
           >
             <View style={style.flatView}>
@@ -212,18 +236,18 @@ const style = StyleSheet.create({
   walletText: {
     marginTop: hp(4),
     fontSize: 14,
-    color:"white"
+    color: "white",
   },
   Body: {
     display: "flex",
     backgroundColor: "#131E3A",
     // paddingTop:hp(2),
-    paddingBottom:hp(12),
+    paddingBottom: hp(12),
     width: wp(95),
-    borderRadius:hp(2),
+    borderRadius: hp(2),
     alignItems: "center",
-  alignSelf:"center",
-    borderWidth:1
+    alignSelf: "center",
+    borderWidth: 1,
   },
   welcomeText: {
     fontSize: 20,
@@ -290,12 +314,12 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0E0E0",
     borderRadius: hp(1),
-    backgroundColor:"#F0F8FF",
+    backgroundColor: "#F0F8FF",
     paddingVertical: hp(1.5),
     marginTop: hp(2),
   },
-  crossIcon:{
-    alignSelf:"flex-end",
-    padding:hp(1)
-  }
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1),
+  },
 });

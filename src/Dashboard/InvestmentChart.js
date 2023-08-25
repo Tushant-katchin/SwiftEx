@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, RefreshControl } from "react-native";
 import {
   Avatar,
   Card,
@@ -25,6 +25,7 @@ import { getXrpBalance } from "../components/Redux/actions/auth";
 
 function InvestmentChart(setCurrentWallet) {
   const state = useSelector((state) => state);
+  const [pull,setPull]=useState(false)
   const wallet = useSelector((state) => state.wallet);
   const [bnbBalance, getBnbBalance] = useState(0.00);
   const [xrpBalance, GetXrpBalance] = useState(0.00);
@@ -51,7 +52,6 @@ function InvestmentChart(setCurrentWallet) {
   
 
   const getTokenBalance =  async() => {
-   
     const bal = await state.walletBalance;
     const EthBalance = await state.EthBalance;
     const xrpBalance = await state.XrpBalance;
@@ -150,6 +150,7 @@ function InvestmentChart(setCurrentWallet) {
         getMaticBalance(0.00);
         GetXrpBalance(0.00);
       }
+      setPull(false)
     });
   }
 
@@ -186,8 +187,18 @@ function InvestmentChart(setCurrentWallet) {
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
 
   return (
-    <View>
-      <ScrollView>
+      <ScrollView 
+      refreshControl={
+        <RefreshControl
+          refreshing={pull}
+          onRefresh={() => {
+            setPull(true);
+            getTokenBalance();
+          }}
+        />
+      }
+  
+      nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:hp(55)}}>
         <View style={styles.flatlistContainer}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image source={bnbimage} style={styles.img} />
@@ -289,8 +300,10 @@ function InvestmentChart(setCurrentWallet) {
             {xrpBalance ? xrpBalance : 0} XRP
           </Text>
         </View>
+
+
+        
       </ScrollView>
-    </View>
   );
 }
 
@@ -299,7 +312,7 @@ export default InvestmentChart;
 const styles = StyleSheet.create({
   flatlistContainer: {
     flexDirection: "row",
-    marginVertical: hp(3),
+    marginVertical: hp(5),
     width: "80%",
     justifyContent: "space-between",
     alignItems: "center",

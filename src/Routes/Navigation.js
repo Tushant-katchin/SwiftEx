@@ -124,7 +124,7 @@ const AuthStack = () => (
         component={TokenList}
         options={{ headerShown: false }}
       /> */}
-{/* 
+      {/* 
 <Stack.Screen
         name="SelectWallet"
         component={SelectWallet}
@@ -453,11 +453,7 @@ const AuthStack = () => (
         name="exchangeLogin"
         component={ExchangeLogin}
         options={{
-          header: () => {
-            return (
-              <ExchangeHeaderIcon title="Exchange-Login" isLogOut={false} />
-            );
-          },
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -476,7 +472,6 @@ const AuthStack = () => (
         component={ExchangeNavigation}
         options={{
           headerShown: false,
-
           headerTintColor: "white",
           headerTitleStyle: {
             fontWeight: "bold",

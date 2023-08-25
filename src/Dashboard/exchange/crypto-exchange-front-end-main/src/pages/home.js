@@ -211,7 +211,7 @@ export const HomeView = ({ setPressed }) => {
         </LinearGradient>
 
         {walletType === "Ethereum" || walletType === "Multi-coin" ? (
-          <Text style={{ color: "black" }}>{walletType} Wallet Connected</Text>
+          <Text style={{ color: "white" }}>{walletType} Wallet Connected</Text>
         ) : (
           <Text style={styles.whiteColor}>
             Only Ethereum and Multi-coin based wallets are supported.

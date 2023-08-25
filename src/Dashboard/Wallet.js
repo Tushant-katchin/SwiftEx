@@ -107,6 +107,7 @@ const Wallet = ({ navigation }) => {
             style={styles.PresssableBtn}
           >
             <TouchableOpacity
+            style={{width:wp(30),alignItems:"center"}}
               onPress={() => {
                 setNewWalletModal(true);
               }}

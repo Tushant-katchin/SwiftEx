@@ -9,6 +9,7 @@ import {
   Share,
   Clip,
   Image,
+  Pressable,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -33,6 +34,8 @@ import Header from "../reusables/Header";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
 import Icon from "../../icon";
+import { WalletHeader } from "../header";
+import { AntDesign } from "@expo/vector-icons";
 const RippleAPI = require("ripple-lib").RippleAPI;
 
 const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
@@ -416,12 +419,32 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
           setModalVisible(false);
         }}
       >
-        <View
-          style={style.barCode}
+        <TouchableOpacity
+          onPress={() => {
+            setModalVisible(false);
+          }}
+          style={{
+            position: "absolute",
+            top: 0,
+            alignSelf: "flex-start",
+            alignItems: "flex-start",
+            padding: 15,
+            width: "100%",
+            backgroundColor: "#4CA6EA",
+          }}
         >
-          <TouchableOpacity
-            style={style.flatView}
-          >
+          <Icon
+            name={"left"}
+            type={"antDesign"}
+            size={20}
+            color={"#fff"}
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          />
+        </TouchableOpacity>
+        <View style={style.barCode}>
+          <TouchableOpacity style={style.flatView}>
             <Image
               style={{ width: wp(10), height: hp(5) }}
               source={
@@ -440,7 +463,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             </Text>
           </TouchableOpacity>
 
-          <View style={{ alignSelf: "center" ,marginTop:hp(1)}}>
+          <View style={{ alignSelf: "center", marginTop: hp(1) }}>
             <QRCode
               //QR code value
               value={qrvalue ? qrvalue : "NA"}
@@ -464,16 +487,12 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               // logoBackgroundColor="yellow"
             />
           </View>
-          <Text
-            style={style.addressTxt}
-          >
+          <Text style={style.addressTxt}>
             {WalletAddress ? WalletAddress : ""}
           </Text>
         </View>
 
-        <View
-          style={style.btnView}
-        >
+        <View style={style.btnView}>
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
               style={style.copyBtn}
@@ -493,15 +512,14 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             </TouchableOpacity>
             <Text style={style.btnTextColor}>Copy</Text>
           </View>
-          
 
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-             onPress={() => {
-              onShare();
-              setSelected1(true);
-              setSelected(false);
-            }}
+              onPress={() => {
+                onShare();
+                setSelected1(true);
+                setSelected(false);
+              }}
               style={style.amount}
             >
               <Icon name="share" type={"feather"} size={20} color={"#4169e1"} />
@@ -532,10 +550,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             }, 0);
           }}
           actionText="Proceed"
-        /> 
-
-
-       
+        />
       </Modal>
     </Animated.View>
   );
@@ -629,13 +644,14 @@ const style = StyleSheet.create({
     backgroundColor: "white",
     borderTopWidth: 1,
   },
-  modal:{
+  modal: {
     backgroundColor: "#fff",
     width: wp(100),
+    top: 20,
     alignSelf: "center",
     alignItems: "center",
   },
-  barCode:{
+  barCode: {
     backgroundColor: "#fff",
     height: hp(50),
     borderRadius: hp(1),
@@ -653,40 +669,40 @@ const style = StyleSheet.create({
     backgroundColor: "white",
     borderColor: "rgba(238, 227, 232,1)",
   },
-  flatView:{
+  flatView: {
     flexDirection: "row",
     marginHorizontal: wp(5),
     padding: 10,
     alignItems: "center",
     alignSelf: "center",
   },
-  addressTxt:{
+  addressTxt: {
     marginTop: hp(3),
     width: wp(54),
     alignSelf: "center",
     color: "gray",
   },
-  btnView:{
+  btnView: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(56),
     marginTop: hp(3),
   },
-  copyBtn:{
-                height: hp(6),
-                width: hp(6),
-                backgroundColor: "#4169e1",
-                borderRadius: hp(3),
-                alignItems: "center",
-                justifyContent: "center",
-              },
-              amount:{
-                height: hp(6),
-                width: hp(6),
-                backgroundColor: "rgba(115, 167, 242, 0.2)",
-                borderRadius: hp(3),
-                alignItems: "center",
-                justifyContent: "center",
-              },
-              btnTextColor:{ color: "#4169e1" }
+  copyBtn: {
+    height: hp(6),
+    width: hp(6),
+    backgroundColor: "#4169e1",
+    borderRadius: hp(3),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  amount: {
+    height: hp(6),
+    width: hp(6),
+    backgroundColor: "rgba(115, 167, 242, 0.2)",
+    borderRadius: hp(3),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnTextColor: { color: "#4169e1" },
 });

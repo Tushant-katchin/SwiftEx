@@ -404,9 +404,10 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     backgroundColor: "#fff",
-    height: hp(100),
-    width: wp("100"),
+    // height: hp(100),
+    width: wp(100),
     alignContent: "center",
+    paddingBottom:100
   },
   setHeading: {
     fontSize: hp(2.5),

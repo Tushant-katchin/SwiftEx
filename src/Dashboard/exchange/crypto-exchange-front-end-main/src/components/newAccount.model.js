@@ -495,6 +495,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { LinearGradient } from "expo-linear-gradient";
 import BankModel from "./bankModel";
 import { alert } from "../../../../reusables/Toasts";
+import Icon from "../../../../../icon";
 
 // <===============================< Constants >==============================>
 /* const TEST_EXTERNAL_ACCOUNT_DATA = {
@@ -766,6 +767,7 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
           colors={["rgba(22, 19, 107, 1)", "rgba(210, 88, 150, 1)"]}
         >
           <View style={styles.modelmainContainer}>
+            <Icon type={"entypo"} name={'cross'} color={'white'} size={24} style={styles.crossIcon} onPress={onCrossIcon}/>
             <Text style={styles.accountText}>Add Bank Account</Text>
             <Text>{modalMessage}</Text>
             {/* NOTE: bellow element is only for test and has to be removed in prod */}
@@ -992,7 +994,7 @@ const styles = StyleSheet.create({
     fontSize: hp(2.5),
     fontWeight: "700",
     color: "#fff",
-    marginTop: hp(4),
+    
   },
   number: {
     color: "#fff",
@@ -1038,5 +1040,9 @@ const styles = StyleSheet.create({
     width:wp(100),
     justifyContent:"center",
     alignSelf:"center"
+  },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.5)
   }
 });

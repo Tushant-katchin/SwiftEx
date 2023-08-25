@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, View, Modal } from "react-native";
 import {
@@ -12,6 +12,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { Animated } from "react-native";
 import { utils, providers } from "ethers";
 import { useNavigation } from "@react-navigation/native";
 import { getNonce } from "../../utilities/utilities";
@@ -350,33 +351,53 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
       console.log(e);
     }
   };
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(async () => {
     await Balance();
     const token = await state.token;
     console.log(token);
     // console.log(result)
   }, [state.wallet.address, MaticBalance]);
+
   useEffect(() => {
     Balance();
   }, []);
 
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+    }).start();
+  }, [fadeAnim]);
+
   return (
-    <View>
+    <Animated.View // Special animatable View
+      style={{ opacity: fadeAnim }}
+    >
       <Modal
         animationType="slide"
         transparent={true}
+        animationIn="slideInUp"
+        animationOut="slideOutRight"
         visible={modalVisible}
+        useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
         statusBarTranslucent={true}
+        hideModalContentWhileAnimating
+        onModalHide={() => setModalVisible(false)}
+
         onBackdropPress={() => setModalVisible(false)}
         onRequestClose={() => {
           setModalVisible(false);
         }}
       >
+          <View style={{backgroundColor:'rgba(217, 217, 217, 0.4)',height:"100%",width:wp(100)}}>
         <View
           style={{
             backgroundColor: "#131E3A",
-            paddingTop:hp(1),
-            paddingBottom:hp(12),
+            paddingTop: hp(1),
+            paddingBottom: hp(12),
             marginTop: hp(20),
             width: wp(95),
             borderRadius: hp(2),
@@ -393,8 +414,10 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
           {/* </View> */}
           {/* </View> */}
         </View>
+      </View>
       </Modal>
-    </View>
+
+    </Animated.View>
   );
 };
 

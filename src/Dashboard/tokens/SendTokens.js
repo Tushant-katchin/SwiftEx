@@ -34,6 +34,7 @@ import { isFloat, isInteger, Paste } from "../../utilities/utilities";
 import { alert } from "../reusables/Toasts";
 import Icon from "../../icon";
 import { WalletHeader } from "../header";
+import { NavigationActions } from "react-navigation";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -275,13 +276,19 @@ const SendTokens = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
+<View style={{backgroundColor:"#4CA6EA"}}>
+
+<Icon type={'antDesign'} name='left' size={24} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5)}}/>
+
+</View>
+
       {/* <WalletHeader title={props.route.params.token}/> */}
       <View style={{ backgroundColor: "white", height: hp(100) }}>
         <View style={style.inputView}>
           <TextInput
           value={address}
             onChangeText={(input) => {
-              if (input && address) {
+              if (input && address) { 
                 setDisable(false);
               } else {
                 setDisable(true);

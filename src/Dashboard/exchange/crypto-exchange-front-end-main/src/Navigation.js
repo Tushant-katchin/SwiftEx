@@ -23,13 +23,12 @@ export function ExchangeNavigation() {
     <Tab.Navigator
       // initialRouteName="/"
       activeColor="#f0edf6"
-      
       // inactiveColor="#3e2465"
-      barStyle={{ backgroundColor: "#fff", }}
+      barStyle={{ backgroundColor: "#fff" }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          size = 25;
+          size = 27;
           if (route.name === "/") {
             iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
             iconName = "ios-home-sharp";
@@ -46,30 +45,29 @@ export function ExchangeNavigation() {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "card-sharp";
           }
-          if (route.name === "account") {
+          if (route.name === "Profile") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "wallet";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-
         tabBarActiveTintColor: "blue",
         tabBarInactiveTintColor: "white",
         tabBarStyle: {
           // position: "absolute",
           backgroundColor: "white",
-          height:hp(9),
-          backgroundColor:"#4CA6EA",
-
+          height: hp(9),
+          backgroundColor: "#4CA6EA",
         },
         headerTitleAlign: "center",
+        
+        
       })}
     >
       <Tab.Screen
         name="/"
         component={HomeView}
-        
         options={{
           tabBarLabel: "Home",
           headerShown: true,
@@ -85,7 +83,7 @@ export function ExchangeNavigation() {
           headerShown: true,
           header: () => {
             return <ExchangeHeaderIcon />;
-          }
+          },
         }}
       />
       <Tab.Screen
@@ -99,16 +97,15 @@ export function ExchangeNavigation() {
           //Tab bar styles can be added here
         }}
       />
-     
+
       <Tab.Screen
         name="Profile"
-        
         component={ProfileView}
         options={{
           headerShown: true,
           header: () => {
             return <ExchangeHeaderIcon />;
-          }
+          },
         }}
       />
     </Tab.Navigator>

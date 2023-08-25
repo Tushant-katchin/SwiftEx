@@ -4608,9 +4608,17 @@
     "loader-utils" "^2.0.0"
 
 "@swc/helpers@^0.4.14":
-  "integrity" "sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw=="
-  "resolved" "https://registry.npmjs.org/@swc/helpers/-/helpers-0.4.14.tgz"
-  "version" "0.4.14"
+  "integrity" "sha512-5lxnyLEYFskErRPenYItLRSge5DjrJngYKdVjRSrWfza9G6KkgHEXi0vUZiyUeMU5JfXH1YnvXZzSp8ul88o2Q=="
+  "resolved" "https://registry.npmjs.org/@swc/helpers/-/helpers-0.4.36.tgz"
+  "version" "0.4.36"
+  dependencies:
+    "legacy-swc-helpers" "npm:@swc/helpers@=0.4.14"
+    "tslib" "^2.4.0"
+
+"@swc/helpers@^0.5.1":
+  "integrity" "sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg=="
+  "resolved" "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.1.tgz"
+  "version" "0.5.1"
   dependencies:
     "tslib" "^2.4.0"
 
@@ -14601,6 +14609,13 @@
   "version" "5.1.0"
   dependencies:
     "package-json" "^6.3.0"
+
+"legacy-swc-helpers@npm:@swc/helpers@=0.4.14":
+  "integrity" "sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw=="
+  "resolved" "https://registry.npmjs.org/@swc/helpers/-/helpers-0.4.14.tgz"
+  "version" "0.4.14"
+  dependencies:
+    "tslib" "^2.4.0"
 
 "level-blobs@^0.1.7":
   "integrity" "sha512-n0iYYCGozLd36m/Pzm206+brIgXP8mxPZazZ6ZvgKr+8YwOZ8/PPpYC5zMUu2qFygRN8RO6WC/HH3XWMW7RMVg=="

@@ -26,6 +26,7 @@ import {
 } from "react-native-paper";
 import Bnbimage from "../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../assets/ethereum.png";
+import darkBlue from "../../assets/darkBlue.png"
 import Xrpimage from "../../assets/xrp.png";
 import Maticimage from "../../assets/matic.png";
 
@@ -91,13 +92,13 @@ const ImportAccount = (props) => {
     >
       <View style={style.Body}>
         <TouchableOpacity
-          style={style.Box}
+          style={style.Box1}
           onPress={() => {
             props.navigation.navigate("Import Multi-Coin Wallet");
           }}
         >
-          <Image source={title_icon} style={style.img} />
-          <Text style={style.text}>Multi-Coin Wallet</Text>
+          <Image source={darkBlue} style={style.img1} />
+          <Text style={style.text1}>Multi-Coin Wallet</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -197,11 +198,28 @@ const style = StyleSheet.create({
     padding: 8,
     borderColor: "#DADADA",
   },
+  Box1:{
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: wp(4),
+    marginTop: hp(3),
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    padding: 8,
+    borderColor: "#DADADA",
+  },
   text: {
     marginHorizontal: wp(4),
+  },
+  text1:{
+    marginHorizontal: wp(3),
+
   },
   img: {
     height: hp(4),
     width: wp(8),
   },
+  img1:{
+    height: hp(6),
+    width: wp(10), 
+  }
 });

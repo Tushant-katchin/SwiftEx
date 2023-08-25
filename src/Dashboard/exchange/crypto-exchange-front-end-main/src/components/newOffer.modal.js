@@ -1372,6 +1372,10 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
               colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
             >
               <TouchableOpacity
+              
+              activeOpacity={true}
+              style={{width:wp(23),alignItems:"center",paddingVertical: hp(0.7),
+            }}
                 disabled={disable}
                 onPress={handleSubmit}
                 color="green"
@@ -1484,7 +1488,6 @@ const styles = StyleSheet.create({
   confirmButton: {
     alignItems: "center",
     width: wp(23),
-    paddingVertical: hp(0.7),
     borderRadius: 6,
   },
   cancelButton: {

@@ -589,6 +589,7 @@ export const NewBidModal = ({ offer, onCrossPress }) => {
                   colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
                 >
                   <TouchableOpacity
+                  style={{width:wp(44),alignItems:"center",paddingVertical:hp(1)}}
                     disabled={disable}
                     onPress={() => {
                       setLoading(true);
@@ -662,7 +663,7 @@ const style = StyleSheet.create({
     borderRadius: hp(1),
     marginTop: hp(3),
     alignSelf: "center",
-    height: hp(5),
+    // paddingVertical:hp(1.6)
     // marginRight: wp(4),
   },
   linearBtnDisable: {
