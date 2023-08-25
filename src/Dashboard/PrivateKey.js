@@ -47,7 +47,7 @@ const PrivateKey = (props) => {
     }).start();
 
     console.log(props.route.params.wallet.wallet.mnemonic);
-    const mnemonic = props.route.params.wallet.wallet.mnemonic.match(/.*?[\.\s]+?/g);
+    const mnemonic = props.route.params.wallet.wallet.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)
     console.log("My mnemonic",mnemonic)
     setMnemonic(mnemonic)
   }, []);
@@ -80,9 +80,9 @@ const PrivateKey = (props) => {
           }}
           source={title_icon}
         /> */}
-          <Text style={style.backupText}>Backup Mneumonic Phrase</Text>
+          <Text style={style.backupText}>Backup Mnemonic Phrase</Text>
           <Text style={style.welcomeText1}>
-            Please select the menumonic in order to ensure the backup is
+            Please select the Mnemonic in order to ensure the backup is
             correct.
           </Text>
         </View>
@@ -107,13 +107,13 @@ const PrivateKey = (props) => {
         <View style={style.dotView}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={{ color: "black" }}>
-            Keep your mneumonic in a safe place isolated from any network
+            Keep your Mnemonic in a safe place isolated from any network
           </Text>
         </View>
         <View style={style.dotView1}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={style.welcomeText}>
-            Don't share and store mneumonic with a network, such as email,photo,
+            Don't share and store Mnemonic with a network, such as email,photo,
             social apps, and so on
           </Text>
         </View>

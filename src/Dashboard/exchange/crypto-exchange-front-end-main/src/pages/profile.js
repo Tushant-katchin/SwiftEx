@@ -581,6 +581,7 @@ export const ProfileView = (props) => {
             </LinearGradient>
             <NewAccountModal
               isVisible={modalVisible}
+              setModalVisible={setModalVisible}
               onPress={() => {
                 setModalVisible(!modalVisible);
                 setIsSubmit(!isSubmit);
@@ -593,7 +594,7 @@ export const ProfileView = (props) => {
               }}
             />
           </View>
-        )}
+        )} 
       </View>
     </ScrollView>
   );

@@ -107,7 +107,7 @@ const NewWalletPrivateKey = ({
   const closeModal = () => {
     SetVisible(false);
   };
-  const mnemonic = Wallet?.mnemonic.match(/.*?[\.\s]+?/g);
+  const mnemonic = Wallet?.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)
   console.log("My mnemonic", mnemonic);
 
   useEffect(async () => {
@@ -116,7 +116,7 @@ const NewWalletPrivateKey = ({
       duration: 1000,
     }).start();
 
-    console.log(Wallet);
+    console.log(Wallet.mnemonic);
     let wallet = Wallet
     wallet.Mnemonic = mnemonic
     setNewWallet(wallet)
@@ -159,9 +159,9 @@ const NewWalletPrivateKey = ({
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Private Key'}/> */}
 <Icon type={'entypo'} name={'cross'} color={'gray'} size={24} style={style.croosIcon} onPress={onCrossPress}/>
-          <Text style={style.backupText}>Backup Mneumonic Phrase</Text>
+          <Text style={style.backupText}>Backup Mnemonic Phrase</Text>
           <Text style={style.welcomeText1}>
-            Please select the menumonic in order to ensure the backup is
+            Please select the Mnemonic in order to ensure the backup is
             correct.
           </Text>
 
@@ -179,13 +179,13 @@ const NewWalletPrivateKey = ({
           <View style={style.dotView}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={{ color: "black" }}>
-            Keep your mneumonic in a safe place isolated from network
+            Keep your Mnemonic in a safe place isolated from network
           </Text>
         </View>
         <View style={style.dotView1}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={{color:"black",width:"90%"}}>
-            Don't share and store mneumonic with a network, such as email,photo,
+            Don't share and store Mnemonic with a network, such as email,photo,
             social apps, and so on
           </Text>
         </View>

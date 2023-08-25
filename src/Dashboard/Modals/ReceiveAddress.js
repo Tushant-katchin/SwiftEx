@@ -28,7 +28,7 @@ import Moralis from "moralis";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import SnackBar from "react-native-snackbar-component";
-import { checkPendingTransactions } from "../../utilities/web3utilities";
+import { checkPendingTransactions, getAllBalances } from "../../utilities/web3utilities";
 import Header from "../reusables/Header";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
@@ -526,6 +526,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               );
               setSnackbarVisible(false);
               setModalVisible(false);
+              getAllBalances(state,dispatch)
 
               //navigation.navigate("Transactions")
             }, 0);

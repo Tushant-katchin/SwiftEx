@@ -1169,7 +1169,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
   useEffect(() => {
     console.log(newOffer);
     getBalance(newOffer.assetName);
-  }, [newOffer.assetName]);
+  }, [newOffer.assetName, newOffer]);
   useEffect(() => {
     enableValidation();
   }, [newOffer]);
@@ -1315,9 +1315,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
                 // placeholderTextColor="#FFF"
               />
             </View>
-            <Text style={styles.priceMsg}>
-              0.001 Eth for 1,00,000 INR Unit Price!
-            </Text>
+            
           </View>
         </View>
 
@@ -1328,7 +1326,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
             marginTop: hp(2),
           }}
         >
-          <Text style={styles.balance}>Balance: {balance}</Text>
+          <Text style={styles.balance}>Balance: {balance?Number(balance).toFixed(2):0.0}</Text>
           <View style={styles.subTotal}>
             <Text style={styles.textColor}>Subtotal:</Text>
 
