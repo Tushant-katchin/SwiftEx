@@ -106,7 +106,8 @@ const NewWalletPrivateKey = ({
   const closeModal = () => {
     SetVisible(false);
   };
-  const mnemonic = Wallet?.mnemonic.match(/.*?[\.\s]+?/g);
+  const mnemonic = Wallet?.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)
+
   console.log("My mnemonic", mnemonic);
 
   useEffect(async () => {
@@ -409,3 +410,4 @@ const style = StyleSheet.create({
     padding: hp(1.2),
   },
 });
+//  const mnemonic = Wallet?.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)

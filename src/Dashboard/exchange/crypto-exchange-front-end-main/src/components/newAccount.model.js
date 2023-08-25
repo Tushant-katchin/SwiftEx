@@ -504,6 +504,13 @@ import Icon from "../../../../../icon";
       account_number: '000123456789',
       routing_number: 'HDFC0000261',
     }*/
+    const prefill = () => {
+         // setIsIban(false)
+          //setNewAccount({ ...TEST_EXTERNAL_ACCOUNT_DATA })
+          const testData = _getExternalAccountTestData()
+           setIsIban(!testData.routing_number)
+           setNewAccount({ ...testData })
+        }
 
 const TEST_EXTERNAL_ACCOUNTS_DATA = [
   {
@@ -611,7 +618,7 @@ export const SelectView = ({
   );
 };
 
-export const NewAccountModal = ({ getAccountDetails,isVisible,onPress,onCrossIcon }) => {
+export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,onPress }) => {
 
   const [modalMessage, setModalMessage] = useState("");
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
@@ -642,6 +649,7 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,onPress,onCrossIco
       routing_number: "",
     });
     setOpen(false);
+    setModalVisible(false)
   };
 
   const handleChange = (event) => {
@@ -765,7 +773,7 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,onPress,onCrossIco
             {/* NOTE: bellow element is only for test and has to be removed in prod */}
             <View>
               {/* <Text>{`[ONLY FOR TEST] `}</Text>  */}
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 onPress={() => {
                   prefill();
                 }}
@@ -775,7 +783,7 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,onPress,onCrossIco
                   {" "}
                   prefill with a test bank account
                 </Text>
-              </TouchableOpacity>  */}
+              </TouchableOpacity> 
             </View>
             <View>
               <View style={styles.dropdownContainer}>

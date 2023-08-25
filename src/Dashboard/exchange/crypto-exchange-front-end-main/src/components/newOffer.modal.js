@@ -716,14 +716,14 @@ import Modal from "react-native-modal";
 import { DropDown } from "./dropDown";
 import { TextInput } from "react-native-paper";
 import { convertCurrencies } from "../utils/currencyConversion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import WebView from "react-native-webview";
 import { getCurrentChain } from "../utils/chainHandler";
 import { SelectView, _getCurrencyOptions } from "./newAccount.model";
 import { getAssetToUsd } from "../utils/assetPriceHandler";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { getEthTokenBalance } from "../../../../../utilities/web3utilities";
+import { getAllBalances, getEthTokenBalance } from "../../../../../utilities/web3utilities";
 import { DAI, USDT, WBTC } from "../utils/assetAddress";
 import { useToast } from "native-base";
 import { alert, ShowToast } from "../../../../reusables/Toasts";
@@ -752,6 +752,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
   const [balance, setBalance] = useState();
   const [disable, setDisable] = useState(true);
   const toast = useToast();
+  const dispatch = useDispatch()
   const [breakDowns, setBreakdowns] = useState({
     finalPayable: 0,
     appFee: 0,
@@ -840,6 +841,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
       } else {
         setOpen(false);
         ShowToast(toast, "New Offer Created Successfully");
+        getBalance(newOffer.assetName);
+        getAllBalances(state,dispatch)
         // alert("New Offer Created Successfully");
       }
     } catch (err) {
@@ -1066,6 +1069,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
         JSON.parse(walletType) == "BNB" ||
         JSON.parse(walletType) == "Multi-coin"
       ) {
+        
         const balance = await state.walletBalance;
         console.log(balance);
         setBalance(balance);
@@ -1165,7 +1169,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
   useEffect(() => {
     console.log(newOffer);
     getBalance(newOffer.assetName);
-  }, [newOffer.assetName]);
+  }, [newOffer.assetName, newOffer]);
   useEffect(() => {
     enableValidation();
   }, [newOffer]);
@@ -1311,9 +1315,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
                 // placeholderTextColor="#FFF"
               />
             </View>
-            <Text style={styles.priceMsg}>
-              0.001 Eth for 1,00,000 INR Unit Price!
-            </Text>
+            
           </View>
         </View>
 
@@ -1324,7 +1326,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
             marginTop: hp(2),
           }}
         >
-          <Text style={styles.balance}>Balance: {balance}</Text>
+          <Text style={styles.balance}>Balance: {balance?Number(balance).toFixed(2):0.0}</Text>
           <View style={styles.subTotal}>
             <Text style={styles.textColor}>Subtotal:</Text>
 

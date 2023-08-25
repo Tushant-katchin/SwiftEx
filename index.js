@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import "@ethersproject/shims"
 import 'text-encoding-polyfill'
 import { registerRootComponent } from 'expo';

@@ -255,7 +255,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       delay: 0.1,
       useNativeDriver: true,
     }).start();
-  }, [state2, wallet]);
+  }, [state2, wallet,state.walletBalance,state.EthBalance,state.XrpBalance,state.MaticBalance]);
 
   useEffect(() => {
     try {
@@ -265,7 +265,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     } catch (e) {
       console.log(e);
     }
-  }, [state.wallet.address, state.wallet.name, state.walletType]);
+  }, [state.wallet.address, state.wallet.name, state.walletType,state.walletBalance,state.EthBalance,state.XrpBalance,state.MaticBalance]);
 
   const openExtended = () => {
     changeState();
@@ -302,7 +302,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         return;
       } else if (JSON.parse(Type) === "Multi-coin") {
         const totalBalance =
-          Number(ethInUsd) + Number(bnbInUsd) + Number(xrpInUsd);
+        Number(ethInUsd) + Number(bnbInUsd) + Number(xrpInUsd);
         console.log(totalBalance);
         setBalance(totalBalance.toFixed(1));
         return;
@@ -334,6 +334,9 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       console.log("XRP price =", response.USD);
       setXrpPrice(response.USD);
     });
+
+    return true
+
   };
 
   useEffect(async () => {
@@ -369,8 +372,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   useEffect(async () => {
     console.log(balanceUsd);
     //getEthPrice()
-    getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
+    getETHBNBPrice()
+    .then(()=>{
+      getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
+    })
   }, []);
   useEffect(async () => {
     const user = await state.wallet.name;
@@ -398,6 +403,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         </TouchableOpacity> */}
         <Pressable onPress={() => openExtended()}>
           <Icon name="sliders" type={"FAIcon"} size={24} />
+          <Text>Refresh</Text>
         </Pressable>
       </View>
       <View style={{ marginVertical: hp(2) }}>

@@ -174,7 +174,7 @@ function InvestmentChart(setCurrentWallet) {
       console.log(e)
     }
    // await GetBalance(await state)
-  }, [wallet.address,wallet.name,EthBalance,bnbBalance,XrpBalance]);
+  }, [wallet.address,wallet.name,EthBalance,bnbBalance,XrpBalance,state.walletBalance,state.EthBalance,state.XrpBalance,state.MaticBalance]);
 
   let LeftContent = (props) => (
     <Avatar.Image

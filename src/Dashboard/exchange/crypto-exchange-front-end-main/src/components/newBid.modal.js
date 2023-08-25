@@ -330,18 +330,14 @@ export const NewBidModal = ({ offer, onCrossPress }) => {
     if (
       newBid.pricePerUnit != null &&
       newBid.pricePerUnit != "" &&
-      newBid.pricePerUnit <= offer.pricePerUnit &&
-      offer.amount < balance
+      newBid.pricePerUnit <= offer.pricePerUnit
     ) {
       setDisable(false);
     } else {
       setDisable(true);
     }
 
-    if (offer.amount > balance) {
-      setDisable(true);
-      setModalMessage("Low Balance");
-    } else if (newBid.pricePerUnit > offer.pricePerUnit) {
+    if (newBid.pricePerUnit > offer.pricePerUnit) {
       setDisable(true);
       setModalMessage("Bid price cannot be greater than offer price");
     } else {
@@ -670,8 +666,19 @@ const style = StyleSheet.create({
     // paddingVertical:hp(1.6)
     // marginRight: wp(4),
   },
+  linearBtnDisable: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: wp(44),
+    alignSelf: "flex-end",
+    borderRadius: hp(1),
+    marginTop: hp(3),
+    alignSelf: "center",
+    height: hp(5),
+    // marginRight: wp(4),
+},
   crossIcon: {
     alignSelf: "flex-end",
     padding: hp(1.4),
-  },
+ },
 });
