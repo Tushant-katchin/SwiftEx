@@ -356,45 +356,45 @@ export const CoinDetails = (props) => {
 
       <View style={{ marginTop: hp(9) }}>
         <View style={styles.iconText}>
+          <Text> Last 24h:</Text>
           <View style={styles.arrowText}>
             <Text>
               {props?.route?.params?.data?.price_change_percentage_24h}%
             </Text>
             <Icon name="arrow-up-right" type={"feather"} size={20} />
           </View>
-          <Text> Last 24h:</Text>
         </View>
         <View style={styles.iconText}>
+          <Text>USD</Text>
           <View style={styles.arrowText}>
             <Text>$ {props?.route?.params?.data?.current_price}</Text>
             <Icon name="arrow-up-right" type={"feather"} size={20} />
           </View>
-          <Text>USD</Text>
         </View>
 
         <View style={styles.iconText}>
-          <Text> ${props?.route?.params?.data?.market_cap}</Text>
           <Text>Market Cap : </Text>
+          <Text> ${props?.route?.params?.data?.market_cap}</Text>
         </View>
 
         <View style={styles.iconText}>
-          <Text>${props?.route?.params?.data?.total_supply}</Text>
           <Text>Total Supply :</Text>
+          <Text>${props?.route?.params?.data?.total_supply}</Text>
         </View>
 
         <View style={styles.iconText}>
-          <Text>${props?.route?.params?.data?.high_24h} </Text>
           <Text> 24H high :</Text>
+          <Text>${props?.route?.params?.data?.high_24h} </Text>
         </View>
 
         <View style={styles.iconText}>
-          <Text>${props?.route?.params?.data?.low_24h}</Text>
           <Text> 24H low :</Text>
+          <Text>${props?.route?.params?.data?.low_24h}</Text>
         </View>
 
         <View style={styles.iconText}>
-          <Text>${props?.route?.params?.data?.ath}</Text>
           <Text> All Time High :</Text>
+          <Text>${props?.route?.params?.data?.ath}</Text>
         </View>
       </View>
     </ScrollView>
