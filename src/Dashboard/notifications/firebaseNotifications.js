@@ -8,6 +8,7 @@ import messaging from '@react-native-firebase/messaging'
 import {SendNotification} from "./pushController"
 import AsyncStorageLib from '@react-native-async-storage/async-storage'
 import * as Clipboard from "expo-clipboard";
+import { firebaseNotification } from './firebasePushMessages'
 
 
 const copyToClipboard = (text) => {
@@ -78,13 +79,13 @@ const useFirebaseCloudMessaging = (navigation) => {
       console.log(remoteMessage.notification.body)
       console.log(remoteMessage.notification.title)
 
-      SendNotification(remoteMessage.notification.title,remoteMessage.notification.body)
-     // firebaseNotification(remoteMessage.notification.title,'MunziDapp','You have new Exchange updates',remoteMessage.notification.body)
+      //SendNotification(remoteMessage.notification.title,remoteMessage.notification.body)
+     firebaseNotification(remoteMessage.notification.title,'SwiftEx','You have new Exchange updates',remoteMessage.notification.body)
     })
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
-      //firebaseNotification(remoteMessage.notification.title,'MunziDapp','You have new Exchange updates',remoteMessage.notification.body)
-      SendNotification(remoteMessage.notification.title,remoteMessage.notification.body)
+      firebaseNotification(remoteMessage.notification.title,'SwiftEx','You have new Exchange updates',remoteMessage.notification.body)
+      //SendNotification(remoteMessage.notification.title,remoteMessage.notification.body)
 
 
     });
