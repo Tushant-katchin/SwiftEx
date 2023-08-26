@@ -6,25 +6,21 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useSelector } from "react-redux";
-import {
-  Avatar,
-  Card,
-  Title,
-  Paragraph,
-
-} from "react-native-paper";
+import { Avatar, Card, Title, Paragraph } from "react-native-paper";
 import Bnbimage from "../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../assets/ethereum.png";
 import Xrpimage from "../../assets/xrp.png";
 import Maticimage from "../../assets/matic.png";
 import title_icon from "../../assets/title_icon.png";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+
 const Transactions = (props) => {
   const [transactions, setTransactions] = useState("");
   const state = useSelector((state) => state);
@@ -97,7 +93,10 @@ try{
     >
       <View style={styles.footer}>
         <View elevation={5} style={{ height: hp(100) }}>
-          <ScrollView alwaysBounceVertical={true} style={{ marginBottom:hp(10)}}>
+          <ScrollView
+            alwaysBounceVertical={true}
+            style={{ marginBottom: hp(10) }}
+          >
             {transactions[0] ? (
               transactions.map((item) => {
                 const hash = item.hash;
@@ -105,24 +104,22 @@ try{
                 let LeftContent;
                 console.log(item.walletType);
                 if (item.walletType === "Ethereum") {
-                  LeftContent = (props) => (
-                    <Avatar.Image {...props} source={Etherimage} />
-                  );
+                  LeftContent = Etherimage;
                 } else if (item.walletType === "BSC") {
-                  LeftContent = BnbLeftContent;
-                }else if (item.walletType == "Xrp") {
-                  LeftContent = XrpLeftContent;
-                }else if (item.walletType == "Matic") {
-                  LeftContent = MaticLeftContent;
-                }  else if (item.walletType === "Multi-coin") {
+                  LeftContent = Bnbimage;
+                } else if (item.walletType == "Xrp") {
+                  LeftContent = Xrpimage;
+                } else if (item.walletType == "Matic") {
+                  LeftContent = Maticimage;
+                } else if (item.walletType === "Multi-coin") {
                   if (item.chainType === "Eth") {
-                    LeftContent = EtherLeftContent;
+                    LeftContent = Etherimage;
                   } else if (item.chainType === "BSC") {
-                    LeftContent = BnbLeftContent;
+                    LeftContent = Bnbimage;
                   } else if (item.chainType === "Matic") {
-                    LeftContent = MaticLeftContent;
+                    LeftContent = Maticimage;
                   } else if (item.chainType === "Xrp") {
-                    LeftContent = XrpLeftContent;
+                    LeftContent = Xrpimage;
                   } else {
                     LeftContent = multiCoinLeftContent; //props => <Avatar.Image {...props}  source={{ uri: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850' }} />
                   }
@@ -150,51 +147,29 @@ try{
                       props.navigation.navigate("TxDetail", { data });
                     }}
                   >
-                    <View style={{ marginTop: 10, width: wp(99), margin: 2 }}>
-                      <Card
-                        style={{
-                          width: wp(95),
-                          height: hp(10),
-                          backgroundColor: "white",
-                          borderRadius: 10,
-                          marginLeft: 5,
-                        }}
-                      >
-                        <Card.Title
-                          titleStyle={{
-                            color: "black",
-                            fontSize: 15,
-                            marginBottom: 23,
-                          }}
-                          title={item.type}
-                          left={LeftContent}
-                        />
-                        <Card.Content
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            color: "black",
-                          }}
-                        >
-                          <Title style={{ color: "black" }}></Title>
-                          <Paragraph
-                            style={{
-                              color: "grey",
-                              marginLeft: wp("12"),
-                              fontWeight: "bold",
-                              top: -39,
-                            }}
-                          >
-                            {item.hash}
-                          </Paragraph>
-                        </Card.Content>
-                      </Card>
+                    <View style={styles.flatView}>
+                      <Image source={LeftContent} style={styles.img} />
+                      <View style={{ marginHorizontal: wp(3) }}>
+                        <Text>{item.type}</Text>
+                        <Text style={styles.text} numberOfLines={1}>
+                          {item.hash}
+                        </Text>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 );
               })
             ) : (
-              <Text>No transactions yet!</Text>
+              <Text
+                style={{
+                  color: "black",
+                  textAlign: "center",
+                  fontSize: 16,
+                  marginTop: hp(4),
+                }}
+              >
+                No transactions yet!
+              </Text>
             )}
           </ScrollView>
         </View>
@@ -230,7 +205,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    backgroundColor: "#ddd",
+    backgroundColor: "white",
     bottom: 0,
     left: 0,
     right: 0,
@@ -302,5 +277,27 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  flatView: {
+    width: wp(90),
+    padding: hp(1),
+    flexDirection: "row",
+    alignSelf: "center",
+    alignItems: "center",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "gray",
+    marginTop: hp(2),
+    alignItems: "center",
+  },
+  img: {
+    height: hp(5),
+    width: wp(9),
+    borderRadius: hp(3),
+  },
+  text: {
+    color: "gray",
+    fontSize: 12,
+    width: wp(75),
+    marginVertical: hp(0.5),
   },
 });

@@ -67,6 +67,7 @@ export const DropdownComponent =()=>{
         getWallets()
      }catch(error){
        console.log(error)
+       
        alert('no wallets found. Make sure you have the file with private keys saved in your device')
      }
  },[])     

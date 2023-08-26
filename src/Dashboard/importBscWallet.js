@@ -4,9 +4,10 @@ import {
   Text,
   View,
   Button,
+  TextInput,
+  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { TextInput, Checkbox } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,7 +25,7 @@ import {
   setProvider,
   setWalletType,
 } from "../components/Redux/actions/auth";
-import { encryptFile } from "../utilities/utilities";
+import { encryptFile, Paste } from "../utilities/utilities";
 import DialogInput from "react-native-dialog-input";
 import { urls } from "./constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
@@ -32,6 +33,8 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genUsrToken } from "./Auth/jwtHandler";
+import { alert } from "./reusables/Toasts";
+
 const ImportBscWallet = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -44,9 +47,9 @@ const ImportBscWallet = (props) => {
   const [jsonKey, setJsonKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
-  const [disable, setDisable] = useState(true)
-  const [ message, setMessage] = useState('')
-  const[text,setText] = useState('')
+  const [disable, setDisable] = useState(true);
+  const [message, setMessage] = useState("");
+  const [text, setText] = useState("");
 
   const dispatch = useDispatch();
 
@@ -54,7 +57,6 @@ const ImportBscWallet = (props) => {
 
   const Spin = new Animated.Value(0);
 
-  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -68,148 +70,179 @@ const ImportBscWallet = (props) => {
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(()=>{
-    if(accountName && (privateKey || mnemonic || json))
-    {
-      let valid
-      if(label==='mnemonic'){
+  useEffect(() => {
+    if (accountName && (privateKey || mnemonic || json)) {
+      let valid;
+      if (label === "mnemonic") {
         const phrase = mnemonic.trimStart();
         const trimmedPhrase = phrase.trimEnd();
         valid = ethers.utils.isValidMnemonic(trimmedPhrase);
-        if(!valid){
-          setMessage('Please enter a valid mnemonic')
+        if (!valid) {
+          setMessage("Please enter a valid mnemonic");
+        } else {
+          setMessage("");
         }
-        else{
-          setMessage('')
-        }
-        
-      }else if(label==='privateKey'){
+      } else if (label === "privateKey") {
         valid = ethers.utils.isHexString(privateKey, 32);
-        if(!valid){
-          setMessage('Please enter a valid private key')
-        }
-        else{
-          setMessage('')
+        if (!valid) {
+          setMessage("Please enter a valid private key");
+        } else {
+          setMessage("");
         }
       }
-      
-      if(accountName && (mnemonic || privateKey || json) && valid){
-        setDisable(false)
-      }else{
-        setDisable(true)
+
+      if (accountName && (mnemonic || privateKey || json) && valid) {
+        setDisable(false);
+      } else {
+        setDisable(true);
       }
-    }else{
-      setMessage('')
+    } else {
+      setMessage("");
     }
-    },[mnemonic,privateKey,json])
-    
-    return (
-      <Animated.View // Special animatable View
+  }, [mnemonic, privateKey, json]);
+
+  return (
+    <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
-      >
+    >
       <View style={style.Body}>
         <View style={style.Button}>
-          <View style={{ margin: 2, width: wp(32) }}>
-            <Button
-              title={"privateKey"}
-              color={label == "privateKey" ? "green" : "grey"}
-              onPress={() => {
-                setOptionVisible(false);
-                setLabel("privateKey");
-                if(text){
-                  setPrivateKey(text)
-                }
-              }}
-            ></Button>
-          </View>
-          <View style={{ margin: 2, width: wp(32) }}>
-            <Button
-              title={"Mnemonic"}
-              color={label == "mnemonic" ? "green" : "grey"}
-              onPress={() => {
-                setOptionVisible(false);
-                setLabel("mnemonic");
-                if(text){
-                  setMnemonic(text)
-                }
-              }}
-            ></Button>
-          </View>
-          <View style={{ margin: 2, width: wp(33) }}>
-            <Button
-              title={"JSON key"}
-              color={label == "JSON" ? "green" : "grey"}
-              onPress={() => {
-                setLabel("JSON");
-                setOptionVisible(true);
-                if(text){
-                  setJson(text)
-                }
-              }}
-            ></Button>
-          </View>
+          <TouchableOpacity
+            style={
+              label == "privateKey"
+                ? { ...style.tabBtns, borderColor: "#4CA6EA" }
+                : style.tabBtns
+            }
+            // color={label == "privateKey" ? "green" : "grey"}
+            onPress={() => {
+              setOptionVisible(false);
+              setLabel("privateKey");
+              if (text) {
+                setPrivateKey(text);
+              }
+            }}
+          >
+            <Text style={{ color: label == "privateKey" ? "#4CA6EA" : "grey" }}>
+              PrivateKey
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={
+              label == "mnemonic"
+                ? { ...style.tabBtns, borderColor: "#4CA6EA" }
+                : style.tabBtns
+            } // color={label == "mnemonic" ? "green" : "grey"}
+            onPress={() => {
+              setOptionVisible(false);
+              setLabel("mnemonic");
+              if (text) {
+                setMnemonic(text);
+              }
+            }}
+          >
+            <Text style={{ color: label == "mnemonic" ? "#4CA6EA" : "grey" }}>
+              Mnemonic
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={
+              label == "JSON"
+                ? { ...style.tabBtns, borderColor: "#4CA6EA" }
+                : style.tabBtns
+            }
+            // color={label == "JSON" ? "green" : "grey"}
+            onPress={() => {
+              setLabel("JSON");
+              setOptionVisible(true);
+              if (text) {
+                setJson(text);
+              }
+            }}
+          >
+            <Text style={{ color: label == "JSON" ? "#4CA6EA" : "grey" }}>
+              JSON key
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={{ display: "flex", alignContent: "flex-start" }}>
-          <Text style={style.welcomeText}>Name</Text>
+        <View style={style.labelInputContainer}>
+          <Text style={style.label}>Name</Text>
+          <TextInput
+            value={accountName}
+            onChangeText={(text) => {
+              setAccountName(text);
+            }}
+            style={{ width: wp("78%") }}
+            placeholder={accountName ? accountName : "Wallet 1"}
+            placeholderTextColor={"black"}
+          />
         </View>
-        <TextInput
-          style={style.input2}
-          theme={{ colors: { text: "black" } }}
-          value={accountName}
-          onChangeText={(text) => {
-            setAccountName(text);
-          }}
-          placeholderTextColor="black"
-          autoCapitalize={"none"}
-          placeholder="Wallet 1"
-        />
 
-        <TextInput
-          style={style.textInput}
-          onChangeText={(text) => {
+        <View style={style.inputView}>
+          <TouchableOpacity onPress={async ()=>{
+           // setText('abc')
             if (label === "privateKey") {
-              setText(text)
-              setPrivateKey(text);
+              await Paste(setText)
+              .then((text)=>{
+                console.log(text)
+                setPrivateKey(text)
+              })
+
             } else if (label === "mnemonic") {
-              setText(text)
-              setMnemonic(text);
+              
+              Paste(setText)
+              .then((text)=>{
+
+                setMnemonic(text)
+              })
+
             } else if (label === "JSON") {
-              setText(text)
-              setJson(text);
+              Paste(
+                setText
+              ).then((text)=>{
+
+                setJson(text)
+              })
+
+
             } else {
               return alert(`please input ${label} to proceed `);
             }
-          }}
-          placeholder={
-            label === "privateKey"
-              ? "Enter your private Key here"
-              : label === "JSON"
-              ? "Enter your secret JSON Key here"
-              : "Enter your secret phrase here"
-          }
-        />
+          }}>
+          <Text style={style.paste}>Paste</Text>
+          </TouchableOpacity>
+          <Text>Phrase</Text>
+          <TextInput
+            style={style.input}
+            value={text}
+            onChangeText={(text) => {
+              if (label === "privateKey") {
+                setText(text);
+                setPrivateKey(text);
+              } else if (label === "mnemonic") {
+                setText(text);
+                setMnemonic(text);
+              } else if (label === "JSON") {
+                setText(text);
+                setJson(text);
+              } else {
+                return alert(`please input ${label} to proceed `);
+              }
+            }}
+            placeholder={
+              label === "privateKey"
+                ? "Enter your private Key here"
+                : label === "JSON"
+                ? "Enter your secret JSON Key here"
+                : "Enter your secret phrase here"
+            }
+          />
+        </View>
 
         <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "grey",
-            height: hp(5),
-            width: wp(95),
-            display: optionVisible === false ? "none" : "flex",
-            margin: 10,
-            borderRadius: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 12,
-            },
-            shadowOpacity: 0.58,
-            shadowRadius: 16.0,
-
-            elevation: 24,
-          }}
-          theme={{ colors: { text: "black" } }}
+          style={style.jsonInput}
           value={jsonKey}
           onChangeText={(text) => {
             setJsonKey(text);
@@ -224,137 +257,148 @@ const ImportBscWallet = (props) => {
         ) : (
           <Text> </Text>
         )}
-        <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
-        <Text style={{color:'red'}}>{message}</Text>
+        <View
+          style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "red" }}>{message}</Text>
         </View>
-        <View style={{ width: wp(95), margin: 10 }}>
-          <Button
-            title={"Import"}
-            color={"blue"}
-            disabled={disable}
-            onPress={async () => {
-              const pin = await AsyncStorageLib.getItem("pin");
-              if (!accountName) {
-                return alert("please enter an accountName to proceed");
-              }
-              setLoading(true);
-              setTimeout(() => {
-                if (label === "mnemonic") {
-                  try {
-                    const phrase = mnemonic.trimStart();
-                    const trimmedPhrase = phrase.trimEnd();
-                    const check = ethers.utils.isValidMnemonic(trimmedPhrase);
-                    if (!check) {
-                      setLoading(false);
-                      return alert(
-                        "Incorrect Mnemonic. Please provide a valid Mnemonic"
-                      );
-                    }
-                    const accountFromMnemonic = new ethers.Wallet.fromMnemonic(
+
+        <TouchableOpacity
+          style={style.btn}
+          disabled={disable}
+          onPress={async () => {
+            const pin = await AsyncStorageLib.getItem("pin");
+            if (!accountName) {
+              return alert("error", "please enter an accountName to proceed");
+            }
+            setLoading(true);
+            setTimeout(() => {
+              if (label === "mnemonic") {
+                try {
+                  const phrase = mnemonic.trimStart();
+                  const trimmedPhrase = phrase.trimEnd();
+                  const check = ethers.utils.isValidMnemonic(trimmedPhrase);
+                  if (!check) {
+                    setLoading(false);
+                    return alert(
+                      "error",
+                      "Incorrect Mnemonic. Please provide a valid Mnemonic"
+                    );
+                  }
+                  const accountFromMnemonic = new ethers.Wallet.fromMnemonic(
+                    trimmedPhrase
+                  );
+                  const Keys = accountFromMnemonic._signingKey();
+                  const privateKey = Keys.privateKey;
+                  const wallet = {
+                    address: accountFromMnemonic.address,
+                    privateKey: privateKey,
+                  };
+                  /*  const response = saveUserDetails(wallet.address).then((response)=>{
+                      if(response.code===400){
+                        setLoading(false)
+
+                        return alert(response.message)
+                      }
+                      else if(response.code===401){
+                        setLoading(false)
+
+                        return alert(response.message)
+                      }
+                    }).catch((e)=>{
+                      console.log(e)
+                      setLoading(false)
+
+                    })*/
+
+                  console.log(pin);
+                  const body = {
+                    accountName: accountName,
+                    pin: JSON.parse(pin),
+                  };
+                  const token = genUsrToken(body);
+                  console.log(token);
+
+                  const accounts = {
+                    address: wallet.address,
+                    privateKey: wallet.privateKey,
+                    name: accountName,
+                    mnemonic: trimmedPhrase,
+                    walletType: "BSC",
+                    wallets: [],
+                  };
+                  let wallets = [];
+                  wallets.push(accounts);
+                  const allWallets = [
+                    {
+                      address: wallet.address,
+                      privateKey: wallet.privateKey,
+                      name: accountName,
+                      mnemonic: trimmedPhrase,
+                      walletType: "BSC",
+                    },
+                  ];
+
+                  AsyncStorageLib.setItem(
+                    "wallet",
+                    JSON.stringify(allWallets[0])
+                  );
+                  AsyncStorageLib.setItem(
+                    `${accountName}-wallets`,
+                    JSON.stringify(allWallets)
+                  );
+                  AsyncStorageLib.setItem("user", accountName);
+                  AsyncStorageLib.setItem("token", token);
+                  AsyncStorageLib.setItem("currentWallet", accountName);
+
+                  dispatch(setUser(accountName));
+                  dispatch(
+                    setCurrentWallet(
+                      wallet.address,
+                      accountName,
+                      wallet.privateKey,
                       trimmedPhrase
-                    );
-                    const Keys = accountFromMnemonic._signingKey();
-                    const privateKey = Keys.privateKey;
-                    const wallet = {
-                      address: accountFromMnemonic.address,
-                      privateKey: privateKey,
-                    };
-                    /*  const response = saveUserDetails(wallet.address).then((response)=>{
-                      if(response.code===400){
-                        setLoading(false)
+                    )
+                  );
+                  dispatch(AddToAllWallets(wallets, accountName));
+                  dispatch(getBalance(wallet.address));
+                  dispatch(setToken(token));
+                  //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                  dispatch(setWalletType("BSC"));
 
-                        return alert(response.message)
-                      }
-                      else if(response.code===401){
-                        setLoading(false)
+                  setLoading(false);
+                  props.navigation.navigate("HomeScreen");
 
-                        return alert(response.message)
-                      }
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-
-                    })*/
-
-                    console.log(pin);
-                    const body = {
-                      accountName: accountName,
-                      pin: JSON.parse(pin),
-                    };
-                    const token = genUsrToken(body);
-                    console.log(token);
-
-                    const accounts = {
-                      address: wallet.address,
-                      privateKey: wallet.privateKey,
-                      name: accountName,
-                      walletType: "BSC",
-                      wallets: [],
-                    };
-                    let wallets = [];
-                    wallets.push(accounts);
-                    const allWallets = [
-                      {
-                        address: wallet.address,
-                        privateKey: wallet.privateKey,
-                        name: accountName,
-                        walletType: "BSC",
-                      },
-                    ];
-
-                    AsyncStorageLib.setItem(
-                      "wallet",
-                      JSON.stringify(allWallets[0])
-                    );
-                    AsyncStorageLib.setItem(
-                      `${accountName}-wallets`,
-                      JSON.stringify(allWallets)
-                    );
-                    AsyncStorageLib.setItem("user", accountName);
-                    AsyncStorageLib.setItem("token", token);
-                    AsyncStorageLib.setItem("currentWallet", accountName);
-
-                    dispatch(setUser(accountName));
-                    dispatch(
-                      setCurrentWallet(
-                        wallet.address,
-                        accountName,
-                        wallet.privateKey
-                      )
-                    );
-                    dispatch(AddToAllWallets(wallets, accountName));
-                    dispatch(getBalance(wallet.address));
-                    dispatch(setToken(token));
-                    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-                    dispatch(setWalletType("BSC"));
-
+                  //setVisible(!visible)
+                } catch (e) {
+                  console.log(e);
+                  alert("error", e);
+                  setLoading(false);
+                }
+              } else if (label === "privateKey") {
+                try {
+                  console.log('starting private key')
+                  const check = ethers.utils.isHexString(privateKey, 32);
+                  if (!check) {
                     setLoading(false);
-                    props.navigation.navigate("HomeScreen");
-
-                    //setVisible(!visible)
-                  } catch (e) {
-                    console.log(e);
-                    alert(e);
-                    setLoading(false);
+                    return alert(
+                      "error",
+                      "Incorrect PrivateKey. Please provide a valid privatekey"
+                    );
                   }
-                } else if (label === "privateKey") {
-                  try {
-                    const check = ethers.utils.isHexString(privateKey, 32);
-                    if (!check) {
-                      setLoading(false);
-                      return alert(
-                        "Incorrect PrivateKey. Please provide a valid privatekey"
-                      );
-                    }
-                    const walletPrivateKey = new ethers.Wallet(privateKey);
-                    console.log(walletPrivateKey.mnemonic);
-                    const Keys = walletPrivateKey._signingKey();
-                    const privatekey = Keys.privateKey;
-                    const wallet = {
-                      address: walletPrivateKey.address,
-                      privateKey: privatekey,
-                    };
-                    /*  const response = saveUserDetails(wallet.address).then((response)=>{
+                  const walletPrivateKey = new ethers.Wallet(privateKey);
+                  console.log(walletPrivateKey.mnemonic);
+                  const Keys = walletPrivateKey._signingKey();
+                  const privatekey = Keys.privateKey;
+                  const wallet = {
+                    address: walletPrivateKey.address,
+                    privateKey: privatekey,
+                  };
+                  /*  const response = saveUserDetails(wallet.address).then((response)=>{
                       if(response.code===400){
                         setLoading(false)
                         return alert(response.message)
@@ -369,74 +413,74 @@ const ImportBscWallet = (props) => {
                       setLoading(false)
 
                     })*/
-                    console.log(pin);
-                    const body = {
-                      accountName: accountName,
-                      pin: JSON.parse(pin),
-                    };
-                    const token = genUsrToken(body);
-                    console.log(token);
+                  console.log(pin);
+                  const body = {
+                    accountName: accountName,
+                    pin: JSON.parse(pin),
+                  };
+                  const token = genUsrToken(body);
+                  console.log(token);
 
-                    const accounts = {
+                  const accounts = {
+                    address: wallet.address,
+                    privateKey: wallet.privateKey,
+                    name: accountName,
+                    walletType: "BSC",
+                    wallets: [],
+                  };
+                  let wallets = [];
+                  wallets.push(accounts);
+                  const allWallets = [
+                    {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
                       name: accountName,
                       walletType: "BSC",
-                      wallets: [],
+                    },
+                  ];
+
+                  AsyncStorageLib.setItem(
+                    "wallet",
+                    JSON.stringify(allWallets[0])
+                  );
+                  AsyncStorageLib.setItem(
+                    `${accountName}-wallets`,
+                    JSON.stringify(allWallets)
+                  );
+                  AsyncStorageLib.setItem("user", accountName);
+                  AsyncStorageLib.setItem("token", token);
+                  AsyncStorageLib.setItem("currentWallet", accountName);
+
+                  dispatch(setUser(accountName));
+                  dispatch(
+                    setCurrentWallet(
+                      wallet.address,
+                      accountName,
+                      wallet.privateKey
+                    )
+                  );
+                  dispatch(AddToAllWallets(wallets, accountName));
+                  dispatch(getBalance(wallet.address));
+                  dispatch(setToken(token));
+                  //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                  dispatch(setWalletType("BSC"));
+
+                  setLoading(false);
+                  props.navigation.navigate("HomeScreen");
+                } catch (e) {
+                  console.log(e);
+                  setLoading(false);
+                  return alert("error", e);
+                }
+              } else {
+                ethers.Wallet.fromEncryptedJson(json, jsonKey)
+                  .then((wallet) => {
+                    console.log("Address: " + wallet.address);
+                    const Wallet = {
+                      address: wallet.address,
+                      privateKey: wallet.privateKey,
                     };
-                    let wallets = [];
-                    wallets.push(accounts);
-                    const allWallets = [
-                      {
-                        address: wallet.address,
-                        privateKey: wallet.privateKey,
-                        name: accountName,
-                        walletType: "BSC",
-                      },
-                    ];
-
-                    AsyncStorageLib.setItem(
-                      "wallet",
-                      JSON.stringify(allWallets[0])
-                    );
-                    AsyncStorageLib.setItem(
-                      `${accountName}-wallets`,
-                      JSON.stringify(allWallets)
-                    );
-                    AsyncStorageLib.setItem("user", accountName);
-                    AsyncStorageLib.setItem("token", token);
-                    AsyncStorageLib.setItem("currentWallet", accountName);
-
-                    dispatch(setUser(accountName));
-                    dispatch(
-                      setCurrentWallet(
-                        wallet.address,
-                        accountName,
-                        wallet.privateKey
-                      )
-                    );
-                    dispatch(AddToAllWallets(wallets, accountName));
-                    dispatch(getBalance(wallet.address));
-                    dispatch(setToken(token));
-                    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-                    dispatch(setWalletType("BSC"));
-
-                    setLoading(false);
-                    props.navigation.navigate("HomeScreen");
-                  } catch (e) {
-                    console.log(e);
-                    setLoading(false);
-                    return alert(e);
-                  }
-                } else {
-                  ethers.Wallet.fromEncryptedJson(json, jsonKey)
-                    .then((wallet) => {
-                      console.log("Address: " + wallet.address);
-                      const Wallet = {
-                        address: wallet.address,
-                        privateKey: wallet.privateKey,
-                      };
-                      /* const response = saveUserDetails(wallet.address).then((response)=>{
+                    /* const response = saveUserDetails(wallet.address).then((response)=>{
       if(response.code===400){
         setLoading(false)
 
@@ -453,72 +497,73 @@ const ImportBscWallet = (props) => {
 
     })*/
 
-                      console.log(pin);
-                      const body = {
-                        accountName: accountName,
-                        pin: JSON.parse(pin),
-                      };
-                      const token = genUsrToken(body);
-                      console.log(token);
+                    console.log(pin);
+                    const body = {
+                      accountName: accountName,
+                      pin: JSON.parse(pin),
+                    };
+                    const token = genUsrToken(body);
+                    console.log(token);
 
-                      const accounts = {
+                    const accounts = {
+                      address: wallet.address,
+                      privateKey: wallet.privateKey,
+                      name: accountName,
+                      walletType: "BSC",
+                      wallets: [],
+                    };
+                    let wallets = [];
+                    wallets.push(accounts);
+                    const allWallets = [
+                      {
                         address: wallet.address,
                         privateKey: wallet.privateKey,
                         name: accountName,
                         walletType: "BSC",
-                        wallets: [],
-                      };
-                      let wallets = [];
-                      wallets.push(accounts);
-                      const allWallets = [
-                        {
-                          address: wallet.address,
-                          privateKey: wallet.privateKey,
-                          name: accountName,
-                          walletType: "BSC",
-                        },
-                      ];
+                      },
+                    ];
 
-                      AsyncStorageLib.setItem(
-                        "wallet",
-                        JSON.stringify(allWallets[0])
-                      );
-                      AsyncStorageLib.setItem(
-                        `${accountName}-wallets`,
-                        JSON.stringify(allWallets)
-                      );
-                      AsyncStorageLib.setItem("user", accountName);
-                      AsyncStorageLib.setItem("currentWallet", accountName);
-                      AsyncStorageLib.setItem("token", token);
+                    AsyncStorageLib.setItem(
+                      "wallet",
+                      JSON.stringify(allWallets[0])
+                    );
+                    AsyncStorageLib.setItem(
+                      `${accountName}-wallets`,
+                      JSON.stringify(allWallets)
+                    );
+                    AsyncStorageLib.setItem("user", accountName);
+                    AsyncStorageLib.setItem("currentWallet", accountName);
+                    AsyncStorageLib.setItem("token", token);
 
-                      dispatch(setUser(accountName));
-                      dispatch(
-                        setCurrentWallet(
-                          wallet.address,
-                          accountName,
-                          wallet.privateKey
-                        )
-                      );
-                      dispatch(AddToAllWallets(wallets, accountName));
-                      dispatch(getBalance(wallet.address));
-                      dispatch(setToken(token));
-                      //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
-                      dispatch(setWalletType("BSC"));
+                    dispatch(setUser(accountName));
+                    dispatch(
+                      setCurrentWallet(
+                        wallet.address,
+                        accountName,
+                        wallet.privateKey
+                      )
+                    );
+                    dispatch(AddToAllWallets(wallets, accountName));
+                    dispatch(getBalance(wallet.address));
+                    dispatch(setToken(token));
+                    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                    dispatch(setWalletType("BSC"));
 
-                      setLoading(false);
-                      props.navigation.navigate("HomeScreen");
-                    })
-                    .catch((e) => {
-                      console.log(e);
-                      setLoading(false);
-                      return alert(e);
-                    });
-                  setLoading(false);
-                }
-              }, 1);
-            }}
-          ></Button>
-        </View>
+                    setLoading(false);
+                    props.navigation.navigate("HomeScreen");
+                  })
+                  .catch((e) => {
+                    console.log(e);
+                    setLoading(false);
+                    return alert("error", e);
+                  });
+                setLoading(false);
+              }
+            }, 1);
+          }}
+        >
+          <Text style={{ color: "white" }}>Import</Text>
+        </TouchableOpacity>
       </View>
     </Animated.View>
   );
@@ -547,11 +592,12 @@ const style = StyleSheet.create({
     marginTop: hp(1),
   },
   Button: {
-    marginTop: hp(0),
-    display: "flex",
     flexDirection: "row",
-    alignContent: "space-around",
-    alignItems: "center",
+    justifyContent: "space-between",
+    width: wp(85),
+    marginTop: hp(3),
+    marginBottom: hp(3),
+    alignSelf: "center",
   },
   tinyLogo: {
     width: wp("5"),
@@ -607,5 +653,63 @@ const style = StyleSheet.create({
     shadowRadius: 16.0,
 
     elevation: 24,
+  },
+  labelInputContainer: {
+    position: "relative",
+    width: wp(90),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(3),
+    borderRadius: wp(2),
+    backgroundColor: "white",
+    borderWidth: 1,
+    paddingLeft: wp(3),
+    paddingVertical: hp(1.2),
+    borderColor: "#DADADA",
+  },
+  label: {
+    position: "absolute",
+    zIndex: 100,
+    backgroundColor: "white",
+    paddingHorizontal: 5,
+    left: 12,
+    color: "#4CA6EA",
+    top: -12,
+  },
+  inputView: {
+    borderWidth: 1,
+    width: wp(90),
+    alignSelf: "center",
+    padding: 10,
+    marginTop: hp(3),
+    borderRadius: hp(1),
+    borderColor: "#DADADA",
+  },
+  input: { paddingVertical: hp(4) },
+  paste: { textAlign: "right", color: "#4CA6EA" },
+  btn: {
+    backgroundColor: "#4CA6EA",
+    paddingVertical: hp(1.6),
+    width: wp(90),
+    alignSelf: "center",
+    borderRadius: hp(1),
+    alignItems: "center",
+  },
+  jsonInput: {
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    marginTop: hp(3),
+    width: wp(90),
+    borderRadius: hp(1),
+    paddingVertical: hp(1.6),
+    alignSelf: "center",
+    paddingHorizontal: wp(2),
+  },
+  tabBtns: {
+    borderBottomWidth: 1,
+    width: "26%",
+    alignItems: "center",
+    padding: 3,
   },
 });

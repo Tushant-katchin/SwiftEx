@@ -6,6 +6,7 @@ import {
   Button,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -14,6 +15,8 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
+import title_icon2 from "../../../assets/darkBlue.png";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -42,6 +45,7 @@ import { urls } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../reusables/Header";
 import { RPC, WSS } from "../constants";
+import { alert } from "../reusables/Toasts";
 
 const xrpl = require("xrpl");
 
@@ -54,15 +58,11 @@ const AllWallets = (props) => {
   let wallet = [];
   const dispatch = useDispatch();
 
-  let LeftContent = (props) => <Avatar.Image {...props} source={title_icon} />;
-  let multiCoinLeftContent = (props) => (
-    <Avatar.Image {...props} source={title_icon} />
-  );
-  let EtherLeftContent = (props) => (
-    <Avatar.Image {...props} source={Etherimage} />
-  );
-  let BnbLeftContent = (props) => <Avatar.Image {...props} source={Bnbimage} />;
-  let XrpLeftContent = (props) => <Avatar.Image {...props} source={Xrpimage} />;
+  let LeftContent = title_icon2;
+  let multiCoinLeftContent = title_icon2
+  let EtherLeftContent = Etherimage
+  let BnbLeftContent = Bnbimage;
+  let XrpLeftContent = Xrpimage;
   let MaticLeftContent = (props) => (
     <Avatar.Image {...props} source={Maticimage} />
   );
@@ -161,7 +161,9 @@ const AllWallets = (props) => {
             console.log("My bsc balance" + balance);
           }
         } else if (JSON.parse(type) == "Xrp") {
-          const resp = await getXrpBal(address)
+          //const resp = await getXrpBal(address)
+          dispatch(getXrpBalance(state.wallet.xrp.address))
+
           .catch((e)=>{
             console.log(e)
           })
@@ -217,6 +219,7 @@ const AllWallets = (props) => {
           if (balance) {
             console.log("My bsc balance" + balance);
           }
+          dispatch(getXrpBalance(state.wallet.xrp.address))
         } else {
           const wallet = await state.wallet.address;
           console.log("hello" + wallet);
@@ -266,12 +269,11 @@ const AllWallets = (props) => {
     setAllWallets(allwallets);
   }, []);
 
+
+ 
   return (
-    <View style={style.Body}>
-      <Text>Main Wallet</Text>
-      <ScrollView
-        style={{ height: hp(1), width: wp(90), marginBottom: hp(10) }}
-      >
+    <ScrollView contentContainerStyle={style.body}>
+    
         {Wallets[0] ? (
           Wallets[0].map((item) => {
             if (item.walletType === "BSC") {
@@ -296,6 +298,7 @@ const AllWallets = (props) => {
                   onPress={() => {
                     // props.navigation.navigate('Import Multi-Coin Wallet')
                     if (item.walletType) {
+                      console.log(item.mnemonic)
                       AsyncStorageLib.setItem("currentWallet", item.name);
                       if(item.xrp){
                         dispatch(
@@ -303,6 +306,7 @@ const AllWallets = (props) => {
                             item.address,
                             item.name,
                             item.privateKey,
+                            item.mnemonic?item.mnemonic:'',
                             item.xrp.address?item.xrp.address:'',
                             item.xrp.privateKey?item.xrp.privateKey:'',
                             walletType='Multi-coin'
@@ -316,15 +320,18 @@ const AllWallets = (props) => {
                                 JSON.stringify(item.walletType)
                               );
                               dispatch(setWalletType(item.walletType));
-                              //getBalance(state);
-                              alert("Wallet Selected " + item.name);
+                             // getBalance(state);
+                              
+                              alert("success","Wallet Selected " + item.name);
                             } else {
                               alert(
+                                "error",
                                 "error while selecting wallet. please try again"
                               );
                             }
                           } else {
                             alert(
+                              "error",
                               "error while selecting wallet. please try again"
                             );
                           }
@@ -336,7 +343,9 @@ const AllWallets = (props) => {
                           setCurrentWallet(
                             item.classicAddress,
                             item.name,
-                            item.privateKey
+                            item.privateKey,
+                            item.mnemonic?item.mnemonic:'',
+
                           )
                         ).then(async (response) => {
                           console.log(response)
@@ -360,9 +369,10 @@ const AllWallets = (props) => {
                               console.log(response)
                             })*/
                             //dispatch(getXrpBalance(item.classicAddress))
-                            alert(`Wallet selected : ${item.name}`);
+                            alert("success",`Wallet selected : ${item.name}`);
                           } else {
                             alert(
+                              "error",
                               "error while selecting wallet. please try again"
                             );
                           }
@@ -372,7 +382,8 @@ const AllWallets = (props) => {
                           setCurrentWallet(
                             item.address,
                             item.name,
-                            item.privateKey
+                            item.privateKey,
+                            item.mnemonic?item.mnemonic:'',
                           )
                         ).then((response) => {
                           console.log(response);
@@ -383,15 +394,17 @@ const AllWallets = (props) => {
                                 JSON.stringify(item.walletType)
                               );
                               dispatch(setWalletType(item.walletType));
-                              //getBalance(state);
-                              alert("Wallet Selected " + item.name);
+                              getBalance(state);
+                              alert("success","Wallet Selected " + item.name);
                             } else {
                               alert(
+                                "error",
                                 "error while selecting wallet. please try again"
                               );
                             }
                           } else {
                             alert(
+                              "error",
                               "error while selecting wallet. please try again"
                             );
                           }
@@ -399,62 +412,53 @@ const AllWallets = (props) => {
                       }
                     } else {
                       alert(
+                        "error",
                         "wallet not supported. Please try selecting a different wallet"
                       );
                     }
                   }}
                 >
-                  <Card
+                  <View
                     style={{
-                      width: wp(99),
-                      height: hp(10),
-                      backgroundColor: "white",
-                      borderRadius: 10,
-                      marginRight: wp(-20),
+                     flexDirection:"row",
+                     alignItems:"center"
                     }}
                   >
-                    <Card.Title
-                      titleStyle={{ color: "black" }}
-                      title={item.name}
+                    <Image style={style.img} source={LeftContent}/>
+                    <Text style={{marginHorizontal:wp(3)}}
                       left={LeftContent}
-                    />
-                    <Card.Content
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        color: "#fff",
-                      }}
-                    ></Card.Content>
-                  </Card>
+                    >{item.name}</Text>
+                   
+                  </View>
                 </TouchableOpacity>
               </View>
             );
           })
         ) : (
-          <Text>No wallets</Text>
+          <Text style={style.NoText}>No wallets found</Text>
         )}
-      </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
 
 export default AllWallets;
 
 const style = StyleSheet.create({
-  Body: {
-    display: "flex",
-    backgroundColor: "white",
-    height: hp(100),
-    width: wp(100),
-    alignItems: "center",
-    textAlign: "center",
-    justifyContent: "flex-start",
-  },
+ body:{backgroundColor:"white",height:hp(100)},
   welcomeText: {
     fontSize: 20,
     fontWeight: "200",
     color: "black",
     marginTop: hp(5),
+  },
+  wallet:{
+textAlign:"center",
+marginTop:hp(3),
+fontSize:16
+  },
+  NoText:{
+textAlign:"center",
+marginTop:hp(2)
   },
   welcomeText2: {
     fontSize: 15,
@@ -473,16 +477,11 @@ const style = StyleSheet.create({
     color: "white",
   },
   Box: {
-    height: hp("10"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(1),
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
+    marginHorizontal:wp(6),
+    borderBottomWidth:StyleSheet.hairlineWidth*1,
+    padding:10,
+    marginTop:hp(2),
+    borderColor:"#D7D7D7"
   },
   Box2: {
     height: hp("15%"),
@@ -508,5 +507,10 @@ const style = StyleSheet.create({
     alignContent: "center",
     backgroundColor: "white",
     borderTopWidth: 1,
+  },
+  img:{
+    height: hp(5),
+    width: wp(9),
+    borderRadius: hp(3),
   },
 });

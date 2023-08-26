@@ -14,8 +14,10 @@ import {
 } from "react-native-responsive-screen";
 import { LineChart } from "react-native-svg-charts";
 import { useDispatch, useSelector } from "react-redux";
-
+import darkBlue from "../../assets/darkBlue.png"
 import Etherimage from "../../assets/ethereum.png";
+import monkey from "../../assets/monkey.png"
+import wl from "../../assets/wl.jpg"
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 import profile from "../../assets/profile.jpg"
 import { style } from "@mui/system";
@@ -68,7 +70,7 @@ const Nfts = () => {
     <Animated.View
       style={styles.mainContainer}>
        
-<Image source={profile} style={styles.img}/>
+<Image source={monkey} style={styles.img}/>
 <Text style={styles.text}>Collectibles will appear here</Text>
 <TouchableOpacity style={styles.btnContainer}>
   <Text style={styles.btnText}>Receive</Text>

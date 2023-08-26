@@ -3,10 +3,11 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
   Button,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { TextInput, Checkbox } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -23,7 +24,7 @@ import {
   setToken,
   setWalletType,
 } from "../components/Redux/actions/auth";
-import { encryptFile } from "../utilities/utilities";
+import { encryptFile, Paste } from "../utilities/utilities";
 import DialogInput from "react-native-dialog-input";
 import { urls } from "./constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
@@ -31,6 +32,8 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
+import { alert } from "./reusables/Toasts";
+import styles from "../Screens/splash/style";
 const xrpl = require("xrpl");
 
 const ImportMunziWallet = (props) => {
@@ -39,9 +42,9 @@ const ImportMunziWallet = (props) => {
   const [mnemonic, setMnemonic] = useState("");
   const [visible, setVisible] = useState(false);
   const [Wallet, setWallet] = useState();
-  const [disable, setDisable] = useState(true)
-  const [ message, setMessage] = useState('')
-  
+  const [disable, setDisable] = useState(true);
+  const [message, setMessage] = useState("");
+
   const dispatch = useDispatch();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -52,7 +55,6 @@ const ImportMunziWallet = (props) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -66,73 +68,82 @@ const ImportMunziWallet = (props) => {
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(()=>{
-    if(accountName &&  mnemonic )
-    {
-      let valid
-        const phrase = mnemonic.trimStart();
-        const trimmedPhrase = phrase.trimEnd();
-        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
-        if(!valid){
-          setMessage('Please enter a valid mnemonic')
-        }
-        else{
-          setMessage('')
-        }
-
-      if(accountName && mnemonic  && valid){
-        setDisable(false)
-      }else{
-        setDisable(true)
+  useEffect(() => {
+    if (accountName && mnemonic) {
+      let valid;
+      const phrase = mnemonic.trimStart();
+      const trimmedPhrase = phrase.trimEnd();
+      valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+      if (!valid) {
+        setMessage("Please enter a valid mnemonic");
+      } else {
+        setMessage("");
       }
-    }else{
-      setMessage('')
+
+      if (accountName && mnemonic && valid) {
+        setDisable(false);
+      } else {
+        setDisable(true);
+      }
+    } else {
+      setMessage("");
     }
-    },[mnemonic])
-  
+  }, [mnemonic]);
 
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
       <View style={style.Body}>
-        <View style={{ display: "flex", alignContent: "flex-start" }}>
-          <Text style={style.welcomeText}>Name</Text>
+        <View style={style.labelInputContainer}>
+          <Text style={style.label}>Name</Text>
+          <TextInput
+            value={accountName}
+            onChangeText={(text) => setAccountName(text)}
+            style={{ width: wp("78%") }}
+            placeholder={accountName?accountName: "Wallet 1"}
+            placeholderTextColor={"black"}
+          />
         </View>
-        <TextInput
-          style={style.input2}
-          theme={{ colors: { text: "black" } }}
-          value={accountName}
-          onChangeText={(text) => setAccountName(text)}
-          placeholderTextColor="black"
-          autoCapitalize={"none"}
-          placeholder="Wallet 1"
-        />
+        <View
+          style={style.inputView}
+        >
+          <TouchableOpacity onPress={async ()=>{
+           // setText('abc')
+              Paste(setMnemonic)          
+          }}>
+          <Text style={style.paste}>Paste</Text>
+          </TouchableOpacity>
+          <Text>Phrase</Text>
+          <TextInput
+            style={style.input}
+            value={mnemonic}
+            onChangeText={(text) => {
+              setMnemonic(text);
+            }}
+          />
+        </View>
 
-        <TextInput
-          style={style.textInput}
-          onChangeText={(text) => {
-            setMnemonic(text);
-          }}
-          placeholder={"Enter your secret phrase here"}
-        />
-        <Text style={{ margin: 5 }}>
-          Secret Phrases are typically 12(sometimes 16) words long.They are also
-          called mnemonic phrase.{" "}
+        <Text style={style.text}>
+          Typically 12 (sometimes 18.24) words separated by single spaces
         </Text>
         {loading ? (
           <ActivityIndicator size="large" color="green" />
         ) : (
           <Text> </Text>
         )}
-        <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
-        <Text style={{color:'red'}}>{message}</Text>
+        <View
+          style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "red" }}>{message}</Text>
         </View>
-        
-        <View style={{ width: wp(95), margin: 10 }}>
-          <Button
-            title={"Import"}
-            color={"blue"}
+
+          <TouchableOpacity
+            style={style.btn}
             disabled={disable}
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
@@ -147,21 +158,24 @@ const ImportMunziWallet = (props) => {
                   const check = ethers.utils.isValidMnemonic(trimmedPhrase);
                   if (!check) {
                     setLoading(false);
+
                     return alert(
+                      "error",
                       "Incorrect Mnemonic. Please provide a valid Mnemonic"
                     );
                   }
 
-                  const xrpWalletFromM = xrpl.Wallet.fromMnemonic(trimmedPhrase);
-                    const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
-                    console.log(
-                      "\t===> seed Created from mnemonic",
-                      entropy.split("x")[1]
-                    );
-                    const xrpWallet = xrpl.Wallet.fromEntropy(
-                      entropy.split("x")[1]
-                    ); // This is suggested because we will get seeds also
-                    console.log(xrpWallet); // Produces different addresses
+                  const xrpWalletFromM =
+                    xrpl.Wallet.fromMnemonic(trimmedPhrase);
+                  const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
+                  console.log(
+                    "\t===> seed Created from mnemonic",
+                    entropy.split("x")[1]
+                  );
+                  const xrpWallet = xrpl.Wallet.fromEntropy(
+                    entropy.split("x")[1]
+                  ); // This is suggested because we will get seeds also
+                  console.log(xrpWallet); // Produces different addresses
 
                   const accountFromMnemonic =
                     ethers.Wallet.fromMnemonic(trimmedPhrase);
@@ -170,10 +184,10 @@ const ImportMunziWallet = (props) => {
                   const wallet = {
                     address: accountFromMnemonic.address,
                     privateKey: privateKey,
-                    xrp:{
-                      address:xrpWallet.classicAddress,
-                      privateKey:xrpWallet.seed
-                    }
+                    xrp: {
+                      address: xrpWallet.classicAddress,
+                      privateKey: xrpWallet.seed,
+                    },
                   };
                   /* const response = saveUserDetails(accountFromMnemonic.address).then((response)=>{
                 if(response.code===400){
@@ -198,10 +212,11 @@ const ImportMunziWallet = (props) => {
                   const accounts = {
                     address: wallet.address,
                     privateKey: wallet.privateKey,
+                    mnemonic: trimmedPhrase,
                     name: accountName,
-                    xrp:{
-                      address:xrpWallet.classicAddress,
-                      privateKey:xrpWallet.seed
+                    xrp: {
+                      address: xrpWallet.classicAddress,
+                      privateKey: xrpWallet.seed,
                     },
                     walletType: "Multi-coin",
                     wallets: [],
@@ -212,10 +227,11 @@ const ImportMunziWallet = (props) => {
                     {
                       address: wallet.address,
                       privateKey: wallet.privateKey,
+                      mnemonic: trimmedPhrase,
                       name: accountName,
-                      xrp:{
-                        address:xrpWallet.classicAddress,
-                        privateKey:xrpWallet.seed
+                      xrp: {
+                        address: xrpWallet.classicAddress,
+                        privateKey: xrpWallet.seed,
                       },
                       walletType: "Multi-coin",
                     },
@@ -238,10 +254,10 @@ const ImportMunziWallet = (props) => {
                       wallet.address,
                       accountName,
                       wallet.privateKey,
+                      trimmedPhrase,
                       xrpWallet.classicAddress,
                       xrpWallet.seed,
-                      walletType='Multi-coin'
-                      
+                      (walletType = "Multi-coin")
                     )
                   );
                   dispatch(AddToAllWallets(wallets, accountName));
@@ -253,7 +269,7 @@ const ImportMunziWallet = (props) => {
 
                   props.navigation.navigate("HomeScreen");
                 } catch (e) {
-                  alert(e);
+                  alert("error", e);
                   setLoading(false);
                 }
 
@@ -261,8 +277,9 @@ const ImportMunziWallet = (props) => {
                 setLoading(false);
               }, 1);
             }}
-          ></Button>
-        </View>
+          >
+            <Text style={{color:"white"}}>Import</Text>
+          </TouchableOpacity>
       </View>
     </Animated.View>
   );
@@ -272,11 +289,8 @@ export default ImportMunziWallet;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
     backgroundColor: "white",
     height: hp(100),
-    width: wp(100),
-    textAlign: "center",
   },
   welcomeText: {
     fontSize: 15,
@@ -319,22 +333,15 @@ const style = StyleSheet.create({
     backgroundColor: "white",
   },
   textInput: {
-    borderWidth: 1,
-    borderColor: "grey",
-    height: hp(20),
-    width: wp(95),
-    margin: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-
-    elevation: 24,
+    width: wp(90),
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "gray",
+    alignSelf: "center",
+    marginTop: hp(3),
+    paddingVertical: hp(8),
+    borderRadius: hp(1),
   },
+
   input2: {
     borderWidth: 1,
     borderColor: "grey",
@@ -352,4 +359,67 @@ const style = StyleSheet.create({
 
     elevation: 24,
   },
+  labelInputContainer: {
+    position: "relative",
+    width: wp(90),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(3),
+    borderRadius: wp(2),
+    backgroundColor: "white",
+    borderWidth: 1,
+    paddingLeft: wp(3),
+    paddingVertical: hp(1.2),
+    borderColor: "#DADADA",
+  },
+  labelInputContainer1: {
+    position: "relative",
+    width: wp(90),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(3),
+    borderRadius: wp(2),
+    backgroundColor: "white",
+    borderWidth: 1,
+    paddingLeft: wp(3),
+    paddingVertical: hp(8),
+    borderColor: "#DADADA",
+  },
+  label: {
+    position: "absolute",
+    zIndex: 100,
+    backgroundColor: "white",
+    paddingHorizontal: 5,
+    left: 12,
+    color: "#4CA6EA",
+    top: -12,
+  },
+  text: {
+    marginHorizontal: wp(6),
+    marginTop: hp(5),
+    color: "gray",
+  },
+  inputView:{
+    borderWidth: 1,
+    width: wp(90),
+    alignSelf: "center",
+    padding: 10,
+    marginTop: hp(3),
+    borderRadius: hp(1),
+    borderColor: "#DADADA",
+  },
+  input:{ paddingVertical: hp(4) },
+  paste:{ textAlign: "right",color:"#4CA6EA" },
+  btn:{
+    backgroundColor: "#4CA6EA",
+    paddingVertical: hp(1.6),
+    width: wp(90),
+    alignSelf: "center",
+    borderRadius: hp(1),
+    alignItems: "center",
+  }
 });

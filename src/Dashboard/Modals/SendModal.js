@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, View, Modal } from "react-native";
 import {
@@ -12,6 +12,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { Animated } from "react-native";
 import { utils, providers } from "ethers";
 import { useNavigation } from "@react-navigation/native";
 import { getNonce } from "../../utilities/utilities";
@@ -281,17 +282,17 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
                   console.log(e);
                 });
             } else if (JSON.parse(Type) == "Matic") {
-              let bal = await AsyncStorageLib.getItem("MaticBalance")
+              let bal = await AsyncStorageLib.getItem("MaticBalance");
               console.log(bal);
               setBalance(bal);
 
               if (bal) {
-                console.log("balance", bal)
+                console.log("balance", bal);
                 setBalance(bal);
               } else {
                 console.log("coudnt get balance");
               }
-            /* dispatch(getMaticBalance(address))
+              /* dispatch(getMaticBalance(address))
             .then(async(res) => {
               console.log(res)
               let bal = await AsyncStorageLib.getItem("MaticBalance")
@@ -309,13 +310,12 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
               console.log(e);
             });*/
             } else if (JSON.parse(Type) == "Xrp") {
-              try{
-
+              try {
                 await AsyncStorageLib.getItem("wallet").then(async (wallet) => {
-                  console.log(wallet)
+                  console.log(wallet);
                   const response = await dispatch(
                     getXrpBalance(JSON.parse(wallet).address)
-                    )
+                  )
                     .then((res) => {
                       console.log(res.XrpBalance);
                       setBalance(res.XrpBalance);
@@ -323,10 +323,10 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
                     .catch((e) => {
                       console.log(e);
                     });
-                  });
-                }catch(e){
-                  console.log(e)
-                }
+                });
+              } catch (e) {
+                console.log(e);
+              }
             } else {
               const response = await dispatch(getBalance(state.wallet.address))
                 .then(async (response) => {
@@ -351,56 +351,73 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
       console.log(e);
     }
   };
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(async () => {
     await Balance();
     const token = await state.token;
     console.log(token);
     // console.log(result)
   }, [state.wallet.address, MaticBalance]);
-  useEffect(()=>{
-     Balance();
 
-  },[])
+  useEffect(() => {
+    Balance();
+  }, []);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+    }).start();
+  }, [fadeAnim]);
 
   return (
-    <View
-      style={{
-        backgroundColor: "white",
-        borderWidth: 1,
-        borderColor: "grey",
-        borderRadius: 10,
-      }}
+    <Animated.View // Special animatable View
+      style={{ opacity: fadeAnim }}
     >
       <Modal
         animationType="slide"
         transparent={true}
+        animationIn="slideInUp"
+        animationOut="slideOutRight"
         visible={modalVisible}
+        useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
         statusBarTranslucent={true}
-        style={{ backgroundColor: "#fff" }}
-        onBackdropPress={() => setModalVisible(false)}
+        hideModalContentWhileAnimating
+        onModalHide={() => setModalVisible(false)}
 
+        onBackdropPress={() => setModalVisible(false)}
         onRequestClose={() => {
           setModalVisible(false);
         }}
       >
+          <View style={{backgroundColor:'rgba(217, 217, 217, 0.4)',height:"100%",width:wp(100)}}>
         <View
           style={{
-            height: "90%",
-            marginTop: "auto",
-            backgroundColor: "white",
-            borderRadius: 20,
+            backgroundColor: "#131E3A",
+            paddingTop: hp(1),
+            paddingBottom: hp(12),
+            marginTop: hp(20),
+            width: wp(95),
+            borderRadius: hp(2),
+            alignSelf: "center",
+            borderWidth: 1,
+            borderColor: "#E0E0E0",
           }}
         >
-          <View style={styles.footer}>
-            <View style={styles.Amount}>
-              <View style={{ right: Visible === false ? wp(0) : wp(100) }}>
-                <ChooseTokens setModalVisible={setModalVisible} />
-              </View>
-            </View>
+          {/* <View style={styles.footer}> */}
+          {/* <View style={styles.Amount}> */}
+          <View style={{ right: Visible === false ? wp(0) : wp(100) }}>
+            <ChooseTokens setModalVisible={setModalVisible} />
           </View>
+          {/* </View> */}
+          {/* </View> */}
         </View>
+      </View>
       </Modal>
-    </View>
+
+    </Animated.View>
   );
 };
 

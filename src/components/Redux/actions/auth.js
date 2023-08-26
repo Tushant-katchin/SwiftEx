@@ -177,8 +177,8 @@ export const AddToAllWallets  = (account,user) => (dispatch) => {
   });
 };
 
-export const setCurrentWallet = (address, name, privateKey, classicAddress,seed,walletType) => (dispatch) => {
-  return AuthService.setCurrentWallet(address, name, privateKey, classicAddress,seed,walletType).then((response) => {
+export const setCurrentWallet = (address, name, privateKey, mnemonic,classicAddress,seed,walletType) => (dispatch) => {
+  return AuthService.setCurrentWallet(address, name, privateKey, mnemonic,classicAddress,seed,walletType).then((response) => {
     if (response.status === "success") {
       dispatch({
         type: SETCURRENTWALLET,

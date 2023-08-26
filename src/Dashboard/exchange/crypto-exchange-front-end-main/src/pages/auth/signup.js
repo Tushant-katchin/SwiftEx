@@ -73,57 +73,58 @@ export const ExchangeRegister = (props) => {
           <View
             style={{
               display: "flex",
-              alignItems: "center",
+              // alignItems: "center",
               textAlign: "center",
               justifyContent: "space-evenly",
               marginTop: platform === "ios" ? hp(20) : hp("1"),
               color: "white",
             }}
           >
-            <Text style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}>
+            <Text style={{ color: "#fff", marginBottom: 20, fontSize: 16,textAlign:"center",marginTop:hp(3) ,fontWeight:"700"}}>
               Create your exchange account
             </Text>
 
+
+
             <View style={styles.inp}>
-              <View style={styles.icon}>
-                <Text style={{ color: "#FFF", marginLeft: 5 }}>First Name</Text>
-              </View>
+                <Text style={styles.text}>First Name</Text>
 
               <TextInput
                 style={styles.input}
                 theme={{ colors: { text: "white" } }}
                 value={formContent.firstName}
-                placeholder={"First name"}
+                placeholder={"Enter your first name"}
                 onChangeText={(text) =>
                   setFormContent({ ...formContent, firstName: text })
                 }
                 autoCapitalize={"none"}
-                placeholderTextColor="#FFF"
+                placeholderTextColor="gray"
               />
             </View>
 
+
+
             <View style={styles.inp}>
-              <View style={styles.icon}>
-                <Text style={{ color: "#FFF", marginLeft: 5 }}>last name</Text>
-              </View>
+                <Text style={styles.text}>Last name</Text>
               <TextInput
-                placeholderTextColor="#FFF"
+                placeholderTextColor="gray"
                 style={styles.input}
                 theme={{ colors: { text: "white" } }}
                 value={formContent.lastName}
-                placeholder={"Last Name"}
+                placeholder={"Enter your last name"}
                 onChangeText={(text) =>
                   setFormContent({ ...formContent, lastName: text })
                 }
               />
             </View>
             <View>
-              <View style={styles.icon}>
-                <Text style={{ color: "#FFF", marginLeft: 5 }}>
+                <Text style={styles.text}>
                   Phone Number
                 </Text>
-              </View>
               <PhoneInput
+              containerStyle={{alignSelf:"center",marginTop:hp(2)}}
+              textContainerStyle={{ paddingVertical: hp(1) }}
+              textInputStyle={{ paddingVertical: hp(0.1) }}
                 ref={phoneInput}
                 defaultValue={value}
                 defaultCode="IN"
@@ -141,37 +142,33 @@ export const ExchangeRegister = (props) => {
               />
             </View>
             <View style={styles.inp}>
-              <View style={styles.icon}>
-                <Text style={{ color: "#FFF", marginLeft: 5 }}>
+                <Text style={styles.text}>
                   Email address
                 </Text>
-              </View>
               <TextInput
-                placeholderTextColor="#FFF"
+                placeholderTextColor="gray"
                 style={styles.input}
                 theme={{ colors: { text: "white" } }}
                 value={formContent.email}
-                placeholder={"Email address"}
+                placeholder={"Enter your email address"}
                 onChangeText={(text) =>
                   setFormContent({ ...formContent, email: text })
                 }
               />
             </View>
             <View style={styles.inp}>
-              <View style={styles.icon}>
-                <Text style={{ color: "#FFF", marginLeft: 5 }}>
+                <Text style={styles.text}>
                   Wallet Address
                 </Text>
-              </View>
               <TextInput
-                placeholderTextColor="#FFF"
+                placeholderTextColor="gray"
                 style={styles.input}
                 theme={{ colors: { text: "white" } }}
                 value={formContent.walletAddress}
                 placeholder={
                   state.wallet ? state.wallet.address : "Wallet address"
                 }
-                disabled={true}
+                // disabled={true}
                 onChangeText={(text) =>
                   setFormContent({ ...formContent, walletAddress: text })
                 }
@@ -183,7 +180,6 @@ export const ExchangeRegister = (props) => {
               <View></View>
             )}
 
-            <View style={styles.btn}>
               <LinearGradient
                 colors={["#12c2e9", "#c471ed", "#f64f59"]}
                 start={{ x: 0, y: 0.5 }}
@@ -206,7 +202,6 @@ export const ExchangeRegister = (props) => {
                   </Text>
                 </TouchableOpacity>
               </LinearGradient>
-            </View>
             <View style={styles.lowerbox}>
               <TouchableOpacity
                 onPress={() => {
@@ -248,13 +243,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   inp: {
-    borderWidth: 2,
-    marginTop: hp("1"),
+    marginTop: hp(3),
     color: "#FFF",
-    borderRadius: 20,
-    borderColor: "#808080",
-    width: wp("95"),
-    height: hp(12),
+   
   },
   btn: {
     width: wp("80"),
@@ -293,18 +284,23 @@ const styles = StyleSheet.create({
     paddingLeft: wp("2"),
   },
   button: {
-    paddingVertical: hp("2"),
-    paddingHorizontal: wp("2"),
-    borderRadius: wp("10"),
+    width:wp(80),
+    paddingVertical:hp(1),
+    alignSelf:"center",
+    borderRadius:hp(1),
+    marginTop:hp(2),
+    paddingVertical:hp(1.5),
+    marginBottom:hp(3)
+
   },
   buttonText: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 24,
+    // fontSize: 24,
   },
   lowerbox: {
     marginTop: hp(2),
-    height: 100,
+    height:hp(6),
     width: 400,
     backgroundColor: "#003166",
     borderTopLeftRadius: 30,
@@ -315,7 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   lowerboxtext: {
-    fontSize: 20,
+    fontSize: 16,
     color: "#FFFFFF",
     textAlign: "center",
     alignSelf: "center",
@@ -332,6 +328,11 @@ const styles = StyleSheet.create({
     height: 10,
     color: "#fff",
   },
+  text:{
+    color:"white",
+    marginHorizontal:wp(11),
+    fontSize:16,
+  }
 });
 
 /*import React, { useState } from 'react'

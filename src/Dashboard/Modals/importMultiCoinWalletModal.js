@@ -4,9 +4,10 @@ import {
   Text,
   View,
   Button,
+  TextInput,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { TextInput, Checkbox } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -23,6 +24,11 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import Modal from "react-native-modal";
 import ModalHeader from "../reusables/ModalHeader";
+import { alert } from "../reusables/Toasts";
+import { Paste } from "../../utilities/utilities";
+import * as Clipboard from "expo-clipboard";
+import Icon from "../../icon";
+
 const xrpl = require("xrpl");
 
 const ImportMultiCoinWalletModal = ({
@@ -30,9 +36,10 @@ const ImportMultiCoinWalletModal = ({
   setWalletVisible,
   Visible,
   setModalVisible,
+  onCrossPress
 }) => {
   const [loading, setLoading] = useState(false);
-  const [accountName, setAccountName] = useState("");
+  const [accountName, setAccountName] = useState();
   const [mnemonic, setMnemonic] = useState("");
   const [visible, setVisible] = useState(false);
   const [Wallet, setWallet] = useState();
@@ -42,9 +49,9 @@ const ImportMultiCoinWalletModal = ({
   const [jsonKey, setJsonKey] = useState();
   const [optionVisible, setOptionVisible] = useState(false);
   const [provider, setProvider] = useState("");
-  const [disable, setDisable] = useState(true)
-  const [ message, setMessage] = useState('')
-  
+  const [disable, setDisable] = useState(true);
+  const [message, setMessage] = useState("");
+
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
@@ -75,15 +82,16 @@ const ImportMultiCoinWalletModal = ({
         .then((response) => response.json())
         .then(async (responseJson) => {
           if (responseJson.responseCode === 200) {
-            alert("success");
+            alert("success", "success");
             return responseJson.responseCode;
           } else if (responseJson.responseCode === 400) {
             alert(
+              "error",
               "account with same name already exists. Please use a different name"
             );
             return responseJson.responseCode;
           } else {
-            alert("Unable to create account. Please try again");
+            alert("error", "Unable to create account. Please try again");
             return 401;
           }
         })
@@ -98,9 +106,9 @@ const ImportMultiCoinWalletModal = ({
     return response;
   }
 
-  const closeModal = ()=>{
-    setWalletVisible(false)
-  }
+  const closeModal = () => {
+    setWalletVisible(false);
+  };
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -115,6 +123,10 @@ const ImportMultiCoinWalletModal = ({
   }, [fadeAnim, Spin]);
 
   useEffect(()=>{
+    if(!accountName)
+    {
+      setDisable(true)
+    }
     if(accountName &&  mnemonic )
     {
       let valid
@@ -128,16 +140,15 @@ const ImportMultiCoinWalletModal = ({
           setMessage('')
         }
 
-      if(accountName && mnemonic  && valid){
-        setDisable(false)
-      }else{
-        setDisable(true)
+      if (accountName && mnemonic && valid) {
+        setDisable(false);
+      } else {
+        setDisable(true);
       }
-    }else{
-      setMessage('')
+    } else {
+      setMessage("");
     }
-    },[mnemonic])
-  
+    },[mnemonic,accountName])
 
 
   return (
@@ -158,85 +169,102 @@ const ImportMultiCoinWalletModal = ({
         }}
       >
         <View style={style.Body}>
-          <ModalHeader Function={closeModal} name={'Multi-Coin'}/>
-          <View style={{ display: "flex", alignContent: "flex-start" }}>
-            <Text style={style.welcomeText}>Name</Text>
+          {/* <ModalHeader Function={closeModal} name={'Multi-Coin'}/> */}
+<Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} onPress={onCrossPress}/>
+<Text style={style.coinText}>Multi Coin Wallet</Text>
+          <View style={style.labelInputContainer}>
+            <Text style={style.label}>Name</Text>
+            <TextInput
+              value={accountName}
+              onChangeText={(text) => setAccountName(text)}
+              style={{ width: wp("78%") }}
+              placeholder={accountName ? accountName : "Wallet 1"}
+              placeholderTextColor={"black"}
+            />
           </View>
-          <TextInput
-            style={style.input2}
-            theme={{ colors: { text: "black" } }}
-            value={accountName}
-            onChangeText={(text) => setAccountName(text)}
-            placeholderTextColor="black"
-            autoCapitalize={"none"}
-            placeholder="Wallet 1"
-          />
 
-          <TextInput
-            style={style.textInput}
-            onChangeText={(text) => {
-              setMnemonic(text);
-            }}
+
+          <View style={style.inputView}>
+            <TouchableOpacity
+              onPress={async () => {
+                // setText('abc')
+                Paste(setMnemonic);
+                
+              }}
+            >
+              <Text style={style.paste}>Paste</Text>
+            </TouchableOpacity>
+            <Text>Phrase</Text>
+            <TextInput
             placeholder={"Enter your secret phrase here"}
-          />
-          <Text style={{ margin: 5 }}>
-            Secret Phrases are typically 12(sometimes 16) words long.They are
-            also called mnemonic phrase.{" "}
-          </Text>
+              style={style.input}
+              value={mnemonic}
+              onChangeText={(text) => {
+                setMnemonic(text);
+              }}
+            />
+          </View>
+
+
           {loading ? (
             <ActivityIndicator size="large" color="green" />
           ) : (
             <Text> </Text>
           )}
-          <View style={{display:'flex', alignContent:'center',alignItems:'center'}}>
-        <Text style={{color:'red'}}>{message}</Text>
-        </View>
-          <View style={{ display:'flex',alignSelf:'center',width: wp(30), margin: 10 }}>
-            <Button
-              title={"Import"}
-              color={"blue"}
-              disabled={disable}
-              onPress={async () => {
-                if (!accountName) {
-                  return alert("please enter an accountName to proceed");
+          <View
+            style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "red" }}>{message}</Text>
+          </View>
+
+          <TouchableOpacity
+            style={style.btn}
+            disabled={disable}
+            onPress={async () => {
+              if (!accountName) {
+                return alert("error", "please enter an accountName to proceed");
+              }
+              setLoading(true);
+              try {
+                const user = await AsyncStorageLib.getItem("user");
+                const phrase = mnemonic.trimStart();
+                const trimmedPhrase = phrase.trimEnd();
+                const check = ethers.utils.isValidMnemonic(trimmedPhrase);
+                if (!check) {
+                  setLoading(false);
+                  return alert(
+                    "error",
+                    "Incorrect Mnemonic. Please provide a valid Mnemonic"
+                  );
                 }
-                setLoading(true);
-                try {
-                  const user = await AsyncStorageLib.getItem("user");
-                  const phrase = mnemonic.trimStart();
-                  const trimmedPhrase = phrase.trimEnd();
-                  const check = ethers.utils.isValidMnemonic(trimmedPhrase);
-                  if (!check) {
-                    setLoading(false);
-                    return alert(
-                      "Incorrect Mnemonic. Please provide a valid Mnemonic"
-                    );
-                  }
-                    const xrpWalletFromM = xrpl.Wallet.fromMnemonic(trimmedPhrase);
-                    const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
-                    console.log(
-                      "\t===> seed Created from mnemonic",
-                      entropy.split("x")[1]
-                    );
-                    const xrpWallet = xrpl.Wallet.fromEntropy(
-                      entropy.split("x")[1]
-                    ); // This is suggested because we will get seeds also
-                    console.log(xrpWallet); // Produces different addresses
+                const xrpWalletFromM = xrpl.Wallet.fromMnemonic(trimmedPhrase);
+                const entropy = ethers.utils.mnemonicToEntropy(trimmedPhrase);
+                console.log(
+                  "\t===> seed Created from mnemonic",
+                  entropy.split("x")[1]
+                );
+                const xrpWallet = xrpl.Wallet.fromEntropy(
+                  entropy.split("x")[1]
+                ); // This is suggested because we will get seeds also
+                console.log(xrpWallet); // Produces different addresses
 
-
-                  const accountFromMnemonic =
-                    ethers.Wallet.fromMnemonic(trimmedPhrase);
-                  const Keys = accountFromMnemonic._signingKey();
-                  const privateKey = Keys.privateKey;
-                  const wallet = {
-                    address: accountFromMnemonic.address,
-                    privateKey: privateKey,
-                    xrp:{
-                      address:xrpWallet.classicAddress,
-                      privateKey:xrpWallet.seed
-                    }
-                  };
-                  /* const response = saveUserDetails(accountFromMnemonic.address).then(async (response)=>{
+                const accountFromMnemonic =
+                  ethers.Wallet.fromMnemonic(trimmedPhrase);
+                const Keys = accountFromMnemonic._signingKey();
+                const privateKey = Keys.privateKey;
+                const wallet = {
+                  address: accountFromMnemonic.address,
+                  privateKey: privateKey,
+                  xrp: {
+                    address: xrpWallet.classicAddress,
+                    privateKey: xrpWallet.seed,
+                  },
+                };
+                /* const response = saveUserDetails(accountFromMnemonic.address).then(async (response)=>{
                 if(response===400){
                   return 
                 }
@@ -252,89 +280,86 @@ const ImportMultiCoinWalletModal = ({
 
 
               })*/
-                  const accounts = {
+                const accounts = {
+                  address: wallet.address,
+                  privateKey: wallet.privateKey,
+                  name: accountName,
+                  wallets: [],
+                };
+                let wallets = [];
+                const data = await AsyncStorageLib.getItem(`${user}-wallets`)
+                  .then((response) => {
+                    console.log(response);
+                    JSON.parse(response).map((item) => {
+                      wallets.push(item);
+                    });
+                  })
+                  .catch((e) => {
+                    setWalletVisible(false);
+                    setVisible(false);
+                    setModalVisible(false);
+                    console.log(e);
+                  });
+
+                //wallets.push(accounts)
+                const allWallets = [
+                  {
                     address: wallet.address,
                     privateKey: wallet.privateKey,
+                    mnemonic: trimmedPhrase,
                     name: accountName,
-                    wallets: [],
-                  };
-                  let wallets = [];
-                  const data = await AsyncStorageLib.getItem(`${user}-wallets`)
-                    .then((response) => {
-                      console.log(response);
-                      JSON.parse(response).map((item) => {
-                        wallets.push(item);
-                      });
-                    })
-                    .catch((e) => {
-                      setWalletVisible(false);
-                      setVisible(false);
-                      setModalVisible(false);
-                      console.log(e);
-                    });
-
-                  //wallets.push(accounts)
-                  const allWallets = [
-                    {
-                      address: wallet.address,
-                      privateKey: wallet.privateKey,
-                      name: accountName,
-                      xrp:{
-                        address:xrpWallet.classicAddress,
-                        privateKey:xrpWallet.seed
-                      },
-                      walletType: "Multi-coin",
-                      wallets: wallets,
+                    xrp: {
+                      address: xrpWallet.classicAddress,
+                      privateKey: xrpWallet.seed,
                     },
-                  ];
-                  // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
+                    walletType: "Multi-coin",
+                    wallets: wallets,
+                  },
+                ];
+                // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
 
-                  dispatch(AddToAllWallets(allWallets, user))
-                  .then(
-                    (response) => {
-                      if (response) {
-                        if (response.status === "Already Exists") {
-                          alert("Account with same name already exists");
-                          setLoading(false);
-                          return;
-                        } else if (response.status === "success") {
-                          setTimeout(() => {
-                            setLoading(false);
-                            setWalletVisible(false);
-                            setVisible(false);
-                            setModalVisible(false);
-                            navigation.navigate("AllWallets");
-                          }, 0);
-                        } else {
-                          alert("failed please try again");
-                          return;
-                        }
-                      }
+                dispatch(AddToAllWallets(allWallets, user)).then((response) => {
+                  if (response) {
+                    if (response.status === "Already Exists") {
+                      alert("error", "Account with same name already exists");
+                      setLoading(false);
+                      return;
+                    } else if (response.status === "success") {
+                      setTimeout(() => {
+                        setLoading(false);
+                        setWalletVisible(false);
+                        setVisible(false);
+                        setModalVisible(false);
+                        navigation.navigate("AllWallets");
+                      }, 0);
+                    } else {
+                      alert("error", "failed please try again");
+                      return;
                     }
-                  );
-                  
-                  // dispatch(getBalance(wallet.address))
-                  //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                  }
+                });
 
-                  let result = [];
+                // dispatch(getBalance(wallet.address))
+                //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
 
-                  
-                } catch (e) {
-                  alert(e);
-                  setLoading(false);
-                  setWalletVisible(false);
-                  setVisible(false);
-                  setModalVisible(false);
-                }
-
-                // setVisible(!visible)
+                let result = [];
+              } catch (e) {
+                alert("error", e);
+                setLoading(false);
                 setWalletVisible(false);
                 setVisible(false);
                 setModalVisible(false);
-                setLoading(false);
-              }}
-            ></Button>
-          </View>
+              }
+
+              // setVisible(!visible)
+              setWalletVisible(false);
+              setVisible(false);
+              setModalVisible(false);
+              setLoading(false);
+            }}
+          >
+            <Text style={{ color: "white" }}>Import</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </Animated.View>
@@ -347,11 +372,12 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     backgroundColor: "white",
-    height: hp(90),
-    width: wp(90),
+    height: hp(75),
+    width: wp(97),
     textAlign: "center",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
+    borderRadius:hp(1),
+    alignSelf: "center",
+    marginTop:hp(5)
   },
   welcomeText: {
     fontSize: 15,
@@ -393,38 +419,98 @@ const style = StyleSheet.create({
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "grey",
-    height: hp(20),
-    width: wp(85),
-    margin: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
 
-    elevation: 24,
-  },
-  input2: {
-    borderWidth: 1,
-    borderColor: "grey",
-    height: hp(5),
-    width: wp(85),
-    margin: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
+  labelInputContainer: {
+    position: "relative",
+    width: wp(90),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(3),
+    borderRadius: wp(2),
     backgroundColor: "white",
-    elevation: 24,
+    borderWidth: 1,
+    paddingLeft: wp(3),
+    paddingVertical: hp(1.2),
+    borderColor: "#DADADA",
   },
+  label: {
+    position: "absolute",
+    zIndex: 100,
+    backgroundColor: "white",
+    paddingHorizontal: 5,
+    left: 12,
+    color: "#4CA6EA",
+    top: -12,
+  },
+  input: {
+    height: hp("5%"),
+    marginBottom: hp("2"),
+    color: "black",
+    marginTop: hp("2"),
+    width: wp("90"),
+    paddingRight: wp("7"),
+    backgroundColor: "white",
+  },
+  jsonInput: {
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    marginTop: hp(3),
+    width: wp(90),
+    borderRadius: hp(1),
+    paddingVertical: hp(1.6),
+    alignSelf: "center",
+    paddingHorizontal: wp(2),
+  },
+  inputView: {
+    borderWidth: 1,
+    width: wp(90),
+    alignSelf: "center",
+    padding: 10,
+    marginTop: hp(3),
+    borderRadius: hp(1),
+    borderColor: "#DADADA",
+  },
+  text: {
+    marginHorizontal: wp(6),
+    marginTop: hp(5),
+    color: "gray",
+  },
+  btn: {
+    backgroundColor: "#4CA6EA",
+    paddingVertical: hp(1.6),
+    width: wp(90),
+    alignSelf: "center",
+    borderRadius: hp(1),
+    alignItems: "center",
+  },
+  paste: { textAlign: "right", color: "#4CA6EA" },
+  coinText:{
+    textAlign:"center",
+    marginTop:hp(1.5),
+    fontSize:15,
+    fontWeight:"700"
+  },
+  inputView: {
+    borderWidth: 1,
+    width: wp(90),
+    alignSelf: "center",
+    padding: 10,
+    marginTop: hp(3),
+    borderRadius: hp(1),
+    borderColor: "#DADADA",
+  },
+  input: {
+    height: hp("5%"),
+    marginBottom: hp("2"),
+    color: "black",
+    marginTop: hp("2"),
+    width: wp("90"),
+    paddingRight: wp("7"),
+    backgroundColor: "white",
+  },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.5)
+  }
 });

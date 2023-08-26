@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import Web3 from 'web3';
 import { useNavigation } from '@react-navigation/native';
+import * as Clipboard from "expo-clipboard";
 import React from 'react';
 var ethers = require('ethers');
 
@@ -882,6 +883,16 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
     return response
   }
 
+  export const getXrpPrice = async ()=>{
+    const response =await fetch('https://min-api.cryptocompare.com/data/price?fsym=XRP&tsyms=USD')
+    .then((res)=>res.json())
+    .then((resJson)=>{
+      console.log("xrp Current price",resJson)
+      return resJson
+    })
+    return response
+  }
+
 
   export const getEtherBnbPrice = async (address,address2) => {
     const token = await AsyncStorageLib.getItem('token')
@@ -928,3 +939,8 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
     return false
   }
   
+  export const Paste = async (func) => {
+    const text = await Clipboard.getStringAsync();
+    func(text);
+    return text
+  };

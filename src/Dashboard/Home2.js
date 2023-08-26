@@ -6,6 +6,8 @@ import {
   AppState,
   BackHandler,
   Alert,
+  ScrollView,
+  Dimensions,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setWalletType } from "../components/Redux/actions/auth";
@@ -45,6 +47,7 @@ const Home2 = ({ navigation }) => {
   const currentState = useRef(AppState.currentState);
   const [appState, setAppState] = useState(currentState.current);
   const [transactions, setTransactions] = useState();
+  
   const [routes] = useState([
     { key: "first", title: "Tokens" },
     { key: "second", title: "NFTs" },
@@ -53,15 +56,8 @@ const Home2 = ({ navigation }) => {
 
   const { getToken, requestUserPermission } = useFirebaseCloudMessaging();
 
-  if (Platform.OS === "android") {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-  }
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  const translation = useRef(new Animated.Value(0)).current;
-
+  
+  
   const getAllBalance = async () => {
     try {
       const wallet = await AsyncStorageLib.getItem("wallet");
@@ -72,7 +68,7 @@ const Home2 = ({ navigation }) => {
       AsyncStorageLib.getItem("walletType").then(async (type) => {
         console.log("hi" + JSON.parse(type));
         if (!state.wallet.address) {
-          console.log(res);
+          console.log('no wallet selected');
         } else if (JSON.parse(type) == "Matic") {
           await dispatch(getMaticBalance(address))
             .then(async (res) => {
@@ -196,13 +192,14 @@ const Home2 = ({ navigation }) => {
     console.log(user);
     let walletType = await AsyncStorageLib.getItem("walletType");
     let wallet = await AsyncStorageLib.getItem(`Wallet`).then((wallet) => {
-      console.log(JSON.parse(wallet));
+      console.log("My Wallet",JSON.parse(wallet));
       if (JSON.parse(wallet).xrp) {
         dispatch(
           setCurrentWallet(
             JSON.parse(wallet).address,
             user,
             JSON.parse(wallet).privateKey,
+            JSON.parse(wallet).mnemonic,
             JSON.parse(wallet).xrp.address
               ? JSON.parse(wallet).xrp.address
               : "",
@@ -231,61 +228,72 @@ const Home2 = ({ navigation }) => {
 
     return wallet;
   };
+
+    // setTimeout(()=>{
+    //   getAllBalance().catch((e) => {
+    //     console.log(e);
+    //   });
+    // },10000)
+  
+
   const renderTabBar = (props) => (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: "blue" }}
-      style={{ backgroundColor: "#189AB4" }}
-      activeColor={"blue"}
-      inactiveColor={"white"}
+      indicatorStyle={{ backgroundColor: "#4CA6EA" }}
+      style={{ backgroundColor: "#fff" }}
+      activeColor={"#4CA6EA"}
+      inactiveColor={"black"}
       pressColor={"black"}
+      
     />
   );
 
   const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <ScrollView style={{ flex: 1}}>
       <InvestmentChart />
-    </View>
+    </ScrollView>
   );
 
   const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View>
       <Nfts />
     </View>
   );
 
   const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
+    first: InvestmentChart,
+    second: Nfts,
   });
 
-  useEffect(async () => {
-    // getWallets(state.user, readData,dispatch, importAllWallets)
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-    }).start();
+  // useEffect(async () => {
+  //   // getWallets(state.user, readData,dispatch, importAllWallets)
+  //   Animated.timing(fadeAnim, {
+  //     toValue: 1,
+  //     duration: 1000,
+  //   }).start();
 
-    Animated.timing(translation, {
-      toValue: 1,
-      delay: 0.1,
-      useNativeDriver: true,
-    }).start();
-   /* if (!state.wallet.address) {
-      try {
-        await SetCurrentWallet().catch((e) => {
-          console.log(e);
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  */  }, []);
+  //   Animated.timing(translation, {
+  //     toValue: 1,
+  //     delay: 0.1,
+  //     useNativeDriver: true,
+  //   }).start();
+  //   /* if (!state.wallet.address) {
+  //     try {
+  //       await SetCurrentWallet().catch((e) => {
+  //         console.log(e);
+  //       });
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
+  // */
+  // }, []);
   useEffect(async () => {
     try {
       await SetCurrentWallet().catch((e) => {
         console.log(e);
       });
+     
     } catch (e) {
       console.log(e);
     }
@@ -330,23 +338,25 @@ const Home2 = ({ navigation }) => {
     requestUserPermission();
     getToken();
   }, []);
+  useEffect(()=>{
+    console.log('wallet changed')
+  },[state.wallet.name])
 
   /*useFocusEffect(
     React.useCallback(() => {
-      try{
-
+      try {
         getTransactions().then((res) => {
           console.log(res);
           checkIncomingTx(res);
         });
-      }catch(e){
-        console.log(e)
+      } catch (e) {
+        console.log(e);
       }
     }, [])
   );*/
 
   return (
-    <Animated.View style={{ backgroundColor: "#000C66" }}>
+    <View style={{ backgroundColor: "#000C66" }}>
       <View style={Styles.container}>
         <TabView
           swipeEnabled={true}
@@ -354,24 +364,24 @@ const Home2 = ({ navigation }) => {
           renderTabBar={renderTabBar}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          initialLayout={{ width: layout.width }}
-          style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
+          initialLayout={{width: Dimensions.get('window').width}}
+          // style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
         />
       </View>
-    </Animated.View>
+    </View>
   );
 };
 
 export default Home2;
 const Styles = StyleSheet.create({
   container: {
-    display: "flex",
+    // display: "flex",
     backgroundColor: "white",
     height: hp("100"),
     width: wp("100"),
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    zIndex: 100,
+    // zIndex: 100,
   },
   content: {
     display: "flex",

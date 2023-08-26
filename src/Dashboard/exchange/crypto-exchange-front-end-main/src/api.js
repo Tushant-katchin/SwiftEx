@@ -38,11 +38,20 @@ export const login = async (userData) => {
     const opts = {
       url: '/users/login',
       body: userData,
+      
+      
     }
     const res = await POST(opts)
+    .then((resp)=>{
+      console.log(resp)
+    }).catch((e)=>{
+      console.log(e)
+    })
+    console.log('starting')
+    console.log("RESPONSEE",res)
     return { res }
   } catch (error) {
-    console.log('LOGIN_ERROR: \n' + error.response)
+    console.log('LOGIN_ERROR: \n' + JSON.stringify(error.response))
     const err = {
       message: error.response.data.message,
       status: error.response.statusText,

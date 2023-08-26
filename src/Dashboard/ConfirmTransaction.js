@@ -22,9 +22,10 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import TransactionPinModal from "./Modals/transactionPinModal";
 import { useBiometricsForSendTransaction } from "../biometrics/biometric";
-import { useToast } from 'native-base';
-import { ShowToast } from "./reusables/Toasts";
+import { useToast } from "native-base";
+import { alert, ShowToast } from "./reusables/Toasts";
 import { CommonActions } from "@react-navigation/native";
+import Icon from "../icon";
 
 var ethers = require("ethers");
 const ConfirmTransaction = (props) => {
@@ -35,170 +36,168 @@ const ConfirmTransaction = (props) => {
   const [walletType, setWalletType] = useState("");
   const [pinViewVisible, setPinViewVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
- const navigation = useNavigation()
- const toast = useToast()
+  const navigation = useNavigation();
+  const toast = useToast();
+  // const a = props?.route?.pararms?.info;
+  // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa',a)
 
- const Navigate = () => {
-  navigation.dispatch((state) => {
-    // Remove the home route from the stack
-    const routes = state.routes.filter((r) => r.name !== "Confirm Tx");
+  const Navigate = () => {
+    navigation.dispatch((state) => {
+      // Remove the home route from the stack
+      const routes = state.routes.filter((r) => r.name !== "Confirm Tx");
 
-    return CommonActions.reset({
-      ...state,
-      routes,
-      index: routes.length - 1,
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
     });
-  });
-};
+  };
 
- async function sendTx(){
- let provider=props.route.params.info.provider
- let type=props.route.params.info.type
- let rawTransaction=props.route.params.info.rawTransaction
- const emailid = await state.user;
- const token = await state.token;
- setLoading(true);
- setDisable(true);
+  async function sendTx() {
+    let provider = props.route.params.info.provider;
+    let type = props.route.params.info.type;
+    let rawTransaction = props.route.params.info.rawTransaction;
+    const emailid = await state.user;
+    const token = await state.token;
+    setLoading(true);
+    setDisable(true);
 
- if (type === "Eth") {
-   let txx = await provider.core
-     .sendTransaction(rawTransaction)
-     .catch((e) => {
-       console.log(e);
-       setLoading(false);
-     });
-   const tx = txx.wait();
-   console.log("Sent transaction", await tx);
+    if (type === "Eth") {
+      let txx = await provider.core
+        .sendTransaction(rawTransaction)
+        .catch((e) => {
+          console.log(e);
+          setLoading(false);
+        });
+      const tx = txx.wait();
+      console.log("Sent transaction", await tx);
 
-   if (txx.hash) {
-     try {
-       const type = "Send";
-       const chainType = "Eth";
-       const saveTransaction = await SaveTransaction(
-         type,
-         txx.hash,
-         emailid,
-         token,
-         walletType,
-         chainType
-       );
+      if (txx.hash) {
+        try {
+          const type = "Send";
+          const chainType = "Eth";
+          const saveTransaction = await SaveTransaction(
+            type,
+            txx.hash,
+            emailid,
+            token,
+            walletType,
+            chainType
+          );
 
-       console.log(saveTransaction);
-       ShowToast(toast,"Transaction Successful")
-      
-       setLoading(false);
-       setDisable(false);
-       Navigate();
-       navigation.navigate("Transactions");
-     } catch (e) {
-       setLoading(false);
-       setDisable(false);
-       console.log(e);
-       alert(e);
-     }
-   }
- } else if (type === "Matic") {
-   let alchemy = provider;
-   let txx = await alchemy.core.sendTransaction(
-     rawTransaction
-   );
-   console.log("Sent transaction", txx.hash);
-   if (txx.hash) {
-     try {
-       const type = "Send";
-       const chainType = "Matic";
+          console.log(saveTransaction);
+          ShowToast(toast, "Transaction Successful");
 
-       const saveTransaction = await SaveTransaction(
-         type,
-         txx.hash,
-         emailid,
-         token,
-         walletType
-       );
+          setLoading(false);
+          setDisable(false);
+          Navigate();
+          navigation.navigate("Transactions");
+        } catch (e) {
+          setLoading(false);
+          setDisable(false);
+          console.log(e);
 
-       console.log(saveTransaction);
-       ShowToast(toast,"Transaction Successful")
+          alert("error", e);
+        }
+      }
+    } else if (type === "Matic") {
+      let alchemy = provider;
+      let txx = await alchemy.core.sendTransaction(rawTransaction);
+      console.log("Sent transaction", txx.hash);
+      if (txx.hash) {
+        try {
+          const type = "Send";
+          const chainType = "Matic";
 
-       setLoading(false);
-       setDisable(false);
-       setPinViewVisible(false);
-       Navigate();
-       navigation.navigate("Transactions");
-     } catch (e) {
-       setDisable(false);
-       setLoading(false);
-       console.log(e);
-       alert(e);
-     }
-   }
- } else if (type === "BSC") {
-   const txx = await provider
-     .sendTransaction(rawTransaction)
-     .catch((e) => {
-       return alert(e);
-     }); //SendTransaction(signer, token)
-   if (txx.hash) {
-     try {
-       const type = "Send";
-       const chainType = "BSC";
+          const saveTransaction = await SaveTransaction(
+            type,
+            txx.hash,
+            emailid,
+            token,
+            walletType
+          );
 
-       const saveTransaction = await SaveTransaction(
-         type,
-         txx.hash,
-         emailid,
-         token,
-         walletType,
-         chainType
-       );
+          console.log(saveTransaction);
+          ShowToast(toast, "Transaction Successful");
 
-       console.log(saveTransaction);
-       ShowToast(toast,"Transaction Successful")
+          setLoading(false);
+          setDisable(false);
+          setPinViewVisible(false);
+          Navigate();
+          navigation.navigate("Transactions");
+        } catch (e) {
+          setDisable(false);
+          setLoading(false);
+          console.log(e);
+          alert("error", e);
+        }
+      }
+    } else if (type === "BSC") {
+      const txx = await provider.sendTransaction(rawTransaction).catch((e) => {
+        return alert("error", e);
+      }); //SendTransaction(signer, token)
+      if (txx.hash) {
+        try {
+          const type = "Send";
+          const chainType = "BSC";
 
-       setLoading(false);
-       setDisable(false);
-       Navigate()
-       navigation.navigate("Transactions");
-     } catch (e) {
-       setDisable(false);
-       setLoading(false);
-       console.log(e);
-       alert(e);
-     }
-   }
- } else {
-   try {
-     const client = provider;
-     const signed = rawTransaction;
-     const tx = await client.submitAndWait(signed.tx_blob);
-     const type = "Send";
-     const chainType = "Xrp";
+          const saveTransaction = await SaveTransaction(
+            type,
+            txx.hash,
+            emailid,
+            token,
+            walletType,
+            chainType
+          );
 
-     const saveTransaction = await SaveTransaction(
-       type,
-       signed.hash,
-       emailid,
-       token,
-       walletType,
-       chainType
-     );
+          console.log(saveTransaction);
+          ShowToast(toast, "Transaction Successful");
 
-     console.log(saveTransaction);
-     ShowToast(toast,"Transaction Successful")
+          setLoading(false);
+          setDisable(false);
+          Navigate();
+          navigation.navigate("Transactions");
+        } catch (e) {
+          setDisable(false);
+          setLoading(false);
+          console.log(e);
+          alert("error", e);
+        }
+      }
+    } else {
+      try {
+        const client = provider;
+        const signed = rawTransaction;
+        const tx = await client.submitAndWait(signed.tx_blob);
+        const type = "Send";
+        const chainType = "Xrp";
 
-     setLoading(false);
-     setDisable(false);
-     console.log(tx);
-     Navigate()
-     navigation.navigate("Transactions");
-   } catch (e) {
-     setDisable(false);
-     setLoading(false);
-     console.log(e);
-     alert("please try again");
-   }
- }
-}
+        const saveTransaction = await SaveTransaction(
+          type,
+          signed.hash,
+          emailid,
+          token,
+          walletType,
+          chainType
+        );
 
+        console.log(saveTransaction);
+        ShowToast(toast, "Transaction Successful");
+
+        setLoading(false);
+        setDisable(false);
+        console.log(tx);
+        Navigate();
+        navigation.navigate("Transactions");
+      } catch (e) {
+        setDisable(false);
+        setLoading(false);
+        console.log(e);
+        alert("error", "please try again");
+      }
+    }
+  }
 
   useEffect(async () => {
     const user = await state.user;
@@ -218,86 +217,98 @@ const ConfirmTransaction = (props) => {
   }, [fadeAnim]);
 
   return (
-    <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim }}
-    >
-      <View style={style.Body}>
-        <View style={{ alignItems: "center" }}>
-          <Text style={style.welcomeText}>Transaction details</Text>
-          <Text style={style.welcomeText}>
-            {" "}
-            {props.route.params.info.amount}{" "}
-          </Text>
-        </View>
-        <Text style={style.welcomeText2}> From: </Text>
-        <Text style={style.welcomeText2}>
-          {" "}
-          {props.route.params.info.addressFrom}
+    <View style={style.mainContainer}>
+      <View style={style.BttView}>
+        <Text style={{ marginHorizontal: wp(3) }}>
+          {props?.route?.params?.info?.amount}
+          {/* -100 BTT */}
+          {/* <Text style={{ fontSize: 10 }}>($0.02)</Text> */}
         </Text>
-        <Text style={style.welcomeText2}> To: </Text>
-        <Text style={style.welcomeText2}>
-          {" "}
-          {props.route.params.info.addressTo}
-        </Text>
-
-        <Text style={style.welcomeText2}>
-          Fee: {Cost ? Cost : "evaluating fees"} {props.route.params.info.type}
-        </Text>
-        <Text style={style.welcomeText2}>
-          Final Amount (Amount+fee) :  {props.route.params.info.finalAmount}
-        </Text>
-
-        {Loading ? (
-          <View style={{ marginBottom: hp("-4") }}>
-            <ActivityIndicator size="small" color="white" />
-          </View>
-        ) : (
-          <Text> </Text>
-        )}
-        <View style={style.Button}>
-          <Button
-            title="confirm"
-            color={"green"}
-            disabled={disable ? true : false}
-            onPress={async() => {
-              //setVisible(!visible)
-              
-
-                const biometric = await AsyncStorageLib.getItem('Biometric')
-                if(biometric==='SET'){
-                  try{
-
-                    useBiometricsForSendTransaction(sendTx)
-                    return
-                  }catch(e)
-                  {
-                    console.log(e)
-                  }
-                }
-              
-              //checkBioMetric()
-              const type = props.route.params.info.type;
-              console.log(type);
-              setPinViewVisible(true);
-              setLoading(true);
-              setDisable(true);
-             
-            }}
-          ></Button>
-        </View>
       </View>
+
+      <Text style={style.fromTxt}>From</Text>
+      <Text style={style.fromAdd}>
+        {props?.route?.params?.info?.addressFrom}
+      </Text>
+
+      <Text style={style.fromTxt}>To</Text>
+      <Text style={style.toAdd}>
+        {props?.route?.params?.info?.addressTo}
+      </Text>
+
+      <View style={style.networkTxt}>
+        <Text>Network fee</Text>
+        <Text style={style.dollarTxt}>
+          {/* 0.1 TRX ($0.00) */}
+          {Cost ? Cost : "evaluating fees"} {props?.route?.params?.info?.type}
+        </Text>
+      </View>
+
+      <View
+        style={{
+          backgroundColor: "#eeeeee",
+          marginTop: hp(3),
+          width: wp(100),
+          alignSelf: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingVertical: hp(1.6),
+          paddingHorizontal: wp(5.5),
+        }}
+      >
+        <Text>Max Total</Text>
+        <Text style={style.dollarTxt}>
+          {/* $0.03 */}
+          (Amount+fee) : {props?.route?.params?.info?.finalAmount}
+        </Text>
+      </View>
+      {Loading ? (
+        <View style={{ marginBottom: hp("-4") }}>
+          <ActivityIndicator size="small" color="white" />
+        </View>
+      ) : (
+        <Text> </Text>
+      )}
+
+      <TouchableOpacity
+        style={style.doneBtn}
+        disabled={disable ? true : false}
+        onPress={async () => {
+          //setVisible(!visible)
+
+          const biometric = await AsyncStorageLib.getItem("Biometric");
+          if (biometric === "SET") {
+            try {
+              useBiometricsForSendTransaction(sendTx);
+              return;
+            } catch (e) {
+              console.log(e);
+            }
+          }
+
+          //checkBioMetric()
+          const type = props?.route?.params?.info?.type;
+          console.log(type);
+          setPinViewVisible(true);
+          setLoading(true);
+          setDisable(true);
+        }}
+      >
+        <Text style={{ color: "white" }}>{Loading?<ActivityIndicator size={'small'} color={'white'}/>: 'Send'}</Text>
+      </TouchableOpacity>
+
       <TransactionPinModal
         setPinViewVisible={setPinViewVisible}
         pinViewVisible={pinViewVisible}
-        provider={props.route.params.info.provider}
-        type={props.route.params.info.type}
-        rawTransaction={props.route.params.info.rawTransaction}
+        provider={props?.route?.params?.info?.provider}
+        type={props?.route?.params?.info?.type}
+        rawTransaction={props?.route?.params?.info?.rawTransaction}
         walletType={walletType}
         SaveTransaction={SaveTransaction}
         setLoading={setLoading}
         setDisable={setDisable}
       />
-    </Animated.View>
+    </View>
   );
 };
 
@@ -305,40 +316,12 @@ export default ConfirmTransaction;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
-    backgroundColor: "#131E3A",
+    backgroundColor: "white",
     height: hp(100),
     width: wp(100),
     textAlign: "center",
   },
-  welcomeText: {
-    fontSize: 15,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(5),
-    alignItems: "center",
-  },
-  welcomeText2: {
-    fontSize: 15,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(5),
-  },
-  Button: {
-    marginTop: hp(10),
-  },
-  tinyLogo: {
-    width: wp("5"),
-    height: hp("5"),
-    padding: 30,
-    marginTop: hp(10),
-  },
-  Text: {
-    marginTop: hp(5),
-    fontSize: 15,
-    fontWeight: "200",
-    color: "white",
-  },
+  mainContainer: { backgroundColor: "white", height: hp(100) },
   input: {
     height: hp("5%"),
     marginBottom: hp("2"),
@@ -348,5 +331,59 @@ const style = StyleSheet.create({
     paddingRight: wp("7"),
     backgroundColor: "white",
     borderColor: "white",
+  },
+  BttView: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(2),
+    borderBottomWidth: 0.3,
+    paddingVertical: hp(1),
+    width: wp(90),
+  },
+  downloadBtn: {
+    // backgroundColor: "red",
+    borderRadius: hp(3),
+    width: wp(10),
+    borderWidth: 0.3,
+    height: hp(5),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fromTxt: {
+    color: "black",
+    fontWeight: "700",
+    marginHorizontal: wp(6),
+    marginTop: hp(2),
+    fontSize: 15,
+  },
+  fromAdd: {
+    marginHorizontal: wp(6),
+    color: "gray",
+    marginTop: hp(1),
+  },
+  toAdd: {
+    marginHorizontal: wp(6),
+    color: "gray",
+    borderBottomWidth: 0.3,
+    paddingVertical: 12,
+  },
+  networkTxt: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(90),
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(2),
+  },
+  dollarTxt: { color: "gray", fontSize: 12 },
+  doneBtn: {
+    backgroundColor: "#3574B6",
+    alignItems: "center",
+    alignSelf: "center",
+    width: wp(90),
+    marginTop: hp(20),
+    paddingVertical: hp(1.8),
+    borderRadius: hp(1),
   },
 });

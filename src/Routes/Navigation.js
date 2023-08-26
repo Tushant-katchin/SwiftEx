@@ -34,7 +34,6 @@ import ConfirmTransaction from "../Dashboard/ConfirmTransaction";
 import SendTokens from "../Dashboard/tokens/SendTokens";
 import Transactions from "../Dashboard/Transactions";
 import AllWallets from "../Dashboard/Wallets/allWallets";
-import ExchangeRoutes from "../Dashboard/exchange/crypto-exchange-front-end-main/src/exchangeRoutes";
 import { ExchangeLogin } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
 import { ExchangeRegister } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/signup";
 import LockApp from "../Dashboard/lockApp";
@@ -43,11 +42,25 @@ import { ExchangeNavigation } from "../Dashboard/exchange/crypto-exchange-front-
 import BiometricPage from "../Dashboard/BiometricPage";
 import SplashScreen from "../Screens/splash";
 import Nfts from "../Dashboard/Nfts";
-import ScoringTopTab from "./TopNavigator";
-import ProfileHeader from "../Dashboard/header";
 import Token from "../Dashboard/Token";
 import Settings from "../../Settings";
 import Wallet from "../Dashboard/Wallet";
+import {
+  OfferListView,
+  OfferListViewHome,
+  OfferView,
+} from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/offers";
+import {
+  ExchangeHeader,
+  ExchangeHeaderIcon,
+  WalletHeader,
+} from "../Dashboard/header";
+import MyPrivateKey from "../Dashboard/myPrivateKey";
+import MarketChart from "../Dashboard/MarketChart";
+import RecieveAddress from "../Dashboard/Modals/ReceiveAddress";
+import ImportMultiCoinWalletModal from "../Dashboard/Modals/importMultiCoinWalletModal";
+import SelectWallet from "../Dashboard/Modals/SelectWallet";
+import TokenList from "../Dashboard/tokens/TokenList";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -56,21 +69,67 @@ const AuthStack = () => (
     ref={navigationRef}
   >
     <Stack.Navigator
-      // initialRouteName="privacyPolicy"
+      // initialRouteName="TokenList"
       mode="modal"
       screenOptions={{
         animation: "slide_from_right",
       }}
     >
+      {/* <Stack.Screen
+        name="ExchangeNavigation"
+        component={ExchangeNavigation}
+        options={{ headerShown: false }}
+      />     */}
 
-{/* <Stack.Screen
-        name="PrivacyPolicy"
-        component={PrivacyPolicy}
+      {/* <Stack.Screen
+        name="Home2"
+        component={Home2}
+        options={{
+          headerShown: true,
+          header: () => {
+            return <ProfileHeader />;
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="WalletTopTab"
+        component={WalletTopTab}
+        options={{
+          headerShown: true,
+          header: () => {
+            return <ProfileHeader />;
+          },
+        }}
+      /> */}
+      {/* <Stack.Screen
+        name="RecieveAddress"
+        component={RecieveAddress}
+        options={{ 
+          header:()=>{
+            return(
+              <WalletHeader title='Market-Chart'/>
+            )
+          }
+        }}
+      />    */}
+      {/* <Stack.Screen
+        name="ImportMultiCoinWalletModal"
+        component={ImportMultiCoinWalletModal}
         options={{ headerShown: false }}
       /> */}
 
-
-
+      {/* <Stack.Screen
+        name="TokenList"
+        component={TokenList}
+        options={{ headerShown: false }}
+      /> */}
+      {/* 
+<Stack.Screen
+        name="SelectWallet"
+        component={SelectWallet}
+        options={{ headerShown: false }}
+      /> */}
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -103,11 +162,14 @@ const AuthStack = () => (
         name="MyWallet"
         component={MyWallet}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return (
+              <WalletHeader
+                title={"Wallet"}
+                IconName="delete"
+                IconType="material"
+              />
+            );
           },
         }}
       />
@@ -123,6 +185,18 @@ const AuthStack = () => (
           },
         }}
       />
+
+      <Stack.Screen
+        name="OfferListView"
+        component={OfferListView}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OfferListViewHome"
+        component={OfferListViewHome}
+        options={{ headerShown: false }}
+      />
+
       <Stack.Screen
         name="Wallet"
         component={Wallet}
@@ -150,26 +224,21 @@ const AuthStack = () => (
         name="CoinDetails"
         component={CoinDetails}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Coin-Detail" />;
           },
         }}
       />
 
-
-<Stack.Screen
+      <Stack.Screen
         name="Settings"
         component={Settings}
         options={{
           headerShown: false,
-          
         }}
-      /> 
+      />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ScoringTopTab"
         component={ScoringTopTab}
         options={{
@@ -178,10 +247,14 @@ const AuthStack = () => (
             return <ProfileHeader />;
           },
         }}
+      /> */}
+      <Stack.Screen
+        name="Token"
+        component={Token}
+        options={{
+          headerShown: false,
+        }}
       />
-      <Stack.Screen name="Token" component={Token} options={{
-        headerShown:false
-      }}/>
       <Stack.Screen
         name="Nfts"
         component={Nfts}
@@ -195,11 +268,8 @@ const AuthStack = () => (
         name="TxDetail"
         component={TxDetail}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <ExchangeHeaderIcon isLogOut={false} title="Tx-Detail" />;
           },
         }}
       />
@@ -232,11 +302,8 @@ const AuthStack = () => (
         name="PrivateKey"
         component={PrivateKey}
         options={{
-          headerShown: false,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Private-Key" />;
           },
         }}
       />
@@ -258,11 +325,8 @@ const AuthStack = () => (
         name="Import"
         component={ImportAccount}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import" />;
           },
         }}
       />
@@ -271,11 +335,8 @@ const AuthStack = () => (
         name="Import Multi-Coin Wallet"
         component={ImportMunziWallet}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Multi-Coin Wallet" />;
           },
         }}
       />
@@ -284,11 +345,8 @@ const AuthStack = () => (
         name="Import Ethereum"
         component={ImportOtherWallets}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Ethereum" />;
           },
         }}
       />
@@ -297,11 +355,8 @@ const AuthStack = () => (
         name="Import Binance"
         component={ImportBscWallet}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Binance" />;
           },
         }}
       />
@@ -310,11 +365,8 @@ const AuthStack = () => (
         name="Import Polygon"
         component={ImportPolygon}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Polygon" />;
           },
         }}
       />
@@ -323,11 +375,8 @@ const AuthStack = () => (
         name="Import Xrp"
         component={ImportXrp}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Import Xrp" />;
           },
         }}
       />
@@ -336,11 +385,18 @@ const AuthStack = () => (
         name="Check Mnemonic"
         component={CheckMnemonic}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Check-Mneumonic" />;
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="My PrivateKey"
+        component={MyPrivateKey}
+        options={{
+          header: () => {
+            return <WalletHeader title="Secret Key" />;
           },
         }}
       />
@@ -349,12 +405,7 @@ const AuthStack = () => (
         name="Send"
         component={SendTokens}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
+          headerShown: false,
         }}
       />
 
@@ -362,11 +413,8 @@ const AuthStack = () => (
         name="Confirm Tx"
         component={ConfirmTransaction}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Confirm Tx" />;
           },
         }}
       />
@@ -375,11 +423,8 @@ const AuthStack = () => (
         name="Transactions"
         component={Transactions}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="Transaction" />;
           },
         }}
       />
@@ -387,11 +432,8 @@ const AuthStack = () => (
         name="AllWallets"
         component={AllWallets}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return <WalletHeader title="All Wallets" />;
           },
         }}
       />
@@ -411,34 +453,25 @@ const AuthStack = () => (
         name="exchangeLogin"
         component={ExchangeLogin}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="exchangeRegister"
         component={ExchangeRegister}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
+          header: () => {
+            return (
+              <ExchangeHeaderIcon isLogOut={false} title="Exchange-Register" />
+            );
           },
         }}
       />
-
       <Stack.Screen
         name="exchange"
         component={ExchangeNavigation}
         options={{
-          headerShown: true,
-
-          headerStyle: { backgroundColor: "#000C66" },
+          headerShown: false,
           headerTintColor: "white",
           headerTitleStyle: {
             fontWeight: "bold",

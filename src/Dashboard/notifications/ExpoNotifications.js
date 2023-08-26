@@ -1,15 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
+import { Text, View, Button, Platform, Alert } from 'react-native';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import * as Clipboard from "expo-clipboard";
+
+const copyToClipboard = (text) => {
+  Clipboard.setString(text);
+  alert("Copied");
+};
+
+/*Notifications.setNotificationHandler({
+=======
 import { Text, View, Button, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 
 Notifications.setNotificationHandler({
+>>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
   }),
-});
+<<<<<<< HEAD
+});*/
+
 
 // Can use this function below OR use Expo's Push Notification Tool from: https://expo.dev/notifications
 export async function sendPushNotification(expoPushToken) {
@@ -42,11 +57,20 @@ export async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
+     // alert('Failed to get push token for push notification!');
+     // return;
+     console.log('granted')
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
+    token = (await Notifications.getExpoPushTokenAsync({ projectId: '5a84df33-6d1e-4c4d-a511-c60ceebeb97a' })).data;
     console.log(token);
+    if(token){
+
+      //alert(token)
+      //Alert.alert('Push Token', token, [ {text: `copy`, onPress: () => copyToClipboard(token), style: 'cancel'}, {text: 'close alert', onPress: () => console.log('closed')}, ], { cancelable: true});
+      
+    }
+
+     
   } else {
     alert('Must use physical device for Push Notifications');
   }

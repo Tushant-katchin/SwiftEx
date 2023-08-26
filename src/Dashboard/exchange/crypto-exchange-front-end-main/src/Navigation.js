@@ -1,7 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeView } from "./pages/home";
 import { ProfileView } from "./pages/profile";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -9,22 +12,23 @@ import {
 import { Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { OfferView } from "./pages/offers";
-import { TransactionView } from "./pages/transaction";
+import { TransactionsListView } from "./pages/transaction";
 import { AccountView } from "./pages/account";
-
+import { TransactionView } from "./pages/transaction";
+import { ExchangeHeader, ExchangeHeaderIcon } from "../../../header";
 const Tab = createBottomTabNavigator();
 
 export function ExchangeNavigation() {
   return (
     <Tab.Navigator
-      initialRouteName="/"
+      // initialRouteName="/"
       activeColor="#f0edf6"
-      inactiveColor="#3e2465"
-      barStyle={{ backgroundColor: "white" }}
+      // inactiveColor="#3e2465"
+      barStyle={{ backgroundColor: "#fff" }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          size = 33;
+          size = 27;
           if (route.name === "/") {
             iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
             iconName = "ios-home-sharp";
@@ -41,26 +45,24 @@ export function ExchangeNavigation() {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "card-sharp";
           }
-          if (route.name === "account") {
+          if (route.name === "Profile") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "wallet";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-
         tabBarActiveTintColor: "blue",
-        tabBarInactiveTintColor: "gray",
+        tabBarInactiveTintColor: "white",
         tabBarStyle: {
-          position: "absolute",
+          // position: "absolute",
           backgroundColor: "white",
-          height: heightPercentageToDP("12"),
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          borderTopColor: "black",
-          borderTopWidth: 1,
+          height: hp(9),
+          backgroundColor: "#4CA6EA",
         },
         headerTitleAlign: "center",
+        
+        
       })}
     >
       <Tab.Screen
@@ -68,36 +70,42 @@ export function ExchangeNavigation() {
         component={HomeView}
         options={{
           tabBarLabel: "Home",
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeaderIcon />;
+          },
         }}
       />
       <Tab.Screen
         name="offers"
         component={OfferView}
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeaderIcon />;
+          },
         }}
       />
       <Tab.Screen
         name="Transactions"
         component={TransactionView}
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeaderIcon />;
+          },
           //Tab bar styles can be added here
         }}
       />
+
       <Tab.Screen
-        name="account"
-        component={AccountView}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="profile"
+        name="Profile"
         component={ProfileView}
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeaderIcon />;
+          },
         }}
       />
     </Tab.Navigator>

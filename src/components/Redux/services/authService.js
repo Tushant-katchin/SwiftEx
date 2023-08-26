@@ -485,6 +485,7 @@ async function setCurrentWallet(
   address,
   name,
   privateKey,
+  mnemonic,
   classicAddress,
   seed,
   walletType
@@ -496,6 +497,7 @@ async function setCurrentWallet(
       address: address,
       name: name,
       privateKey: privateKey,
+      mnemonic:mnemonic?mnemonic:'',
       xrp: {
         address: classicAddress,
         privateKey: seed,
@@ -507,12 +509,14 @@ async function setCurrentWallet(
       address: address,
       name: name,
       privateKey: privateKey,
+      mnemonic:mnemonic?mnemonic:'',
     };
   } else {
     wallet = {
       address: address,
       name: name,
       privateKey: privateKey,
+      mnemonic:mnemonic?mnemonic:''
     };
   }
 
@@ -580,6 +584,7 @@ async function AddToAllWallets(wallets, user) {
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
         address: wallets[0].address,
+        mnemonic: wallets[0].mnemonic?wallets[0].mnemonic:'',
         walletType: wallets[0].walletType,
         xrp: {
           address: wallets[0].xrp.address,
@@ -590,6 +595,7 @@ async function AddToAllWallets(wallets, user) {
       allWallets.push({
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
+        mnemonic: wallets[0].mnemonic?wallets[0].mnemonic:'',
         address: wallets[0].address,
         classicAddress: wallets[0].classicAddress,
         walletType: wallets[0].walletType,
@@ -598,6 +604,7 @@ async function AddToAllWallets(wallets, user) {
       allWallets.push({
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
+        mnemonic: wallets[0].mnemonic?wallets[0].mnemonic:'',
         address: wallets[0].address,
         walletType: wallets[0].walletType,
       });

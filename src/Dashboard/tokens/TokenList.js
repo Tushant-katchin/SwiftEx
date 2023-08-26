@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Image,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -36,6 +37,7 @@ import tokenList from "../tokens/tokenList.json";
 import chooseSwap from "../tokens/chooseSwap.json";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
+import { WalletHeader } from "../header";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 const { ChainId, Fetcher, WETH, Route } = require("@uniswap/sdk");
@@ -72,32 +74,6 @@ const TokenList = ({
   const dispatch = useDispatch();
 
   let LeftContent = (props) => <Avatar.Image {...props} source={title_icon} />;
-  let EtherLeftContent = (props) => (
-    <Avatar.Image {...props} source={Etherimage} />
-  );
-  let BnbLeftContent = (props) => <Avatar.Image {...props} source={Bnbimage} />;
-  let XrpLeftContent = (props) => <Avatar.Image {...props} source={Xrpimage} />;
-  let MaticLeftContent = (props) => (
-    <Avatar.Image {...props} source={Maticimage} />
-  );
-
-  const Wallets = [
-    {
-      name: "ethereum",
-    },
-    {
-      name: "Binance smart chain",
-      LeftContent: Bnbimage,
-    },
-    {
-      name: "Xrp",
-      LeftContent: Xrpimage,
-    },
-    {
-      name: "Polygon(Matic)",
-      LeftContent: Maticimage,
-    },
-  ];
 
   const fetchMoreData = () => {
     setLoading(true);
@@ -106,7 +82,7 @@ const TokenList = ({
     if (data) {
       console.log(data.length);
       setLoading(false);
-      setData([...Data,data])
+      setData([...Data, data]);
       setData(data);
       setPage(page + 1);
     }
@@ -125,149 +101,142 @@ const TokenList = ({
     </View>
   );
 
-  const ListCard = React.memo(({ item, LeftContent }) => {
+  const ListCard = React.memo(({ item }) => {
     //console.log(item.symbol)
     //console.log(item)
+    let address;
+
+    if (walletType === "Ethereum") {
+      if (item.symbol === "WBTC") {
+        address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
+      } else if (item.symbol === "USDC") {
+        address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
+      } else if (item.symbol === "DAI") {
+        //0xdf1742fe5b0bfc12331d8eaec6b478dfdbd31464
+        address = "0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464";
+        //address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
+      } else if (item.symbol === "USDT") {
+        address = "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49";
+      } else if (item.symbol === "WETH") {
+        address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+      } else if (item.symbol === "UNI") {
+        address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+      } else {
+        address = toChecksumAddress(item.address);
+      }
+    } else if (walletType === "BSC") {
+      if (item.symbol === "USDT") {
+        address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
+      } else if (item.symbol === "ETH") {
+        address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
+      } else if (item.symbol === "DAI") {
+        address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
+      } else if (item.symbol === "WBNB") {
+        address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+      } else if (item.symbol === "BNB") {
+        address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+      } else if (item.symbol === "BUSD") {
+        address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
+      } else {
+        address = toChecksumAddress(item.address);
+      }
+    } else if (walletType === "Multi-coin") {
+      if (item.chainId === 1 || item.chainId === 5) {
+        setSwapType("ETH");
+        if (item.symbol === "WBTC") {
+          address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
+        } else if (item.symbol === "USDC") {
+          address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
+        } else if (item.symbol === "DAI") {
+          address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
+        } else if (item.symbol === "USDT") {
+          address = "0x7016353707A91BA5c9bd4D3098DBb730236df68c";
+        } else if (item.symbol === "WETH") {
+          address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+        } else if (item.symbol === "UNI") {
+          address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+        } else if (item.symbol === "ETH") {
+          address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+        } else {
+          address = toChecksumAddress(item.address);
+        }
+      } else if (item.chainId === 56) {
+        setSwapType("BSC");
+        if (item.symbol === "USDT") {
+          address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
+        } else if (item.symbol === "ETH") {
+          address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
+        } else if (item.symbol === "DAI") {
+          address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
+        } else if (item.symbol === "WBNB") {
+          address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+        } else if (item.symbol === "BNB") {
+          address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+        } else if (item.symbol === "BUSD") {
+          address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
+        } else {
+          address = toChecksumAddress(item.address);
+        }
+      }
+    }
+    LeftContent = (props) => {
+      return <Avatar.Image {...props} source={{ uri: item.logoURI }} />;
+    };
     return (
       <TouchableOpacity
         key={item.address}
         style={{
-          height: hp("15%"),
-          width: wp("80"),
-          fontSize: 20,
-          fontWeight: "200",
-          color: "white",
-          marginTop: hp(0),
-          display: "flex",
+          flexDirection: "row",
+          borderBottomWidth: 0.3,
+          borderColor: "gray",
+          width: wp(90),
+          paddingVertical: hp(2),
           alignItems: "center",
-          alignContent: "center",
-          backgroundColor: "white",
-          display: "flex",
-          marginRight: 50,
+         
         }}
-        onPress={async () => {
-          let address;
-
-          if (walletType === "Ethereum") {
-            if (item.symbol === "WBTC") {
-              address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
-            } else if (item.symbol === "USDC") {
-              address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
-            } else if (item.symbol === "DAI") {
-              //0xdf1742fe5b0bfc12331d8eaec6b478dfdbd31464
-              address = "0xDF1742fE5b0bFc12331D8EAec6b478DfDbD31464";
-              //address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
-            } else if (item.symbol === "USDT") {
-              address = "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49";
-            } else if (item.symbol === "WETH") {
-              address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
-            } else if (item.symbol === "UNI") {
-              address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
-            } else {
-              address = toChecksumAddress(item.address);
-            }
-          } else if (walletType === "BSC") {
-            if (item.symbol === "USDT") {
-              address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
-            } else if (item.symbol === "ETH") {
-              address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
-            } else if (item.symbol === "DAI") {
-              address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
-            } else if (item.symbol === "WBNB") {
-              address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-            } else if (item.symbol === "BNB") {
-              address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-            } else if (item.symbol === "BUSD") {
-              address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
-            } else {
-              address = toChecksumAddress(item.address);
-            }
-          } else if (walletType === "Multi-coin") {
-            if (item.chainId === 1 || item.chainId === 5) {
-              setSwapType("ETH");
-              if (item.symbol === "WBTC") {
-                address = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05";
-              } else if (item.symbol === "USDC") {
-                address = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
-              } else if (item.symbol === "DAI") {
-                address = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
-              } else if (item.symbol === "USDT") {
-                address = "0x7016353707A91BA5c9bd4D3098DBb730236df68c";
-              } else if (item.symbol === "WETH") {
-                address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
-              } else if (item.symbol === "UNI") {
-                address = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
-              } else if (item.symbol === "ETH") {
-                address = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
-              } else {
-                address = toChecksumAddress(item.address);
-              }
-            } else if (item.chainId === 56) {
-              setSwapType("BSC");
-              if (item.symbol === "USDT") {
-                address = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
-              } else if (item.symbol === "ETH") {
-                address = "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378";
-              } else if (item.symbol === "DAI") {
-                address = "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867";
-              } else if (item.symbol === "WBNB") {
-                address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-              } else if (item.symbol === "BNB") {
-                address = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-              } else if (item.symbol === "BUSD") {
-                address = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee";
-              } else {
-                address = toChecksumAddress(item.address);
-              }
-            }
-          }
+        onPress={() => {
+          setVisible(false);
+          console.log("pressed");
           if (coinType == "0") {
+            setVisible(false);
             setCoin0({
               name: item.name,
               address: address,
               symbol: item.symbol,
               ChainId: item.chainId,
+              logoUri: item.logoURI,
             });
-            setVisible(false);
           } else {
+            setVisible(false);
             setCoin1({
               name: item.name,
               address: address,
               symbol: item.symbol,
               ChainId: item.chainId,
+              logoUri: item.logoURI,
             });
-            setVisible(false);
           }
           console.log(address);
         }}
       >
-        <Card
+       
+
+        <Image source={{uri:item.logoURI}} style={{ height: hp(4), width: wp(8) }} />
+        <View
           style={{
-            width: wp(100),
-            height: hp(10),
-            backgroundColor: "white",
-            borderRadius: 10,
-            marginLeft: wp(20),
-            display: "flex",
+            marginHorizontal: wp(4),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width:'80%',
           }}
         >
-          <Card.Title
-            titleStyle={{ color: "black" }}
-            title={item.name}
-            left={LeftContent}
-          />
-          <Card.Content
-            style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-          >
-            <Paragraph
-            style={{position:'absolute',marginLeft:wp(73),marginTop:hp(-5)}}
-            >0 {item.symbol}</Paragraph>
-            <Paragraph
-            style={{position:'absolute',marginLeft:wp(20),marginTop:hp(-3)}}
-            >{item.chainId==56?'bnb':"eth"}</Paragraph>
-          
-          </Card.Content>
-        </Card>
+          <View>
+            <Text>{item.name}</Text>
+            <Text style={{ color: "gray", fontSize: 12 }}>0 {item.symbol}</Text>
+          </View>
+          <Text>{item.chainId == 56 ? "bnb" : "eth"}</Text>
+        </View>
       </TouchableOpacity>
     );
   });
@@ -277,10 +246,9 @@ const TokenList = ({
   }, []);
 
   return (
-    <View 
-      style={{ width: wp(100) }}
-    >
-      <TokenHeader setVisible={setVisible} name={name} />
+    <View style={{ width: wp(100),height:hp(100) }}>
+      <WalletHeader title='Token-List'/>
+      {/* <TokenHeader setVisible={setVisible} name={name} /> */}
       <View style={style.Body}>
         <SearchComponent
           clampedScroll={clampedScroll}
@@ -299,13 +267,7 @@ const TokenList = ({
             contentContainerStyle={{ flexGrow: 1 }}
             data={Data}
             renderItem={({ item }) => {
-              LeftContent = (props) => {
-                return (
-                  <Avatar.Image {...props} source={{ uri: item.logoURI }} />
-                );
-              };
-
-              return <ListCard item={item} LeftContent={LeftContent} />;
+              return <ListCard item={item} />;
             }}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
@@ -314,7 +276,6 @@ const TokenList = ({
             ListEmptyComponent={renderEmpty}
             onEndReachedThreshold={0.1}
             onEndReached={fetchMoreData}
-            pagingEnabled={true}
           />
         )}
       </View>

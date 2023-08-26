@@ -22,7 +22,7 @@ LogBox.ignoreLogs(["Setting a timer"]);
 
 export default function App() {
   const [ready, setReady] = useState(false);
-
+  LogBox.ignoreAllLogs()
   LogBox.ignoreLogs(["Setting a timer"]);
   LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
   LogBox.ignoreLogs(['Failed prop type: Invalid prop `data[0]` supplied to `XAxis`, expected one of type [number, object]'])
@@ -36,6 +36,9 @@ export default function App() {
   LogBox.ignoreLogs([
     "The provided value 'moz-chunked-arraybuffer' is not a valid 'responseType'",
   ]);
+  LogBox.ignoreLogs([
+    "verified is not a valid icon name for family FontAwesome"
+  ])
 
   
   useEffect(() => {
@@ -53,20 +56,12 @@ export default function App() {
     <StoreProvider store={store}>
       <NativeBaseProvider>
         <PaperProvider>
-          <AnimatedSplash
-            translucent={true}
-            isLoaded={ready}
-            logoImage={require("./assets/splash.jpeg")}
-            backgroundColor={"#131E3A"}
-            logoHeight={hp("150")}
-            logoWidth={wp("100")}
-          >
+          
             <View style={styles.container}>
               <StatusBar hidden />
 
               <NavigationProvider />
             </View>
-          </AnimatedSplash>
         </PaperProvider>
       </NativeBaseProvider>
     </StoreProvider>

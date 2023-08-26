@@ -1,41 +1,7 @@
 import React, {Component} from "react";
 import PushNotification from "react-native-push-notification";
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import { useNavigation } from "@react-navigation/native";
-
-
-/*PushNotification.getChannels(function (channel_ids) {
-    console.log(channel_ids); // ['channel_id_1']
-  });
-
-  PushNotification.configure({
-    // (required) Called when a remote or local notification is opened or received
-    onNotification: function(notification) {
-      console.log('LOCAL NOTIFICATION ==>', notification)
-      if(notification.userInteraction){
-       // const Navigation = useNavigation()
-       // Navigation.navigate('exchange')
-      }
-    },
-  
-    popInitialNotification: true,
-    requestPermissions: true
-  })
-
-  PushNotification.createChannel(
-    {
-      channelId: "1", // (required)
-      channelName: "My channel", // (required)
-      channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-      playSound: true, // (optional) default: true
-      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-      importance: 4, // (optional) default: 4. Int value of the Android notification importance
-      vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-    },
-    (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-  );
-
-*/
+//import PushNotificationIOS from '@react-native-community/push-notification-ios';
+//import notifee from '@notifee/react-native';
 
 export default function PushNotifications(){
         PushNotification.configure({
@@ -70,24 +36,55 @@ export default function PushNotifications(){
     
 }
 
-export const LocalNotification = () => {
-    PushNotification.localNotification({
-      foreground:true,
-        channelId: "1",
-      autoCancel: true,
-      bigText:
-        'You recieved a new token from talib',
-      subText: 'Local Notification Demo',
-      title: 'MunziDapp',
-      message: 'Expand me to see more',
-      vibrate: true,
-      vibration: 300,
-      playSound: true,
-      soundName: 'default',
-      actions: '["Yes", "No"]',
-      invokeApp:false
+// export const LocalNotification = () => {
+// <<<<<<< HEAD
+    
+// =======
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
+//     PushNotification.localNotification({
+//       foreground:true,
+//         channelId: "1",
+//       autoCancel: true,
+//       bigText:
+//         'You recieved a new token from talib',
+//       subText: 'Local Notification Demo',
+//       title: 'MunziDapp',
+//       message: 'Expand me to see more',
+//       vibrate: true,
+//       vibration: 300,
+//       playSound: true,
+//       soundName: 'default',
+// <<<<<<< HEAD
+//       actions: '["Yes", "No"]'
+// =======
+//       actions: '["Yes", "No"]',
+//       invokeApp:false
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
       
-    })
-  }
+//     })
+//   }
 
-  
+// <<<<<<< HEAD
+  // export const SendNotification = async(title,message)=>{
+  //   await notifee.requestPermission()
+
+  //   // Create a channel (required for Android)
+  //   const channelId = await notifee.createChannel({
+  //     id: 'default',
+  //     name: 'Default Channel',
+  //   });
+
+  //   // Display a notification
+  //   await notifee.displayNotification({
+  //     title: title,
+  //     body: message,
+  //     android: {
+  //       channelId,
+  //       smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+  //       // pressAction is needed if you want the notification to open the app when pressed
+  //       pressAction: {
+  //         id: 'default',
+  //       },
+  //     },
+  //   });
+  // }

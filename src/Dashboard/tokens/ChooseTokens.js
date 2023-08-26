@@ -3,10 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   Button,
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  Pressable,
 } from "react-native";
 import { TextInput, Checkbox } from "react-native-paper";
 import {
@@ -31,12 +33,16 @@ import Maticimage from "../../../assets/matic.png";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import TokenHeader from "./TokenHeader";
+import { alert } from "../reusables/Toasts";
+import Icon from "../../icon";
 
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const ChooseTokens = ({ setModalVisible }) => {
+  
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [walletType, setWalletType] = useState(false);
+  const [ visible , setVisible] = useState(false)
 
   const navigation = useNavigation();
 
@@ -77,7 +83,10 @@ const ChooseTokens = ({ setModalVisible }) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  useEffect(() => {
+  useEffect(async () => {
+    const walletType = await AsyncStorageLib.getItem("walletType");
+    const Type = JSON.parse(walletType);
+    setWalletType(Type)
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -92,167 +101,128 @@ const ChooseTokens = ({ setModalVisible }) => {
 
   return (
     <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim }}
+      style={{ opacity: fadeAnim ,  
+    }}
     >
-      <TokenHeader setVisible={setModalVisible} name={'Choose Wallet'}/>
+   
+
+      <Icon type={'entypo'}  name='cross' color={"white"} size={24} style={style.crossIcon}  onPress={()=>{setModalVisible(false)}}/>
+      {/* <TokenHeader setVisible={setModalVisible} name={'Choose Wallet'}/> */}
+      <Text style={{fontSize:16,color:"#4CA6EA",textAlign:"center"}}>Choose Wallet</Text>
+
       <ScrollView>
         <View style={style.Body}>
+          <TouchableOpacity
+            style={walletType==='BSC'||walletType==='Multi-coin'?style.Box3:style.disableBox}
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              const Type = JSON.parse(walletType);
+              console.log(Type)
+              if (Type === "BSC" || Type ==='Multi-coin') {
+                setModalVisible(false);
+
+              let token = "BNB";
+              navigation.navigate("Send", {
+                token: token,
+              });
+            }else{
+              //setModalVisible(false);
+
+              return alert("error",'Please select a bnb wallet')
+            }
+            }}
+          >
+            <View style={style.flatView}>
+              <Image source={Bnbimage} style={style.img} />
+              <Text style={{ marginHorizontal: wp(4) }}>BNB</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={style.Box3}
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              const Type = JSON.parse(walletType);
+              if (Type === "Ethereum" || Type ==='Multi-coin') {
+                setModalVisible(false);
+
+              let token = "Ethereum";
+              navigation.navigate("Send", {
+                token: token,
+              });
+            }else{
+              return alert("error",'please select an ethereum wallet')
+            }
+            }}
+          >
+            <View style={style.flatView}>
+              <Image source={Etherimage} style={style.img} />
+              <Text style={{ marginHorizontal: wp(4) }}>ethereum</Text>
+              <View>
+                <Title style={{ color: "#fff" }}></Title>
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={style.Box3}
+            onPress={async () => {
+              const walletType = await AsyncStorageLib.getItem("walletType");
+              const Type = JSON.parse(walletType);
+              if (Type === "Matic" || Type ==='Multi-coin') {
+                setModalVisible(false);
+              let token = "Matic";
+              navigation.navigate("Send", {
+                token: token,
+              });
+            }else{
+              return alert("error",'Please select a matic wallet')
+            }
+            }}
+          >
+            <View style={style.flatView}>
+              <Image source={Maticimage} style={style.img} />
+              <Text style={{ marginHorizontal: wp(4) }}>Polygon(Matic)</Text>
+              <View>
+                <Title style={{ color: "#fff" }}></Title>
+              </View>
+            </View>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
               setModalVisible(false);
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
-              if (Type === "BSC" || Type ==='Multi-coin') {
-              
-              let token = "BNB";
-              navigation.navigate("Send", {
-                token: token,
-              });
-            }else{
-              return alert('Please select a bnb wallet')
-            }
-            }}
-          >
-            <Card
-              style={{
-                width: wp(99),
-                height: hp(10),
-                backgroundColor: "white",
-                borderRadius: 10,
-              }}
-            >
-              <Card.Title
-                titleStyle={{ color: "black" }}
-                title={"BNB "}
-                left={BnbLeftContent}
-              />
-              <Card.Content
-                style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-              >
-                <Title style={{ color: "#fff" }}></Title>
-              </Card.Content>
-            </Card>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={style.Box2}
-            onPress={async() => {
-              setModalVisible(false);
-              const walletType = await AsyncStorageLib.getItem("walletType");
-              const Type = JSON.parse(walletType);
-              if (Type === "Ethereum" || Type ==='Multi-coin') {
-              
-              let token = "Ethereum";
-              navigation.navigate("Send", {
-                token: token,
-              });
-            }else{
-              return alert('please select an ethereum wallet')
-            }
-            }}
-          >
-            <Card
-              style={{
-                width: wp(99),
-                height: hp(10),
-                backgroundColor: "white",
-                borderRadius: 10,
-              }}
-            >
-              <Card.Title
-                titleStyle={{ color: "black" }}
-                title={"ethereum"}
-                left={EtherLeftContent}
-              />
-              <Card.Content
-                style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-              >
-                <Title style={{ color: "#fff" }}></Title>
-              </Card.Content>
-            </Card>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={style.Box2}
-            onPress={async () => {
-              setModalVisible(false);
-              const walletType = await AsyncStorageLib.getItem("walletType");
-              const Type = JSON.parse(walletType);
-              if (Type === "Matic" || Type ==='Multi-coin') {
-              
-              let token = "Matic";
-              navigation.navigate("Send", {
-                token: token,
-              });
-            }else{
-              return alert('Please select a matic wallet')
-            }
-            }}
-            
-          >
-            <Card
-              style={{
-                width: wp(99),
-                height: hp(10),
-                backgroundColor: "white",
-                borderRadius: 10,
-              }}
-            >
-              <Card.Title
-                titleStyle={{ color: "black" }}
-                title={"Polygon(Matic)"}
-                left={MaticLeftContent}
-              />
-              <Card.Content
-                style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-              >
-                <Title style={{ color: "#fff" }}></Title>
-              </Card.Content>
-            </Card>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={style.Box2}
-            onPress={async () => {
-              setModalVisible(false);
-              const walletType = await AsyncStorageLib.getItem("walletType");
-              const Type = JSON.parse(walletType);
-              if(Type==='Multi-coin'){
+              if (Type === "Multi-coin") {
+                setModalVisible(false);
                 let token = "Multi-coin-Xrp";
                 navigation.navigate("Send", {
                   token: token,
                 });
-                return
-              }
-               else if(Type==='Xrp'){
+                return;
+              } else if (Type === "Xrp") {
+                setModalVisible(false);
+
                 let token = "Xrp";
                 navigation.navigate("Send", {
                   token: token,
                 });
                 return
               }else{
-                return alert('Please select xrp wallet')
+                
+                return alert("error",'Please select xrp wallet')
               }
             }}
           >
-            <Card
-              style={{
-                width: wp(99),
-                height: hp(10),
-                backgroundColor: "white",
-                borderRadius: 10,
-              }}
-            >
-              <Card.Title
-                titleStyle={{ color: "black" }}
-                title={"Xrp"}
-                left={XrpLeftContent}
-              />
-              <Card.Content
-                style={{ display: "flex", flexDirection: "row", color: "#fff" }}
-              >
+            <View style={style.flatView}>
+              <Image source={Xrpimage} style={style.img} />
+              <Text style={{ marginHorizontal: wp(4) }}>Xrp</Text>
+              <View>
                 <Title style={{ color: "#fff" }}></Title>
-              </Card.Content>
-            </Card>
+              </View>
+            </View>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -263,15 +233,20 @@ const ChooseTokens = ({ setModalVisible }) => {
 export default ChooseTokens;
 
 const style = StyleSheet.create({
+  flatView: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: wp(2),
+  },
+  img: { height: hp(5), width: wp(10), borderRadius: hp(3) },
   Body: {
     display: "flex",
-    backgroundColor: "white",
-    height: hp(100),
+    bottom: 0,
+    height: hp(50),
+    alignSelf:"center",
     width: wp(100),
     alignItems: "center",
     textAlign: "center",
-    borderWidth: 1,
-    borderColor: "grey",
     borderRadius: 20,
   },
   welcomeText: {
@@ -335,16 +310,25 @@ const style = StyleSheet.create({
     backgroundColor: "white",
   },
   Box3: {
-    height: hp("15%"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
+    width: wp(90),
+    borderWidth:1,
+    borderColor:"#E0E0E0",
+    borderRadius: hp(1),  
+    backgroundColor:"#F0F8FF",
+    paddingVertical: hp(1.5),
     marginTop: hp(2),
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
-    borderTopWidth: 1,
   },
+  disableBox: {
+    width: wp(90),
+    borderWidth:1,
+    borderColor:"grey",
+    borderRadius: hp(1),  
+    backgroundColor:"#F0F8FF",
+    paddingVertical: hp(1.5),
+    marginTop: hp(2),
+  },
+  crossIcon:{
+    alignSelf:"flex-end",
+    padding:hp(1.5)
+  }
 });

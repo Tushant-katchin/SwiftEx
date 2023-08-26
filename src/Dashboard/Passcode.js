@@ -11,7 +11,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import title_icon from "../../assets/title_icon.png";
+//import title_icon from "../../assets/title_icon.png";
+import title_icon from "../../assets/Pink.png"
+import darkBlue from "../../assets/darkBlue.png";
 
 import { Animated } from "react-native";
 import ReactNativePinView from "react-native-pin-view";
@@ -22,6 +24,7 @@ import { Platform } from "react-native";
 import { setPlatform } from "../components/Redux/actions/auth";
 import { useBiometrics } from "../biometrics/biometric";
 import { useFocusEffect } from "@react-navigation/native";
+import { alert } from "./reusables/Toasts";
 
 const Passcode = (props) => {
   const [pin, setPin] = useState();
@@ -58,7 +61,7 @@ const Passcode = (props) => {
     const Check = await AsyncStorage.getItem("pin");
     const biometric = await AsyncStorage.getItem("Biometric");
     if (biometric === "SET") {
-      useBiometrics(props.navigation);
+      //useBiometrics(props.navigation);
     }
 
     console.log(Check);
@@ -90,11 +93,23 @@ const Passcode = (props) => {
     }
     if (enteredPin.length === 6) {
       setShowCompletedButton(true);
-      if (status === "pinset") {
-        setShowCompletedButton(false);
+      if (status === "verify") {
+        if (pin === enteredPin) {
+          pinView.current.clearAll();
+          props.navigation.navigate("Welcome");
+
+          AsyncStorage.setItem("pin", JSON.stringify(pin));
+        } else {
+          
+          alert("error","password did not match. please try again");
+          pinView.current.clearAll();
+          setStatus("");
+        }
+      } else if (status === "pinset") {
         const Pin = await AsyncStorage.getItem("pin");
         const user = await AsyncStorage.getItem("user");
         const wallets = await AsyncStorage.getItem(`${user}-wallets`);
+
         if (JSON.parse(Pin) === enteredPin) {
           console.log(Pin);
           console.log(user);
@@ -105,14 +120,14 @@ const Passcode = (props) => {
             props.navigation.navigate("Welcome");
           }
         } else {
-          alert("invalid pin");
-          pinView.current.clearAll();
+          alert("error","invalid pin");
         }
+      } else {
+        setPin(enteredPin);
+        setStatus("verify");
+
         pinView.current.clearAll();
-        setShowCompletedButton(true);
       }
-    } else {
-      setShowCompletedButton(false);
     }
   }, [fadeAnim, enteredPin]);
 
@@ -123,13 +138,13 @@ const Passcode = (props) => {
       <View style={style.Body}>
          <Animated.Image
           style={{
-            width: wp("5"),
-            height: hp("5"),
+            width: wp("15"),
+            height: hp("15"),
             padding: 30,
             marginTop: hp(2),
             transform: [{ rotate: SpinValue }],
           }}
-          source={title_icon}
+          source={darkBlue}
         /> 
         {/* <Text style={style.welcomeText}> Hi,</Text> */}
         <Text style={style.welcomeText}>
@@ -137,7 +152,7 @@ const Passcode = (props) => {
           {status == "verify"
             ? "please re enter pin"
             : status === "pinset"
-            ? "Create Passcode"
+            ? "Please enter your pin"
             : "Please create a pin"}
         </Text>
         <View style={{ marginTop: hp(2) }}>
@@ -218,7 +233,7 @@ const Passcode = (props) => {
                 pinView.current.clear();
               }
               if (key === "custom_left") {
-                if (status === "verify") {
+               /* if (status === "verify") {
                   if (pin === enteredPin) {
                     pinView.current.clearAll();
                     props.navigation.navigate("Welcome");
@@ -251,7 +266,7 @@ const Passcode = (props) => {
                   setStatus("verify");
 
                   pinView.current.clearAll();
-                }
+                }*/
               }
               if (key === "three") {
                 //alert("You can't use 3")
@@ -263,13 +278,22 @@ const Passcode = (props) => {
             //   ) : undefined
             // }
             customLeftButton={
-              showCompletedButton ? (
+              
                 <Icon
                   name={"finger-print"}
                   size={36}
                   color={"gray"}
+                  onPress={async ()=>{
+                    const biometric = await AsyncStorage.getItem("Biometric");
+                    if (biometric === "SET") {
+                      useBiometrics(props.navigation);
+                    }else{
+                      alert('error','please enable biometrics from settings')
+                    }
+                
+                  }}
                 />
-              ) : undefined
+            
             }
             customRightButton={
               showRemoveButton ? (
@@ -314,7 +338,7 @@ const style = StyleSheet.create({
     fontSize: 20,
     fontWeight: "200",
     color: "#fff",
-    marginTop: hp(5),
+    marginTop: hp(2),
   },
   welcomeText2: {
     fontSize: 20,

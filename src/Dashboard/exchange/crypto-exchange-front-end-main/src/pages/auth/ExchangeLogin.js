@@ -6,23 +6,27 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
+  TextInput,
   DeviceEventEmitter,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
-import { TextInput } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Button, ActivityIndicator, Image, Platform } from "react-native";
 import title_icon from "../../../../../../../assets/title_icon.png";
+import darkBlue from "../../../../../../../assets/darkBlue.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
 import PhoneInput from "react-native-phone-number-input";
 import { login, verifyLoginOtp } from "../../api";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import RNOtpVerify from "react-native-otp-verify";
+import { alert } from "../../../../../reusables/Toasts";
+import { ExchangeHeaderIcon } from "../../../../../header";
 
 export const ExchangeLogin = (props) => {
   const [value, setValue] = useState("");
@@ -63,7 +67,7 @@ export const ExchangeLogin = (props) => {
         return setMessage("phone number is required to proceed");
       }
 
-      console.log(formattedValue);
+      console.log('formatted value',formattedValue);
       const { err } = await login({ phoneNumber: `${formattedValue}` });
       if (err) {
         return setMessage(err.message);
@@ -72,6 +76,7 @@ export const ExchangeLogin = (props) => {
       setMessage("OTP is sent");
       setIsOtpSent(true);
     } catch (err) {
+      console.log(err)
       setMessage(err.message);
     } finally {
       setLoading(false);
@@ -88,11 +93,15 @@ export const ExchangeLogin = (props) => {
         phoneNumber: `${formattedValue}`,
         otp: otp,
       });
-      if (err) return setMessage(err.message);
-      setIsOtpSent(false);
-      setMessage("");
-      navigation.navigate("exchange");
-      alert("success");
+      if (err) {
+        setMessage(err.message);
+        setOtp(null);
+      } else {
+        setIsOtpSent(false);
+        setMessage("");
+        navigation.navigate("exchange");
+        alert("success", "success");
+      }
     } catch (err) {
       setMessage(err.message);
     } finally {
@@ -163,151 +172,165 @@ export const ExchangeLogin = (props) => {
 
   return (
     <>
-      <View
-        style={styles.container}
-        onStartShouldSetResponder={() => Keyboard.dismiss()}
-      >
-        {isOtpSent === false ? (
-          <View style={styles.content}>
-            <View>
-              <Image style={styles.tinyLogo} source={title_icon} />
-            </View>
+    <ExchangeHeaderIcon title="Exchange-Login" isLogOut={false} />
+      <ScrollView style={styles.container}>
+        <View
+          // style={styles.container}
+          onStartShouldSetResponder={() => Keyboard.dismiss()}
+        >
+          {isOtpSent === false ? (
+            <View style={styles.content}>
+              <View style={{ marginTop: hp(3), borderRadius: hp(2) }}>
+                <Image style={styles.tinyLogo} source={darkBlue} />
 
-            <Text style={styles.text}>Welcome Back!</Text>
-            <Text style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}>
-              Login to your account
-            </Text>
-            <View style={{ marginTop: 30 }}>
-              <PhoneInput
-                ref={phoneInput}
-                defaultValue={value}
-                defaultCode="IN"
-                layout="first"
-                autoFocus={false}
-                onChangeText={(text) => {
-                  setValue(text);
-                }}
-                onChangeFormattedText={(text) => {
-                  setFormattedValue(text);
-                }}
-                withDarkTheme
-                withShadow
-              />
-            </View>
-            <View style={{ marginTop: 10 }}>
-              {showMessage ? (
-                <Text style={{ color: "white" }}>{Message}</Text>
-              ) : (
-                <Text></Text>
-              )}
-            </View>
-
-            {loading ? (
-              <View style={{ marginTop: 10 }}>
-                <ActivityIndicator size="large" color="white" />
-              </View>
-            ) : (
-              <Text> </Text>
-            )}
-
-            <View style={styles.btn}>
-              <LinearGradient
-                colors={["#12c2e9", "#c471ed", "#f64f59"]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.button}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    setLoading(true);
-                    const checkValid = phoneInput.current?.isValidNumber(value);
-                    console.log(checkValid)
-                    if (checkValid) {
-                      try {
-                        setMessage("Your number is valid");
-                        submitPhoneNumber();
-                      } catch (e) {
-                        console.log(e);
-                        alert(e);
-
-                      }
-                    } else {
-                      setMessage("Your number is invalid");
-                      setLoading(false)
-
-                    }
-                    setShowMessage(true);
-                    setValid(checkValid ? checkValid : false);
-
-                    console.log(checkValid);
+                <Text style={styles.text}>Welcome Back!</Text>
+                <Text
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: 16,
+                    textAlign: "center",
+                    marginTop: hp(1),
+                    marginBottom: hp(3),
                   }}
                 >
-                  <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-              </LinearGradient>
-            </View>
-            <View style={styles.lowerbox}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("exchangeRegister");
-                }}
-              >
-                <Text style={styles.lowerboxtext}>
-                  <Text style={{ color: "#78909c" }}>
-                    Don't have an account?
-                  </Text>{" "}
-                  Register now
+                  Login to your account
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.content}>
-            <View>
-              <Image style={styles.tinyLogo} source={title_icon} />
-            </View>
+                <PhoneInput
+                  textContainerStyle={{ paddingVertical: hp(1) }}
+                  textInputStyle={{ paddingVertical: hp(0.1) }}
+                  ref={phoneInput}
+                  defaultValue={value}
+                  defaultCode="IN"
+                  layout="first"
+                  autoFocus={false}
+                  onChangeText={(text) => {
+                    setValue(text);
+                  }}
+                  onChangeFormattedText={(text) => {
+                    setFormattedValue(text);
+                  }}
+                  withDarkTheme
+                  withShadow
+                />
+                <LinearGradient
+                  colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.button}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      setLoading(true);
+                      const checkValid =
+                        phoneInput.current?.isValidNumber(value);
+                      console.log(checkValid);
+                      if (checkValid) {
+                        try {
+                          setMessage("Your number is valid");
+                          submitPhoneNumber();
+                        } catch (e) {
+                          console.log(e);
+                          alert("error", e);
+                        }
+                      } else {
+                        setMessage("Your number is invalid");
+                        setLoading(false);
+                      }
+                      setShowMessage(true);
+                      setValid(checkValid ? checkValid : false);
 
-            <Text style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}>
-              Please Enter the OTP
-            </Text>
-            <View style={styles.inp}>
-              <TextInput
-                placeholderTextColor="#FFF"
-                style={styles.input}
-                theme={{ colors: { text: "white" } }}
-                value={otp}
-                placeholder={"OTP"}
-                onChangeText={(text) => {
-                  console.log(text);
-                  setOtp(text);
-                }}
-                autoComplete={"sms-otp"}
-                textContentType={"oneTimeCode"}
-                keyboardType={"number-pad"}
-                maxLength={6}
-              />
-            </View>
+                      console.log(checkValid);
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>Login</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+                {showMessage ? (
+                  <Text
+                    style={{
+                      color: "white",
+                      textAlign: "center",
+                      marginTop: hp(2),
+                    }}
+                  >
+                    {Message}
+                  </Text>
+                ) : (
+                  <Text></Text>
+                )}
+              </View>
 
-            <View style={{ marginTop: 10 }}>
-              {showMessage ? (
-                <Text style={{ color: "white" }}>{Message}</Text>
+              {loading ? (
+                <View style={{ marginTop: 10 }}>
+                  <ActivityIndicator size="large" color="white" />
+                </View>
               ) : (
-                <Text></Text>
+                <Text> </Text>
               )}
+
+              <View style={styles.lowerbox}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("exchangeRegister");
+                  }}
+                >
+                  <Text style={styles.lowerboxtext}>
+                    <Text style={{ color: "#78909c" }}>
+                      Don't have an account?
+                    </Text>{" "}
+                    Register now
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
+          ) : (
+            <View style={styles.content}>
+              <View>
+                <Image style={styles.tinyLogo} source={darkBlue} />
+              </View>
 
-            {loading ? (
-              <ActivityIndicator size="large" color="white" />
-            ) : (
-              <Text> </Text>
-            )}
+              <Text
+                style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}
+              >
+                Please Enter the OTP
+              </Text>
+              <View style={styles.inp}>
+                <TextInput
+                  placeholderTextColor="#FFF"
+                  style={styles.input}
+                  theme={{ colors: { text: "white" } }}
+                  value={otp}
+                  placeholder={"OTP"}
+                  onChangeText={(text) => {
+                    console.log(text);
+                    setOtp(text);
+                  }}
+                  autoComplete={"sms-otp"}
+                  textContentType={"oneTimeCode"}
+                  keyboardType={"number-pad"}
+                  maxLength={6}
+                />
+              </View>
 
-            <View style={styles.btn}>
+              <View style={{ marginTop: 10 }}>
+                {showMessage ? (
+                  <Text style={{ color: "white" }}>{Message}</Text>
+                ) : (
+                  <Text></Text>
+                )}
+              </View>
+
+              {loading ? (
+                <ActivityIndicator size="large" color="white" />
+              ) : (
+                <Text> </Text>
+              )}
+
               <LinearGradient
-                colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                colors={["#12c2e9", "#c471ed"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 1 }}
-                style={styles.button}
+                style={styles.verifyBtn}
               >
                 <TouchableOpacity
                   onPress={() => {
@@ -319,41 +342,32 @@ export const ExchangeLogin = (props) => {
                 </TouchableOpacity>
               </LinearGradient>
             </View>
-          </View>
-        )}
-      </View>
+          )}
+        </View>
+      </ScrollView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    height: hp("5%"),
-    marginBottom: hp("2"),
+    paddingVertical: hp(1),
+    paddingLeft: wp(7),
     color: "#fff",
-    marginTop: hp("2"),
-    width: wp("70"),
-    paddingRight: wp("7"),
-    backgroundColor: "#131E3A",
-    borderRadius: wp("20"),
-    marginLeft: wp("10"),
+    width: wp("84"),
+    borderRadius: hp(1),
+    borderWidth: StyleSheet.hairlineWidth * 2,
+    borderColor: "gray",
   },
   content: {
     display: "flex",
     alignItems: "center",
     textAlign: "center",
     justifyContent: "space-evenly",
-    marginTop: hp("10"),
+    // marginTop: hp("10"),
     color: "white",
   },
-  inp: {
-    borderWidth: 2,
-    marginTop: hp("5"),
-    color: "#FFF",
-    borderRadius: 20,
-    borderColor: "#808080",
-    width: wp("90"),
-  },
+
   btn: {
     marginTop: hp("10"),
     width: wp("80"),
@@ -369,13 +383,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#FFFFFF",
-    marginBottom: wp("5"),
-    fontSize: hp("5"),
+    fontSize: 20,
+    fontWeight: "700",
+    // paddingVertical: 10,
+    textAlign: "center",
   },
   tinyLogo: {
-    width: wp("5"),
-    height: hp("5"),
-    padding: 30,
+    width: wp("13"),
+    height: hp("13"),
+    marginTop: hp(5),
+    alignSelf: "center",
   },
   icon: {
     display: "flex",
@@ -391,18 +408,20 @@ const styles = StyleSheet.create({
     paddingLeft: wp("2"),
   },
   button: {
-    paddingVertical: hp("2"),
-    paddingHorizontal: wp("2"),
-    borderRadius: wp("10"),
+    marginTop: hp(10),
+    width: wp(80),
+    borderRadius: hp(1),
+    paddingVertical: hp(1.5),
+    alignItems: "center",
   },
   buttonText: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 18,
   },
   lowerbox: {
-    marginTop: hp(20),
-    height: 100,
+    marginTop: hp(33),
+    height: hp(6),
     width: 400,
     backgroundColor: "#003166",
     borderTopLeftRadius: 30,
@@ -413,7 +432,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   lowerboxtext: {
-    fontSize: 20,
+    fontSize: 16,
     color: "#FFFFFF",
     textAlign: "center",
     alignSelf: "center",
@@ -435,5 +454,12 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderColor: "red",
     borderWidth: 1,
+  },
+  verifyBtn: {
+    backgroundColor: "red",
+    width: wp(85),
+    paddingVertical: hp(1),
+    borderRadius: hp(1),
+    marginTop: hp(10),
   },
 });

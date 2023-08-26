@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import PushNotification from 'react-native-push-notification'
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
+//import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 
 const getToken = async () => {

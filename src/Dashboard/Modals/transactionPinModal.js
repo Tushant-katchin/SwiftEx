@@ -12,7 +12,8 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
-import title_icon from "../../../assets/title_icon.png";
+// import title_icon from "../../../assets/title_icon.png";
+import darkBlue from "../../../assets/darkBlue.png";
 import ReactNativePinView from "react-native-pin-view";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -29,8 +30,9 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import { CommonActions } from "@react-navigation/native";
-import { useToast } from 'native-base';
-import { ShowToast } from "../reusables/Toasts";
+import { useToast } from "native-base";
+import { alert, ShowToast } from "../reusables/Toasts";
+import { getAllBalances } from "../../utilities/web3utilities";
 
 const TransactionPinModal = ({
   pinViewVisible,
@@ -53,7 +55,7 @@ const TransactionPinModal = ({
   const pinView = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
-  const toast = useToast()
+  const toast = useToast();
   const Navigate = () => {
     navigation.dispatch((state) => {
       // Remove the home route from the stack
@@ -73,8 +75,6 @@ const TransactionPinModal = ({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
-
-
 
   useEffect(async () => {
     const Check = await AsyncStorage.getItem(`pin`);
@@ -105,7 +105,7 @@ const TransactionPinModal = ({
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
       setShowCompletedButton(true);
     } else {
       setShowCompletedButton(false);
@@ -122,14 +122,14 @@ const TransactionPinModal = ({
       useNativeDriver={true}
       statusBarTranslucent={true}
       onBackdropPress={() => {
-        setPinViewVisible(false)
-        setLoading(false)
-        setDisable(false)
+        setPinViewVisible(false);
+        setLoading(false);
+        setDisable(false);
       }}
       onBackButtonPress={() => {
         setPinViewVisible(false);
-        setLoading(false)
-        setDisable(false)
+        setLoading(false);
+        setDisable(false);
       }}
     >
       <Animated.View // Special animatable View
@@ -138,16 +138,16 @@ const TransactionPinModal = ({
         <View style={style.Body}>
           <Animated.Image
             style={{
-              width: wp("5"),
-              height: hp("5"),
+              width: wp("12"),
+              height: hp("12"),
               padding: 30,
               marginTop: hp(2),
               transform: [{ rotate: SpinValue }],
             }}
-            source={title_icon}
+            source={darkBlue}
           />
           <Text style={style.welcomeText}> Hi,</Text>
-          <Text style={style.welcomeText}>
+          <Text style={style.welcomeText1}>
             {" "}
             {status == "verify"
               ? "please re enter pin"
@@ -155,17 +155,15 @@ const TransactionPinModal = ({
               ? "please enter your pin"
               : "Please create a pin"}
           </Text>
-          <View style={{ marginTop: hp(10) }}>
+          <View style={{ marginTop: hp(5) }}>
             {loader ? <SendLoadingComponent /> : <View></View>}
             <ReactNativePinView
-              inputSize={32}
+              inputSize={25}
               ref={pinView}
-              pinLength={4}
-              buttonSize={60}
+              pinLength={6}
+              buttonSize={45}
               onValueChange={(value) => setEnteredPin(value)}
-              buttonAreaStyle={{
-                marginTop: 24,
-              }}
+              buttonAreaStyle={{}}
               inputAreaStyle={{
                 marginBottom: 24,
               }}
@@ -190,7 +188,7 @@ const TransactionPinModal = ({
                 }
                 if (key === "custom_right") {
                   const Pin = await AsyncStorage.getItem("pin");
-                  setPinViewVisible(false)
+                  setPinViewVisible(false);
                   setLoader(true);
                   if (JSON.parse(Pin) === enteredPin) {
                     const emailid = await state.user;
@@ -220,12 +218,13 @@ const TransactionPinModal = ({
                           );
 
                           console.log(saveTransaction);
-                          ShowToast(toast,"Transaction Successful")
-                          
+                          ShowToast(toast, "Transaction Successful");
+
                           setLoading(false);
                           setLoader(false);
                           setDisable(false);
                           setPinViewVisible(false);
+                          getAllBalances(state,dispatch)
                           Navigate();
                           navigation.navigate("Transactions");
                         } catch (e) {
@@ -234,7 +233,8 @@ const TransactionPinModal = ({
                           setLoader(false);
                           setPinViewVisible(false);
                           console.log(e);
-                          alert(e);
+
+                          alert("error", e);
                         }
                       }
                     } else if (type === "Matic") {
@@ -257,12 +257,13 @@ const TransactionPinModal = ({
                           );
 
                           console.log(saveTransaction);
-                          ShowToast(toast,"Transaction Successful")
+                          ShowToast(toast, "Transaction Successful");
 
                           setLoading(false);
                           setLoader(false);
                           setDisable(false);
                           setPinViewVisible(false);
+                          getAllBalances(state,dispatch)
                           Navigate();
                           navigation.navigate("Transactions");
                         } catch (e) {
@@ -271,7 +272,7 @@ const TransactionPinModal = ({
                           setPinViewVisible(false);
                           setLoading(false);
                           console.log(e);
-                          alert(e);
+                          alert("error", e);
                         }
                       }
                     } else if (type === "BSC") {
@@ -295,12 +296,13 @@ const TransactionPinModal = ({
                           );
 
                           console.log(saveTransaction);
-                          ShowToast(toast,"Transaction Successful")
+                          ShowToast(toast, "Transaction Successful");
 
                           setLoading(false);
                           setLoader(false);
                           setDisable(false);
                           setPinViewVisible(false);
+                          getAllBalances(state,dispatch)
                           Navigate();
                           navigation.navigate("Transactions");
                         } catch (e) {
@@ -309,7 +311,7 @@ const TransactionPinModal = ({
                           setLoader(false);
                           setLoading(false);
                           console.log(e);
-                          alert(e);
+                          alert("error", e);
                         }
                       }
                     } else {
@@ -330,46 +332,43 @@ const TransactionPinModal = ({
                         );
 
                         console.log(saveTransaction);
-                        ShowToast(toast,"Transaction Successful")
+                        ShowToast(toast, "Transaction Successful");
 
                         setLoading(false);
                         setDisable(false);
                         console.log(tx);
                         setLoader(false);
                         setPinViewVisible(false);
+                        getAllBalances(state,dispatch)
                         Navigate();
                         navigation.navigate("Transactions");
                       } catch (e) {
-                        setDisable(false);
-                        setPinViewVisible(false);
                         setLoader(false);
                         setLoading(false);
+                        setDisable(false);
+                        setPinViewVisible(false);
                         console.log(e);
-                        alert("please try again");
+                        alert("error", "please try again");
                       }
                     }
                   } else {
-                    setPinViewVisible(false)
+                    setPinViewVisible(false);
                     setLoading(false);
                     setLoader(false);
                     setDisable(false);
                     pinView.current.clearAll();
-                    alert("invalid pin.please try again!");
+                    alert("error", "invalid pin.please try again!");
                   }
                 }
               }}
               customLeftButton={
                 showRemoveButton ? (
-                  <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
+                  <Icon name={"ios-backspace"} size={36} color={"gray"} />
                 ) : undefined
               }
               customRightButton={
                 showCompletedButton ? (
-                  <Icon
-                    name={"ios-chevron-forward-circle"}
-                    size={36}
-                    color={"#FFF"}
-                  />
+                  <Icon name={"ios-chevron-forward-circle"} size={36} color={"#FFF"} />
                 ) : undefined
               }
             />
@@ -384,18 +383,25 @@ export default TransactionPinModal;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
     backgroundColor: "#131E3A",
-    height: hp(95),
-    width: wp(90),
+    height: hp(75),
+    width: wp(95),
     alignItems: "center",
+    borderRadius: hp(2),
     textAlign: "center",
+    alignSelf: "center",
   },
   welcomeText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "200",
     color: "white",
-    marginTop: hp(5),
+    // marginTop: hp(2),
+  },
+  welcomeText1: {
+    fontSize: 16,
+    fontWeight: "200",
+    color: "white",
+    marginTop: hp(1),
   },
   welcomeText2: {
     fontSize: 20,

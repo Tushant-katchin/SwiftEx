@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RPC } from "../constants";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
+import { alert } from "../reusables/Toasts";
 var ethers = require("ethers");
 
 const xrpl = require("xrpl");
@@ -177,7 +178,7 @@ const sendMatic = async (
 
   return info;
 };
-const sendXRP = async (privateKey, amount, addressTo, setLoading) => {
+const sendXRP = async (privateKey, amount, addressTo, balance,setLoading) => {
   console.log("started");
   console.log(privateKey);
   const Wallet = xrpl.Wallet.fromSecret(privateKey);
@@ -186,7 +187,26 @@ const sendXRP = async (privateKey, amount, addressTo, setLoading) => {
   await client.connect();
   const wallet = await AsyncStorageLib.getItem("wallet");
   console.log(JSON.parse(wallet).address);
-  const prepared = await client
+  // const prepared = await client
+  //   .autofill({
+  //     TransactionType: "Payment",
+  //     Account: Wallet.classicAddress,
+  //     Amount: xrpl.xrpToDrops(`${amount}`),
+  //     Destination: addressTo,
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   });
+  
+ // const signed = Wallet.sign(prepared);
+  
+  
+  if(Number(amount)===Number(balance)){
+    let Amount=Number(amount)-10
+    amount = Amount.toFixed(2).toString()
+    console.log("XRP AMOUNT",amount)
+   }
+   const Prepared = await client
     .autofill({
       TransactionType: "Payment",
       Account: Wallet.classicAddress,
@@ -196,17 +216,15 @@ const sendXRP = async (privateKey, amount, addressTo, setLoading) => {
     .catch((e) => {
       console.log(e);
     });
-  const max_ledger = prepared.LastLedgerSequence;
-  console.log("Prepared transaction instructions:", prepared);
-  console.log("Transaction cost:", xrpl.dropsToXrp(prepared.Fee), "XRP");
-  console.log("Transaction expires after ledger:", max_ledger);
-  const signed = Wallet.sign(prepared);
-  console.log("Identifying hash:", signed.hash);
-  console.log("Signed blob:", signed.tx_blob);
+    const Signed = Wallet.sign(Prepared);
+    const max_ledger = Prepared.LastLedgerSequence;
+    console.log("Prepared transaction instructions:", Prepared);
+    console.log("Transaction cost:", xrpl.dropsToXrp(Prepared.Fee), "XRP");
+    console.log("Transaction expires after ledger:", max_ledger);
   const info = {
     type: "XRP",
-    fee: prepared.Fee,
-    rawTransaction: signed,
+    fee: Prepared.Fee,
+    rawTransaction: Signed,
     addressTo: addressTo,
     addressFrom: Wallet.classicAddress,
     amount: amount,
@@ -258,7 +276,8 @@ const SendCrypto = async (
           info.finalAmount=finalAmount
           setLoading(false);
           if(Number(finalAmount)>Number(balance)){
-            return alert("You don't have enough balance to do this transaction")
+            
+            return alert("error","You don't have enough balance to do this transaction")
           }
           navigation.navigate("Confirm Tx", {
             info,
@@ -283,7 +302,7 @@ const SendCrypto = async (
               info.finalAmount=finalAmount
               setLoading(false);
               if(Number(finalAmount)>=Number(balance)){
-                return alert("You don't have enough balance to do this transaction")
+                return alert("error","You don't have enough balance to do this transaction")
               }
               navigation.navigate("Confirm Tx", {
                 info,
@@ -306,7 +325,7 @@ const SendCrypto = async (
               info.finalAmount=finalAmount
               setLoading(false);
               if(Number(finalAmount)>Number(balance)){
-                return alert("You don't have enough balance to do this transaction")
+                return alert("error","You don't have enough balance to do this transaction")
               }
               navigation.navigate("Confirm Tx", {
                 info,
@@ -323,8 +342,13 @@ const SendCrypto = async (
                 let finalAmount = Number(info.amount)+Number(fee)
                 info.finalAmount=finalAmount
                 setLoading(false);
+                if(Number(balance)<11)
+                {
+                  return alert("error","Your minnimum balance should be 10 to send xrp")
+
+                }
                 if(Number(finalAmount)>=Number(balance)){
-                  return alert("You don't have enough balance to do this transaction")
+                  return alert("error","You don't have enough balance to do this transaction")
                 }
                 navigation.navigate("Confirm Tx", {
                   info,
@@ -351,7 +375,7 @@ const SendCrypto = async (
         info.finalAmount=finalAmount
         setLoading(false);
         if(Number(finalAmount)>Number(balance)){
-          return alert("You don't have enough balance to do this transaction")
+          return alert("error","You don't have enough balance to do this transaction")
         }        
         navigation.navigate("Confirm Tx", {
           info,
@@ -380,7 +404,7 @@ const SendCrypto = async (
           let finalAmount = Number(info.amount)+Number(fee)
           info.finalAmount=finalAmount
           if(Number(finalAmount)>Number(balance)){
-            return alert("You don't have enough balance to do this transaction")
+            return alert("error","You don't have enough balance to do this transaction")
           }
           navigation.navigate("Confirm Tx", {
             info,
@@ -403,14 +427,14 @@ const SendCrypto = async (
             info.finalAmount=finalAmount
             setLoading(false);
             if(Number(finalAmount)>Number(balance)){
-              return alert("You don't have enough balance to do this transaction")
+              return alert("error","You don't have enough balance to do this transaction")
             }
             navigation.navigate("Confirm Tx", {
               info,
             });
           });
         }else if(Token==='Multi-coin-Xrp'){
-          await sendXRP(privateKey, amount, addressTo, balance,setLoading).then(
+          await sendXRP(privateKey, amount, addressTo,balance,setLoading).then(
             (response) => {
               console.log(response);
               let info = response;
@@ -419,8 +443,13 @@ const SendCrypto = async (
               let finalAmount = Number(info.amount)+Number(fee)
               info.finalAmount=finalAmount
               setLoading(false);
+              if(Number(balance)<11)
+              {
+                return alert("error","Your minnimum balance should be 10 to send xrp")
+
+              }
               if(Number(finalAmount)>=Number(balance)){
-                return alert("You don't have enough balance to do this transaction")
+                return alert("error","You don't have enough balance to do this transaction")
               }
               navigation.navigate("Confirm Tx", {
                 info,
@@ -439,7 +468,7 @@ const SendCrypto = async (
                 info.finalAmount=finalAmount
                 setLoading(false);
                 if(Number(finalAmount)>=Number(balance)){
-                  return alert("You don't have enough balance to do this transaction")
+                  return alert("error","You don't have enough balance to do this transaction")
                 }
                  navigation.navigate("Confirm Tx", {
                   info,
@@ -451,21 +480,21 @@ const SendCrypto = async (
             setDisable(true);
             
             setLoading(false);
-            return alert("chain not supported yet");
+            return alert("error","chain not supported yet");
           }
           
           setLoading(false);
         }catch(e){
           if(e.message=='invalid arrayify value (argument="value", value="-0xbefe6f671f38", code=INVALID_ARGUMENT, version=bytes/5.7.0)'){
             setLoading(false);
-            return alert("You don't have enough balance to do this transaction")
+            return alert("error","You don't have enough balance to do this transaction")
           }
           else if(e.message=='fractional component exceeds decimals [ See: https://links.ethers.org/v5-errors-NUMERIC_FAULT ] (fault="underflow", operation="parseFixed", code=NUMERIC_FAULT, version=bignumber/5.7.0)')
           {
             setLoading(false)
-            return alert("You don't have enough balance to do this transaction")
+            return alert("error","You don't have enough balance to do this transaction")
           }
-          alert(e)
+          alert("error",e)
           console.log(e.message)
           setLoading(false);
 

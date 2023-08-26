@@ -1,18 +1,24 @@
-import { View, Text } from "react-native";
+import { ImageBackground, Text } from "react-native";
 import React, { useEffect } from "react";
+import splashImg from "../../../assets/splashImg.png";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import styles from "./style";
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(async () => {
       navigation.navigate("Passcode");
     }, 3000);
   }, []);
   return (
-    <View style={styles.mainContainer}>
-      <Text style={styles.heading}>Splash....</Text>
-      <Text style={styles.text}>Screen</Text>
-    </View>
+    <ImageBackground source={splashImg} style={styles.mainContainer}>
+      <Text style={{ marginTop: hp(28), color: "white" }}>
+        Security, Control, Confidence
+      </Text>
+    </ImageBackground>
   );
 };
 

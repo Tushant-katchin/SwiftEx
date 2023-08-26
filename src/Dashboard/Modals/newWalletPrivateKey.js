@@ -4,8 +4,10 @@ import {
   Text,
   View,
   Button,
+  FlatList,
   Image,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -13,7 +15,6 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
-import { TextInput, Checkbox } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AddToAllWallets,
@@ -30,6 +31,7 @@ import { urls } from "../constants";
 import Modal from "react-native-modal";
 import CheckNewWalletMnemonic from "./checkNewWalletMnemonic";
 import ModalHeader from "../reusables/ModalHeader";
+import Icon from "../../icon";
 
 const NewWalletPrivateKey = ({
   props,
@@ -38,10 +40,14 @@ const NewWalletPrivateKey = ({
   SetVisible,
   setModalVisible,
   setNewWalletVisible,
+  onCrossPress,
 }) => {
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
-  const [newWallet, setNewWallet] = useState(false);
+  const [newWallet, setNewWallet] = useState(Wallet);
+  const [data, setData] = useState();
+  const [user, setUser] = useState("");
+
   const [MnemonicVisible, setMnemonicVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
@@ -69,15 +75,16 @@ const NewWalletPrivateKey = ({
         .then((response) => response.json())
         .then(async (responseJson) => {
           if (responseJson.responseCode === 200) {
-            alert("success");
+            alert("success", "success");
             return responseJson.responseCode;
           } else if (responseJson.responseCode === 400) {
             alert(
+              "error",
               "account with same name already exists. Please use a different name"
             );
             return responseJson.responseCode;
           } else {
-            alert("Unable to create account. Please try again");
+            alert("error", "Unable to create account. Please try again");
             return 401;
           }
         })
@@ -90,17 +97,18 @@ const NewWalletPrivateKey = ({
       setVisible(!visible);
 
       console.log(e);
-      alert(e);
+      alert("error", e);
     }
     console.log(response);
     return response;
   }
 
+  const closeModal = () => {
+    SetVisible(false);
+  };
+  const mnemonic = Wallet?.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)
 
-  const closeModal =()=>{
-    SetVisible(false)
-   
-  }
+  console.log("My mnemonic", mnemonic);
 
   useEffect(async () => {
     Animated.timing(fadeAnim, {
@@ -109,7 +117,21 @@ const NewWalletPrivateKey = ({
     }).start();
 
     console.log(Wallet);
-  }, [fadeAnim]);
+    let wallet = Wallet;
+    wallet.Mnemonic = mnemonic;
+    setNewWallet(wallet);
+  }, []);
+
+  const RenderItem = ({ item, index }) => {
+    console.log("============------------", item);
+    setData(data);
+    return (
+      <TouchableOpacity style={style.flatBtn}>
+        <Text style={{ textAlign: "right" }}>{index + 1}</Text>
+        <Text>{item}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <Animated.View // Special animatable View
@@ -122,137 +144,125 @@ const NewWalletPrivateKey = ({
         animationOutTiming={650}
         isVisible={Visible}
         statusBarTranslucent={true}
-        useNativeDriver={true}
+        // style={{backgroundColor:"blue",height:hp(100),top:20,width:wp(100),alignSelf:"center"}}
         useNativeDriverForBackdrop={true}
         backdropTransitionOutTiming={0}
         hideModalContentWhileAnimating
         onBackdropPress={() => {
           SetVisible(false);
-                }}
+        }}
         onBackButtonPress={() => {
           SetVisible(false);
         }}
       >
+
         <View style={style.Body}>
-          <ModalHeader Function={closeModal} name={'Private Key'}/>
-          <Animated.Image
-            style={{
-              width: wp("5"),
-              height: hp("5"),
-              padding: 30,
-              marginTop: hp(10),
-            }}
-            source={title_icon}
+          {/* <ModalHeader Function={closeModal} name={'Private Key'}/> */}
+          <Icon
+            type={"entypo"}
+            name={"cross"}
+            color={"gray"}
+            size={24}
+            style={style.croosIcon}
+            onPress={onCrossPress}
           />
-          <Text style={style.welcomeText}> Hi,</Text>
-          <Text style={style.welcomeText}>
-            {" "}
-            Please note your mnemonic or save it
+          <Text style={style.backupText}>Backup Mneumonic Phrase</Text>
+          <Text style={style.welcomeText1}>
+            Please select the menumonic in order to ensure the backup is
+            correct.
           </Text>
-          <Text style={style.welcomeText2}> Your Mnemonic Phrase</Text>
 
-          <Text selectable={true} style={style.welcomeText2}>
+          <View style={{ marginTop: hp(3) }}>
+            <FlatList
+              data={mnemonic}
+              renderItem={RenderItem}
+              numColumns={3}
+              contentContainerStyle={{
+                alignSelf: "center",
+              }}
+            />
+          </View>
+
+          <View style={style.dotView}>
+            <Icon name="dot-single" type={"entypo"} size={20} />
+            <Text style={{ color: "black" }}>
+              Keep your mneumonic in a safe place isolated from network
+            </Text>
+          </View>
+          <View style={style.dotView1}>
+            <Icon name="dot-single" type={"entypo"} size={20} />
+            <Text style={{ color: "black", width: "90%" }}>
+              Don't share and store mneumonic with a network, such as
+              email,photo, social apps, and so on
+            </Text>
+          </View>
+          {/* <Text selectable={true} style={style.welcomeText2}>
             {Wallet ? Wallet.mnemonic : ""}
-          </Text>
-          <Text style={style.welcomeText2}> Account Name</Text>
+          </Text> */}
+          {/* <Text style={style.welcomeText2}> Account Name</Text> */}
 
-          <TextInput
+          <View style={style.labelInputContainer}>
+            <Text style={style.label}>Account Name</Text>
+            <TextInput
+              value={accountName}
+              onChangeText={(text) => {
+                setAccountName(text);
+              }}
+              style={{ width: wp("78%") }}
+              placeholder={user ? user : "Enter your account name"}
+              placeholderTextColor={"black"}
+            />
+          </View>
+
+          {/* <TextInput
+          placeholder="Enter your account name"
             style={style.input}
-            theme={{ colors: { text: "black" } }}
             value={accountName}
+            placeholder='Enter account name'
             onChangeText={(text) => setAccountName(text)}
-            placeholderTextColor="#FFF"
             autoCapitalize={"none"}
-          />
-          <View style={style.Button}>
-            <Button
-              title="Next"
-              color={"green"}
-              disabled={accountName ? false : true}
+          /> */}
+
+          <View style={{ width: wp(95) }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor:
+                  accountName && !/\s/.test(accountName) ? "#4CA6EA" : "gray",
+                width: wp(55),
+                alignSelf: "center",
+                alignItems: "center",
+                borderRadius: 10,
+                marginTop: hp(1.5),
+                paddingVertical: hp(1.7),
+              }}
+              disabled={accountName && !/\s/.test(accountName) ? false : true}
               onPress={() => {
                 //setVisible(!visible)
                 let wallet = Wallet;
                 wallet.accountName = accountName;
+                wallet.Mnemonic = mnemonic;
                 setNewWallet(wallet);
+                console.log(newWallet);
                 setMnemonicVisible(true);
               }}
-            ></Button>
+            >
+              <Text style={{ color: "white" }}>Done</Text>
+            </TouchableOpacity>
           </View>
-          <DialogInput
-            isDialogVisible={visible}
-            title={"Wallet password"}
-            message={"Please set your wallet password below"}
-            hintInput={"Enter Passsword here"}
-            submitInput={async (inputText) => {
-              setVisible(!visible);
-              if (!inputText) {
-                return alert("please enter a password to continue");
-              } else {
-                const response = await saveUserDetails()
-                  .then((response) => {
-                    if (response === 400) {
-                      return;
-                    } else if (response === 401) {
-                      return;
-                    }
-                    const password = inputText;
-                    const encrypt = encryptFile(Wallet.privateKey, password);
-
-                    const accounts = {
-                      address: props.route.params.wallet.address,
-                      privateKey: encrypt,
-                      name: accountName,
-                      wallets: [],
-                    };
-                    let wallets = [];
-                    wallets.push(accounts);
-                    const allWallets = [
-                      {
-                        address: props.route.params.wallet.address,
-                        privateKey: encrypt,
-                        name: accountName,
-                      },
-                    ];
-                    AsyncStorageLib.setItem(
-                      `${accountName}-wallets`,
-                      JSON.stringify(allWallets)
-                    );
-                    AsyncStorageLib.setItem("user", accountName);
-
-                    dispatch(setUser(accountName));
-                    dispatch(
-                      setCurrentWallet(
-                        props.route.params.wallet.address,
-                        accountName,
-                        encrypt
-                      )
-                    );
-                    dispatch(AddToAllWallets(wallets, accountName));
-                    dispatch(getBalance(props.route.params.wallet.address));
-                    dispatch(setToken(response));
-                    dispatch(setWalletType("Xrp"));
-
-                    props.navigation.navigate("HomeScreen");
-                  })
-                  .catch((e) => {
-                    return alert("failed to create account. please try again");
-                  });
-
-                // alert('success ' + accountName)
-                //props.navigation.navigate('HomeScreen')
-              }
-            }}
-            closeDialog={() => setVisible(!visible)}
-          ></DialogInput>
         </View>
-        <CheckNewWalletMnemonic
-          Wallet={newWallet}
-          SetVisible={setMnemonicVisible}
-          Visible={MnemonicVisible}
-          setModalVisible={setModalVisible}
-          SetPrivateKeyVisible={SetVisible}
-          setNewWalletVisible={setNewWalletVisible}
-        />
+        {MnemonicVisible && (
+          <CheckNewWalletMnemonic
+            Wallet={newWallet}
+            SetVisible={setMnemonicVisible}
+            onCrossPress={() => {
+              setMnemonicVisible(false);
+            }}
+            Visible={MnemonicVisible}
+            setModalVisible={setModalVisible}
+            SetPrivateKeyVisible={SetVisible}
+            setNewWalletVisible={setNewWalletVisible}
+          />
+        )}
       </Modal>
     </Animated.View>
   );
@@ -262,12 +272,14 @@ export default NewWalletPrivateKey;
 
 const style = StyleSheet.create({
   Body: {
-    display: "flex",
-    backgroundColor: "#131E3A",
-    height: hp(100),
-    width: wp(90),
-    alignItems: "center",
-    textAlign: "center",
+    backgroundColor: "white",
+    // paddingVertical:hp(2),
+    height: hp(90),
+    borderRadius: hp(2),
+    width: wp(95),
+    alignSelf: "center",
+    paddingBottom: hp(2),
+    marginTop: hp(3),
   },
   welcomeText: {
     fontSize: 20,
@@ -276,11 +288,10 @@ const style = StyleSheet.create({
     marginTop: hp(5),
   },
   welcomeText2: {
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(6),
-
+    fontSize: 14,
+    color: "black",
+    textAlign: "center",
+    marginTop: hp(3),
   },
   Button: {
     marginTop: hp(0),
@@ -298,13 +309,105 @@ const style = StyleSheet.create({
     color: "white",
   },
   input: {
-    height: hp("5%"),
-    marginBottom: hp("2"),
-    color: "#fff",
-    marginTop: hp("2"),
+    marginTop: hp(2),
     width: wp("70"),
-    paddingRight: wp("7"),
+    height: hp(5),
+    borderRadius: hp(1),
     backgroundColor: "white",
-    borderColor: "white",
+    paddingHorizontal: wp(4),
+    alignSelf: "center",
+    borderWidth: StyleSheet.hairlineWidth * 1,
+  },
+  verifyText: {
+    color: "black",
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+    marginTop: hp(2),
+  },
+  wordText: {
+    color: "black",
+    textAlign: "center",
+    marginTop: hp(1),
+    width: wp(88),
+    marginHorizontal: wp(5),
+  },
+  ButtonView: {
+    backgroundColor: "#4CA6EA",
+    width: wp(40),
+    alignSelf: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    marginTop: hp(1.5),
+    paddingVertical: hp(1.7),
+  },
+  flatBtn: {
+    backgroundColor: "#F2F2F2",
+    borderRadius: hp(0.3),
+    width: wp(28),
+    paddingVertical: hp(2),
+    borderWidth: 0.3,
+    borderColor: "#D7D7D7",
+    padding: 6,
+  },
+  backupText: {
+    fontWeight: "bold",
+    fontSize: 17,
+    color: "black",
+    marginLeft: 20,
+    marginBottom: hp(1),
+  },
+  welcomeText1: {
+    marginLeft: wp(4.7),
+    color: "gray",
+    // marginLeft: wp(4),
+    width: wp(90),
+  },
+  dotView: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(3),
+  },
+  dotView1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: wp(90),
+    marginLeft: 18,
+    marginTop: hp(2),
+  },
+  welcomeText: {
+    color: "black",
+    textAlign: "center",
+  },
+  labelInputContainer: {
+    position: "relative",
+    width: wp(90),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: hp(4),
+    borderRadius: wp(2),
+    backgroundColor: "white",
+    borderWidth: 1,
+    paddingLeft: wp(3),
+    paddingVertical: hp(1.2),
+    borderColor: "#DADADA",
+  },
+  label: {
+    position: "absolute",
+    zIndex: 100,
+    backgroundColor: "white",
+    paddingHorizontal: 5,
+    left: 12,
+    color: "#4CA6EA",
+    top: -12,
+  },
+  croosIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1.2),
   },
 });
+//  const mnemonic = Wallet?.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)

@@ -1,8 +1,11 @@
 import PushNotification from "react-native-push-notification";
 import { useNavigation } from '@react-navigation/native'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+//import notifee from '@notifee/react-native';
+
 
 /*PushNotification.getChannels(function (channel_ids) {
+>>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
     console.log(channel_ids); // ['channel_id_1']
   });
 
@@ -28,6 +31,9 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
     },
     (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
   );
+<<<<<<< HEAD
+
+=======
 */
 export default function PushNotifications(){
     const navigation = useNavigation()
@@ -65,21 +71,57 @@ export default function PushNotifications(){
     
 }
 
+// export const FirebaseSendNotification = async(title,message)=>{
+//   await notifee.requestPermission()
 
-  export const firebaseNotification = (title,appName,submessage,message) => {
+//   // Create a channel (required for Android)
+//   const channelId = await notifee.createChannel({
+//     id: 'default',
+//     name: 'Default Channel',
+//   });
+
+//   // Display a notification
+//   await notifee.displayNotification({
+//     title: title,
+//     body: message,
+//     android: {
+//       channelId,
+//       smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+//       // pressAction is needed if you want the notification to open the app when pressed
+//       pressAction: {
+//         id: 'default',
+//       },
+//     },
+//   });
+// }
+
+
+// =======
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
+
+//   export const firebaseNotification = (title,appName,submessage,message) => {
     
-    PushNotification.localNotification({
-        channelId: "1",
-      autoCancel: true,
-      bigText:submessage,
-      subText: appName,
-      title: title,
-      message: message,
-      vibrate: true,
-      vibration: 300,
-      playSound: true,
-      soundName: 'default',
-      actions: ["Yes", "No"],
-      invokeApp:false
-    })
-  }
+//     PushNotification.localNotification({
+//         channelId: "1",
+//       autoCancel: true,
+// <<<<<<< HEAD
+//       bigText:
+//         submessage,
+// =======
+//       bigText:submessage,
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
+//       subText: appName,
+//       title: title,
+//       message: message,
+//       vibrate: true,
+//       vibration: 300,
+//       playSound: true,
+//       soundName: 'default',
+// <<<<<<< HEAD
+//       actions: '["Yes", "No"]'
+// =======
+//       actions: ["Yes", "No"],
+//       invokeApp:false
+// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
+//     })
+//   }

@@ -214,6 +214,7 @@ import {
 } from "react-native-responsive-screen";
 import {useNavigation } from "@react-navigation/native";
 import Icon from "../icon";
+import { alert } from "./reusables/Toasts";
 
 const Market = (props) => {
   const [data, setData] = useState();
@@ -223,6 +224,8 @@ const Market = (props) => {
   const [percent, setPercent] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [updatedData,setUpdatedData] = useState([])
+  const[searchItem, setSearchItem]= useState('')
   const navigation = useNavigation();
   const fetchKline = async (
     setData,
@@ -233,7 +236,7 @@ const Market = (props) => {
     setImageUrl
   ) => {
     try {
-      const response = await fetch(
+       await fetch(
         `http://${urls.testUrl}/user/getcryptodata`,
         {
           method: "GET",
@@ -248,6 +251,7 @@ const Market = (props) => {
 
           setLoading(false);
           setData(responseJson);
+          setUpdatedData(responseJson)
           //setTrades(responseJson.trades)
           setPrice(responseJson.current_price);
           setPercent(responseJson.price_change_percentage_24h);
@@ -255,7 +259,8 @@ const Market = (props) => {
         })
         .catch((error) => {
           console.error(error);
-          alert(error);
+          
+          alert("error",error);
         });
     } catch (error) {
       console.log(error);
@@ -278,7 +283,7 @@ const Market = (props) => {
   };
 
   useEffect(async () => {
-    const resp = await fetchKline(
+    await fetchKline(
       setData,
       setLoading,
       setPercent,
@@ -287,33 +292,47 @@ const Market = (props) => {
       setImageUrl
     );
   }, []);
-  let logo = "https://static.alchemyapi.io/images/assets/3408.png";
-  let LeftContent;
+ 
 
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View style={{backgroundColor:"white"}}>
       <View style={{ height: hp(100) }}>
         <View style={Styles.searchContainer}>
           <Icon name="search1" type="antDesign" size={hp(2.4)} />
           <TextInput
-            placeholder="Search or enter website url"
+            placeholder="Search Crypto"
             placeholderTextColor={"black"}
             style={Styles.input}
+            onChangeText={(input)=>{
+              setSearchItem(input)
+              let UpdatedData=[]
+              updatedData.filter((item)=>{
+                console.log(item.name.toLowerCase().includes(input.toLowerCase()))
+                if(item.name.toLowerCase().includes(input.toLowerCase()))
+                {
+                  UpdatedData.push(item)
+                }
+                
+                    setData(UpdatedData)
+                    return UpdatedData
+                  })
+                  
+            }}
           />
         </View>
 
         <View style={Styles.iconwithTextContainer1}>
           <Text style={{ color: "gray" }}>New DApps</Text>
-          <Icon
+          {/* <Icon
             name={"arrowright"}
             type={"antDesign"}
             size={hp(3)}
             color={"gray"}
-          />
+          /> */}
         </View>
         <ScrollView
           alwaysBounceVertical={true}
-          style={{ marginBottom: hp(2) }}
+        contentContainerStyle={{ marginBottom: hp(2) }}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -322,18 +341,21 @@ const Market = (props) => {
             data.map((item) => {
               const image = item.image;
               const color = item.price_change_24h > 0 ? "green" : "red";
+              let data = item
+
               return (
                 <ScrollView>
                   <TouchableOpacity
                     style={Styles.Container}
                     key={item.id}
                     onPress={() => {
-                      props.navigation.navigate("CoinDetails", { data });
+                      props.navigation.navigate("CoinDetails", { data:data });
+
                     }}
                   >
                     <Image source={{ uri: image }} style={Styles.img} />
                     <View style={Styles.flatContainerText}>
-                      <Text style={Styles.textWidth}>{item.symbol}</Text>
+                      <Text >{item.name}</Text>
                       <Text>{`$ ${
                         item.current_price ? item.current_price.toFixed(2) : "0"
                       }`}</Text>
@@ -372,6 +394,7 @@ const Styles = StyleSheet.create({
     marginTop: hp(3),
     alignItems: "center",
     flexDirection: "row",
+    
   },
   flatContainerText: {
     marginHorizontal: wp(4),

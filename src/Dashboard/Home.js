@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
+import { View, Text, StyleSheet, Button, Image, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "../components/Redux/actions/auth";
 import Home2 from "./Home2";
@@ -20,6 +20,14 @@ import store from "../components/Redux/Store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyHeader3 from "./Header3";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
+import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/src/Navigation";
+import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
+import { ExchangeHeaderApp } from "./reusables/ExchangeHeader";
+import { AppHeader } from "./reusables/AppHeader";
+import { ExchangeHeaderIcon } from "./header";
+import { CoinDetails } from "./CoinDetail";
+
 const Tab = createBottomTabNavigator();
 
 const Dashboard = ({ navigation }) => {
@@ -30,9 +38,7 @@ const Dashboard = ({ navigation }) => {
   const dispatch = useDispatch();
   //let state = store.getState()
   console.log(state);
-
-  
-
+  const [token, setToken] = useState("");
 
   const updateState = () => {
     let data = store.getState();
@@ -96,18 +102,26 @@ const Dashboard = ({ navigation }) => {
   };
   const Header3 = (title) => {
     // return <MyHeader2 title={title} state={state} changeState={collapseState} extended={extended} setExtended={setExtended}/>
-    return <MyHeader3 title={title} />;
+    return <AppHeader name={title} />;
   };
 
-  useEffect(async () => {
-    // CheckWallet(statee.user, dispatch, importAllWallets)
-    const user = await AsyncStorageLib.getItem("user");
-    console.log(user);
-    dispatch(setUser(JSON.parse(user)));
+  // useEffect(async () => {
+  //   // CheckWallet(statee.user, dispatch, importAllWallets)
+  //   const user = await AsyncStorageLib.getItem("user");
+  //   console.log(user);
+  //   dispatch(setUser(JSON.parse(user)));
 
-    const data = await AsyncStorage.getItem(`${user}-wallets`);
-    console.log(data);
-  }, []);
+  //   const data = await AsyncStorage.getItem(`${user}-wallets`);
+  //   console.log(data);
+  // }, []);
+
+  useEffect(async () => {
+    const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+    const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+    console.log(token);
+
+    setToken(token);
+  });
 
   return (
     <>
@@ -117,7 +131,7 @@ const Dashboard = ({ navigation }) => {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-            size = 33;
+            size = 25;
             if (route.name === "Home") {
               iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
               iconName = "ios-home-sharp";
@@ -134,6 +148,12 @@ const Dashboard = ({ navigation }) => {
               iconName = focused ? "ios-settings-sharp" : "ios-settings-sharp";
               iconName = "ios-settings-sharp";
             }
+            if (route.name === "Exchange") {
+              iconName = focused
+                ? "swap-vertical-outline"
+                : "swap-vertical-outline";
+              iconName = "swap-vertical-outline";
+            }
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -147,7 +167,7 @@ const Dashboard = ({ navigation }) => {
               <Text
                 style={{
                   color: iconColor,
-                  fontSize: hp("2"),
+                  // fontSize: hp("1"),
                   textAlign: "center",
                   marginBottom: 10,
                 }}
@@ -157,15 +177,13 @@ const Dashboard = ({ navigation }) => {
             );
           },
           tabBarActiveTintColor: "blue",
-          tabBarInactiveTintColor: "gray",
+          tabBarInactiveTintColor: "white",
           tabBarStyle: {
             position: "absolute",
-            backgroundColor: "white",
-            height: hp("12"),
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            borderTopColor: "black",
-            borderTopWidth: 1,
+            backgroundColor: "#4CA6EA",
+            height: Platform.OS == 'android' ?  hp("9") : hp("11")
+            // borderTopColor: "black",
+            // borderTopWidth: 1,
           },
           headerTitleAlign: "center",
 
@@ -188,46 +206,29 @@ const Dashboard = ({ navigation }) => {
           name="Wallet"
           component={Wallet}
           options={{
+            headerShown: true,
             unmountOnBlur: true,
+            header: () => {
+              return Header3("Wallet");
+            },
             tabBarIcon: ({ focused }) => {
               let iconName;
               iconName = "ios-home-sharp"; //for icon or image
               let iconColor;
 
-              iconColor = focused ? "blue" : "grey";
+              iconColor = focused ? "blue" : "white";
               return (
                 <View>
                   <Text>
                     <Ionicons
                       name={"wallet"}
-                      size={hp("5")}
+                      size={hp("3")}
                       color={iconColor}
                     />
                   </Text>
                 </View>
               );
             },
-            tabBarLabel: ({ focused }) => {
-              let iconColor;
-
-              iconColor = focused ? "blue" : "black";
-
-              return (
-                <Text
-                  style={{
-                    width: wp("30"),
-                    color: iconColor,
-                    fontSize: hp("2.5"),
-                    textAlign: "center",
-                    marginBottom: 10,
-                  }}
-                >
-                  Wallet
-                </Text>
-              );
-            },
-            header: () => Header3("Wallet"),
-            headerShown: true,
           }}
         />
 
@@ -241,6 +242,18 @@ const Dashboard = ({ navigation }) => {
           }}
         />
         <Tab.Screen
+          name="Exchange"
+          component={token ? ExchangeNavigation : ExchangeLogin}
+          options={{
+            header: () => {
+              null;
+            },
+            headerShown: true,
+            display: "none",
+            tabBarStyle: { display: "none" },
+          }}
+        />
+        <Tab.Screen
           name="Settings"
           component={Settings}
           options={{
@@ -248,6 +261,8 @@ const Dashboard = ({ navigation }) => {
             headerShown: true,
           }}
         />
+
+
       </Tab.Navigator>
     </>
   );

@@ -10,11 +10,11 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 export const TxDetail = (props) => {
   const type = useSelector((state) => state.walletType);
   const [walletType, setWalletType] = useState();
-  const url = `https://testnet.bscscan.com/tx/${props.route.params.data.hash}`;
-  const etherUrl = `https://goerli.etherscan.io/tx/${props.route.params.data.hash}`;
-  const MaticUrl = `https://mumbai.polygonscan.com/tx/${props.route.params.data.hash}`;
-  const XrpUrl = `https://test.bithomp.com/explorer/${props.route.params.data.hash}`;
-  console.log(props.route.params.data.hash);
+  const url = `https://testnet.bscscan.com/tx/${props?.route?.params?.data?.hash}`;
+  const etherUrl = `https://goerli.etherscan.io/tx/${props?.route?.params?.data?.hash}`;
+  const MaticUrl = `https://mumbai.polygonscan.com/tx/${props?.route?.params?.data?.hash}`;
+  const XrpUrl = `https://test.bithomp.com/explorer/${props?.route?.params?.data?.hash}`;
+  console.log(props?.route?.params?.data?.hash);
   useEffect(async () => {
     AsyncStorageLib.getItem("walletType").then(async (Type) => {
       if (JSON.parse(Type) == "Ethereum") {
@@ -26,15 +26,15 @@ export const TxDetail = (props) => {
       } else if (JSON.parse(Type) == "BSC") {
         setWalletType("BSC");
       } else if (JSON.parse(Type) == "Multi-coin") {
-        if (props.route.params.data.chainType === "Eth") {
+        if (props?.route?.params?.data?.chainType === "Eth") {
           setWalletType("Ethereum");
-        }else if (props.route.params.data.chainType === "eth") {
+        }else if (props?.route?.params?.data?.chainType === "eth") {
           setWalletType("Ethereum");
-        } else if (props.route.params.data.chainType === "BSC") {
+        } else if (props?.route?.params?.data?.chainType === "BSC") {
           setWalletType("BSC");
-        } else if (props.route.params.data.chainType === "Matic") {
+        } else if (props?.route?.params?.data?.chainType === "Matic") {
           setWalletType("Matic");
-        } else if (props.route.params.data.chainType === "Xrp") {
+        } else if (props?.route?.params?.data?.chainType === "Xrp") {
           setWalletType("Xrp");
         } else {
           return alert(
@@ -59,7 +59,7 @@ export const TxDetail = (props) => {
               ?url
               : url,
         }}
-      />
+      /> 
     </View>
   );
 };
@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    marginTop: 50,
-    height: 10,
+    // marginTop:2,
+    // height: 100,
   },
   content: {
     padding: 40,

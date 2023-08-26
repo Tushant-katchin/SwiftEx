@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Button } from "react-native";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity } from "react-native";
 import {
   Avatar,
   Card,
@@ -12,109 +12,169 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Etherimage from "../../assets/ethereum.png";
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { getBnbPrice, getEthPrice } from "../utilities/utilities";
+import Maticimage from "../../assets/matic.png";
+import Xrpimage from "../../assets/xrp.png";
+import bnbimage from "../../assets/bnb-icon2_2x.png";
+import { GetBalance } from "../utilities/web3utilities";
+import { getXrpBalance } from "../components/Redux/actions/auth";
 
-function InvestmentChart() {
-  const state2 = useSelector((state) => state.walletBalance);
-
+function InvestmentChart(setCurrentWallet) {
   const state = useSelector((state) => state);
+  const [pull,setPull]=useState(false)
   const wallet = useSelector((state) => state.wallet);
-  const [bnbBalance, getBnbBalance] = useState(0);
-  const [ethBalance, getEthBalance] = useState(0);
-  const[ethPrice, setEthPrice] = useState(0)
-  const[bnbPrice, setBnbPrice] = useState(0)
-  if (Platform.OS === "android") {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
+  const [bnbBalance, getBnbBalance] = useState(0.00);
+  const [xrpBalance, GetXrpBalance] = useState(0.00);
+  const [maticBalance, getMaticBalance] = useState(0.00);
+  const [ethBalance, getEthBalance] = useState(0.00);
+  const EthBalance = useSelector((state) => state.EthBalance);
+  const XrpBalance = useSelector((state) => state.XrpBalance);
+  const walletState = useSelector((state) => state.wallets);
+  const type = useSelector((state) => state.walletType);
+
+  const [ethPrice, setEthPrice] = useState();
+  const [bnbPrice, setBnbPrice] = useState();
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch()
+  const getEthBnbPrice = async () => {
+    await getEthPrice().then((response) => {
+      setEthPrice(response.USD);
+    });
+    await getBnbPrice().then((response) => {
+      setBnbPrice(response.USD);
+    });
+  };
+
+  
+
+  const getTokenBalance =  async() => {
+    const bal = await state.walletBalance;
+    const EthBalance = await state.EthBalance;
+    const xrpBalance = await state.XrpBalance;
+    const maticBalance = await state.MaticBalance;
+    const wallet = await state.wallet
+    console.log('wall',wallet.address)
+    AsyncStorageLib.getItem("walletType").then(async (type) => {
+
+      console.log(JSON.parse(type))
+      if (JSON.parse(type) === "Ethereum") {
+        if (EthBalance) {
+          getEthBalance(Number(EthBalance).toFixed(2));
+          getBnbBalance(0.00);
+          getMaticBalance(0.00);
+          GetXrpBalance(0.00);
+        } else {
+          getEthBalance(0.00);
+          getBnbBalance(0.00);
+          getMaticBalance(0.00);
+          GetXrpBalance(0.00);
+        }
+      } else if (JSON.parse(type) === "BSC") {
+        // provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
+        // const balance = provider.getBalance(address)
+        // console.log('balance',balance)
+        if (bal) {
+          getBnbBalance(Number(bal).toFixed(2));
+          getEthBalance(0.00);
+          getMaticBalance(0.00);
+          GetXrpBalance(0.00);
+        } else {
+          getBnbBalance(0.00);
+          getEthBalance(0.00);
+          getMaticBalance(0.00);
+          GetXrpBalance(0.00);
+        }
+      }else if (JSON.parse(type) === "Xrp") {
+        console.log('fetching')
+        // provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
+        // const balance = provider.getBalance(address)
+        // console.log('balance',balance)
+        if (xrpBalance) {
+          dispatch(getXrpBalance(wallet.address))
+          GetXrpBalance(xrpBalance)
+          getBnbBalance(0.00);
+          getEthBalance(0.00);
+          getMaticBalance(0.00);
+        } else {
+          getBnbBalance(0.00);
+          getEthBalance(0.00);
+          getMaticBalance(0.00);
+          GetXrpBalance(0.00);
+        }
+      } else if (JSON.parse(type) === "Multi-coin") {
+        // provider = new ethers.providers.JsonRpcProvider(RPC.BSCRPC)
+        // const balance = await provider.getBalance(address)
+        // console.log('balances=',balance)
+        if (
+          EthBalance >=0
+        ) {
+          getEthBalance(Number(EthBalance).toFixed(2));
+         
+        } else {
+          getEthBalance(0.00);
+        }
+
+        if (bal>=0) {
+          console.log('bal',bal)
+          getBnbBalance(Number(bal).toFixed(2));
+        } else {
+          getBnbBalance(0.00);
+        }
+        if (xrpBalance>=0) {
+          try{
+
+            dispatch(getXrpBalance(wallet.xrp.address))
+          }catch(e){
+            console.log(e)
+          }
+         
+         GetXrpBalance(Number(xrpBalance).toFixed(2));
+        
+         
+          
+          } else {
+          GetXrpBalance(0.00);
+        }
+        if (maticBalance>=0) {
+         getMaticBalance(Number(maticBalance).toFixed(2));
+        } else {
+          getMaticBalance(0.00);
+        }
+      } else {
+        getEthBalance(0.00);
+        getBnbBalance(0.00);
+        getMaticBalance(0.00);
+        GetXrpBalance(0.00);
+      }
+      setPull(false)
+    });
+  }
+
+  useEffect(async () => {
+    try{
+
+      await getTokenBalance()
+      getEthBnbPrice();
+    }catch(e)
+    {
+      console.log(e)
     }
-  }
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  }, []);
 
-  const translation = useRef(new Animated.Value(0)).current;
+  useEffect( async () => {
+    try{
 
-  const getEthBnbPrice = async() => {
-    await getEthPrice()
-    .then((response)=>{
-      setEthPrice(response.USD)
-    })
-    await getBnbPrice()
-    .then((response)=>{
-      setBnbPrice(response.USD)
-    })
-  }
-
-  useEffect(async () => {
-    const bal = await state.walletBalance;
-    const EthBalance = await state.EthBalance;
-    AsyncStorageLib.getItem('walletType')
-    .then((type)=>{
-      if(JSON.parse(type)==='Ethereum' || JSON.parse(type)==='BSC'){
-
-        if (bal) {
-          getBnbBalance(bal);
-        } else {
-          getBnbBalance(0.0);
-        }
-        if (EthBalance) {
-          getEthBalance(EthBalance);
-        } else {
-          getEthBalance(0.0);
-        }
-      }else{
-        getEthBalance(0.0)
-        getBnbBalance(0.0)
-      }
-    })
-    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, [state2]);
-
-  useEffect(async () => {
-    const bal = await state.walletBalance;
-    const EthBalance = await state.EthBalance;
-    AsyncStorageLib.getItem('walletType')
-    .then((type)=>{
-      if(JSON.parse(type)==='Ethereum'){
-        if (EthBalance) {
-          getEthBalance(Number(EthBalance).toFixed(5));
-          getBnbBalance(0.0)
-        } else {
-          getEthBalance(0.0);
-        }
-      }else if(JSON.parse(type)==='BSC'){
-        if (bal) {
-          getBnbBalance(Number(bal).toFixed(5));
-          getEthBalance(0.0)
-        } else {
-          getBnbBalance(0.0);
-        }
-      }else if(JSON.parse(type)==='Multi-coin'){
-        if (EthBalance) {
-          getEthBalance(Number(EthBalance).toFixed(5));
-        } else {
-          getEthBalance(0.0);
-        }
-
-        if (bal) {
-          getBnbBalance(Number(bal).toFixed(5));
-        } else {
-          getBnbBalance(0.0);
-        }
-      }
-      else{
-        getEthBalance(0.0)
-        getBnbBalance(0.0)
-      }
-    })
-    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, [wallet.address]);
-
-  useEffect(()=>{
-    getEthBnbPrice()
-  },[])
+      getTokenBalance();
+    }catch(e)
+    {
+      console.log(e)
+    }
+   // await GetBalance(await state)
+  }, [wallet.address,wallet.name,EthBalance,bnbBalance,XrpBalance,state.walletBalance,state.EthBalance,state.XrpBalance,state.MaticBalance]);
 
   let LeftContent = (props) => (
     <Avatar.Image
@@ -127,100 +187,149 @@ function InvestmentChart() {
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
 
   return (
-    <View style={{ display: "flex", flexDirection: "column", marginTop: 5 }}>
-      <Card
-        style={{
-          width: wp(95),
-          height: hp(10),
-          backgroundColor: "white",
-          borderRadius: 10,
-          marginLeft: 5,
-        }}
-      >
-        <Card.Title
-          titleStyle={{ color: "black", fontSize: 15, marginBottom: 23 }}
-          title={"BNB Coin"}
-          left={LeftContent}
-        />
-        <Card.Content
-          style={{ display: "flex", flexDirection: "row", color: "black" }}
-        >
-          <Title style={{ color: "black" }}></Title>
-          <Paragraph
+      <ScrollView 
+      // refreshControl={
+      //   <RefreshControl
+      //     refreshing={pull}
+      //     onRefresh={() => {
+      //       setPull(true);
+      //       getTokenBalance();
+      //     }}
+      //   />
+      // }
+  
+      nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:hp(55)}}>
+        <TouchableOpacity  style={styles.refresh}>
+            <Text style={{color:"white",fontSize:12}}>Refresh</Text>
+          </TouchableOpacity>
+        <View style={styles.flatlistContainer}>
+
+          
+
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image source={bnbimage} style={styles.img} />
+            <View style={styles.ethrumView}>
+              <Text>BNB Coin</Text>
+              <Text
+                style={{
+                  color: "grey",
+                  fontWeight: "bold",
+                }}
+              >
+                ${bnbPrice >= 0 ? bnbPrice : 300}
+              </Text>
+            </View>
+          </View>
+          <Text
             style={{
               color: "black",
-              marginLeft: wp("50"),
+
               fontWeight: "bold",
-              top: -50,
-              left: 50,
             }}
           >
             {bnbBalance ? bnbBalance : 0} BNB
-          </Paragraph>
-          <Paragraph
-            style={{
-              color: "grey",
-              position: "absolute",
-              marginLeft: wp("20"),
-              fontWeight: "bold",
-              top: -39,
-            }}
-          >
-           ${bnbPrice>=0?bnbPrice:300}
-          </Paragraph>
-        </Card.Content>
-      </Card>
+          </Text>
+        </View>
 
-      <Card
-        style={{
-          width: wp(95),
-          height: hp(10),
-          backgroundColor: "white",
-          borderRadius: 10,
-          marginLeft: 5,
-        }}
-      >
-        <Card.Title
-          titleStyle={{ color: "black", fontSize: 15, marginBottom: 23 }}
-          title={"Ethereum"}
-          left={LeftContent2}
-        />
-        <Card.Content
-        
-          style={{ display: "flex", flexDirection: "row", color: "black" }}
-        >
-          <Title style={{ color: "black" }}></Title>
-          <Paragraph
+        <View style={styles.flatlistContainer}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image source={Etherimage} style={styles.img} />
+            <View style={styles.ethrumView}>
+              <Text>Ethereum</Text>
+              <Text
+                style={{
+                  color: "grey",
+                  fontWeight: "bold",
+                }}
+              >
+                $ {ethPrice >= 0 ? ethPrice : 1300}
+              </Text>
+            </View>
+          </View>
+
+          <Text
             style={{
               color: "black",
-              marginLeft: wp("50"),
               fontWeight: "bold",
-              top: -50,
-              left: 50,
             }}
           >
             {ethBalance ? ethBalance : 0} ETH
-          </Paragraph>
-          <Paragraph
+          </Text>
+        </View>
+        <View style={styles.flatlistContainer}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image source={Maticimage} style={styles.img} />
+            <View style={styles.ethrumView}>
+              <Text>Matic</Text>
+              <Text
+                style={{
+                  color: "grey",
+                  fontWeight: "bold",
+                }}
+              >
+                $ {4}
+              </Text>
+            </View>
+          </View>
+
+          <Text
             style={{
-              color: "grey",
-              position: "absolute",
-              marginLeft: wp("20"),
+              color: "black",
               fontWeight: "bold",
-              top: -39,
             }}
           >
-          $ {ethPrice>=0?ethPrice:1300}
-          </Paragraph>
-        </Card.Content>
-      </Card>
-    </View>
+            {maticBalance ? maticBalance : 0} MAT
+          </Text>
+        </View>
+        <View style={styles.flatlistContainer}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image source={Xrpimage} style={styles.img} />
+            <View style={styles.ethrumView}>
+              <Text>XRP</Text>
+              <Text
+                style={{
+                  color: "grey",
+                  fontWeight: "bold",
+                }}
+              >
+                $ {0.78}
+              </Text>
+            </View>
+          </View>
+
+          <Text
+            style={{
+              color: "black",
+              fontWeight: "bold",
+            }}
+          >
+            {xrpBalance ? xrpBalance : 0} XRP
+          </Text>
+        </View>
+
+
+        
+      </ScrollView>
   );
 }
 
 export default InvestmentChart;
 
 const styles = StyleSheet.create({
+  flatlistContainer: {
+    flexDirection: "row",
+    marginVertical: hp(5),
+    width: "80%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: wp(90),
+    alignSelf: "center",
+    marginBottom: 0,
+  },
+  img: { height: hp(5), width: wp(10), borderWidth: 1, borderRadius: hp(3) },
+  ethrumView: {
+    marginHorizontal: wp(4),
+  },
   view: {
     flex: 1,
     height: 75,
@@ -234,4 +343,5 @@ const styles = StyleSheet.create({
   priceDown: {
     color: "rgb(204,51,51)",
   },
+  refresh:{backgroundColor: "#4CA6EA",  width:wp(20),paddingVertical:hp(0.6),marginTop:hp(4),marginLeft:wp(5),alignItems:"center",borderRadius:hp(1)}
 });

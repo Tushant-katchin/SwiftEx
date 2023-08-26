@@ -14,7 +14,8 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
-import title_icon from "../../assets/title_icon.png";
+// import title_icon from "../../assets/title_icon.png";
+import darkBlue from '../../assets/darkBlue.png'
 import ReactNativePinView from "react-native-pin-view";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,6 +24,7 @@ import { Platform } from "react-native";
 import { setPlatform } from "../components/Redux/actions/auth";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useBiometricsForAppLock } from "../biometrics/biometric";
+import { alert } from "./reusables/Toasts";
 const LockApp = (props) => {
   const [pin, setPin] = useState();
   const [status, setStatus] = useState("pinset");
@@ -95,7 +97,7 @@ const LockApp = (props) => {
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
       //setShowCompletedButton(true)
       const Pin = await AsyncStorage.getItem("pin");
 
@@ -103,7 +105,8 @@ const LockApp = (props) => {
         console.log(Pin);
         navigation.goBack();
       } else {
-        alert("invalid pin");
+        
+        alert("error","invalid pin");
         pinView.current.clearAll();
 
       }
@@ -119,16 +122,16 @@ const LockApp = (props) => {
       <View style={style.Body}>
         <Animated.Image
           style={{
-            width: wp("5"),
-            height: hp("5"),
+            width: wp("12"),
+            height: hp("12"),
             padding: 30,
             marginTop: hp(2),
             transform: [{ rotate: SpinValue }],
           }}
-          source={title_icon}
+          source={darkBlue}
         />
         <Text style={style.welcomeText}> Hi,</Text>
-        <Text style={style.welcomeText}>
+        <Text style={style.welcomeText1}>
           {" "}
           {status == "verify"
             ? "please re enter pin"
@@ -136,18 +139,18 @@ const LockApp = (props) => {
             ? "please enter your pin"
             : "Please create a pin"}
         </Text>
-        <View style={{ marginTop: hp(10) }}>
+        <View style={{ marginTop: hp(5) }}>
           <ReactNativePinView
-            inputSize={32}
+            inputSize={25}
             ref={pinView}
-            pinLength={4}
-            buttonSize={60}
+            pinLength={6}
+            buttonSize={50}
             onValueChange={(value) => setEnteredPin(value)}
             buttonAreaStyle={{
-              marginTop: 24,
+              marginTop: 30,
             }}
             inputAreaStyle={{
-              marginBottom: 24,
+              // marginBottom: 24,
             }}
             inputViewEmptyStyle={{
               backgroundColor: "transparent",
@@ -160,6 +163,7 @@ const LockApp = (props) => {
             buttonViewStyle={{
               borderWidth: 1,
               borderColor: "#FFF",
+              marginVertical:hp(1)
             }}
             buttonTextStyle={{
               color: "#FFF",
@@ -177,13 +181,13 @@ const LockApp = (props) => {
                   console.log(Pin);
                   navigation.goBack();
                 } else {
-                  alert("invalid pin");
+                  alert("error","invalid pin");
                 }
               }
             }}
             customLeftButton={
               showRemoveButton ? (
-                <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
+                <Icon name={"ios-backspace"} size={36} color={"gray"} />
               ) : undefined
             }
             customRightButton={
@@ -193,7 +197,11 @@ const LockApp = (props) => {
                   size={36}
                   color={"#FFF"}
                 />
-              ) : undefined
+              ) : <Icon
+              name={"ios-chevron-forward-circle"}
+              size={36}
+              color={"#FFF"}
+            />
             }
           />
         </View>
@@ -212,12 +220,13 @@ const style = StyleSheet.create({
     width: wp(100),
     alignItems: "center",
     textAlign: "center",
+    // justifyContent:"center"
   },
   welcomeText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "200",
     color: "white",
-    marginTop: hp(5),
+    marginTop: hp(3),
   },
   welcomeText2: {
     fontSize: 20,
@@ -240,4 +249,10 @@ const style = StyleSheet.create({
     fontWeight: "200",
     color: "white",
   },
+  welcomeText1:{
+    fontSize: 16,
+    fontWeight: "200",
+    color: "white",
+    marginTop: hp(1),
+  }
 });

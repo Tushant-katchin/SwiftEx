@@ -203,12 +203,14 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
+import ToggleSwitch from "toggle-switch-react-native";
 import { Switch } from "react-native-paper";
 import { REACT_APP_LOCAL_TOKEN } from "./src/Dashboard/exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import Icon from "./src/icon";
@@ -234,48 +236,59 @@ const Settings = (props) => {
         />
         <Text style={styles.text}>Wallets</Text>
       </TouchableOpacity>
-      <Text
-        style={{ fontSize: hp(1.5), color: "black", marginHorizontal: wp(9) }}
-      >
-        Main Wallet 1
-      </Text>
       <View style={styles.bottomBorder}>
         <TouchableOpacity
           // onPress={() => {
           //   props.navigation.navigate("Transactions");
           // }}
-          style={styles.accountBox}
+          style={styles.accountBox1}
         >
-          <Icon name="moon-o" type={"fa"} size={hp(2)} color="black" />
-          <Text style={styles.text}>Dark Mode</Text>
-          <View style={styles.switchContainer}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Icon name="moon-o" type={"fa"} size={hp(2)} color="black" />
+            <Text style={styles.text}>Dark Mode</Text>
+          </View>
+          <View style={Platform.OS == "android" ? { paddingRight: wp(2) } : { paddingRight: wp(3.5) }}>
+            <ToggleSwitch
+              isOn={Checked}
+              onColor="green"
+              offColor="gray"
+              labelStyle={{ color: "black", fontWeight: "900" }}
+              size="small"
+              onToggle={() => {
+                setCheckBox(!Checked);
+              }}
+              // onToggle={(isOff) => console.log("changed to : ", isOff)}
+            />
+          </View>
+
+          {/* <View style={styles.switchContainer}>
             <Switch            
               value={Checked}
               onValueChange={() => setCheckBox(!Checked)}
               style={styles.Switchbtn}
             />
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
         style={styles.accountBox}
-        // onPress={async () => {
-        //   const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        //   const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
-        //   console.log(token);
+        onPress={async () => {
+          const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+          const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+          console.log(token);
 
-        //   if (token) {
-        //     props.navigation.navigate("exchange");
-        //   } else {
-        //     props.navigation.navigate("exchangeLogin");
-        //   }
-        // }}
+          if (token) {
+            props.navigation.navigate("exchange");
+          } else {
+            props.navigation.navigate("exchangeLogin");
+          }
+        }}
       >
-        <Icon type={"fa"} name="dollar" size={hp(2)} color="black" />
-        <Text style={styles.text}>Price Alerts</Text>
+        <Icon type={"fa"} name="exchange" size={hp(2)} color="black" />
+        <Text style={styles.text}>Exchange</Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.accountBox}
         onPress={() => {
           //alert("coming soon");
@@ -289,25 +302,36 @@ const Settings = (props) => {
           color="black"
         />
         <Text style={styles.text}>Contacts</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         style={styles.accountBox}
         onPress={() => {
-          // props.navigation.navigate('recieveaddress')
-          // alert("coming soon");
+          //alert("coming soon");
+          props.navigation.navigate("Biometric");
         }}
       >
-        <Icon type={"material"} name="qr-code-2" size={hp(2)} color="black" />
-        <Text style={styles.text}>Scan QR Code</Text>
+        <Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" />
+        <Text style={styles.text}>Biometric Authenticaton</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => {
+          props.navigation.navigate("Transactions");
+          //alert("coming soon");
+        }}
+      >
+        <Icon type={"fa"} name="dollar" size={hp(2)} color="black" />
+        <Text style={styles.text}>Transactions</Text>
       </TouchableOpacity>
       <View style={styles.bottomBorder}>
         <TouchableOpacity
           style={styles.accountBox}
           onPress={() => {
             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            // AsyncStorageLib.removeItem('user')
+            //AsyncStorageLib.removeItem('user')
             AsyncStorageLib.removeItem(LOCAL_TOKEN);
-            // props.navigation.navigate("Passcode");
+            props.navigation.navigate("Passcode");
             /* dispatch(logout()).then((res)=>{
       }).catch((e)=>{
         console.log(e)
@@ -315,7 +339,7 @@ const Settings = (props) => {
           }}
         >
           <Icon name="chevron-right" size={hp(2)} color="black" />
-          <Text style={styles.text}>Wallet Connect</Text>
+          <Text style={styles.text}>Log Out</Text>
         </TouchableOpacity>
       </View>
 
@@ -381,9 +405,10 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     backgroundColor: "#fff",
-    height: hp(100),
-    width: wp("100"),
+    // height: hp(100),
+    width: wp(100),
     alignContent: "center",
+    paddingBottom: 100,
   },
   setHeading: {
     fontSize: hp(2.5),
@@ -407,18 +432,28 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
+  accountBox1: {
+    width: wp(90),
+    flexDirection: "row",
+    marginHorizontal: wp(6),
+    justifyContent: "space-between",
+    borderRadius: 20,
+    marginTop: hp(5),
+    textAlign: "center",
+    display: "flex",
+    alignItems: "center",
+  },
   bottomBorder: {
     borderBottomWidth: 1,
     borderColor: "gray",
     paddingBottom: hp(3),
   },
-  switchContainer:{
-    marginHorizontal:hp(24),
-borderRadius:hp(20),
-borderWidth:1,
-borderColor:"gray",
-backgroundColor:"#EBE8FC",
-
+  switchContainer: {
+    marginHorizontal: hp(24),
+    borderRadius: hp(20),
+    borderWidth: 1,
+    borderColor: "gray",
+    backgroundColor: "#EBE8FC",
   },
   Switchbtn: {
     height: hp(4.5),

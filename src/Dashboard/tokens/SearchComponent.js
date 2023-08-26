@@ -4,6 +4,7 @@ import { Dimensions } from "react-native";
 
 const deviceWidth = Dimensions.get("window").width;
 const SearchComponent = (props) => {
+  const [searchData, setSerachData] = useState([]);
   const { clampedScroll, setSearch, data, setData } = props;
   const searchBarTranslate = clampedScroll.interpolate({
     inputRange: [0, 50],
@@ -18,8 +19,8 @@ const SearchComponent = (props) => {
   const handleSearch = (text) => {
     const formattedQuery = text.toLowerCase();
 
-    if (data) {
-      const Data = data.filter((item) => {
+    if (searchData) {
+      const Data = searchData.filter((item) => {
         if (item.name) {
           const name = `${item.name.toLowerCase()}`;
           console.log(name);
@@ -32,6 +33,7 @@ const SearchComponent = (props) => {
       setData(Data);
     }
   };
+  useEffect(() => [setSerachData(data)], []);
 
   return (
     <Animated.View
@@ -57,7 +59,7 @@ const SearchComponent = (props) => {
           if (text) {
             handleSearch(text);
           } else {
-            setData(data);
+            setData(searchData);
           }
         }}
       />
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: "#888888",
     fontSize: 18,
-    height: 50,
+    height: 45,
   },
 });
 

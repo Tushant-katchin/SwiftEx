@@ -1,5 +1,5 @@
 export const urls = {
-  testUrl: "3.19.76.40:2000",
+  testUrl: "ec2-43-205-140-238.ap-south-1.compute.amazonaws.com:2000",
   mainUrl: "3.19.76.40:2000",
 };
 
@@ -25,6 +25,12 @@ export const tokenAddresses = {
   DAI: "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867",
   ETH2: "0xd66c6B4F0be8CE5b39D52E0Fd1344c389929B378",
 };
+
+export const faucets ={
+  bscFaucet:'https://testnet.binance.org/faucet-smart/',
+  ethFaucetGoerli:'https://goerlifaucet.com/',
+  polygonFaucet:'https://faucet.polygon.technology/'
+}
 
 export const jwtSecret = "0xC02aaA3MunziAppTestMode0xbb4CdB9";
 
