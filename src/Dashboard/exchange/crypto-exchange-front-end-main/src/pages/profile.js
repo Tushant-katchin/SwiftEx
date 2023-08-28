@@ -39,7 +39,12 @@ const VERIFICATION_STATUS = {
 
 const VerifyActionButtonView = ({ onSubmit, status }) => {
   if (status === VERIFICATION_STATUS.VERIFIED) {
-    return <Icon name="verified" size={30} />;
+    return <Icon
+    name={"check-outline"}
+    type={"materialCommunity"}
+    color={"#008C62"}
+    style={styles.checkImg}
+  />;
   }
 
   if (status === VERIFICATION_STATUS.UNVERIFIED) {

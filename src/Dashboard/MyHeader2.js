@@ -42,7 +42,7 @@ import Icon from "../icon";
 import IconWithCircle from "../Screens/iconwithCircle";
 if (
   Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
@@ -396,7 +396,9 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           style={styles.faucetBtn}
           onPress={() => {
             console.log("pressed");
-            setShowModal(true);
+            //setShowModal(true);
+            firebaseNotification('new Bid','Swift Ex','someone bid','new bid buddy ')
+
           }}
         >
           <Text style={styles.faucetText}>Faucet</Text>

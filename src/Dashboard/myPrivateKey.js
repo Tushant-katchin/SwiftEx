@@ -47,7 +47,7 @@ const MyPrivateKey = (props) => {
       duration: 1000,
     }).start();
     let mnemonic =[]
-    mnemonic = await state.wallet.mnemonic.match(/.*?[\.\s]+?/g);
+    mnemonic = await state.wallet.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)
     const privateKey = await state.wallet.privateKey
     console.log("Muy mnemonic",mnemonic)
     if(mnemonic!=null)
