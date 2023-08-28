@@ -99,29 +99,21 @@ export default function PushNotifications(){
 // =======
 // >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
 
-//   export const firebaseNotification = (title,appName,submessage,message) => {
+  export const firebaseNotification = (title,appName,submessage,message) => {
     
-//     PushNotification.localNotification({
-//         channelId: "1",
-//       autoCancel: true,
-// <<<<<<< HEAD
-//       bigText:
-//         submessage,
-// =======
-//       bigText:submessage,
-// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
-//       subText: appName,
-//       title: title,
-//       message: message,
-//       vibrate: true,
-//       vibration: 300,
-//       playSound: true,
-//       soundName: 'default',
-// <<<<<<< HEAD
-//       actions: '["Yes", "No"]'
-// =======
-//       actions: ["Yes", "No"],
-//       invokeApp:false
-// >>>>>>> 82f128721a5a5b21099fa7fb22b426127b2a24a6
-//     })
-//   }
+    PushNotification.localNotification({
+        channelId: "1",
+      autoCancel: true,
+      bigText:
+        submessage,
+      subText: appName,
+      title: title,
+      message: message,
+      vibrate: true,
+      vibration: 300,
+      playSound: true,
+      soundName: 'default',
+      actions: ["Yes", "No"],
+      invokeApp:false
+    })
+  }

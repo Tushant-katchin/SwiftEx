@@ -73,6 +73,30 @@ export const WalletHeader = (props) => {
     </TouchableOpacity>
   );
 };
+export const SwapHeader = (props) => {
+  const { title, title1, setVisible } = props;
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity style={styles.walletContainer} onPress={() => {
+      setVisible(false)
+    }}>
+      <Icon
+        name={"left"}
+        type={"antDesign"}
+        size={20}
+        color={"#fff"}
+        onPress={() => {
+          setVisible(false)
+        }}
+      />
+      <Text style={styles.text1}>{title}</Text>
+      <View style={{ alignItems: "center" }}>
+        <Text style={{ color: "#E96A6A" }}>{title1}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 
 

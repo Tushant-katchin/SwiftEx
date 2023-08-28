@@ -37,7 +37,7 @@ import tokenList from "../tokens/tokenList.json";
 import chooseSwap from "../tokens/chooseSwap.json";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
-import { WalletHeader } from "../header";
+import { SwapHeader, WalletHeader } from "../header";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 const { ChainId, Fetcher, WETH, Route } = require("@uniswap/sdk");
@@ -247,7 +247,7 @@ const TokenList = ({
 
   return (
     <View style={{ width: wp(100),height:hp(100) }}>
-      <WalletHeader title='Token-List'/>
+      <SwapHeader title='Tokens' setVisible={setVisible}/>
       {/* <TokenHeader setVisible={setVisible} name={name} /> */}
       <View style={style.Body}>
         <SearchComponent

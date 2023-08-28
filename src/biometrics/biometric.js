@@ -72,6 +72,7 @@ export function getBiometrics(){
             enableBiometrics()
         } else {
             console.log('Biometrics not supported')
+            
         }
     })
 }

@@ -767,7 +767,7 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
           colors={["rgba(22, 19, 107, 1)", "rgba(210, 88, 150, 1)"]}
         >
           <View style={styles.modelmainContainer}>
-            <Icon type={"entypo"} name={'cross'} color={'white'} size={24} style={styles.crossIcon} onPress={onCrossIcon}/>
+            <Icon type={"entypo"} name={'cross'} color={'white'} size={24} style={styles.crossIcon} />
             <Text style={styles.accountText}>Add Bank Account</Text>
             <Text>{modalMessage}</Text>
             {/* NOTE: bellow element is only for test and has to be removed in prod */}
