@@ -212,7 +212,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import {useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import Icon from "../icon";
 import { alert } from "./reusables/Toasts";
 
@@ -224,8 +224,8 @@ const Market = (props) => {
   const [percent, setPercent] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-  const [updatedData,setUpdatedData] = useState([])
-  const[searchItem, setSearchItem]= useState('')
+  const [updatedData, setUpdatedData] = useState([])
+  const [searchItem, setSearchItem] = useState('')
   const navigation = useNavigation();
   const fetchKline = async (
     setData,
@@ -236,7 +236,7 @@ const Market = (props) => {
     setImageUrl
   ) => {
     try {
-       await fetch(
+      await fetch(
         `http://${urls.testUrl}/user/getcryptodata`,
         {
           method: "GET",
@@ -259,8 +259,8 @@ const Market = (props) => {
         })
         .catch((error) => {
           console.error(error);
-          
-          alert("error",error);
+
+          alert("error", error);
         });
     } catch (error) {
       console.log(error);
@@ -292,10 +292,10 @@ const Market = (props) => {
       setImageUrl
     );
   }, []);
- 
+
 
   return (
-    <View style={{backgroundColor:"white"}}>
+    <View style={{ backgroundColor: "white" }}>
       <View style={{ height: hp(100) }}>
         <View style={Styles.searchContainer}>
           <Icon name="search1" type="antDesign" size={hp(2.4)} />
@@ -303,20 +303,19 @@ const Market = (props) => {
             placeholder="Search Crypto"
             placeholderTextColor={"black"}
             style={Styles.input}
-            onChangeText={(input)=>{
+            onChangeText={(input) => {
               setSearchItem(input)
-              let UpdatedData=[]
-              updatedData.filter((item)=>{
+              let UpdatedData = []
+              updatedData.filter((item) => {
                 console.log(item.name.toLowerCase().includes(input.toLowerCase()))
-                if(item.name.toLowerCase().includes(input.toLowerCase()))
-                {
+                if (item.name.toLowerCase().includes(input.toLowerCase())) {
                   UpdatedData.push(item)
                 }
-                
-                    setData(UpdatedData)
-                    return UpdatedData
-                  })
-                  
+
+                setData(UpdatedData)
+                return UpdatedData
+              })
+
             }}
           />
         </View>
@@ -332,7 +331,7 @@ const Market = (props) => {
         </View>
         <ScrollView
           alwaysBounceVertical={true}
-        contentContainerStyle={{ marginBottom: hp(2) }}
+          contentContainerStyle={{ marginBottom: hp(2) }}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -349,21 +348,24 @@ const Market = (props) => {
                     style={Styles.Container}
                     key={item.id}
                     onPress={() => {
-                      props.navigation.navigate("CoinDetails", { data:data });
+                      props.navigation.navigate("CoinDetails", { data: data });
 
                     }}
                   >
                     <Image source={{ uri: image }} style={Styles.img} />
                     <View style={Styles.flatContainerText}>
+
+
+
+
+
                       <Text >{item.name}</Text>
-                      <Text>{`$ ${
-                        item.current_price ? item.current_price.toFixed(2) : "0"
-                      }`}</Text>
-                      <Text>{`Last 24h: ${
-                        item.price_change_percentage_24h
+                      <Text>{`$ ${item.current_price ? item.current_price.toFixed(2) : "0"
+                        }`}</Text>
+                      <Text>{`Last 24h: ${item.price_change_percentage_24h
                           ? item.price_change_percentage_24h.toFixed(1)
                           : "0"
-                      }%`}</Text>
+                        }%`}</Text>
                     </View>
                   </TouchableOpacity>
                 </ScrollView>
@@ -394,7 +396,7 @@ const Styles = StyleSheet.create({
     marginTop: hp(3),
     alignItems: "center",
     flexDirection: "row",
-    
+
   },
   flatContainerText: {
     marginHorizontal: wp(4),
