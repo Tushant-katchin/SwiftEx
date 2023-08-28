@@ -101,8 +101,8 @@ const Passcode = (props) => {
           AsyncStorage.setItem("pin", JSON.stringify(pin));
         } else {
           
-          alert("error","password did not match. please try again");
           pinView.current.clearAll();
+          alert("error","password did not match. please try again");
           setStatus("");
         }
       } else if (status === "pinset") {
@@ -115,11 +115,14 @@ const Passcode = (props) => {
           console.log(user);
           console.log(wallets);
           if (user) {
+            pinView.current.clearAll();
             props.navigation.navigate("HomeScreen");
           } else {
+            pinView.current.clearAll();
             props.navigation.navigate("Welcome");
           }
         } else {
+          pinView.current.clearAll();
           alert("error","invalid pin");
         }
       } else {

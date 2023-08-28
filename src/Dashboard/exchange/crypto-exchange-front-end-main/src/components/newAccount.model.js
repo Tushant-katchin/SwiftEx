@@ -767,7 +767,11 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
           colors={["rgba(22, 19, 107, 1)", "rgba(210, 88, 150, 1)"]}
         >
           <View style={styles.modelmainContainer}>
-            <Icon type={"entypo"} name={'cross'} color={'white'} size={24} style={styles.crossIcon} />
+            <TouchableOpacity onPress={()=>{
+              handleClose()
+            }}>
+            <Icon type={"entypo"} name={'cross'} color={'white'} size={24} style={styles.crossIcon}/>
+            </TouchableOpacity>
             <Text style={styles.accountText}>Add Bank Account</Text>
             <Text>{modalMessage}</Text>
             {/* NOTE: bellow element is only for test and has to be removed in prod */}
@@ -810,13 +814,15 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
               </View>
               <Text style={styles.number}>Account Number</Text>
               <TextInput
-                placeholderTextColor={"red"}
+                placeholderTextColor={"white"}
                 style={styles.inputContainer}
+                
                 id="outlined-basic"
                 label={isIban ? "IBAN" : ""}
                 value={newAccount.account_number}
                 variant="outlined"
                 //onChange={handleChange}
+                
                 name="account_number"
                 onChangeText={(text) => {
                   let data = {
@@ -861,7 +867,7 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
                 style={styles.submitgradientContainer}
                 colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
               >
-                <TouchableOpacity onPress={onPress}>
+                <TouchableOpacity onPress={handleSubmit}>
                   <Text style={{ color: "#fff" }}>Submit</Text>
                 </TouchableOpacity>
               </LinearGradient>
@@ -1005,7 +1011,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(6),
   },
   inputContainer: {
-    backgroundColor: "#131E3A",
+    backgroundColor: "white",
     borderWidth: StyleSheet.hairlineWidth * 1,
     borderColor: "#407EC9",
     width: wp(80),
@@ -1015,6 +1021,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: hp(1),
     borderBottomRightRadius: hp(1),
     alignSelf: "center",
+    color:'white'
   },
   submitgradientContainer: {
     width: wp(40),

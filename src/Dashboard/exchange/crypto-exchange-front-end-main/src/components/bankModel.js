@@ -32,11 +32,11 @@ const BankModel = (props) => {
         animationOutTiming={200}
         isVisible={isVisible}
         onBackdropPress={() => {
-          handleClose();
+          onPress()
         }}
         onBackButtonPress={() => {
           //setShowModal(!showModal);
-          handleClose();
+          onPress()
         }}
     >
      <View style={{backgroundColor:"rgb(26,26,26)",height:hp(100),opacity:0.7}}> 
@@ -64,7 +64,8 @@ const BankModel = (props) => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('HomeScreen');
+                 // navigation.navigate('HomeScreen');
+                 onPress()
                 }}
               >
                 <Text style={{ color: "#fff" }}>Go To Home</Text>

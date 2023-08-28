@@ -608,6 +608,7 @@ export const ProfileView = (props) => {
               }}
               isVisible={modalVisible}
               setModalVisible={setModalVisible}
+              getAccountDetails={getAccountDetails}
               onPress={() => {
                 setModalVisible(!modalVisible);
                 setIsSubmit(!isSubmit);

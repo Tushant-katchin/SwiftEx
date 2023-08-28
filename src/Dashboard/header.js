@@ -23,25 +23,31 @@ export const ExchangeHeader = (props) => {
         size={20}
         color={"#fff"}
         onPress={() => {
-          navigation.goBack();
+         // navigation.goBack();
         }}
       />
       <Text style={{ color: "#fff", fontWeight: "700" }}>Exchange</Text>
       {isLogOut ? (
-        <View style={{ alignItems: "center" }}>
+        <TouchableOpacity style={{ alignItems: "center" }} onPress={()=>{
+          console.log('clicked')
+          const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+          AsyncStorage.removeItem(LOCAL_TOKEN);
+          navigation.navigate("exchangeLogin");
+        }}>
           <Icon
             name={"logout"}
             type={"materialCommunity"}
             size={20}
             color={"#E96A6A"}
             onPress={() => {
+              console.log('clicked')
               const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
               AsyncStorage.removeItem(LOCAL_TOKEN);
-              navigation.navigate("Settings");
+              //navigation.navigate("Settings");
             }}
           />
           <Text style={{ color: "#E96A6A" }}>Logout</Text>
-        </View>
+        </TouchableOpacity>
       ) : (
         <Text style={{ width: "10%" }}>{""}</Text>
       )}
@@ -158,6 +164,13 @@ export const ExchangeHeaderIcon = (props) => {
       <Text style={styles.text}>{title}</Text>
 
       { isLogOut ? <View style={{ alignItems: "center" }}>
+        <TouchableOpacity onPress={()=>{
+          console.log('clicked')
+           const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+           AsyncStorage.removeItem(LOCAL_TOKEN);
+           navigation.navigate("exchangeLogin");
+        }}>
+
         <Icon
           name={"logout"}
           type={"materialCommunity"}
@@ -166,10 +179,11 @@ export const ExchangeHeaderIcon = (props) => {
           onPress={() => {
             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
             AsyncStorage.removeItem(LOCAL_TOKEN);
-            navigation.navigate("Settings");
+           // navigation.navigate("Settings");
           }}
-        />
+          />
         <Text style={{ color: "#E96A6A" }}>Logout</Text>
+          </TouchableOpacity>
       </View> :  <Text style={{ width: "10%" }}>{""}</Text>}
     </View>
   );
