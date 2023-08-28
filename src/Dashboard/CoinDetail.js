@@ -31,10 +31,10 @@ import MarketChart from "./MarketChart";
 import { urls } from "./constants";
 import IconWithCircle from "../Screens/iconwithCircle";
 import Icon from "../icon";
-import { AreaChart, Grid, LineChart, XAxis } from "react-native-svg-charts";
+import { AreaChart, Grid, LineChart, XAxis, YAxis } from "react-native-svg-charts";
 
 export const CoinDetails = (props) => {
- 
+
 
   const [trades, setTrades] = useState();
   const [percent, setPercent] = useState(1);
@@ -242,9 +242,16 @@ export const CoinDetails = (props) => {
   };
   const color =
     props?.route?.params?.data?.price_change_24h > 0 ? "green" : "red";
+
+
+
+
+
+
+
   return (
     <ScrollView
-      contentContainerStyle={{ backgroundColor: "white", paddingBottom: 100 }}
+      contentContainerStyle={{ backgroundColor: "white", paddingBottom: 50 }}
     >
       {/* <View style={{flexDirection:"row",alignItems:"center",marginHorizontal:wp(7),marginTop:hp(2)}}>
   <Image source={{uri: image}} style={{height:hp(3),width:wp(6)}}/>
@@ -252,15 +259,17 @@ export const CoinDetails = (props) => {
   <Text style={{marginHorizontal:wp(3)}}>wallet:{props?.route?.params?.data?.name}</Text>
 </View> */}
 
+
+
       <View style={styles.btnView}>
         <TouchableOpacity
           style={
             pressed == "1"
               ? {
-                  ...styles.tabBtns,
-                  borderColor: "#4CA6EA",
-                  backgroundColor: "#4CA6EA",
-                }
+                ...styles.tabBtns,
+                borderColor: "#4CA6EA",
+                backgroundColor: "#4CA6EA",
+              }
               : styles.tabBtns
           }
           // title="1h" color={pressed==='1'?'green':'grey'}
@@ -277,10 +286,10 @@ export const CoinDetails = (props) => {
           style={
             pressed == "2"
               ? {
-                  ...styles.tabBtns,
-                  borderColor: "#4CA6EA",
-                  backgroundColor: "#4CA6EA",
-                }
+                ...styles.tabBtns,
+                borderColor: "#4CA6EA",
+                backgroundColor: "#4CA6EA",
+              }
               : styles.tabBtns
           }
           // title="12h"
@@ -298,10 +307,10 @@ export const CoinDetails = (props) => {
           style={
             pressed == "3"
               ? {
-                  ...styles.tabBtns,
-                  borderColor: "#4CA6EA",
-                  backgroundColor: "#4CA6EA",
-                }
+                ...styles.tabBtns,
+                borderColor: "#4CA6EA",
+                backgroundColor: "#4CA6EA",
+              }
               : styles.tabBtns
           }
           // title="1d"
@@ -316,18 +325,53 @@ export const CoinDetails = (props) => {
         </TouchableOpacity>
       </View>
 
+
+
+      <YAxis
+        data={Data ? Data : data}
+        style={{
+          // marginRight: wp(59),
+          // marginLeft: wp(-4),
+          height: hp(36),
+          width: wp(15),
+          marginTop: hp(9),
+          position: "absolute",
+          zIndex: 10,
+          marginLeft:wp(3)
+        }}
+        contentInset={{ top: 20 }}
+
+
+        // contentInset={contentInset}
+        svg={{
+          fill: "gray",
+          fontSize: 12,
+          fontWeight: "500"
+        }}
+
+        numberOfTicks={8}
+        formatLabel={(value) => `${value}`}
+      />
+
+
       <XAxis
+        data={Data ? Data : data}
+
         style={styles.xAxis}
-        data={timeData}
         formatLabel={(value, index) => timeData[index]}
         contentInset={{ left: 18, right: 18 }}
-        svg={{ fontSize: 11, fill: "black" }}
+        svg={{
+          fill: "gray",
+          fontSize: 12,
+          fontWeight: "500"
+        }}
       />
 
       <LineChart
         style={{
           height: hp(30),
-          width: wp(90),
+          width: wp(70),
+          marginLeft:hp(8),
           alignSelf: "center",
           marginTop: hp(6),
         }}
@@ -358,7 +402,7 @@ export const CoinDetails = (props) => {
         <View style={styles.iconText}>
           <Text> Last 24h:</Text>
           <View style={styles.arrowText}>
-            <Text>
+            <Text style={styles.heading}>
               {props?.route?.params?.data?.price_change_percentage_24h}%
             </Text>
             <Icon name="arrow-up-right" type={"feather"} size={20} />
@@ -367,34 +411,34 @@ export const CoinDetails = (props) => {
         <View style={styles.iconText}>
           <Text>USD</Text>
           <View style={styles.arrowText}>
-            <Text>$ {props?.route?.params?.data?.current_price}</Text>
+            <Text style={styles.heading}>$ {props?.route?.params?.data?.current_price}</Text>
             <Icon name="arrow-up-right" type={"feather"} size={20} />
           </View>
         </View>
 
         <View style={styles.iconText}>
           <Text>Market Cap : </Text>
-          <Text> ${props?.route?.params?.data?.market_cap}</Text>
+          <Text style={styles.heading}> ${props?.route?.params?.data?.market_cap}</Text>
         </View>
 
         <View style={styles.iconText}>
           <Text>Total Supply :</Text>
-          <Text>${props?.route?.params?.data?.total_supply}</Text>
+          <Text style={styles.heading}>${props?.route?.params?.data?.total_supply}</Text>
         </View>
 
         <View style={styles.iconText}>
           <Text> 24H high :</Text>
-          <Text>${props?.route?.params?.data?.high_24h} </Text>
+          <Text style={styles.heading}>${props?.route?.params?.data?.high_24h} </Text>
         </View>
 
         <View style={styles.iconText}>
           <Text> 24H low :</Text>
-          <Text>${props?.route?.params?.data?.low_24h}</Text>
+          <Text style={styles.heading}>${props?.route?.params?.data?.low_24h}</Text>
         </View>
 
         <View style={styles.iconText}>
           <Text> All Time High :</Text>
-          <Text>${props?.route?.params?.data?.ath}</Text>
+          <Text style={styles.heading}>${props?.route?.params?.data?.ath}</Text>
         </View>
       </View>
     </ScrollView>
@@ -417,25 +461,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignSelf: "center",
     width: wp(88),
-    marginTop: hp(2.3),
+    marginTop: hp(3),
   },
   arrowText: {
     flexDirection: "row",
   },
   xAxis: {
-    marginTop: hp(43.5),
+    marginTop: hp(47),
     position: "absolute",
-    height: hp(55),
+    // height: hp(55),
     alignSelf: "center",
-    width: wp(90),
+    width: wp(76),
+
   },
   tabBtns: {
-    borderWidth: StyleSheet.hairlineWidth * 1,
     borderColor: "gray",
-    width: wp(20),
+    paddingVertical: hp(1),
+    width: wp(23),
     alignItems: "center",
-    padding: 5,
-    borderRadius: hp(1.5),
+    borderRadius: hp(2),
   },
   btnView: {
     display: "flex",
@@ -443,8 +487,12 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    width: wp(80),
+    width: wp(85),
+    backgroundColor: "#dadadada",
+    borderRadius: hp(2),
     marginTop: hp(2),
+    // paddingVertical: hp(0.6),
     justifyContent: "space-between",
   },
+  heading: { color: "black", fontSize: 14, fontWeight: "700" }
 });
