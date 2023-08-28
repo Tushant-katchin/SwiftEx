@@ -25,6 +25,9 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
+import darkBlue from '../../../assets/darkBlue.png'
+import { alert } from "../reusables/Toasts";
+
 const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
   const state = useSelector((state) => state);
   const [pin, setPin] = useState();
@@ -74,8 +77,18 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
     } else {
       setShowRemoveButton(false);
     }
-    if (enteredPin.length === 4) {
-      setShowCompletedButton(true);
+    if (enteredPin.length === 6) {
+      //setShowCompletedButton(true);
+      const Pin = await AsyncStorage.getItem("pin");
+
+      if (JSON.parse(Pin) === enteredPin) {
+        console.log(Pin);
+        setPinViewVisible(false)
+      } else {
+        pinView.current.clearAll();
+        alert("error","invalid pin");
+      }
+
     } else {
       setShowCompletedButton(false);
     }
@@ -90,93 +103,105 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
       isVisible={pinViewVisible}
       useNativeDriver={true}
       statusBarTranslucent={true}
-      onBackdropPress={() => setPinViewVisible(false)}
-      onBackButtonPress={() => {
-        setPinViewVisible(false);
-      }}
+      style={style.Body}
+    //  onBackdropPress={() => setPinViewVisible(false)}
+      // onBackButtonPress={() => {
+      //   setPinViewVisible(false);
+      // }}
     >
       <Animated.View // Special animatable View
-        style={{ opacity: fadeAnim }}
-      >
-        <View style={style.Body}>
-          <Animated.Image
-            style={{
-              width: wp("5"),
-              height: hp("5"),
-              padding: 30,
-              marginTop: hp(2),
-              transform: [{ rotate: SpinValue }],
+      style={{ opacity: fadeAnim, }}
+    >
+      <View style={style.Body}>
+        <Animated.Image
+          style={{
+            width: wp("12"),
+            height: hp("12"),
+            padding: 30,
+            marginTop: hp(2),
+            //transform: [{ rotate: SpinValue }],
+          }}
+          source={darkBlue}
+        />
+        <Text style={style.welcomeText}> Hi,</Text>
+        <Text style={style.welcomeText1}>
+          {" "}
+          {status == "verify"
+            ? "please re enter pin"
+            : status === "pinset"
+            ? "please enter your pin"
+            : "Please create a pin"}
+        </Text>
+        <View style={{ marginTop: hp(5) }}>
+          <ReactNativePinView
+            inputSize={25}
+            ref={pinView}
+            pinLength={6}
+            buttonSize={50}
+            onValueChange={(value) => setEnteredPin(value)}
+            buttonAreaStyle={{
+              marginTop: 30,
             }}
-            source={title_icon}
-          />
-          <Text style={style.welcomeText}> Hi,</Text>
-          <Text style={style.welcomeText}>
-            {" "}
-            {status == "verify"
-              ? "please re enter pin"
-              : status === "pinset"
-              ? "please enter your pin"
-              : "Please create a pin"}
-          </Text>
-          <View style={{ marginTop: hp(10) }}>
-            {loader ? <SendLoadingComponent /> : <View></View>}
-            <ReactNativePinView
-              inputSize={32}
-              ref={pinView}
-              pinLength={4}
-              buttonSize={60}
-              onValueChange={(value) => setEnteredPin(value)}
-              buttonAreaStyle={{
-                marginTop: 24,
-              }}
-              inputAreaStyle={{
-                marginBottom: 24,
-              }}
-              inputViewEmptyStyle={{
-                backgroundColor: "transparent",
-                borderWidth: 1,
-                borderColor: "#FFF",
-              }}
-              inputViewFilledStyle={{
-                backgroundColor: "#FFF",
-              }}
-              buttonViewStyle={{
-                borderWidth: 1,
-                borderColor: "#FFF",
-              }}
-              buttonTextStyle={{
-                color: "#FFF",
-              }}
-              onButtonPress={async (key) => {
-                if (key === "custom_left") {
-                  pinView.current.clear();
-                }
-                if (key === "custom_right") {
-                  const Pin = await AsyncStorage.getItem("pin");
-                  setLoader(true);
-                  if (JSON.parse(Pin) === enteredPin) {
-                    navigation.goBack();
-                  }
-                }
-              }}
-              customLeftButton={
-                showRemoveButton ? (
-                  <Icon name={"ios-backspace"} size={36} color={"#FFF"} />
-                ) : undefined
+            inputAreaStyle={{
+              // marginBottom: 24,
+            }}
+            inputViewEmptyStyle={{
+              backgroundColor: "transparent",
+              borderWidth: 1,
+              borderColor: "#FFF",
+            }}
+            inputViewFilledStyle={{
+              backgroundColor: "#FFF",
+            }}
+            buttonViewStyle={{
+              borderWidth: 1,
+              borderColor: "#FFF",
+              marginVertical:hp(1)
+            }}
+            buttonTextStyle={{
+              color: "#FFF",
+            }}
+            onButtonPress={async (key) => {
+              console.log(key);
+              if (key === "custom_left") {
+                pinView.current.clear();
               }
-              customRightButton={
-                showCompletedButton ? (
-                  <Icon
-                    name={"ios-chevron-forward-circle"}
-                    size={36}
-                    color={"#FFF"}
-                  />
-                ) : undefined
+              if (key === "custom_right") {
+                console.log("pressed");
+                const Pin = await AsyncStorage.getItem("pin");
+
+                if (JSON.parse(Pin) === enteredPin) {
+                  console.log(Pin);
+                  setPinViewVisible(false)
+                } else {
+                  pinView.current.clearAll();
+                  alert("error","invalid pin");
+
+                }
               }
+            }}
+            customLeftButton={
+              showRemoveButton ? (
+                <Icon name={"ios-backspace"} size={36} color={"gray"} />
+              ) : undefined
+            }
+            customRightButton={
+              showCompletedButton ? (
+                <Icon
+                  name={"ios-chevron-forward-circle"}
+                  size={36}
+                  color={"#FFF"}
+                />
+              ) : <Icon
+              name={"ios-chevron-forward-circle"}
+              size={36}
+              color={"#FFF"}
             />
-          </View>
+            }
+          />
         </View>
-      </Animated.View>
+      </View>
+    </Animated.View>
     </Modal>
   );
 };
@@ -187,16 +212,19 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     backgroundColor: "#131E3A",
-    height: hp(95),
-    width: wp(90),
+    height: hp(100),
+    width: wp(100),
     alignItems: "center",
     textAlign: "center",
+    marginRight:wp(10),
+    marginTop:hp(3)
+    //justifyContent:"center"
   },
   welcomeText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "200",
     color: "white",
-    marginTop: hp(5),
+    marginTop: hp(3),
   },
   welcomeText2: {
     fontSize: 20,
@@ -219,4 +247,10 @@ const style = StyleSheet.create({
     fontWeight: "200",
     color: "white",
   },
+  welcomeText1:{
+    fontSize: 16,
+    fontWeight: "200",
+    color: "white",
+    marginTop: hp(1),
+  }
 });

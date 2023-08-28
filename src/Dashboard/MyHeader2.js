@@ -369,14 +369,14 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     state.wallet.name,
   ]);
 
-  useEffect(async () => {
-    console.log(balanceUsd);
-    //getEthPrice()
-    getETHBNBPrice()
-    .then(()=>{
-      getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
-    })
-  }, []);
+  // useEffect(async () => {
+  //   console.log(balanceUsd);
+  //   //getEthPrice()
+  //   getETHBNBPrice()
+  //   .then(()=>{
+  //     getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
+  //   })
+  // }, []);
   useEffect(async () => {
     const user = await state.wallet.name;
     if (user) {
@@ -405,7 +405,6 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         </TouchableOpacity> */}
         <Pressable style={{alignItems:"center"}} onPress={() => openExtended()}>
           <Icon name="sliders" type={"FAIcon"} size={24} />
-          <Text style={{color:"black"}}> Refresh</Text>
         </Pressable>
       </View>
       <View style={{ marginVertical: hp(2) }}>

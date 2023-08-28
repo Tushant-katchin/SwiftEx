@@ -116,8 +116,9 @@ const LockApp = (props) => {
   }, [fadeAnim, enteredPin]);
 
   return (
+    
     <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim }}
+      style={{ opacity: fadeAnim, }}
     >
       <View style={style.Body}>
         <Animated.Image
@@ -126,7 +127,7 @@ const LockApp = (props) => {
             height: hp("12"),
             padding: 30,
             marginTop: hp(2),
-            transform: [{ rotate: SpinValue }],
+            //transform: [{ rotate: SpinValue }],
           }}
           source={darkBlue}
         />

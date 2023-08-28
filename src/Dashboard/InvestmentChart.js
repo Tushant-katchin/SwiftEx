@@ -20,7 +20,7 @@ import { getBnbPrice, getEthPrice } from "../utilities/utilities";
 import Maticimage from "../../assets/matic.png";
 import Xrpimage from "../../assets/xrp.png";
 import bnbimage from "../../assets/bnb-icon2_2x.png";
-import { GetBalance } from "../utilities/web3utilities";
+import { GetBalance, getAllBalances } from "../utilities/web3utilities";
 import { getXrpBalance } from "../components/Redux/actions/auth";
 
 function InvestmentChart(setCurrentWallet) {
@@ -199,7 +199,9 @@ function InvestmentChart(setCurrentWallet) {
       // }
   
       nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:hp(55)}}>
-        <TouchableOpacity  style={styles.refresh}>
+        <TouchableOpacity  style={styles.refresh} onPress={()=>{
+          getAllBalances(state,dispatch)
+        }}>
             <Text style={{color:"white",fontSize:12}}>Refresh</Text>
           </TouchableOpacity>
         <View style={styles.flatlistContainer}>

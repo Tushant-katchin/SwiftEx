@@ -37,6 +37,7 @@ import {
   getXrpBalance,
 } from "../components/Redux/actions/auth";
 import { useBiometrics } from "../biometrics/biometric";
+import LockAppModal from "./Modals/lockAppModal";
 
 const Home2 = ({ navigation }) => {
   const route = useRoute();
@@ -47,7 +48,7 @@ const Home2 = ({ navigation }) => {
   const currentState = useRef(AppState.currentState);
   const [appState, setAppState] = useState(currentState.current);
   const [transactions, setTransactions] = useState();
-  
+  const [visible, setVisible] = useState(false)
   const [routes] = useState([
     { key: "first", title: "Tokens" },
     { key: "second", title: "NFTs" },
@@ -307,10 +308,11 @@ const Home2 = ({ navigation }) => {
       if (currentState.current === "background") {
         console.log(currentState.current);
 
-        navigation.navigate("appLock");
+        //navigation.navigate("appLock");
         /* if(routeName.name!=='exchangeLogin'){
             
           }*/
+          setVisible(true)
       }
     });
   }, []);
@@ -367,6 +369,7 @@ const Home2 = ({ navigation }) => {
           initialLayout={{width: Dimensions.get('window').width}}
           // style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
         />
+        <LockAppModal pinViewVisible={visible} setPinViewVisible={setVisible}/>
       </View>
     </View>
   );
