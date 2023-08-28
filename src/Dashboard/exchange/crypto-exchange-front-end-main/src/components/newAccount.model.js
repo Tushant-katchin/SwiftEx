@@ -618,7 +618,7 @@ export const SelectView = ({
   );
 };
 
-export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,onPress }) => {
+export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,onPress,onCrossIcon }) => {
 
   const [modalMessage, setModalMessage] = useState("");
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
@@ -778,8 +778,8 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
                   prefill();
                 }}
               >
-                <Text>click here</Text>
-                <Text style={{ color: "blue" }}>
+                <Text style={{color:"white",marginHorizontal:wp(8)}}>click here</Text>
+                <Text style={{ color: "blue",marginHorizontal:wp(8) }}>
                   {" "}
                   prefill with a test bank account
                 </Text>
@@ -987,7 +987,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   modelmainContainer: {
-    height: hp(68),
+    // backgroundColor:"red"
+    paddingVertical:hp(2)
   },
   accountText: {
     textAlign: "center",
@@ -1035,7 +1036,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   modalmainContainer:{
-    backgroundColor:"rgba(57, 31, 125, 0.65)",
+    // backgroundColor:"rgba(57, 31, 125, 0.65)",
     height:hp(100),
     width:wp(100),
     justifyContent:"center",

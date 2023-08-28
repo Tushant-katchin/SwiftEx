@@ -403,9 +403,9 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         >
           <Text style={styles.faucetText}>Faucet</Text>
         </TouchableOpacity> */}
-        <Pressable onPress={() => openExtended()}>
+        <Pressable style={{alignItems:"center"}} onPress={() => openExtended()}>
           <Icon name="sliders" type={"FAIcon"} size={24} />
-          <Text>Refresh</Text>
+          <Text style={{color:"black"}}> Refresh</Text>
         </Pressable>
       </View>
       <View style={{ marginVertical: hp(2) }}>
@@ -633,9 +633,11 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     backgroundColor: "#fff",
+    // backgroundColor:"red",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 10,
+    alignItems:"center",
+    // paddingHorizontal: 10,
     marginTop: hp(2),
     width: wp(90),
     alignSelf: "center",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
+import { View, Text, StyleSheet, Button, Image, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "../components/Redux/actions/auth";
 import Home2 from "./Home2";
@@ -26,6 +26,7 @@ import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pag
 import { ExchangeHeaderApp } from "./reusables/ExchangeHeader";
 import { AppHeader } from "./reusables/AppHeader";
 import { ExchangeHeaderIcon } from "./header";
+import { CoinDetails } from "./CoinDetail";
 
 const Tab = createBottomTabNavigator();
 
@@ -180,7 +181,7 @@ const Dashboard = ({ navigation }) => {
           tabBarStyle: {
             position: "absolute",
             backgroundColor: "#4CA6EA",
-            height: hp("9"),
+            height: Platform.OS == 'android' ?  hp("9") : hp("11")
             // borderTopColor: "black",
             // borderTopWidth: 1,
           },
@@ -260,6 +261,8 @@ const Dashboard = ({ navigation }) => {
             headerShown: true,
           }}
         />
+
+
       </Tab.Navigator>
     </>
   );

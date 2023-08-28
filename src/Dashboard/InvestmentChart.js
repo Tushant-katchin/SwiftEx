@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { StyleSheet, View, Text, Image, ScrollView, RefreshControl } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity } from "react-native";
 import {
   Avatar,
   Card,
@@ -188,18 +188,24 @@ function InvestmentChart(setCurrentWallet) {
 
   return (
       <ScrollView 
-      refreshControl={
-        <RefreshControl
-          refreshing={pull}
-          onRefresh={() => {
-            setPull(true);
-            getTokenBalance();
-          }}
-        />
-      }
+      // refreshControl={
+      //   <RefreshControl
+      //     refreshing={pull}
+      //     onRefresh={() => {
+      //       setPull(true);
+      //       getTokenBalance();
+      //     }}
+      //   />
+      // }
   
       nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:hp(55)}}>
+        <TouchableOpacity  style={styles.refresh}>
+            <Text style={{color:"white",fontSize:12}}>Refresh</Text>
+          </TouchableOpacity>
         <View style={styles.flatlistContainer}>
+
+          
+
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image source={bnbimage} style={styles.img} />
             <View style={styles.ethrumView}>
@@ -337,4 +343,5 @@ const styles = StyleSheet.create({
   priceDown: {
     color: "rgb(204,51,51)",
   },
+  refresh:{backgroundColor: "#4CA6EA",  width:wp(20),paddingVertical:hp(0.6),marginTop:hp(4),marginLeft:wp(5),alignItems:"center",borderRadius:hp(1)}
 });

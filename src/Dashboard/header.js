@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity,Pressable } from "react-native";
 import React from "react";
 import Icon from "../icon";
 import {
@@ -63,7 +63,7 @@ export const WalletHeader = (props) => {
         size={20}
         color={"#fff"}
         onPress={() => {
-          navigation.goBack();
+          navigation.goBack("");
         }}
       />
       <Text style={styles.text1}>{title}</Text>
@@ -98,12 +98,42 @@ export const SwapHeader = (props) => {
   );
 };
 
+
+
+
+export const HomeHeader = (props) => {
+  const { title, title1, IconName, IconType } = props;
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity style={styles.walletContainer} onPress={() => {
+      navigation.goBack("Home");
+    }}>
+      <Icon
+        name={"left"}
+        type={"antDesign"}
+        size={20}
+        color={"#fff"}
+        onPress={() => {
+          navigation.goBack("");
+        }}
+      />
+      <Text style={styles.text1}>{title}</Text>
+      <View style={{ alignItems: "center" }}>
+        <Text style={{ color: "#E96A6A" }}>{title1}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+
+
 export const ExchangeHeaderIcon = (props) => {
   const { title, isLogOut=true  } = props;
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity style={styles.headerContainer1}>
+    <View style={styles.headerContainer1}>
       <View
         style={{
           justifyContent: "space-around",
@@ -111,15 +141,18 @@ export const ExchangeHeaderIcon = (props) => {
           alignItems: "center",
         }}
       >
+        <TouchableOpacity>
         <Icon
           name={"left"}
           type={"antDesign"}
-          size={20}
+          size={23}
           color={"#010C66"}
           onPress={() => {
             navigation.goBack();
           }}
         />
+        </TouchableOpacity>
+       
         <Image source={darkBlue} style={styles.logoImg} />
       </View>
       <Text style={styles.text}>{title}</Text>
@@ -138,7 +171,7 @@ export const ExchangeHeaderIcon = (props) => {
         />
         <Text style={{ color: "#E96A6A" }}>Logout</Text>
       </View> :  <Text style={{ width: "10%" }}>{""}</Text>}
-    </TouchableOpacity>
+    </View>
   );
 };
 

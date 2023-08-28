@@ -14,8 +14,12 @@ import {
 } from "native-base";
 import { useState } from "react";
 import { FaucetDropdown } from "../reusables/faucetDropdown";
-import { Linking } from "react-native";
+import { Linking, TouchableOpacity } from "react-native";
 import { faucets } from "../constants";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { SendNotification } from "../notifications/pushController";
 
 export const FaucetModal = ({ showModal, setShowModal }) => {
@@ -37,16 +41,16 @@ if (network === "BSC") {
   },[network])
   return (
     <Center>
-      <Button
+      <TouchableOpacity
+      style={{backgroundColor:"#145DA0",padding:4,borderRadius:4,marginLeft:30}}
         onPress={ () => {
           setShowModal(true)
          // console.log('pressed')
        //SendNotification('title','test')
         }}
-        style={{ backgroundColor: "#145DA0" }}
       >
-        Test Faucet
-      </Button>
+        <Text style={{color:"white",}}>Test Faucet</Text>
+      </TouchableOpacity>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="400px">
           <Modal.CloseButton />

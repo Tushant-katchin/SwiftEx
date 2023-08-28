@@ -45,6 +45,7 @@ const VerifyActionButtonView = ({ onSubmit, status }) => {
     color={"#008C62"}
     style={styles.checkImg}
   />;
+    //  <Icon name="verified" size={20} color={'red'} />;
   }
 
   if (status === VERIFICATION_STATUS.UNVERIFIED) {

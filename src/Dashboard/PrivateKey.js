@@ -66,7 +66,7 @@ const PrivateKey = (props) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ backgroundColor: "white", height: hp(100),marginBottom:hp(15) }}>
+    <View style={{ backgroundColor: "white", height: hp(100),marginBottom:hp(15) }}>
       <Animated.View // Special animatable View
         style={{ opacity: fadeAnim }}
       >
@@ -165,7 +165,7 @@ const PrivateKey = (props) => {
 
         {/* </View> */}
       </Animated.View>
-    </ScrollView>
+    </View>
   );
 };
 

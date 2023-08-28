@@ -23,11 +23,25 @@ const BankModel = (props) => {
   const navigation = useNavigation();
 
   return (
-    <Modal animationType="fade" visible={isVisible} transparent={true}>
-      <View
-        style={{ backgroundColor: "rgba(57, 31, 125, 0.65)", height: "100%" }}
-      >
-        <View style={styles.modalContent}>
+    <Modal animationType="fade" visible={isVisible}
+    // statusBarTranslucent={true}
+     transparent={true} 
+    animationIn="slideInRight"
+        animationOut="slideOutRight"
+        animationInTiming={100}
+        animationOutTiming={200}
+        isVisible={isVisible}
+        onBackdropPress={() => {
+          handleClose();
+        }}
+        onBackButtonPress={() => {
+          //setShowModal(!showModal);
+          handleClose();
+        }}
+    >
+     <View style={{backgroundColor:"rgb(26,26,26)",height:hp(100),opacity:0.7}}> 
+
+     <View style={styles.modalContent}>
           <Icon
             name={"cross"}
             type={"entypo"}
@@ -58,7 +72,8 @@ const BankModel = (props) => {
             </LinearGradient>
           </View>
         </View>
-      </View>
+     </View>
+       
     </Modal>
   );
 };
@@ -67,11 +82,11 @@ const styles = StyleSheet.create({
   modalContent: {
     height: hp(53),
     width: wp(85),
-    marginTop: 100,
+    marginTop:hp(25),
     alignSelf: "center",
     borderRadius: hp(2),
-
     backgroundColor: "#131E3A",
+    // backgroundColor:"blue"
   },
   homeImg: {
     height: hp(11),

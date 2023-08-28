@@ -203,6 +203,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -242,23 +243,23 @@ const Settings = (props) => {
           // }}
           style={styles.accountBox1}
         >
-          <View style={{flexDirection:"row",alignItems:"center"}}>
-
-          <Icon name="moon-o" type={"fa"} size={hp(2)} color="black" />
-          <Text style={styles.text}>Dark Mode</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Icon name="moon-o" type={"fa"} size={hp(2)} color="black" />
+            <Text style={styles.text}>Dark Mode</Text>
           </View>
-
-          <ToggleSwitch
-            isOn={Checked}
-            onColor="green"
-            offColor="gray"
-            labelStyle={{ color: "black", fontWeight: "900" }}
-            size="small"
-            onToggle={() => {
-              setCheckBox(!Checked);
-            }}
-            // onToggle={(isOff) => console.log("changed to : ", isOff)}
-          />
+          <View style={Platform.OS == "android" ? { paddingRight: wp(2) } : { paddingRight: wp(3.5) }}>
+            <ToggleSwitch
+              isOn={Checked}
+              onColor="green"
+              offColor="gray"
+              labelStyle={{ color: "black", fontWeight: "900" }}
+              size="small"
+              onToggle={() => {
+                setCheckBox(!Checked);
+              }}
+              // onToggle={(isOff) => console.log("changed to : ", isOff)}
+            />
+          </View>
 
           {/* <View style={styles.switchContainer}>
             <Switch            
@@ -407,7 +408,7 @@ const styles = StyleSheet.create({
     // height: hp(100),
     width: wp(100),
     alignContent: "center",
-    paddingBottom:100
+    paddingBottom: 100,
   },
   setHeading: {
     fontSize: hp(2.5),
@@ -431,11 +432,11 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
-  accountBox1:{
+  accountBox1: {
     width: wp(90),
     flexDirection: "row",
     marginHorizontal: wp(6),
-    justifyContent:"space-between",
+    justifyContent: "space-between",
     borderRadius: 20,
     marginTop: hp(5),
     textAlign: "center",
