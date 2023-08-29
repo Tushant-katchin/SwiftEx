@@ -16,8 +16,9 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
+import Icon from "../icon";
 
-const MyHeader = ({ title, changeState, state, extended, setExtended }) => {
+const MyHeader = ({ title, changeState, state, extended, setExtended, title1 }) => {
   state = useSelector((state) => state);
   const dispatch = useDispatch();
 
@@ -50,8 +51,35 @@ const MyHeader = ({ title, changeState, state, extended, setExtended }) => {
   }, []);
 
   return (
-    <Animated.View style={{ backgroundColor: "#131E3A", height: hp("15") }}>
-      <View
+    <Animated.View >
+      <View style={{
+        backgroundColor: "#4CA6EA",
+        justifyContent: "space-between",
+        alignItems: "center",
+        alignSelf: "center",
+        flexDirection: "row",
+        paddingVertical: hp(2),
+        width: wp(100),
+        // paddingHorizontal: wp(2),
+      }} >
+        <Button
+          color="#fff"
+          labelStyle={{ fontSize: 24 }}
+          icon="sort-reverse-variant"
+          onPress={() => openExtended()}
+        />
+        <Text style={{
+          color: "white",
+          fontWeight: "700",
+          alignSelf: "center",
+          textAlign: "center",
+        }}>{title}</Text>
+        <Text style={{ color: "#E96A6A", width: '15%' }}>{''}</Text>
+      </View>
+
+
+
+      {/* <View
         style={{
           display: "flex",
           flexDirection: "row",
@@ -83,7 +111,7 @@ const MyHeader = ({ title, changeState, state, extended, setExtended }) => {
         >
           {title}
         </Text>
-      </View>
+      </View> */}
     </Animated.View>
   );
 };

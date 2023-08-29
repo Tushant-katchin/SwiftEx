@@ -59,8 +59,8 @@ const AllWallets = (props) => {
   const dispatch = useDispatch();
 
   let LeftContent = title_icon2;
-  let multiCoinLeftContent = title_icon2
-  let EtherLeftContent = Etherimage
+  let multiCoinLeftContent = title_icon2;
+  let EtherLeftContent = Etherimage;
   let BnbLeftContent = Bnbimage;
   let XrpLeftContent = Xrpimage;
   let MaticLeftContent = (props) => (
@@ -162,17 +162,13 @@ const AllWallets = (props) => {
           }
         } else if (JSON.parse(type) == "Xrp") {
           //const resp = await getXrpBal(address)
-          dispatch(getXrpBalance(state.wallet.xrp.address))
-
-          .catch((e)=>{
-            console.log(e)
-          })
+          dispatch(getXrpBalance(state.wallet.xrp.address)).catch((e) => {
+            console.log(e);
+          });
           AsyncStorageLib.getItem("Wallet")
             .then((wallet) => {
-
               console.log("classic address" + JSON.parse(wallet).address);
               if (wallet) {
-
                 //const resp =  dispatch(getXrpBalance(await state.wallet.address));
                 //console.log(resp);
               }
@@ -219,7 +215,7 @@ const AllWallets = (props) => {
           if (balance) {
             console.log("My bsc balance" + balance);
           }
-          dispatch(getXrpBalance(state.wallet.xrp.address))
+          dispatch(getXrpBalance(state.wallet.xrp.address));
         } else {
           const wallet = await state.wallet.address;
           console.log("hello" + wallet);
@@ -269,174 +265,168 @@ const AllWallets = (props) => {
     setAllWallets(allwallets);
   }, []);
 
-
- 
   return (
     <ScrollView contentContainerStyle={style.body}>
-    
-        {Wallets[0] ? (
-          Wallets[0].map((item) => {
-            if (item.walletType === "BSC") {
-              LeftContent = BnbLeftContent;
-            } else if (item.walletType === "Ethereum") {
-              LeftContent = EtherLeftContent;
-            } else if (item.walletType === "Matic") {
-              LeftContent = MaticLeftContent;
-            } else if (item.walletType === "Xrp") {
-              LeftContent = XrpLeftContent;
-            } else if (item.walletType === "Multi-coin") {
-              LeftContent = multiCoinLeftContent;
-            } else {
-              LeftContent = multiCoinLeftContent;
-            }
-            return (
-              
-              <View>
-                <TouchableOpacity
-                  key={item.name}
-                  style={style.Box}
-                  onPress={() => {
-                    // props.navigation.navigate('Import Multi-Coin Wallet')
-                    if (item.walletType) {
-                      console.log(item.mnemonic)
-                      AsyncStorageLib.setItem("currentWallet", item.name);
-                      if(item.xrp){
-                        dispatch(
-                          setCurrentWallet(
-                            item.address,
-                            item.name,
-                            item.privateKey,
-                            item.mnemonic?item.mnemonic:'',
-                            item.xrp.address?item.xrp.address:'',
-                            item.xrp.privateKey?item.xrp.privateKey:'',
-                            walletType='Multi-coin'
-                          )
-                        ).then((response) => {
-                          console.log(response);
-                          if (response) {
-                            if (response.status == "success") {
-                              AsyncStorageLib.setItem(
-                                "walletType",
-                                JSON.stringify(item.walletType)
-                              );
-                              dispatch(setWalletType(item.walletType));
-                             // getBalance(state);
-                              
-                              alert("success","Wallet Selected " + item.name);
-                            } else {
-                              alert(
-                                "error",
-                                "error while selecting wallet. please try again"
-                              );
-                            }
-                          } else {
-                            alert(
-                              "error",
-                              "error while selecting wallet. please try again"
-                            );
-                          }
-                        });
-                      
-                      }
-                      else if (item.walletType == "Xrp") {
-                        dispatch(
-                          setCurrentWallet(
-                            item.classicAddress,
-                            item.name,
-                            item.privateKey,
-                            item.mnemonic?item.mnemonic:'',
-
-                          )
-                        ).then(async (response) => {
-                          console.log(response)
-                          if (response) {
-                            console.log(item.walletType);
-                            console.log("resp =", response);
-                             
-                             dispatch(setWalletType(item.walletType));
-                             await getXrpBal(item.classicAddress)
-                             .catch((e)=>{
-                              console.log(e)
-                             })
-                             //dispatch(getXrpBalance(item.classicAddress));
-                             await AsyncStorageLib.setItem(
+      {Wallets[0] ? (
+        Wallets[0].map((item) => {
+          if (item.walletType === "BSC") {
+            LeftContent = BnbLeftContent;
+          } else if (item.walletType === "Ethereum") {
+            LeftContent = EtherLeftContent;
+          } else if (item.walletType === "Matic") {
+            LeftContent = MaticLeftContent;
+          } else if (item.walletType === "Xrp") {
+            LeftContent = XrpLeftContent;
+          } else if (item.walletType === "Multi-coin") {
+            LeftContent = multiCoinLeftContent;
+          }
+          else {
+            LeftContent = multiCoinLeftContent;
+          }
+          return (
+            <View>
+              <TouchableOpacity
+                key={item.name}
+                style={style.Box}
+                onPress={() => {
+                  // props.navigation.navigate('Import Multi-Coin Wallet')
+                  if (item.walletType) {
+                    console.log(item.mnemonic);
+                    AsyncStorageLib.setItem("currentWallet", item.name);
+                    if (item.xrp) {
+                      dispatch(
+                        setCurrentWallet(
+                          item.address,
+                          item.name,
+                          item.privateKey,
+                          item.mnemonic ? item.mnemonic : "",
+                          item.xrp.address ? item.xrp.address : "",
+                          item.xrp.privateKey ? item.xrp.privateKey : "",
+                          (walletType = "Multi-coin")
+                        )
+                      ).then((response) => {
+                        console.log(response);
+                        if (response) {
+                          if (response.status == "success") {
+                            AsyncStorageLib.setItem(
                               "walletType",
                               JSON.stringify(item.walletType)
                             );
-                 
-                            /*  await getXrpBal(item.classicAddress)
-                            .then((response)=>{
-                              console.log(response)
-                            })*/
-                            //dispatch(getXrpBalance(item.classicAddress))
-                            alert("success",`Wallet selected : ${item.name}`);
+                            dispatch(setWalletType(item.walletType));
+                            // getBalance(state);
+
+                            alert("success", "Wallet Selected " + item.name);
                           } else {
                             alert(
                               "error",
                               "error while selecting wallet. please try again"
                             );
                           }
-                        });
-                      } else {
-                        dispatch(
-                          setCurrentWallet(
-                            item.address,
-                            item.name,
-                            item.privateKey,
-                            item.mnemonic?item.mnemonic:'',
-                          )
-                        ).then((response) => {
-                          console.log(response);
-                          if (response) {
-                            if (response.status == "success") {
-                              AsyncStorageLib.setItem(
-                                "walletType",
-                                JSON.stringify(item.walletType)
-                              );
-                              dispatch(setWalletType(item.walletType));
-                              getBalance(state);
-                              alert("success","Wallet Selected " + item.name);
-                            } else {
-                              alert(
-                                "error",
-                                "error while selecting wallet. please try again"
-                              );
-                            }
-                          } else {
-                            alert(
-                              "error",
-                              "error while selecting wallet. please try again"
-                            );
-                          }
-                        });
-                      }
+                        } else {
+                          alert(
+                            "error",
+                            "error while selecting wallet. please try again"
+                          );
+                        }
+                      });
+                    } else if (item.walletType == "Xrp") {
+                      dispatch(
+                        setCurrentWallet(
+                          item.classicAddress,
+                          item.name,
+                          item.privateKey,
+                          item.mnemonic ? item.mnemonic : ""
+                        )
+                      ).then(async (response) => {
+                        console.log(response);
+                        if (response) {
+                          console.log(item.walletType);
+                          console.log("resp =", response);
+
+                          dispatch(setWalletType(item.walletType));
+                          await getXrpBal(item.classicAddress).catch((e) => {
+                            console.log(e);
+                          });
+                          //dispatch(getXrpBalance(item.classicAddress));
+                          await AsyncStorageLib.setItem(
+                            "walletType",
+                            JSON.stringify(item.walletType)
+                          );
+
+                          /*  await getXrpBal(item.classicAddress)
+                          .then((response)=>{
+                            console.log(response)
+                          })*/
+                          //dispatch(getXrpBalance(item.classicAddress))
+                          alert("success", `Wallet selected : ${item.name}`);
+                        } else {
+                          alert(
+                            "error",
+                            "error while selecting wallet. please try again"
+                          );
+                        }
+                      });
                     } else {
-                      alert(
-                        "error",
-                        "wallet not supported. Please try selecting a different wallet"
-                      );
+                      dispatch(
+                        setCurrentWallet(
+                          item.address,
+                          item.name,
+                          item.privateKey,
+                          item.mnemonic ? item.mnemonic : ""
+                        )
+                      ).then((response) => {
+                        console.log(response);
+                        if (response) {
+                          if (response.status == "success") {
+                            AsyncStorageLib.setItem(
+                              "walletType",
+                              JSON.stringify(item.walletType)
+                            );
+                            dispatch(setWalletType(item.walletType));
+                            getBalance(state);
+                            alert("success", "Wallet Selected " + item.name);
+                          } else {
+                            alert(
+                              "error",
+                              "error while selecting wallet. please try again"
+                            );
+                          }
+                        } else {
+                          alert(
+                            "error",
+                            "error while selecting wallet. please try again"
+                          );
+                        }
+                      });
                     }
+                  } else {
+                    alert(
+                      "error",
+                      "wallet not supported. Please try selecting a different wallet"
+                    );
+                  }
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+
                   }}
                 >
-                  <View
-                    style={{
-                     flexDirection:"row",
-                     alignItems:"center"
-                    }}
-                  >
-                    <Image style={style.img} source={LeftContent}/>
-                    <Text style={{marginHorizontal:wp(3)}}
-                      left={LeftContent}
-                    >{item.name}</Text>
-                   
-                  </View>
-                </TouchableOpacity>
-              </View>
-            );
-          })
-        ) : (
-          <Text style={style.NoText}>No wallets found</Text>
-        )}
+                  <Image style={item.walletType === "Multi-coin" ? style.multiImgStyle : style.img} source={LeftContent} />
+                  <Text style={{ marginHorizontal: wp(3) }} left={LeftContent}>
+                    {item.name}
+                  </Text>
+                </View>
+
+              </TouchableOpacity>
+            </View>
+          );
+        })
+      ) : (
+        <Text style={style.NoText}>No wallets found</Text>
+      )}
     </ScrollView>
   );
 };
@@ -444,21 +434,21 @@ const AllWallets = (props) => {
 export default AllWallets;
 
 const style = StyleSheet.create({
- body:{backgroundColor:"white",height:hp(100)},
+  body: { backgroundColor: "white", height: hp(100) },
   welcomeText: {
     fontSize: 20,
     fontWeight: "200",
     color: "black",
     marginTop: hp(5),
   },
-  wallet:{
-textAlign:"center",
-marginTop:hp(3),
-fontSize:16
+  wallet: {
+    textAlign: "center",
+    marginTop: hp(3),
+    fontSize: 16,
   },
-  NoText:{
-textAlign:"center",
-marginTop:hp(2)
+  NoText: {
+    textAlign: "center",
+    marginTop: hp(2),
   },
   welcomeText2: {
     fontSize: 15,
@@ -477,11 +467,11 @@ marginTop:hp(2)
     color: "white",
   },
   Box: {
-    marginHorizontal:wp(6),
-    borderBottomWidth:StyleSheet.hairlineWidth*1,
-    padding:10,
-    marginTop:hp(2),
-    borderColor:"#D7D7D7"
+    marginHorizontal: wp(6),
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    padding: 10,
+    // marginTop: hp(2),
+    borderColor: "#D7D7D7",
   },
   Box2: {
     height: hp("15%"),
@@ -508,9 +498,16 @@ marginTop:hp(2)
     backgroundColor: "white",
     borderTopWidth: 1,
   },
-  img:{
-    height: hp(5),
-    width: wp(9),
+  img: {
+    height: hp(4.5),
+    width: hp(4.5),
     borderRadius: hp(3),
+    marginHorizontal: wp(2.3)
   },
+  multiImgStyle: {
+    height: hp(7),
+    width: hp(7),
+    borderRadius: hp(3),
+
+  }
 });

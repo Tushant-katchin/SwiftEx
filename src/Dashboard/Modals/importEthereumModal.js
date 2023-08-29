@@ -82,16 +82,14 @@ const ImportEthereumModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(()=>{
-    if(!accountName)
-    {
+  useEffect(() => {
+    if (!accountName) {
       setDisable(true)
     }
-    
-    if(accountName && (privateKey || mnemonic || json))
-    {
+
+    if (accountName && (privateKey || mnemonic || json)) {
       let valid
-      if(label==='mnemonic'){
+      if (label === 'mnemonic') {
         const phrase = mnemonic.trimStart();
         const trimmedPhrase = phrase.trimEnd();
         valid = ethers.utils.isValidMnemonic(trimmedPhrase);
@@ -117,8 +115,8 @@ const ImportEthereumModal = ({
     } else {
       setMessage("");
     }
-    },[mnemonic,privateKey,json,accountName])
-   
+  }, [mnemonic, privateKey, json, accountName])
+
 
   return (
     <Animated.View // Special animatable View
@@ -131,7 +129,7 @@ const ImportEthereumModal = ({
         animationOutTiming={650}
         isVisible={Visible}
         useNativeDriver={true}
-        statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         onBackdropPress={() => setWalletVisible(false)}
         onBackButtonPress={() => {
           setWalletVisible(false);
@@ -139,7 +137,7 @@ const ImportEthereumModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={"Ethereum"} /> */}
-<Icon type={'entypo'} name='cross' color={'gray'} size={24}  style={style.crossIcon}/>
+          <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} />
           <Text style={style.text}>Ethereum</Text>
 
           <View style={style.Button}>
@@ -228,15 +226,14 @@ const ImportEthereumModal = ({
                 setText(text)
                 // setText('abc')
                 console.log(label)
-                if(label==='mnemonic')
-                {
+                if (label === 'mnemonic') {
                   Paste(setMnemonic);
-                }else if(label==='privateKey'){
+                } else if (label === 'privateKey') {
                   Paste(setPrivateKey);
-                 // setText(text)
-                }else if(label==='JSON'){
+                  // setText(text)
+                } else if (label === 'JSON') {
                   Paste(setJson);
-                 // setText(text)
+                  // setText(text)
                 }
               }}
             >
@@ -263,8 +260,8 @@ const ImportEthereumModal = ({
                 label === "privateKey"
                   ? "Enter your private Key here"
                   : label === "JSON"
-                  ? "Enter your secret JSON Key here"
-                  : "Enter your secret phrase here"
+                    ? "Enter your secret JSON Key here"
+                    : "Enter your secret phrase here"
               }
             />
           </View>
@@ -618,10 +615,10 @@ const style = StyleSheet.create({
     backgroundColor: "white",
     height: hp(75),
     width: wp(97),
-    borderRadius:hp(1),
+    borderRadius: hp(1),
     textAlign: "center",
     alignSelf: "center",
-    marginTop:hp(5)
+    marginTop: hp(5)
   },
   welcomeText: {
     fontSize: 15,
@@ -756,14 +753,14 @@ const style = StyleSheet.create({
     borderRadius: hp(1),
     alignItems: "center",
   },
-  text:{
-    textAlign:"center",
-    marginTop:hp(1),
-    fontSize:15,
-    fontWeight:"700"
+  text: {
+    textAlign: "center",
+    marginTop: hp(1),
+    fontSize: 15,
+    fontWeight: "700"
   },
-  crossIcon:{
-    alignSelf:"flex-end",
-    padding:hp(1)
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1)
   }
 });
