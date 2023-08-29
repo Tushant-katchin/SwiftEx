@@ -7,7 +7,7 @@ import {
 } from "react-native-responsive-screen";
 import IconWithCircle from "../Screens/iconwithCircle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import darkBlue from "../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { width } from "@mui/system";
@@ -138,6 +138,18 @@ export const ExchangeHeaderIcon = (props) => {
   const { title, isLogOut=true  } = props;
   const navigation = useNavigation();
 
+  const Navigate = () => {
+    navigation.dispatch((state) => {
+      // Remove the home route from the stack
+      const routes = state.routes.filter((r) => r.name !== "exchange");
+
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    });
+  };
   return (
     <View style={styles.headerContainer1}>
       <View
@@ -154,7 +166,11 @@ export const ExchangeHeaderIcon = (props) => {
           size={23}
           color={"#010C66"}
           onPress={() => {
-            navigation.goBack();
+           // navigation.goBack();
+           const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+           AsyncStorage.removeItem(LOCAL_TOKEN);
+           Navigate()
+           navigation.goBack()
           }}
         />
         </TouchableOpacity>
@@ -168,7 +184,8 @@ export const ExchangeHeaderIcon = (props) => {
           console.log('clicked')
            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
            AsyncStorage.removeItem(LOCAL_TOKEN);
-           navigation.navigate("exchangeLogin");
+           Navigate()
+           navigation.goBack()
         }}>
 
         <Icon
@@ -177,8 +194,8 @@ export const ExchangeHeaderIcon = (props) => {
           size={20}
           color={"#E96A6A"}
           onPress={() => {
-            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            AsyncStorage.removeItem(LOCAL_TOKEN);
+            // const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+            // AsyncStorage.removeItem(LOCAL_TOKEN);
            // navigation.navigate("Settings");
           }}
           />

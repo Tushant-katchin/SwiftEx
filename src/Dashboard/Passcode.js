@@ -36,6 +36,8 @@ const Passcode = (props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
 
+  
+
   const Spin = new Animated.Value(0);
   const SpinValue = Spin.interpolate({
     inputRange: [0, 1],

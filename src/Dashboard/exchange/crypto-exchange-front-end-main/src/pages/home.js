@@ -18,7 +18,7 @@ import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useSelector } from "react-redux";
 import { getRegistrationToken } from "../utils/fcmHandler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import walletImg from "../../../../../../assets/walletImg.png";
 import idCard from "../../../../../../assets/idCard.png";
@@ -57,7 +57,18 @@ export const HomeView = ({ setPressed }) => {
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
   const navigation = useNavigation();
-
+  const Navigate = () => {
+    navigation.dispatch((state) => {
+      // Remove the home route from the stack
+      const routes = state.routes.filter((r) => r.name !== "exchange");
+      
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    });
+  };
   useEffect(() => {
     fetchProfileData();
     getOffersData();
@@ -72,9 +83,18 @@ export const HomeView = ({ setPressed }) => {
   }, [change]);
 
   const syncDevice = async () => {
-    const token = await getRegistrationToken();
+    const token = null//await getRegistrationToken();
     console.log(token);
     console.log("hi", token);
+    if(!token)
+    {
+      const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+           AsyncStorage.removeItem(LOCAL_TOKEN);
+           Navigate()
+           
+      navigation.navigate('exchangeLogin')
+      return
+    }
     try {
       const { res } = await authRequest(
         `/users/getInSynced/${await getRegistrationToken()}`,
