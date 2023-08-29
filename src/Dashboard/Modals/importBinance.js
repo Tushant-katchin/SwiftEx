@@ -133,7 +133,7 @@ const ImportBinanceWallet = ({
         isVisible={Visible}
         useNativeDriver={true}
         onBackdropPress={() => setWalletVisible(false)}
-        statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         onBackButtonPress={() => {
           setWalletVisible(false);
         }}

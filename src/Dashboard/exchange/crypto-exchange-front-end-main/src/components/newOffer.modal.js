@@ -736,7 +736,7 @@ const _getAssetsOptions = (assetsList) =>
 export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress }) => {
   const state = useSelector((state) => state);
   const navigation = useNavigation();
-  const [modalMessage, setModalMessage] = useState("hhhhhhhhhhhhhhhhhhh");
+  const [modalMessage, setModalMessage] = useState("");
   const [seeTx, openTx] = useState(false);
   const [isRefetchingTxFee, setIsRefetchingTxFee] = useState(false);
   const [txFeeInUsd, setTxFeeInUsd] = useState(TX_FEE_IN_USD);
@@ -1073,7 +1073,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
         const balance = await state.walletBalance;
         console.log(balance);
         setBalance(balance);
-        setModalMessage("");
+       // setModalMessage("");
         return;
       }
       setDisable(true);
@@ -1088,7 +1088,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
         const balance = await state.MaticBalance;
         console.log(balance);
         setBalance(balance);
-        setModalMessage("");
+        //setModalMessage("");
         return;
       }
       setDisable(true);
@@ -1101,7 +1101,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
         const balance = await getEthTokenBalance(walletAdress, WBTC);
         console.log(balance);
         setBalance(balance);
-        setModalMessage("");
+        //setModalMessage("");
         return;
       }
       setDisable(true);
@@ -1116,7 +1116,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
         const balance = await getEthTokenBalance(walletAdress, DAI);
         console.log(balance);
         setBalance(balance);
-        setModalMessage("");
+       // setModalMessage("");
         return;
       }
       setDisable(true);
@@ -1131,7 +1131,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
         const balance = await getEthTokenBalance(walletAdress, USDT);
         console.log(balance);
         setBalance(balance);
-        setModalMessage("");
+        //setModalMessage("");
         return;
       }
       setDisable(true);
@@ -1223,7 +1223,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData,onCrossPress 
         >
           <Text style={styles.addingText}>Adding Offer</Text>
 
-          <Text style={{ color: "white" }}>{modalMessage.slice(0, 100)}</Text>
+          <Text style={{ color: "white" }}>{modalMessage}</Text>
           {txMessage && (
             <View>
               <Text style={{ color: "white" }}>{txMessage}</Text>

@@ -15,6 +15,7 @@ import {
 import { useSelector } from "react-redux";
 import editImage from "../../../../../../assets/editImage.png";
 import girlProfile from "../../../../../../assets/girlProfile.jpg";
+import Profile from "../../../../../../assets/Profile.png"
 import walletImg from "../../../../../../assets/walletImg.png";
 import copyRide from "../.././../../../../assets/copyRide.png";
 
@@ -423,7 +424,7 @@ export const ProfileView = (props) => {
         <Text style={{ color: "#fff" }}>{message}</Text>
 
         <View style={styles.profileContainer}>
-          <Image source={girlProfile} style={styles.img} />
+          <Image source={Profile} style={styles.img}  />
           <View style={styles.fnlnTextView}>
             <FieldView
               value={profile.firstName + profile.lastName}
@@ -664,7 +665,7 @@ const styles = StyleSheet.create({
   },
   img: {
     height: hp(6),
-    width: wp(13),
+    width: wp(12),
     borderRadius: hp(5),
     marginLeft: wp(3),
   },

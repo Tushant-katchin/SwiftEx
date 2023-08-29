@@ -122,23 +122,21 @@ const ImportMultiCoinWalletModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(()=>{
-    if(!accountName)
-    {
+  useEffect(() => {
+    if (!accountName) {
       setDisable(true)
     }
-    if(accountName &&  mnemonic )
-    {
+    if (accountName && mnemonic) {
       let valid
-        const phrase = mnemonic.trimStart();
-        const trimmedPhrase = phrase.trimEnd();
-        valid = ethers.utils.isValidMnemonic(trimmedPhrase);
-        if(!valid){
-          setMessage('Please enter a valid mnemonic')
-        }
-        else{
-          setMessage('')
-        }
+      const phrase = mnemonic.trimStart();
+      const trimmedPhrase = phrase.trimEnd();
+      valid = ethers.utils.isValidMnemonic(trimmedPhrase);
+      if (!valid) {
+        setMessage('Please enter a valid mnemonic')
+      }
+      else {
+        setMessage('')
+      }
 
       if (accountName && mnemonic && valid) {
         setDisable(false);
@@ -148,7 +146,7 @@ const ImportMultiCoinWalletModal = ({
     } else {
       setMessage("");
     }
-    },[mnemonic,accountName])
+  }, [mnemonic, accountName])
 
 
   return (
@@ -162,7 +160,7 @@ const ImportMultiCoinWalletModal = ({
         animationOutTiming={650}
         isVisible={Visible}
         useNativeDriver={true}
-        statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         onBackdropPress={() => setWalletVisible(false)}
         onBackButtonPress={() => {
           setWalletVisible(false);
@@ -170,8 +168,8 @@ const ImportMultiCoinWalletModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Multi-Coin'}/> */}
-<Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} onPress={onCrossPress}/>
-<Text style={style.coinText}>Multi Coin Wallet</Text>
+          <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} onPress={onCrossPress} />
+          <Text style={style.coinText}>Multi Coin Wallet</Text>
           <View style={style.labelInputContainer}>
             <Text style={style.label}>Name</Text>
             <TextInput
@@ -189,14 +187,14 @@ const ImportMultiCoinWalletModal = ({
               onPress={async () => {
                 // setText('abc')
                 Paste(setMnemonic);
-                
+
               }}
             >
               <Text style={style.paste}>Paste</Text>
             </TouchableOpacity>
             <Text>Phrase</Text>
             <TextInput
-            placeholder={"Enter your secret phrase here"}
+              placeholder={"Enter your secret phrase here"}
               style={style.input}
               value={mnemonic}
               onChangeText={(text) => {
@@ -375,9 +373,9 @@ const style = StyleSheet.create({
     height: hp(75),
     width: wp(97),
     textAlign: "center",
-    borderRadius:hp(1),
+    borderRadius: hp(1),
     alignSelf: "center",
-    marginTop:hp(5)
+    marginTop: hp(5)
   },
   welcomeText: {
     fontSize: 15,
@@ -485,11 +483,11 @@ const style = StyleSheet.create({
     alignItems: "center",
   },
   paste: { textAlign: "right", color: "#4CA6EA" },
-  coinText:{
-    textAlign:"center",
-    marginTop:hp(1.5),
-    fontSize:15,
-    fontWeight:"700"
+  coinText: {
+    textAlign: "center",
+    marginTop: hp(1.5),
+    fontSize: 15,
+    fontWeight: "700"
   },
   inputView: {
     borderWidth: 1,
@@ -509,8 +507,8 @@ const style = StyleSheet.create({
     paddingRight: wp("7"),
     backgroundColor: "white",
   },
-  crossIcon:{
-    alignSelf:"flex-end",
-    padding:hp(1.5)
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1.5)
   }
 });

@@ -83,7 +83,7 @@ export const HomeView = ({ setPressed }) => {
   }, [change]);
 
   const syncDevice = async () => {
-    const token = null//await getRegistrationToken();
+    const token = await getRegistrationToken();
     console.log(token);
     console.log("hi", token);
     if(!token)

@@ -130,16 +130,14 @@ const ImportPolygonWalletModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(()=>{
-    if(!accountName)
-    {
+  useEffect(() => {
+    if (!accountName) {
       setDisable(true)
     }
 
-    if(accountName && (privateKey || mnemonic || json))
-    {
+    if (accountName && (privateKey || mnemonic || json)) {
       let valid
-      if(label==='mnemonic'){
+      if (label === 'mnemonic') {
         const phrase = mnemonic.trimStart();
         const trimmedPhrase = phrase.trimEnd();
         valid = ethers.utils.isValidMnemonic(trimmedPhrase);
@@ -165,10 +163,10 @@ const ImportPolygonWalletModal = ({
     } else {
       setMessage("");
     }
-    },[mnemonic,privateKey,json,accountName])
+  }, [mnemonic, privateKey, json, accountName])
 
 
-   
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -183,7 +181,7 @@ const ImportPolygonWalletModal = ({
         useNativeDriverForBackdrop={true}
         backdropTransitionOutTiming={0}
         hideModalContentWhileAnimating
-        statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         onBackdropPress={() => setWalletVisible(false)}
         onBackButtonPress={() => {
           setWalletVisible(false);
@@ -191,8 +189,8 @@ const ImportPolygonWalletModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Matic'}/> */}
-<Icon  type={'entypo'} name={'cross'} color={'gray'} size={24} onPress={onCrossPress} style={style.crossIcon}/>
-<Text style={style.text}>Polygon Wallet</Text>
+          <Icon type={'entypo'} name={'cross'} color={'gray'} size={24} onPress={onCrossPress} style={style.crossIcon} />
+          <Text style={style.text}>Polygon Wallet</Text>
           <View style={style.Button}>
             <TouchableOpacity
               style={
@@ -280,15 +278,14 @@ const ImportPolygonWalletModal = ({
                 setText(text)
                 // setText('abc')
                 console.log(label)
-                if(label==='mnemonic')
-                {
+                if (label === 'mnemonic') {
                   Paste(setMnemonic);
-                }else if(label==='privateKey'){
+                } else if (label === 'privateKey') {
                   Paste(setPrivateKey);
-                 // setText(text)
-                }else if(label==='JSON'){
+                  // setText(text)
+                } else if (label === 'JSON') {
                   Paste(setJson);
-                 // setText(text)
+                  // setText(text)
                 }
               }}
             >
@@ -315,8 +312,8 @@ const ImportPolygonWalletModal = ({
                 label === "privateKey"
                   ? "Enter your private Key here"
                   : label === "JSON"
-                  ? "Enter your secret JSON Key here"
-                  : "Enter your secret phrase here"
+                    ? "Enter your secret JSON Key here"
+                    : "Enter your secret phrase here"
               }
             />
           </View>
@@ -689,9 +686,9 @@ const style = StyleSheet.create({
     height: hp(75),
     width: wp(97),
     textAlign: "center",
-   alignSelf:"center",
-   borderRadius:hp(1),
-   marginTop:hp(5)
+    alignSelf: "center",
+    borderRadius: hp(1),
+    marginTop: hp(5)
   },
   welcomeText: {
     fontSize: 15,
@@ -826,14 +823,14 @@ const style = StyleSheet.create({
     borderRadius: hp(1),
     alignItems: "center",
   },
-  text:{
-    textAlign:"center",
-    fontWeight:"700",
-    fontSize:15,
+  text: {
+    textAlign: "center",
+    fontWeight: "700",
+    fontSize: 15,
     // marginTop:hp(1)
   },
-  crossIcon:{
-    alignSelf:"flex-end",
-    padding:hp(1.5)
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1.5)
   }
 });

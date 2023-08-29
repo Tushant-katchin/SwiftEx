@@ -119,29 +119,28 @@ const ImportXrpWalletModal = ({
     }).start();
   }, [fadeAnim, Spin]);
 
-  useEffect(()=>{
-    if(!accountName)
-    {
+  useEffect(() => {
+    if (!accountName) {
       setDisable(true)
     }
-    if(accountName && (mnemonic ||  privateKey)){
+    if (accountName && (mnemonic || privateKey)) {
       let valid
-      if(label==='mnemonic'){
+      if (label === 'mnemonic') {
         const phrase = mnemonic.trimStart();
         const trimmedPhrase = phrase.trimEnd();
         valid = utils.isValidMnemnic(trimmedPhrase);
-        if(!valid){
+        if (!valid) {
           setMessage('Please enter a valid mnemonic')
         }
-        else{
+        else {
           setMessage('')
         }
-        
-      }else if(label==='privateKey'){
-      
-       valid = utils.isValidSeed(privateKey)
-       if(!valid){
-         setMessage('Please enter a valid private key')
+
+      } else if (label === 'privateKey') {
+
+        valid = utils.isValidSeed(privateKey)
+        if (!valid) {
+          setMessage('Please enter a valid private key')
         }
       } else if (label === "privateKey") {
         valid = utils.isValidSeed(privateKey);
@@ -163,7 +162,7 @@ const ImportXrpWalletModal = ({
     } else {
       setMessage("");
     }
-  },[mnemonic,privateKey,accountName])
+  }, [mnemonic, privateKey, accountName])
 
 
   return (
@@ -177,7 +176,7 @@ const ImportXrpWalletModal = ({
         animationOutTiming={650}
         isVisible={Visible}
         useNativeDriver={true}
-        statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         onBackdropPress={() => setWalletVisible(false)}
         onBackButtonPress={() => {
           setWalletVisible(false);
@@ -185,7 +184,7 @@ const ImportXrpWalletModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'XRP'}/> */}
-<Icon type={'entypo'} name='cross'  size={24} color={'gray'} onPress={onCrossPress} style={style.crossIcon}/>
+          <Icon type={'entypo'} name='cross' size={24} color={'gray'} onPress={onCrossPress} style={style.crossIcon} />
           <Text style={style.text}>XRP Wallet</Text>
 
           <View style={style.Button}>
@@ -235,7 +234,7 @@ const ImportXrpWalletModal = ({
 
           <View style={style.labelInputContainer}>
             <Text style={style.label}>Name</Text>
-        
+
             <TextInput
               value={accountName}
               onChangeText={(text) => {
@@ -256,12 +255,11 @@ const ImportXrpWalletModal = ({
                 setText(text)
                 // setText('abc')
                 console.log(label)
-                if(label==='mnemonic')
-                {
+                if (label === 'mnemonic') {
                   Paste(setMnemonic);
-                }else if(label==='privateKey'){
+                } else if (label === 'privateKey') {
                   Paste(setPrivateKey);
-                 // setText(text)
+                  // setText(text)
                 }
               }}
             >
@@ -286,8 +284,8 @@ const ImportXrpWalletModal = ({
                 label === "privateKey"
                   ? "Enter your private Key here"
                   : label === "JSON"
-                  ? "Enter your secret JSON Key here"
-                  : "Enter your secret phrase here"
+                    ? "Enter your secret JSON Key here"
+                    : "Enter your secret phrase here"
               }
             />
           </View>
@@ -559,8 +557,8 @@ const style = StyleSheet.create({
     width: wp(97),
     textAlign: "center",
     alignSelf: "center",
-    marginTop:hp(5),
-    borderRadius:hp(1)
+    marginTop: hp(5),
+    borderRadius: hp(1)
   },
 
   welcomeText: {
@@ -662,14 +660,14 @@ const style = StyleSheet.create({
     alignItems: "center",
     padding: 3,
   },
-  text:{
-    textAlign:"center",
-    fontWeight:"700",
-    fontSize:15,
+  text: {
+    textAlign: "center",
+    fontWeight: "700",
+    fontSize: 15,
     // marginTop:hp(3)
   },
-  crossIcon:{
-    alignSelf:"flex-end",
-    padding:hp(1.5)
+  crossIcon: {
+    alignSelf: "flex-end",
+    padding: hp(1.5)
   }
 });

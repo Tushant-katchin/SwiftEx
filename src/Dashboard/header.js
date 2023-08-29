@@ -166,11 +166,11 @@ export const ExchangeHeaderIcon = (props) => {
           size={23}
           color={"#010C66"}
           onPress={() => {
-           // navigation.goBack();
-           const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-           AsyncStorage.removeItem(LOCAL_TOKEN);
-           Navigate()
-           navigation.goBack()
+            navigation.goBack();
+          //  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+          //  AsyncStorage.removeItem(LOCAL_TOKEN);
+          //  Navigate()
+          //  navigation.goBack()
           }}
         />
         </TouchableOpacity>
@@ -185,7 +185,7 @@ export const ExchangeHeaderIcon = (props) => {
            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
            AsyncStorage.removeItem(LOCAL_TOKEN);
            Navigate()
-           navigation.goBack()
+           navigation.navigate('exchangeLogin')
         }}>
 
         <Icon
