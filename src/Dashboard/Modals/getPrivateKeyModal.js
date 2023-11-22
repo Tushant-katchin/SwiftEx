@@ -81,7 +81,7 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
           <Icon
             type={"entypo"}
             name="cross"
-            color={"gray"}
+            color={"white"}
             size={24}
             onPress={onCrossPress}
             style={style.crossIcon}
@@ -174,7 +174,8 @@ export default GetPrivateKeyModal;
 
 const style = StyleSheet.create({
   Body: {
-    backgroundColor: "#131E3A",
+    // backgroundColor: "#131E3A",
+    backgroundColor: "#145DA0",
     paddingTop: hp(1),
     alignSelf: "center",
     paddingBottom: hp(4),
@@ -187,10 +188,11 @@ const style = StyleSheet.create({
   welcomeText: {
     color: "white",
     marginTop: hp(2),
+    fontWeight:"900"
   },
   welcomeText2: {
     fontSize: 15,
-    fontWeight: "200",
+    fontWeight: "300",
     color: "white",
     marginTop: hp(1),
     width: wp(70),

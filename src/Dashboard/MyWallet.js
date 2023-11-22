@@ -160,7 +160,7 @@ const MyWallet = (props) => {
         <TextInput
           style={{ width: wp("78%") }}
           placeholder={user ? user : "Main Wallet 1"}
-          placeholderTextColor={"black"}
+          placeholderTextColor={"gray"}
         />
       </View>
 

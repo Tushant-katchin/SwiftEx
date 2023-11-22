@@ -160,9 +160,7 @@ const Dashboard = ({ navigation }) => {
 
           tabBarLabel: ({ focused }) => {
             let iconColor;
-
-            iconColor = focused ? "blue" : "black";
-
+            iconColor = focused ? "#131E3A" : "white";
             return (
               <Text
                 style={{
@@ -176,7 +174,7 @@ const Dashboard = ({ navigation }) => {
               </Text>
             );
           },
-          tabBarActiveTintColor: "blue",
+          tabBarActiveTintColor: "#131E3A",
           tabBarInactiveTintColor: "white",
           tabBarStyle: {
             position: "absolute",
@@ -200,6 +198,7 @@ const Dashboard = ({ navigation }) => {
                 : Header2("Home", state),
             headerShown: true,
           }}
+
         />
 
         <Tab.Screen
@@ -216,7 +215,7 @@ const Dashboard = ({ navigation }) => {
               iconName = "ios-home-sharp"; //for icon or image
               let iconColor;
 
-              iconColor = focused ? "blue" : "white";
+              iconColor = focused ? "#131E3A" : "white";
               return (
                 <View>
                   <Text>

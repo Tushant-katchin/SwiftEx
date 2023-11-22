@@ -183,7 +183,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
                 }, 1);
               }}
             >
-              <Text style={{ color: "white" }}>Continue</Text>
+              <Text style={{ color: "black" }}>Continue</Text>
             </TouchableOpacity>
           </LinearGradient>
           </View>
@@ -207,7 +207,7 @@ export default NewWalletModal;
 
 const style = StyleSheet.create({
   Body: {
-    backgroundColor: "#131E3A",
+    backgroundColor: "#145DA0",
     paddingTop:hp(1),
     paddingBottom:hp(8),
     justifyContent: "center",
@@ -220,10 +220,11 @@ const style = StyleSheet.create({
   welcomeText: {
     color: "white",
     marginTop: hp(2),
+    fontWeight:"900"
   },
   welcomeText2: {
     fontSize: 15,
-    fontWeight: "200",
+    fontWeight: "300",
     color: "white",
     marginTop: hp(1),
     width: wp(70),

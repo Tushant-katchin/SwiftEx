@@ -203,7 +203,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Platform,
+  Platform,StatusBar, SafeAreaView,Image
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -214,12 +214,12 @@ import ToggleSwitch from "toggle-switch-react-native";
 import { Switch } from "react-native-paper";
 import { REACT_APP_LOCAL_TOKEN } from "./src/Dashboard/exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import Icon from "./src/icon";
-
 const Settings = (props) => {
   const [Checked, setCheckBox] = useState(false);
-
+  const [PUSH_NOTIFICATION,setPUSH_NOTIFICATION]=useState(false)
   const dispatch = useDispatch();
   return (
+    <SafeAreaView>
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.setHeading}>Settings</Text>
       <TouchableOpacity
@@ -303,7 +303,7 @@ const Settings = (props) => {
         />
         <Text style={styles.text}>Contacts</Text>
       </TouchableOpacity> */}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.accountBox}
         onPress={() => {
           //alert("coming soon");
@@ -312,7 +312,7 @@ const Settings = (props) => {
       >
         <Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" />
         <Text style={styles.text}>Biometric Authenticaton</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity
         style={styles.accountBox}
@@ -324,8 +324,100 @@ const Settings = (props) => {
         <Icon type={"fa"} name="dollar" size={hp(2)} color="black" />
         <Text style={styles.text}>Transactions</Text>
       </TouchableOpacity>
+
+<TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => {
+          //alert("coming soon");
+          props.navigation.navigate("Biometric");
+        }}
+      >
+        {/* <Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" /> */}
+        {Platform.OS === 'android' ?<Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" />: <Icon type={"material"} name="lock-outline" size={hp(2)} color="black" />}
+        {Platform.OS === 'android' ? <Text style={styles.text}>Biometric Authenticaton</Text>:<Text style={styles.text}>Authenticaton</Text>}
+      </TouchableOpacity>
+
+      <View style={styles.bottomBorder}></View>
+      
+      <TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => {
+          //props.navigation.navigate('ImportWallet')
+          alert("Coming soon.")
+        }}
+      >
+        <Icon type={"antDesign"} name="setting" size={hp(2)} color="black" />
+        <Text style={styles.text}>Preference</Text>
+      </TouchableOpacity>
+      {/* <TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => {
+          //props.navigation.navigate('ImportWallet')
+            alert("Coming soon.")      
+        }}
+      >
+        <Icon
+          type={"material"}
+          name="lock-outline"
+          size={hp(2)}
+          color="black"
+        />
+        <Text style={styles.text}>Security</Text>
+      </TouchableOpacity> */}
       <View style={styles.bottomBorder}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
+          style={styles.accountBox}
+          onPress={() => {
+            //props.navigation.navigate('ImportWallet')
+            // alert("coming soon");
+          }}
+        >
+          <Icon
+            type={"materialCommunity"}
+            name="bell-outline"
+            size={hp(2)}
+            color="black"
+          />
+          <Text style={styles.text}>Push Notification</Text>
+        </TouchableOpacity> */}
+
+        {/* NEW CODE FOR PUSH NOTIFICATION */}
+     
+         <View style={styles.accountBox1}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Icon type={"materialCommunity"} name="bell-outline" size={hp(2)} color="black"/>
+            <Text style={styles.text}>Push Notification</Text>
+          </View>
+          <View style={Platform.OS == "android" ? { paddingRight: wp(2) } : { paddingRight: wp(3.5) }}>
+            <ToggleSwitch
+              isOn={PUSH_NOTIFICATION}
+              onColor="green"
+              offColor="gray"
+              labelStyle={{ color: "black", fontWeight: "900" }}
+              size="small"
+              onToggle={() => {
+                setPUSH_NOTIFICATION(!PUSH_NOTIFICATION);
+              }}
+              // onToggle={(isOff) => console.log("changed to : ", isOff)}
+            />
+          </View>
+
+        </View>
+
+      </View>
+
+      <TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => {
+          //props.navigation.navigate('ImportWallet')
+          alert("Coming soon.")
+        }}
+      >
+        <Icon type={"feather"} name="help-circle" size={hp(2)} color="black" />
+        <Text style={styles.text}>Help Center</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity
           style={styles.accountBox}
           onPress={() => {
             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
@@ -341,62 +433,8 @@ const Settings = (props) => {
           <Icon name="chevron-right" size={hp(2)} color="black" />
           <Text style={styles.text}>Log Out</Text>
         </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity
-        style={styles.accountBox}
-        onPress={() => {
-          //props.navigation.navigate('ImportWallet')
-          // alert("coming soon");
-        }}
-      >
-        <Icon type={"antDesign"} name="setting" size={hp(2)} color="black" />
-        <Text style={styles.text}>Preference</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.accountBox}
-        onPress={() => {
-          //props.navigation.navigate('ImportWallet')
-          // alert("coming soon");
-        }}
-      >
-        <Icon
-          type={"material"}
-          name="lock-outline"
-          size={hp(2)}
-          color="black"
-        />
-        <Text style={styles.text}>Security</Text>
-      </TouchableOpacity>
-      <View style={styles.bottomBorder}>
-        <TouchableOpacity
-          style={styles.accountBox}
-          onPress={() => {
-            //props.navigation.navigate('ImportWallet')
-            // alert("coming soon");
-          }}
-        >
-          <Icon
-            type={"materialCommunity"}
-            name="bell-outline"
-            size={hp(2)}
-            color="black"
-          />
-          <Text style={styles.text}>Push Notification</Text>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity
-        style={styles.accountBox}
-        onPress={() => {
-          //props.navigation.navigate('ImportWallet')
-          // alert("coming soon");
-        }}
-      >
-        <Icon type={"feather"} name="help-circle" size={hp(2)} color="black" />
-        <Text style={styles.text}>Help Center</Text>
-      </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -419,7 +457,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: hp("2"),
     fontWeight: "600",
-    fontFamily: "sans-serif",
+    // fontFamily:"",
     marginHorizontal: wp(3),
   },
   accountBox: {

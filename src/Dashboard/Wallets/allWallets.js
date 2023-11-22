@@ -268,7 +268,7 @@ const AllWallets = (props) => {
   return (
     <ScrollView contentContainerStyle={style.body}>
       {Wallets[0] ? (
-        Wallets[0].map((item) => {
+        Wallets[0].map((item,index) => {
           if (item.walletType === "BSC") {
             LeftContent = BnbLeftContent;
           } else if (item.walletType === "Ethereum") {
@@ -284,7 +284,7 @@ const AllWallets = (props) => {
             LeftContent = multiCoinLeftContent;
           }
           return (
-            <View>
+            <View key={index}>
               <TouchableOpacity
                 key={item.name}
                 style={style.Box}
@@ -302,7 +302,7 @@ const AllWallets = (props) => {
                           item.mnemonic ? item.mnemonic : "",
                           item.xrp.address ? item.xrp.address : "",
                           item.xrp.privateKey ? item.xrp.privateKey : "",
-                          (walletType = "Multi-coin")
+                          (item.walletType = "Multi-coin")
                         )
                       ).then((response) => {
                         console.log(response);

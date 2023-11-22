@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity,Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity,Pressable, Platform } from "react-native";
 import React from "react";
 import Icon from "../icon";
 import {
@@ -60,23 +60,36 @@ export const WalletHeader = (props) => {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity style={styles.walletContainer} onPress={() => {
-      navigation.goBack();
-    }}>
-      <Icon
-        name={"left"}
-        type={"antDesign"}
-        size={20}
-        color={"#fff"}
-        onPress={() => {
-          navigation.goBack("");
-        }}
-      />
-      <Text style={styles.text1}>{title}</Text>
-      <View style={{ alignItems: "center" }}>
-        <Text style={{ color: "#E96A6A" }}>{title1}</Text>
-      </View>
+    // <View style={styles.walletContainer} onPress={() => {
+    //   // navigation.goBack();
+    // }}>
+    //   <Icon
+    //     name={"left"}
+    //     type={"antDesign"}
+    //     size={20}
+    //     color={"#fff"}
+    //     onPress={() => {
+    //       navigation.goBack("");
+    //     }}
+    //   />
+    //   {/* {Platform.OS == "android" ?<Text style={styles.text1}>{title}</Text>:<Text style={styles.text1_ios}>{title}</Text>} */}
+    //    {/* <Text style={styles.text1}>{title}</Text> */}
+    //   {/* <View style={{ alignItems: "center" }}>
+    //     <Text style={{ color: "#E96A6A" }}>{title1}</Text>
+    //   </View> */}
+    //   <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
+    //    {Platform.OS==='ios'?<Image source={darkBlue} style={styles.logoImg_ios}/>:<Image source={darkBlue} style={styles.logoImg}/>}
+    //   </TouchableOpacity>
+    // </View>
+    <View style={styles.header}>
+    <TouchableOpacity style={styles.backButton} onPress={()=>{navigation.goBack()}}>
+    <Icon name={"left"} type={"antDesign"} size={29} color={"white"}/>
     </TouchableOpacity>
+    {Platform.OS==='android'?<Text style={[styles.headerText_android,]}>{title}</Text>:<Text style={styles.headerText}>{title}</Text>}
+    <TouchableOpacity onPress={()=>{navigation.goBack()}}>
+    <Image source={darkBlue} style={styles.headerImage} />
+    </TouchableOpacity>
+  </View>  
   );
 };
 export const SwapHeader = (props) => {
@@ -84,23 +97,21 @@ export const SwapHeader = (props) => {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity style={styles.walletContainer} onPress={() => {
-      setVisible(false)
-    }}>
+    <View style={styles.walletContainer}>
       <Icon
         name={"left"}
         type={"antDesign"}
-        size={20}
+        size={25}
         color={"#fff"}
         onPress={() => {
           setVisible(false)
         }}
       />
-      <Text style={styles.text1}>{title}</Text>
+      <Text style={styles.text_1}>{title}</Text>
       <View style={{ alignItems: "center" }}>
         <Text style={{ color: "#E96A6A" }}>{title1}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -164,7 +175,7 @@ export const ExchangeHeaderIcon = (props) => {
           name={"left"}
           type={"antDesign"}
           size={23}
-          color={"#010C66"}
+          color={"white"}
           onPress={() => {
             navigation.goBack();
           //  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
@@ -174,11 +185,11 @@ export const ExchangeHeaderIcon = (props) => {
           }}
         />
         </TouchableOpacity>
-       
-        <Image source={darkBlue} style={styles.logoImg} />
       </View>
-      <Text style={styles.text}>{title}</Text>
-
+      {Platform.OS==="android"?<Text style={styles.text}>{title}</Text>:<Text style={[styles.text,styles.text1_ios]}>{title}</Text>}
+        <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
+        <Image source={darkBlue} style={styles.logoImg} />
+        </TouchableOpacity>
       { isLogOut ? <View style={{ alignItems: "center" }}>
         <TouchableOpacity onPress={()=>{
           console.log('clicked')
@@ -296,24 +307,77 @@ const styles = StyleSheet.create({
     paddingVertical: hp(2),
     width: wp(100),
     paddingHorizontal: wp(2),
+    height:wp(17)
   },
   logoImg: {
     height: hp("9"),
     width: wp("12"),
-    marginLeft: wp(1.5),
+    marginLeft: wp(24),
+  },
+  logoImg_ios: {
+    height: hp("9"),
+    width: wp("12"),
+    marginLeft: wp(20),
   },
   text: {
-    color: "#010C66",
+    color: "white",
+    fontSize:17,
     fontWeight: "700",
     alignSelf: "center",
     textAlign: "center",
-    marginRight: wp(10),
+    marginStart:wp(34)
   },
   text1: {
     color: "white",
     fontWeight: "700",
-    alignSelf: "center",
-    textAlign: "center",
-    marginRight: wp(10),
+    marginLeft:wp(31),
+    fontSize:17,
+    fontWeight:"700"
   },
+  text_1: {
+    color: "white",
+    fontWeight: "700",
+    marginRight:wp(8.6),
+    fontSize:17,
+    fontWeight:"700"
+  },
+  text1_ios: {
+    color: "white",
+    fontWeight: "700",
+    alignSelf: "center",
+    marginStart: wp(33),
+    top:19,
+    fontSize:17
+  },
+  header: {
+    backgroundColor: '#4CA6EA',
+    paddingTop: 10,
+    paddingBottom: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  backButton: {
+    paddingHorizontal: 10,
+  },
+  headerText_android:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    paddingTop:3,
+    paddingLeft:45
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    paddingTop:19,
+    paddingLeft:53
+  },
+  headerImage: {
+    width: 80,
+    height: 60,
+    borderRadius: 20,
+    marginRight: 3,
+  }
 });

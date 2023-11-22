@@ -7,7 +7,7 @@ import {
   UIManager,
   Touchable,
   TouchableOpacity,
-  Pressable,
+  Pressable,StatusBar, SafeAreaView
 } from "react-native";
 import { Button, Text } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
@@ -269,7 +269,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
 
   const openExtended = () => {
     changeState();
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
   const getBalanceInUsd = (ethBalance, bnbBalance, xrpBalance) => {
@@ -385,7 +385,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   }, [state.wallet.name]);
 
   return (
-    <View style={{ backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ backgroundColor: "#fff",marginTop:0 }}>
+    <View>
       <View style={styles.headerContainer}>
         <Pressable onPress={() => alert("Notifications will be added soon")}>
           <Icon name="bell" type={"fontisto"} size={24} />
@@ -403,9 +404,10 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         >
           <Text style={styles.faucetText}>Faucet</Text>
         </TouchableOpacity> */}
-        <Pressable style={{alignItems:"center"}} onPress={() => openExtended()}>
+        {/* <Pressable style={{alignItems:"center"}} onPress={() => openExtended()}> */}
+        <TouchableOpacity style={{alignItems:"center"}} onPress={() => openExtended()}>
           <Icon name="sliders" type={"FAIcon"} size={24} />
-        </Pressable>
+        </TouchableOpacity>
       </View>
       <View style={{ marginVertical: hp(2) }}>
         <Text style={styles.dollartxt}>
@@ -415,7 +417,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           style={{
             color: "black",
             textAlign: "center",
-            fontWeight: "10",
+            fontWeight: "400",
             fontStyle: "italic",
             fontSize: 20,
           }}
@@ -424,25 +426,23 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         </Text>
       </View>
       <View style={styles.buttons}>
+        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
         <IconWithCircle
           name={"arrowup"}
           type={"antDesign"}
           title={"Send"}
-          onPress={() => setModalVisible(!modalVisible)}
+          // onPress={() => setModalVisible(!modalVisible)}
         />
-
+       </TouchableOpacity>
+        <TouchableOpacity onPress={() => setModalVisible2(true)}>
         <IconWithCircle
           name={"arrowdown"}
           type={"antDesign"}
           title={"Receive"}
-          onPress={() => setModalVisible2(true)}
+          // onPress={() => setModalVisible2(true)}
         />
-
-        <IconWithCircle
-          name={"swap-horizontal"}
-          type={"ionicon"}
-          title={"Swap"}
-          onPress={async () => {
+        </TouchableOpacity>
+        <TouchableOpacity onPress={async () => {
             const walletType = await AsyncStorageLib.getItem("walletType");
             console.log(JSON.parse(walletType));
             if (!JSON.parse(walletType))
@@ -456,15 +456,36 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
             } else {
               alert("Swapping is only supported for Ethereum and Binance ");
             }
-          }}
+          }}>
+        <IconWithCircle
+          name={"swap-horizontal"}
+          type={"ionicon"}
+          title={"Swap"}
+          // onPress={async () => {
+          //   const walletType = await AsyncStorageLib.getItem("walletType");
+          //   console.log(JSON.parse(walletType));
+          //   if (!JSON.parse(walletType))
+          //     return alert("please select a wallet first to swap tokens");
+          //   if (
+          //     JSON.parse(walletType) === "BSC" ||
+          //     JSON.parse(walletType) === "Ethereum" ||
+          //     JSON.parse(walletType) === "Multi-coin"
+          //   ) {
+          //     setModalVisible3(true);
+          //   } else {
+          //     alert("Swapping is only supported for Ethereum and Binance ");
+          //   }
+          // }}
         />
-
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("buycrypto")}>
         <IconWithCircle
           name={"credit-card-outline"}
           type={"materialCommunity"}
           title={"Buy"}
-          onPress={() => navigation.navigate("buycrypto")}
+          // onPress={() => navigation.navigate("buycrypto")}
         />
+        </TouchableOpacity>
       </View>
       <SendModal
         modalVisible={modalVisible}
@@ -494,6 +515,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         </View>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 };
 

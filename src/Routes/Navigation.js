@@ -65,7 +65,9 @@ const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
   <NavigationContainer
-    theme={{ colors: { background: "#000C66" } }}
+    // theme={{ colors: { background: "#000C66" } }}
+    theme={{ colors: { background: "#fff" } }}
+
     ref={navigationRef}
   >
     <Stack.Navigator
@@ -214,10 +216,10 @@ const AuthStack = () => (
           },
         }}
       />
-      <Stack.Screen
+       <Stack.Screen
         name="buycrypto"
         component={Generate}
-        options={{ headerShown: true }}
+        options={{ headerShown: true ,headerStyle:{backgroundColor:"#4CA6EA"},headerTintColor:"white"}}
       />
 
       <Stack.Screen
@@ -386,7 +388,8 @@ const AuthStack = () => (
         component={CheckMnemonic}
         options={{
           header: () => {
-            return <WalletHeader title="Check-Mneumonic" />;
+            // return <WalletHeader title="Check-Mneumonic" />;
+            return <WalletHeader title="Check-Mnemonic"/>;
           },
         }}
       />
@@ -441,8 +444,11 @@ const AuthStack = () => (
         name="Biometric"
         component={BiometricPage}
         options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: "#000C66" },
+          headerShown: false,
+          headerTitleAlign:"center",
+          headerTitle:"Authentication",
+          // headerStyle: { backgroundColor: "#000C66" },
+          headerStyle: { backgroundColor: "#4CA6EA"},
           headerTintColor: "white",
           headerTitleStyle: {
             fontWeight: "bold",

@@ -89,12 +89,14 @@ const ChooseTokens = ({ setModalVisible }) => {
     setWalletType(Type)
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      // duration: 1000,
+      duration: 1,
     }).start();
 
     Animated.timing(Spin, {
       toValue: 1,
-      duration: 2000,
+      // duration: 2000,
+      duration: 1,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
@@ -108,7 +110,7 @@ const ChooseTokens = ({ setModalVisible }) => {
 
       <Icon type={'entypo'}  name='cross' color={"white"} size={24} style={style.crossIcon}  onPress={()=>{setModalVisible(false)}}/>
       {/* <TokenHeader setVisible={setModalVisible} name={'Choose Wallet'}/> */}
-      <Text style={{fontSize:16,color:"#4CA6EA",textAlign:"center"}}>Choose Wallet</Text>
+      <Text style={{fontSize:19,color:"white",textAlign:"center"}}>Choose Wallet</Text>
 
       <ScrollView>
         <View style={style.Body}>
@@ -157,7 +159,7 @@ const ChooseTokens = ({ setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={Etherimage} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>ethereum</Text>
+              <Text style={{ marginHorizontal: wp(4) }}>Ethereum</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>

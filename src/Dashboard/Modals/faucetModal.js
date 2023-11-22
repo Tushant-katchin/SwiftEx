@@ -42,14 +42,14 @@ if (network === "BSC") {
   return (
     <Center>
       <TouchableOpacity
-      style={{backgroundColor:"#145DA0",padding:4,borderRadius:4,marginLeft:0}}
+      style={{backgroundColor:"#145DA0",borderRadius:16,marginLeft:0,padding:'6%'}}
         onPress={ () => {
           setShowModal(true)
          // console.log('pressed')
        //SendNotification('title','test')
         }}
       >
-        <Text style={{color:"white",}}>Add Test Faucet Balance</Text>
+        <Text style={{color:"white",fontWeight: "bold"}}>Add Test Faucet Balance</Text>
       </TouchableOpacity>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="400px">

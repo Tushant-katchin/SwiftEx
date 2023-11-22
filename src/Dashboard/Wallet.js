@@ -11,7 +11,7 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
-  Alert,
+  Alert,StatusBar
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,27 +40,28 @@ const Wallet = ({ navigation }) => {
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      duration: 1,
     }).start();
   }, [fadeAnim]);
 
   return (
     <Animated.View>
+      {Platform.OS === 'ios' &&  <StatusBar hidden={true}/>}
       <View
         style={{
           height: hp(95),
           marginTop: "auto",
-          backgroundColor: "#131E3A",
+          backgroundColor: "white",
           borderRadius: 20,
         }}
       >
         <Animated.Image
           style={{
-            width: wp("50"),
+            width: wp("70"),
             height: hp("30"),
             padding: 30,
-            marginTop: hp(10),
-            marginLeft: wp(25),
+            marginTop: hp(13),
+            marginLeft: wp(15),
             borderRadius: wp(10),
           }}
           source={walletImage}
@@ -73,10 +74,10 @@ const Wallet = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 20, color: "white" }}>
+          <Text style={{ fontSize: 20, color: "black",fontWeight:"700"}}>
             Private and secure
           </Text>
-          <Text style={{ color: "white" }}>
+          <Text style={{ color: "black",fontWeight:"400" }}>
             Private Keys never leave your device
           </Text>
         </View>
@@ -87,7 +88,7 @@ const Wallet = ({ navigation }) => {
           <Pressable onPress={() => {
               navigation.navigate("MyWallet");
             }}>
-            <Text style={{color:"white"}}>My Wallet</Text>
+            <Text style={{color:"white",fontWeight:"700"}}>My Wallet</Text>
           </Pressable>
           <Icon
           onPress={() => {
@@ -100,21 +101,22 @@ const Wallet = ({ navigation }) => {
         </View>
         </TouchableOpacity>
         <View style={styles.Button}>
-          <LinearGradient
+          {/* <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
             colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
             style={styles.PresssableBtn}
-          >
+          > */}
             <TouchableOpacity
-            style={{width:wp(30),alignItems:"center"}}
+            // style={{width:wp(30),alignItems:"center",backgroundColor:"black"}}
+            style={styles.PresssableBtn}
               onPress={() => {
                 setNewWalletModal(true);
               }}
             >
-              <Text style={{color:"white"}}>Create wallet</Text>
+              <Text style={{color:"white",fontWeight:"700"}}>Create wallet</Text>
             </TouchableOpacity>
-          </LinearGradient>
+          {/* </LinearGradient> */}
           {/* <Button
             title="Create wallet"
             color={"green"}
@@ -158,7 +160,8 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
     fontSize: 15,
     fontWeight: "200",
-    color: "white",
+    color: "black",
+    fontWeight:"300"
   },
   Button: {
     display: "flex",

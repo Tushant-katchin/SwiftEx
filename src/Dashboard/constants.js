@@ -1,5 +1,6 @@
 export const urls = {
-  testUrl: "ec2-43-205-140-238.ap-south-1.compute.amazonaws.com:2000",
+  // testUrl: "ec2-43-205-140-238.ap-south-1.compute.amazonaws.com:2000",
+  testUrl: "157.230.10.52:2000",
   mainUrl: "3.19.76.40:2000",
 };
 
@@ -14,7 +15,9 @@ export const API_KEYS ={
   MORALIS:'KRXC1pBilfY526QDwlrM1pINBUFgtZ2cLcSB8KYQyvlq3vHbrdknIZlfTK5DL1D0'
 }
 export const EthereumSecret = {
-  apiKey: "nVTR_gZ2GAO_KlSuvS2kCj7NyD0WxzNg",
+  // apiKey: "47dae78319124500ac4a20ef91175f8c",
+  // apiKey: "nVTR_gZ2GAO_KlSuvS2kCj7NyD0WxzNg",
+  apiKey: "favrOyEWGeWQfG-rjh2KkqhJyUriu72j",
 };
 export const tokenAddresses = {
   BNB: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -40,8 +43,7 @@ export const RPC = {
     "https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/testnet/",
   MATICRPC:
     "https://polygon-mumbai.g.alchemy.com/v2/WUJnVsFyDvgwlbSdNrpr-lMg0-NKaNLH",
-  ETHRPC:
-    "https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG",
+  ETHRPC:"https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG",
     ETHRPC2:"https://eth-goerli.g.alchemy.com/v2/kXUtx7JDweb570vdSTAU3yFOR_cPiL9L",
   XRPRPC:"https://s.altnet.rippletest.net:51234"
 };

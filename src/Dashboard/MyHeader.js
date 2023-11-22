@@ -68,12 +68,23 @@ const MyHeader = ({ title, changeState, state, extended, setExtended, title1 }) 
           icon="sort-reverse-variant"
           onPress={() => openExtended()}
         />
+        
+        {Platform.OS == "android" ?
         <Text style={{
           color: "white",
           fontWeight: "700",
           alignSelf: "center",
           textAlign: "center",
-        }}>{title}</Text>
+          fontSize:19
+        }}>{title}</Text> : <Text style={{
+          color: "white",
+          fontWeight: "700",
+          alignSelf: "center",
+          textAlign: "center",
+          fontSize:19,
+          top:19
+        }}>{title}</Text> 
+        }
         <Text style={{ color: "#E96A6A", width: '15%' }}>{''}</Text>
       </View>
 

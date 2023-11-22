@@ -141,7 +141,7 @@ const TransactionPinModal = ({
               width: wp("12"),
               height: hp("12"),
               padding: 30,
-              marginTop: hp(2),
+              marginTop: hp(16),
               transform: [{ rotate: SpinValue }],
             }}
             source={darkBlue}
@@ -152,7 +152,7 @@ const TransactionPinModal = ({
             {status == "verify"
               ? "please re enter pin"
               : status === "pinset"
-              ? "please enter your pin"
+              ? "Please enter your pin"
               : "Please create a pin"}
           </Text>
           <View style={{ marginTop: hp(5) }}>
@@ -200,6 +200,7 @@ const TransactionPinModal = ({
                         .catch((e) => {
                           console.log(e);
                           setLoading(false);
+                          alert("error","insufficient funds...");
                         });
                       const tx = txx.wait();
                       console.log("Sent transaction", await tx);
@@ -384,21 +385,21 @@ export default TransactionPinModal;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "#131E3A",
-    height: hp(75),
-    width: wp(95),
+    height: hp(110),
+    width: wp(100),
     alignItems: "center",
     borderRadius: hp(2),
     textAlign: "center",
     alignSelf: "center",
   },
   welcomeText: {
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: "200",
     color: "white",
-    // marginTop: hp(2),
+    marginTop: hp(2),
   },
   welcomeText1: {
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: "200",
     color: "white",
     marginTop: hp(1),

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
@@ -7,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -24,7 +27,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 const Transactions = (props) => {
   const [transactions, setTransactions] = useState("");
   const state = useSelector((state) => state);
-
+  const isFocused=useIsFocused();
   const getTransactions = async () => {
     const user = await AsyncStorageLib.getItem("user");
     await AsyncStorageLib.getItem(`${user}-transactions`).then(
@@ -82,7 +85,7 @@ try{
   );
   useEffect(async () => {
     await getTransactions();
-  }, []);
+  }, [isFocused]);
 
   return (
     <View
@@ -97,6 +100,7 @@ try{
             alwaysBounceVertical={true}
             style={{ marginBottom: hp(10) }}
           >
+  
             {transactions[0] ? (
               transactions.map((item) => {
                 const hash = item.hash;
@@ -150,7 +154,12 @@ try{
                     <View style={styles.flatView}>
                       <Image source={LeftContent} style={styles.img} />
                       <View style={{ marginHorizontal: wp(3) }}>
-                        <Text>{item.type}</Text>
+                        <View style={{flexDirection:"row",width:"70%",justifyContent:"space-between"}}>
+                          <Text>{item.type}</Text>
+                          {item.type==="Send"?Platform.OS==="android"?<View style={{transform:[{rotate:'46deg'}]}}><Icon name="arrow-up" size={23} color="red"/></View>:<View style={{transform:[{rotate:'46deg'}]}}><Icon name="arrow-up" size={23} color="red"/></View>:<></>}
+                          {item.type==="Recieved"?Platform.OS==="android"?<View style={{transform:[{rotate:'230deg'}],marginLeft:"91%"}}><Icon name="arrow-up" size={23} color="green"/></View>:<View style={{transform:[{rotate:'230deg'}],marginLeft:"91%"}}><Icon name="arrow-up" size={23} color="green"/></View>:<></>}
+                          {item.type==="Swap"? <Icon type={"fa"} name="exchange" size={23} color="green" />:<></>}                
+                        </View>
                         <Text style={styles.text} numberOfLines={1}>
                           {item.hash}
                         </Text>
@@ -160,16 +169,17 @@ try{
                 );
               })
             ) : (
-              <Text
-                style={{
-                  color: "black",
-                  textAlign: "center",
-                  fontSize: 16,
-                  marginTop: hp(4),
-                }}
-              >
-                No transactions yet!
-              </Text>
+              // <Text
+              //   style={{
+              //     color: "black",
+              //     textAlign: "center",
+              //     fontSize: 16,
+              //     marginTop: hp(4),
+              //   }}
+              // >
+              //   No transactions yet!
+              // </Text>
+              <ActivityIndicator color={"blue"} size={"large"}/>
             )}
           </ScrollView>
         </View>

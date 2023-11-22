@@ -24,7 +24,6 @@ export function alert(type,message){
     }
     if(type=='success')
     {
-
         Snackbar.show({
             text: message,
             duration: Snackbar.LENGTH_SHORT,
@@ -36,6 +35,23 @@ export function alert(type,message){
             text: message,
             duration: Snackbar.LENGTH_SHORT,
             backgroundColor:'red'
+        });
+    }
+    if(type=='error')
+    {
+        Snackbar.show({
+            text: message,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor:'red',
+            
+        });
+    }
+    if(type=='Success')
+    {
+        Snackbar.show({
+            text: message,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor:'green',
         });
     }
         

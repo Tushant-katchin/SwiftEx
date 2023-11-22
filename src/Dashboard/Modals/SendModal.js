@@ -367,7 +367,8 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      // duration: 1000,
+      duration:0,
     }).start();
   }, [fadeAnim]);
 
@@ -392,10 +393,12 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
           setModalVisible(false);
         }}
       >
-          <View style={{backgroundColor:'rgba(217, 217, 217, 0.4)',height:"100%",width:wp(100)}}>
+          <View style={{backgroundColor:'rgba(217, 217, 217, 0)',height:"100%",width:wp(100)}}>
         <View
           style={{
-            backgroundColor: "#131E3A",
+            // backgroundColor: "#131E3A",
+            backgroundColor:"#145DA0",
+            // backgroundColor:"#2D90ED",
             paddingTop: hp(1),
             paddingBottom: hp(12),
             marginTop: hp(20),

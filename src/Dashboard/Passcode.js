@@ -151,7 +151,7 @@ const Passcode = (props) => {
           }}
           source={darkBlue}
         /> 
-        {/* <Text style={style.welcomeText}> Hi,</Text> */}
+        <Text style={style.welcomeText}> Hi,</Text>
         <Text style={style.welcomeText}>
           {" "}
           {status == "verify"

@@ -177,7 +177,7 @@ const ImportMultiCoinWalletModal = ({
               onChangeText={(text) => setAccountName(text)}
               style={{ width: wp("78%") }}
               placeholder={accountName ? accountName : "Wallet 1"}
-              placeholderTextColor={"black"}
+              placeholderTextColor={"gray"}
             />
           </View>
 

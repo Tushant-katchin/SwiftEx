@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { heightPercentageToDP } from "react-native-responsive-screen";
 import { WebView } from "react-native-webview";
-
+import {alert} from "./src/Dashboard/reusables/Toasts"
 const YOUR_WYRE_API_KEY = "TEST-AK-N9EEWWLD-X2RDAMBG-3PRVGN9Q-RT8PA37X";
 const YOUR_WYRE_SECRET_KEY = "TEST-SK-LD2CJA4U-GQMQ3J4F-NLBVE8QP-FZL4WRRY";
 //TEST-AK-Q9FG94D6-GCHZ4EVP-UD7QURJM-ENDGATVZ
@@ -74,6 +74,7 @@ export default function Generate() {
         }}
         onLoadEnd={() => {
           setLoading(false);
+          alert("error", "Something went wrong...");
         }}
       />
     </View>

@@ -166,9 +166,9 @@ const NewWalletPrivateKey = ({
             style={style.croosIcon}
             onPress={onCrossPress}
           />
-          <Text style={style.backupText}>Backup Mneumonic Phrase</Text>
+          <Text style={style.backupText}>Backup Mnemonic Phrase</Text>
           <Text style={style.welcomeText1}>
-            Please select the menumonic in order to ensure the backup is
+            Please select the mnemonic in order to ensure the backup is
             correct.
           </Text>
 
@@ -186,13 +186,13 @@ const NewWalletPrivateKey = ({
           <View style={style.dotView}>
             <Icon name="dot-single" type={"entypo"} size={20} />
             <Text style={{ color: "black" }}>
-              Keep your mneumonic in a safe place isolated from network
+              Keep your mnemonic in a safe place isolated from network
             </Text>
           </View>
           <View style={style.dotView1}>
             <Icon name="dot-single" type={"entypo"} size={20} />
             <Text style={{ color: "black", width: "90%" }}>
-              Don't share and store mneumonic with a network, such as
+              Don't share and store mnemonic with a network, such as
               email,photo, social apps, and so on
             </Text>
           </View>
@@ -210,7 +210,7 @@ const NewWalletPrivateKey = ({
               }}
               style={{ width: wp("78%") }}
               placeholder={user ? user : "Enter your account name"}
-              placeholderTextColor={"black"}
+              placeholderTextColor={"gray"}
             />
           </View>
 

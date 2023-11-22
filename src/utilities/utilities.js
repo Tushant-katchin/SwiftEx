@@ -826,8 +826,8 @@ export async function approveSwap(tokenAdd,amount,PRIVATE_KEY,token){
 }
 
 export const SaveTransaction = async (type,hash,user,Token,walletType,chainType) => {
-
-  let userTransactions = []
+   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+type+hash+user+Token+walletType+chainType)
+  let userTransactions = [];
   
   await AsyncStorageLib.getItem(`${user}-transactions`)
    .then(async (transactions)=>{

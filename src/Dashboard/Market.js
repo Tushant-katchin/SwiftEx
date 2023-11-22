@@ -205,7 +205,7 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
-  Image,
+  Image,StatusBar
 } from "react-native";
 import { urls } from "./constants";
 import {
@@ -238,6 +238,7 @@ const Market = (props) => {
     try {
       await fetch(
         `http://${urls.testUrl}/user/getcryptodata`,
+        // `http://157.230.10.52:2000/user/getcryptodata`,
         {
           method: "GET",
           headers: {
@@ -296,12 +297,13 @@ const Market = (props) => {
 
   return (
     <View style={{ backgroundColor: "white" }}>
+    {Platform.OS === 'ios' &&  <StatusBar hidden={true} />}
       <View style={{ height: hp(100) }}>
         <View style={Styles.searchContainer}>
           <Icon name="search1" type="antDesign" size={hp(2.4)} />
           <TextInput
             placeholder="Search Crypto"
-            placeholderTextColor={"black"}
+            placeholderTextColor={"gray"}
             style={Styles.input}
             onChangeText={(input) => {
               setSearchItem(input)
@@ -319,7 +321,6 @@ const Market = (props) => {
             }}
           />
         </View>
-
         <View style={Styles.iconwithTextContainer1}>
           <Text style={{ color: "gray" }}>New DApps</Text>
           {/* <Icon
@@ -329,6 +330,7 @@ const Market = (props) => {
             color={"gray"}
           /> */}
         </View>
+        <View style={{height:hp(63)}}>
         <ScrollView
           alwaysBounceVertical={true}
           contentContainerStyle={{ marginBottom: hp(2) }}
@@ -337,28 +339,23 @@ const Market = (props) => {
           }
         >
           {data ? (
-            data.map((item) => {
+            data.map((item,index) => {
               const image = item.image;
               const color = item.price_change_24h > 0 ? "green" : "red";
               let data = item
 
               return (
+                  <View key={index}>
                 <ScrollView>
                   <TouchableOpacity
                     style={Styles.Container}
                     key={item.id}
                     onPress={() => {
                       props.navigation.navigate("CoinDetails", { data: data });
-
                     }}
                   >
                     <Image source={{ uri: image }} style={Styles.img} />
                     <View style={Styles.flatContainerText}>
-
-
-
-
-
                       <Text >{item.name}</Text>
                       <Text>{`$ ${item.current_price ? item.current_price.toFixed(2) : "0"
                         }`}</Text>
@@ -369,14 +366,16 @@ const Market = (props) => {
                     </View>
                   </TouchableOpacity>
                 </ScrollView>
+                  </View>
               );
             })
           ) : (
             <View>
-              <ActivityIndicator size="large" color="blue" />
+              <ActivityIndicator size="large" color="blue"/>
             </View>
           )}
         </ScrollView>
+        </View>
       </View>
     </View>
   );

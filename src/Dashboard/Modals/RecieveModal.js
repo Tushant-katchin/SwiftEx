@@ -57,8 +57,8 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
+      toValue: 0,
+      duration: 0,
     }).start();
   }, [fadeAnim]);
 
@@ -68,7 +68,8 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
     >
       <Modal
         animationIn="slideInUp"
-        animationOut="slideOutRight"
+        animationOut="slideOutDown"
+        // animationOut="slideOutRight"
         // animationInTiming={500}
         // animationOutTiming={650}
         isVisible={modalVisible}
@@ -95,7 +96,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
             }}
           />
 
-          <Text style={{ fontSize: 16, color: "#4CA6EA" }}>Receive</Text>
+          <Text style={{ fontSize: 19, color: "#ffffff" }}>Receive</Text>
           <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
@@ -235,12 +236,14 @@ const style = StyleSheet.create({
   img: { height: hp(5), width: wp(10), borderRadius: hp(3) },
   walletText: {
     marginTop: hp(4),
-    fontSize: 14,
+    fontSize: 19,
     color: "white",
   },
   Body: {
     display: "flex",
-    backgroundColor: "#131E3A",
+    // backgroundColor: "#131E3A",
+    // backgroundColor:"#2D90ED",
+    backgroundColor:"#145DA0",
     // paddingTop:hp(2),
     paddingBottom: hp(12),
     width: wp(95),

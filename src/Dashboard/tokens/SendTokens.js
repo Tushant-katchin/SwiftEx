@@ -1,3 +1,4 @@
+import { SaveTransaction } from "../../utilities/utilities";
 import React, { useRef, useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -9,6 +10,9 @@ import {
   ScrollView,
   TextInput,
   Pressable,
+  Modal,
+  Platform,
+  Image
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -18,7 +22,7 @@ import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   getBalance,
   getEthBalance,
@@ -35,6 +39,7 @@ import { alert } from "../reusables/Toasts";
 import Icon from "../../icon";
 import { WalletHeader } from "../header";
 import { NavigationActions } from "react-navigation";
+import darkBlue from "../../../assets/Dark-Blue.png"
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -51,7 +56,8 @@ const SendTokens = (props) => {
   const [message, setMessage] = useState("");
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
-
+  const isFocused=useIsFocused();
+  const [show,setshow]=useState(false);
   const navigation = useNavigation();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -193,6 +199,7 @@ const SendTokens = (props) => {
   };
 
   useEffect(async () => {
+    setshow(true);
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -208,7 +215,8 @@ const SendTokens = (props) => {
     } catch (e) {
       console.log(e);
     }
-  }, []);
+    setshow(false);
+  }, [isFocused]);
 
   useEffect(() => {
     let inputValidation;
@@ -271,17 +279,36 @@ const SendTokens = (props) => {
       }
     }
   }, [amount]);
-
+  const [isModalVisible, setModalVisible] = useState(false);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+  async function a()
+  {
+    
+  }
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-<View style={{backgroundColor:"#4CA6EA"}}>
-
-<Icon type={'antDesign'} name='left' size={24} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5)}}/>
-
-</View>
-
+{Platform.OS==="ios"?<View style={{backgroundColor:"#4CA6EA",flexDirection:"row",height:"7%"}}>
+<Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
+<Text style={{color:"white",alignSelf:"center",marginLeft:"19%",marginTop:'9%',fontSize:19}}>Transaction Details</Text>
+<TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
+<Image source={darkBlue} style={{height: hp("9"),
+    width: wp("12"),
+    marginLeft: wp(13)}}/>
+</TouchableOpacity>
+    </View>:
+<View style={{backgroundColor:"#4CA6EA",flexDirection:"row"}}>
+<Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
+<Text style={{color:"white",alignSelf:"center",marginLeft:"21.9%",fontWeight:'bold',fontSize:17}}>Transaction Details</Text>
+<TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
+<Image source={darkBlue} style={{height: hp("9"),
+    width: wp("12"),
+    marginLeft: wp(17)}}/>
+</TouchableOpacity>
+</View>}
       {/* <WalletHeader title={props.route.params.token}/> */}
       <View style={{ backgroundColor: "white", height: hp(100) }}>
         <View style={style.inputView}>
@@ -299,18 +326,28 @@ const SendTokens = (props) => {
             placeholder="Recipient Address"
             style={style.input}
           ></TextInput>
-          <Icon name="scan" type={"ionicon"} size={20} color={"blue"} />
+          <TouchableOpacity onPress={()=>{
+            toggleModal()
+          }}>
+          <Icon name="scan" type={"ionicon"} size={20} color={"blue"}/>
+          </TouchableOpacity>
           <TouchableOpacity onPress={()=>{
             Paste(setAddress)
           }}>
           <Text style={style.pasteText}>PASTE</Text>
           </TouchableOpacity>
         </View>
+        <View style={{flexDirection:"row",width:wp(90)}}>
+        <Text style={style.balance_heading}>Available balance :-{" "}</Text>
+        <View style={{width:wp(13)}}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{width:wp(11)}}>
         <Text style={style.balance}>
-          Available balance :-{" "}
-          {balance ? balance : <Text style={{ color: "#C1BDBD" }}>0</Text>}
+          {balance ? balance : show===false?<Text style={{ color: "#C1BDBD" }}>0</Text>:<></>}
         </Text>
-
+              </ScrollView>
+        </View>
+        {show===true?<ActivityIndicator color={"green"} style={{top:hp(1)}}/>:<></>}
+        </View>
         <View style={style.inputView}>
           <TextInput
             value={amount}
@@ -353,74 +390,88 @@ const SendTokens = (props) => {
             disabled={disable}
             color="blue"
             title="Send"
-  //           onPress={async () => {
-  //             console.log(walletType);
-  //             let privateKey;
-  //             const myAddress = await state.wallet.address;
-  //             const token = props.route.params.token;
-  //             const wallet = await AsyncStorageLib.getItem("Wallet");
-  //             console.log(wallet);
-  //             if(token==='Multi-coin-Xrp')
-  //             {
-  //               const xrpAddress = await state.wallet.xrp.address
-  //               if(address==xrpAddress)
-  //               {
-  //                 return alert('error','address cannot be same as your address')
+            onPress={async () => {
+              console.log(walletType);
+              let privateKey;
+              const myAddress = await state.wallet.address;
+              const token = props.route.params.token;
+              const wallet = await AsyncStorageLib.getItem("Wallet");
+              console.log(wallet);
+              if(token==='Multi-coin-Xrp')
+              {
+                const xrpAddress = await state.wallet.xrp.address
+                if(address==xrpAddress)
+                {
+                  return alert('error','address cannot be same as your address')
 
-  //               }
-  //             }
-  //             if(address== myAddress)
-  //             {
-  //               return alert('error','address cannot be same as your address')
-  //             }
-  //             if (amount && balance && Number(amount) > Number(balance)) {
-  //               setLoading(false);
-  //               console.log(amount, balance);
-  //               return alert(
-  //                 "error",
-  //                 "You don't have enough balance to do this transaction "
-  //               );
-  //             }
+                }
+              }
+              if(address== myAddress)
+              {
+                return alert('error','address cannot be same as your address')
+              }
+              if (amount && balance && Number(amount) > Number(balance)) {
+                setLoading(false);
+                console.log(amount, balance);
+                return alert(
+                  "error",
+                  "You don't have enough balance to do this transaction "
+                );
+              }
 
-  //             if (token === "Multi-coin-Xrp") {
-  //               privateKey = (await state.wallet.xrp.privateKey)
-  //                 ? await state.wallet.xrp.privateKey
-  //                 : JSON.parse(wallet).xrp.privateKey;
-  //             } else {
-  //               privateKey = (await state.wallet.privateKey)
-  //                 ? await state.wallet.privateKey
-  //                 : JSON.parse(wallet).privateKey;
-  //             }
-  //             console.log(privateKey);
-  //             /* if(balance<amount){
-  //   console.log(balance,amount)
-  //   return alert('You dont have enough balance to do this transaction')
-  // }*/
+              if (token === "Multi-coin-Xrp") {
+                privateKey = (await state.wallet.xrp.privateKey)
+                  ? await state.wallet.xrp.privateKey
+                  : JSON.parse(wallet).xrp.privateKey;
+              } else {
+                privateKey = (await state.wallet.privateKey)
+                  ? await state.wallet.privateKey
+                  : JSON.parse(wallet).privateKey;
+              }
+              console.log(privateKey);
+              /* if(balance<amount){
+    console.log(balance,amount)
+    return alert('You dont have enough balance to do this transaction')
+  }*/
 
-  //             if (
-  //               walletType &&
-  //               token &&
-  //               myAddress &&
-  //               privateKey &&
-  //               amount &&
-  //               address
-  //             ) {
-  //               await SendCrypto(
-  //                 address,
-  //                 amount,
-  //                 privateKey,
-  //                 balance,
-  //                 setLoading,
-  //                 walletType,
-  //                 setDisable,
-  //                 myAddress,
-  //                 token,
-  //                 navigation
-  //               );
-  //             }
-  //           }}
+              if (
+                walletType &&
+                token &&
+                myAddress &&
+                privateKey &&
+                amount &&
+                address
+              ) {
+                await SendCrypto(
+                  address,
+                  amount,
+                  privateKey,
+                  balance,
+                  setLoading,
+                  walletType,
+                  setDisable,
+                  myAddress,
+                  token,
+                  navigation
+                );
+              }
+            }}
           ></Button>
         </View>
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ backgroundColor: '#145DA0', padding: 20, borderRadius: 10,width:"90%",height:"50%" }}>
+            <Text style={{color:"white",fontWeight:"700",alignSelf:"center",fontSize:19}} onPress={()=>{
+              toggleModal();
+            }}>Scan QR.</Text>
+          </View>
+        </View>
+      </Modal>
       </View>
     </Animated.View>
   );
@@ -484,7 +535,8 @@ const style = StyleSheet.create({
     borderRadius: hp(1),
   },
   pasteText: { color: "blue", marginHorizontal: wp(3) },
-  balance: { marginLeft: wp(5), marginTop: hp(2) },
+  balance: { marginLeft: wp(1), marginTop: hp(2) },
+  balance_heading: { marginLeft: wp(5), marginTop: hp(2) },
   input: {
     width: wp(70),
     alignSelf: "center",
@@ -493,122 +545,3 @@ const style = StyleSheet.create({
   msgText: { color: "red", textAlign: "center" },
   btnView: { width: wp(30), alignSelf: "center", marginTop: hp(8) },
 });
-
-/* <View style={style.Body}>
-<Text style={{ marginLeft: wp(5), marginTop: hp(5) }}>
-  {" "}
-  Reciepent address{" "}
-</Text>
-<TextInput
-  style={style.textInput2}
-  onChangeText={(input) => {
-    if (input && address) {
-      setDisable(false);
-    } else {
-      setDisable(true);
-    }
-    console.log(input);
-    setAddress(input);
-  }}
-/>
-<Text style={{ marginLeft: wp(5), marginTop: hp(1) }}>
-  Available balance {balance ? balance : 0}
-</Text>
-<Text style={{ marginLeft: wp(5), marginTop: hp(10) }}> Amount </Text>
-<TextInput
-  style={style.textInput2}
-  value={amount}
-  keyboardType="numeric"
-  onChangeText={(input) => {
-    if (amount && address) {
-      setDisable(false);
-    } else {
-      setDisable(true);
-    }
-    console.log(input);
-    setAmount(input);
-  }}
-/>
-<View style={{ width: wp(20), margin: 10 }}>
-  <Button
-    color={"blue"}
-    title={"max"}
-    onPress={() => {
-      setAmount(balance);
-      console.log("pressed", amount, balance);
-    }}
-  />
-</View>
-{Loading ? (
-  <View style={{ marginBottom: hp("-4") }}>
-    <ActivityIndicator size="small" color="blue" />
-  </View>
-) : (
-  <Text> </Text>
-)}
-<View
-  style={{
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-  }}
->
-  <Text style={{ color: "red" }}>{message}</Text>
-</View>
-<View style={{ width: wp(30), marginTop: hp(10), marginLeft: wp(33) }}>
-  <Button
-    disabled={disable}
-    color="blue"
-    title="Send"
-    onPress={async () => {
-      console.log(walletType);
-      let privateKey;
-      const myAddress = await state.wallet.address;
-      const token = props.route.params.token;
-      const wallet = await AsyncStorageLib.getItem("Wallet");
-      console.log(wallet);
-      /*  if(amount&&balance&&amount>balance){
-        setLoading(false)
-        console.log(amount,balance)
-        return alert("You don't have enough balance to do this transaction ")
-      } */
-
-//   if (token === "Multi-coin-Xrp") {
-//     privateKey = (await state.wallet.xrp.privateKey)
-//       ? await state.wallet.xrp.privateKey
-//       : JSON.parse(wallet).xrp.privateKey;
-//   } else {
-//     privateKey = (await state.wallet.privateKey)
-//       ? await state.wallet.privateKey
-//       : JSON.parse(wallet).privateKey;
-//   }
-//   console.log(privateKey);
-//   /* if(balance<amount){
-//     console.log(balance,amount)
-//     return alert('You dont have enough balance to do this transaction')
-//   }*/
-
-//   if (
-//     walletType &&
-//     token &&
-//     myAddress &&
-//     privateKey &&
-//     amount &&
-//     address
-//   ) {
-//     await SendCrypto(
-//       address,
-//       amount,
-//       privateKey,
-//       balance,
-//       setLoading,
-//       walletType,
-//       setDisable,
-//       myAddress,
-//       token,
-//       navigation
-//     );
-//   }
-// }}
-// ></Button>
-// </View>

@@ -188,21 +188,21 @@ function InvestmentChart(setCurrentWallet) {
 
   return (
       <ScrollView 
-      // refreshControl={
-      //   <RefreshControl
-      //     refreshing={pull}
-      //     onRefresh={() => {
-      //       setPull(true);
-      //       getTokenBalance();
-      //     }}
-      //   />
-      // }
+      refreshControl={
+        <RefreshControl
+          refreshing={pull}
+          onRefresh={() => {
+            setPull(true);
+            getTokenBalance();
+          }}
+        />
+      }
   
-      nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:hp(55)}}>
+      nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:hp(55)}} sp>
         <TouchableOpacity  style={styles.refresh} onPress={()=>{
           getAllBalances(state,dispatch)
         }}>
-            <Text style={{color:"white",fontSize:12}}>Refresh</Text>
+            <Text style={{color:"white",fontSize:14}}>Refresh</Text>
           </TouchableOpacity>
         <View style={styles.flatlistContainer}>
 
@@ -320,7 +320,7 @@ export default InvestmentChart;
 const styles = StyleSheet.create({
   flatlistContainer: {
     flexDirection: "row",
-    marginVertical: hp(5),
+    marginVertical: hp(3),
     width: "80%",
     justifyContent: "space-between",
     alignItems: "center",
@@ -345,5 +345,5 @@ const styles = StyleSheet.create({
   priceDown: {
     color: "rgb(204,51,51)",
   },
-  refresh:{backgroundColor: "#4CA6EA",  width:wp(20),paddingVertical:hp(0.6),marginTop:hp(4),marginLeft:wp(5),alignItems:"center",borderRadius:hp(1)}
+  refresh:{backgroundColor: "#4CA6EA",  width:wp(20),paddingVertical:hp(1),marginTop:hp(1.9),marginLeft:wp(5),alignItems:"center",borderRadius:hp(1)}
 });

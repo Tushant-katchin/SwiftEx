@@ -11,6 +11,7 @@ import {
   Alert,
   ScrollView,
   Image,
+  SafeAreaView,
 } from "react-native";
 import * as shape from "d3-shape";
 import { useDispatch, useSelector } from "react-redux";
@@ -250,9 +251,10 @@ export const CoinDetails = (props) => {
 
 
   return (
-    <ScrollView
-      contentContainerStyle={{ backgroundColor: "white", paddingBottom: 50 }}
-    >
+    <SafeAreaView>
+    {/* // <ScrollView
+    //   contentContainerStyle={{ backgroundColor: "white"}}
+    // > */}
       {/* <View style={{flexDirection:"row",alignItems:"center",marginHorizontal:wp(7),marginTop:hp(2)}}>
   <Image source={{uri: image}} style={{height:hp(3),width:wp(6)}}/>
   <Avatar.Image {...props} source={{ uri: image }} />
@@ -324,9 +326,6 @@ export const CoinDetails = (props) => {
           <Text style={{ color: pressed == "3" ? "#fff" : "grey" }}>3d</Text>
         </TouchableOpacity>
       </View>
-
-
-
       <YAxis
         data={Data ? Data : data}
         style={{
@@ -337,22 +336,18 @@ export const CoinDetails = (props) => {
           marginTop: hp(9),
           position: "absolute",
           zIndex: 10,
-          marginLeft:wp(3)
+          marginLeft:wp(3),
         }}
         contentInset={{ top: 20 }}
-
-
         // contentInset={contentInset}
         svg={{
           fill: "gray",
           fontSize: 12,
           fontWeight: "500"
         }}
-
         numberOfTicks={8}
         formatLabel={(value) => `${value}`}
       />
-
 
       <XAxis
         data={Data ? Data : data}
@@ -395,12 +390,9 @@ export const CoinDetails = (props) => {
       >
         <Grid />
       </AreaChart> */}
-
-
-
-      <View style={{ marginTop: hp(9) }}>
+    <View style={{ marginTop: hp(9) }}>
         <View style={styles.iconText}>
-          <Text> Last 24h:</Text>
+          <Text> Last 24h :</Text>
           <View style={styles.arrowText}>
             <Text style={styles.heading}>
               {props?.route?.params?.data?.price_change_percentage_24h}%
@@ -409,7 +401,7 @@ export const CoinDetails = (props) => {
           </View>
         </View>
         <View style={styles.iconText}>
-          <Text>USD</Text>
+          <Text>USD :</Text>
           <View style={styles.arrowText}>
             <Text style={styles.heading}>$ {props?.route?.params?.data?.current_price}</Text>
             <Icon name="arrow-up-right" type={"feather"} size={20} />
@@ -441,7 +433,9 @@ export const CoinDetails = (props) => {
           <Text style={styles.heading}>${props?.route?.params?.data?.ath}</Text>
         </View>
       </View>
-    </ScrollView>
+
+  {/* </ScrollView> */}
+  </SafeAreaView>
   );
 };
 

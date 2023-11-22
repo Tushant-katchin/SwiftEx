@@ -74,7 +74,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `${state.wallet.address}`,
+        message: `${state.wallet.address}`,//TO-DO
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -366,13 +366,13 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   }, []);
 
   useEffect(async () => {
-    //await checkPendingTransactions(WalletAddress)
+    // await checkPendingTransactions(WalletAddress)
   }, []);
   useFocusEffect(
     React.useCallback(() => {
       try {
         getTransactions().then(async (res) => {
-          //console.log(res);
+          consolse.log(res);
           const walletType = await AsyncStorageLib.getItem("walletType");
           console.log(JSON.parse(walletType));
           if (JSON.parse(walletType) == "BSC") {
@@ -385,7 +385,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             await getIncomingXrpTx(res ? res : [], "Xrp");
           } else if (JSON.parse(walletType) === "Multi-coin") {
           } else {
-            //alert(`Saving receive tx for ${walletType} is  not supported yet`)
+            // alert(`Saving receive tx for ${walletType} is  not supported yet`)
             console.log(JSON.parse(walletType));
           }
         });
@@ -430,14 +430,16 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             alignItems: "flex-start",
             padding: 15,
             width: "100%",
-            backgroundColor: "#4CA6EA",
+            // backgroundColor: "#4CA6EA",
           }}
         >
           <Icon
-            name={"left"}
+            // name={"left"}
+            name={"close"}
             type={"antDesign"}
-            size={20}
-            color={"#fff"}
+            size={30}
+            // color={"#fff"}
+            color={"black"}
             onPress={() => {
               setModalVisible(false);
             }}
@@ -680,7 +682,8 @@ const style = StyleSheet.create({
     marginTop: hp(3),
     width: wp(54),
     alignSelf: "center",
-    color: "gray",
+    color: "black",
+    fontWeight:"600"
   },
   btnView: {
     flexDirection: "row",

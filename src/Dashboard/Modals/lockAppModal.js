@@ -212,7 +212,7 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     backgroundColor: "#131E3A",
-    height: hp(100),
+    height: hp(109),
     width: wp(100),
     alignItems: "center",
     textAlign: "center",

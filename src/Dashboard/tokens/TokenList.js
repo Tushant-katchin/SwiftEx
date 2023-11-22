@@ -263,7 +263,7 @@ const TokenList = ({
           </View>
         ) : (
           <FlatList
-            style={{ marginTop: hp(9) }}
+            style={{ marginTop: hp(9),marginBottom:hp(10) }}
             contentContainerStyle={{ flexGrow: 1 }}
             data={Data}
             renderItem={({ item }) => {

@@ -265,7 +265,7 @@ const ImportPolygonWalletModal = ({
               }}
               style={{ width: wp("78%") }}
               placeholder={accountName ? accountName : "Wallet 1"}
-              placeholderTextColor={"black"}
+              placeholderTextColor={"gray"}
             />
           </View>
 
@@ -329,7 +329,7 @@ const ImportPolygonWalletModal = ({
                 onChangeText={(text) => {
                   setJsonKey(text);
                 }}
-                placeholderTextColor="black"
+                placeholderTextColor="gray"
                 autoCapitalize={"none"}
                 placeholder="JSON password"
               />
