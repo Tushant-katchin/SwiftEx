@@ -169,17 +169,16 @@ try{
                 );
               })
             ) : (
-              // <Text
-              //   style={{
-              //     color: "black",
-              //     textAlign: "center",
-              //     fontSize: 16,
-              //     marginTop: hp(4),
-              //   }}
-              // >
-              //   No transactions yet!
-              // </Text>
-              <ActivityIndicator color={"blue"} size={"large"}/>
+              <Text
+                style={{
+                  color: "black",
+                  textAlign: "center",
+                  fontSize: 19,
+                  marginTop: hp(40),
+                }}
+              >
+                No transactions yet!
+              </Text>
             )}
           </ScrollView>
         </View>

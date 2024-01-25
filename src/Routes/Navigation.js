@@ -61,6 +61,7 @@ import RecieveAddress from "../Dashboard/Modals/ReceiveAddress";
 import ImportMultiCoinWalletModal from "../Dashboard/Modals/importMultiCoinWalletModal";
 import SelectWallet from "../Dashboard/Modals/SelectWallet";
 import TokenList from "../Dashboard/tokens/TokenList";
+import Payout from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/payout";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -487,6 +488,19 @@ const AuthStack = () => (
       <Stack.Screen
         name="appLock"
         component={LockApp}
+        options={{
+          headerShown: false,
+          headerStyle: { backgroundColor: "#000C66" },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+
+<Stack.Screen
+        name="payout"
+        component={Payout}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: "#000C66" },

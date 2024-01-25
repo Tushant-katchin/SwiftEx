@@ -106,7 +106,7 @@ const LockApp = (props) => {
         navigation.goBack();
       } else {
         
-        alert("error","invalid pin");
+        alert("error","Incorrect pin try again.");
         pinView.current.clearAll();
 
       }
@@ -182,7 +182,7 @@ const LockApp = (props) => {
                   console.log(Pin);
                   navigation.goBack();
                 } else {
-                  alert("error","invalid pin");
+                  alert("error","Incorrect pin try again.");
                 }
               }
             }}

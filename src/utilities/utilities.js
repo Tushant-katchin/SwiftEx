@@ -863,6 +863,86 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
    })    
   };
 
+  export const SavePayout = async (senderId, receiverId, date, time, g_amount, g_ASSET, status) => {
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + senderId + receiverId + date + time);
+    let userTransactions = [];
+  
+    try {
+        const transactions = await AsyncStorageLib.getItem(`${senderId}-transactions`);
+        console.log(JSON.parse(transactions));
+  
+        const data = JSON.parse(transactions);
+  
+        if (data) {
+            data.forEach((item) => {
+                userTransactions.push(item);
+            });
+  
+            console.log("Existing transactions:", userTransactions);
+  
+            let txBody = {
+                senderId,
+                receiverId,
+                date,
+                time,
+                g_amount,
+                g_ASSET,
+                status,
+            };
+  
+            userTransactions.push(txBody);
+  
+            await AsyncStorageLib.setItem(`${senderId}-transactions`, JSON.stringify(userTransactions));
+        } else {
+            let transactions = [];
+            let txBody = {
+                senderId,
+                receiverId,
+                date,
+                time,
+                g_amount,
+                g_ASSET,
+                status,
+            };
+            transactions.push(txBody);
+  
+            await AsyncStorageLib.setItem(`${senderId}-transactions`, JSON.stringify(transactions));
+  
+            userTransactions = transactions;
+        }
+  
+        console.log("Updated userTransactions:", userTransactions);
+  
+        return userTransactions;
+    } catch (error) {
+        console.error("Error saving payout:", error);
+        throw error;
+    }
+};
+
+export const getAllDataAndShow = async (senderId) => {
+  try {
+      const transactions = await AsyncStorageLib.getItem(`${senderId}-transactions`);
+      const data = JSON.parse(transactions);
+
+      if (data) {
+          const transactionList = data.map((item, index) => {
+              return {
+                  id: index + 1,
+                  ...item,
+              };
+          });
+          return transactionList;
+      } else {
+          console.log("No transactions found for the specified senderId.");
+          return [];
+      }
+  } catch (error) {
+      console.error("Error retrieving data:", error);
+      throw error;
+  }
+};
+
   export const getEthPrice = async ()=>{
     const response =await fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
     .then((res)=>res.json())
@@ -870,6 +950,16 @@ export const SaveTransaction = async (type,hash,user,Token,walletType,chainType)
       //console.log("Eth Current price",resJson)
       return resJson
     })
+    return response
+  }
+
+  export const getXLMPrice = async ()=>{
+    const response =await fetch('https://min-api.cryptocompare.com/data/price?fsym=XLM&tsyms=USD')
+    .then((res)=>res.json())
+    .then((resJson)=>{
+      return resJson
+    })
+    console.log(",.,.,.,.,",response)
     return response
   }
 

@@ -44,116 +44,62 @@ import { SaveTransaction } from "../utilities/utilities";
 import { alert } from "./reusables/Toasts";
 import { resolve } from "bluebird";
 import { reject } from "lodash";
-const addressToMonitor="0x05cBb7CbEEE7C8f1B2DBf0Bb4bb820ac918D7c0e"; //TO-DO  
-
-const providerUrl = 'wss://soft-quiet-fog.bsc-testnet.quiknode.pro/cec30e0e493d7b47c30b264b9bcc1b8b93e399f6/';
-const addressToWatch = '0x05cBb7CbEEE7C8f1B2DBf0Bb4bb820ac918D7c0e';
-const web3BSC = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
-
-console.log("Watching for transactions to:", addressToWatch);
-
-web3BSC.eth.subscribe('pendingTransactions', (error, result) => {
-  if (error) {
-    console.error("Subscription error:", error);
-    return;
-  }
-
-  web3BSC.eth.getTransaction(result).then((tx) => {
-    console.log("Received transaction:", tx);
-
-    if (tx && tx.to && tx.to.toLowerCase() === addressToWatch.toLowerCase()) {
-      console.log('Transaction to your address:', tx);
+import store from "././../../src/components/Redux/Store"
+import PushNotification from 'react-native-push-notification';
+ 
+  const handleLocalNotification = (msg) => {
+    PushNotification.localNotification({
+      channelId: 'app',
+      title: 'SwiftEx Notification',
+      message: msg,
+      playSound: true,
+      soundName: 'default',
+      vibration: 300,
+    });
+  };
+function listion(addressToMonitor) {
+// const addressToMonitor= store.getState().wallet.address;
+  console.log('>>>>>>',addressToMonitor)
+  const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-goerli.g.alchemy.com/v2/favrOyEWGeWQfG-rjh2KkqhJyUriu72j'))
+  web3.eth.subscribe('newBlockHeaders', (error, blockHeader) => {
+    if (!error) {
+      try {
+        web3.eth.getBlock(blockHeader.number, true)
+          .then((block) => {
+            block.transactions.forEach((transaction) => {
+              setDelay(200)
+              if (transaction.to === addressToMonitor) {
+                console.log('Transaction to the monitored address detected:', transaction.from);
+                alert("Success", "Eth Transactions Recieved Check history.");
+                SaveTransaction("Recieved", transaction.hash, "App", "null", "Multi-coin", "Eth");
+                handleLocalNotification("ETH Transactions Recieved.");
+              }
+            });
+          })
+          .catch((err) => {
+            console.error('Error fetching block:', err);
+          });
+      } catch (e) {
+        console.log(e)
+      }
     } else {
-      console.log("Transaction not to the watched address:", tx.to);
+      console.error('Error:', error);
     }
-  }).catch((txError) => {
-    console.error("Error fetching transaction:", txError);
-  });
-}).on('error', (subError) => {
-  console.error("Subscription error:", subError);
-});
+  })
+    .on('error', (err) => {
+      console.error('Error:', err);
+    });
 
+  async function setDelay(time) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({});
+      }, time);
+    });
 
-
-
-
-
-
-// const web3 = new Web3("wss://soft-quiet-fog.bsc-testnet.quiknode.pro/cec30e0e493d7b47c30b264b9bcc1b8b93e399f6/");
-// const addressToWatch="0x05cBb7CbEEE7C8f1B2DBf0Bb4bb820ac918D7c0e"; //TO-DO  
-// const web3BSC = new Web3(new Web3.providers.WebsocketProvider('wss://soft-quiet-fog.bsc-testnet.quiknode.pro/cec30e0e493d7b47c30b264b9bcc1b8b93e399f6/'))
-// console.log(">>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<");
-//  web3BSC.eth.subscribe('pendingTransactions', (error, result) => {
-//   if (!error) {
-//     web3BSC.eth.getTransaction(result).then((tx) => {
-//       if (tx.to===addressToWatch) {
-//         console.log('Transaction to your address:', tx);
-//       }
-//       else
-//       {
-//         console.log(">>>>>>>>>>>>>>>>>>>>>>>>><<<<<<",tx.to)
-//       }
-//     });
-//   }
-// })
-// .on('error', console.error);
-
-// To stop watching for transactions, you can unsubscribe
-// subscription.unsubscribe((error, success) => {
-//   if (success) console.log('Unsubscribed successfully!');
-// });
-
-
-
-// const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-goerli.g.alchemy.com/v2/favrOyEWGeWQfG-rjh2KkqhJyUriu72j'))
-// web3.eth.subscribe('newBlockHeaders', (error, blockHeader) => {
-//   if (!error) {
-//     try{
-//     web3.eth.getBlock(blockHeader.number, true)
-//       .then((block) => {
-//         block.transactions.forEach((transaction) => {
-//           setDelay(200)
-//           if(transaction.to===addressToMonitor)
-//           {
-//             console.log('Transaction to the monitored address detected:', transaction.from);
-//             alert("Success","Eth Transactions Recieved Check history.");
-//             SaveTransaction("Recieved",transaction.hash,"App","null","Multi-coin","Eth");
-//             // setTimeout(()=>{
-//             // },6000);
-//           }
-//         });
-//       })
-//       .catch((err) => {
-//         console.error('Error fetching block:', err);
-//       });
-//   }catch(e)
-//   {
-//     console.log(e)
-//   }
-// } else {
-//     console.error('Error:', error);
-//   }
-// })
-// .on('error', (err) => {
-//   console.error('Error:', err);
-// });
-
-// async function setDelay(time){
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       resolve({});
-//     }, time);
-//   });
-
-// }
-
-////////////////for save Address in local storage.
-// const data=()=>{
-//   const WalletAddress = useSelector((state) =>
-//      state.wallet.address
-// );
-//  AsyncStorage.setItem("ADD",WalletAddress);
-// }
+  }  
+}
+// listion()
 
 const Home2 = ({ navigation }) => {
   const route = useRoute();
@@ -171,8 +117,7 @@ const Home2 = ({ navigation }) => {
   ]);
   const Navigation = useNavigation();
   const { getToken, requestUserPermission } = useFirebaseCloudMessaging();
-  const isFocused=useIsFocused();
-
+  const isFocused = useIsFocused();
   const getAllBalance = async () => {
     try {
       const wallet = await AsyncStorageLib.getItem("wallet");
@@ -307,7 +252,7 @@ const Home2 = ({ navigation }) => {
     console.log(user);
     let walletType = await AsyncStorageLib.getItem("walletType");
     let wallet = await AsyncStorageLib.getItem(`Wallet`).then((wallet) => {
-      console.log("My Wallet",JSON.parse(wallet));
+      console.log("My Wallet", JSON.parse(wallet));
       if (JSON.parse(wallet).xrp) {
         dispatch(
           setCurrentWallet(
@@ -344,16 +289,21 @@ const Home2 = ({ navigation }) => {
     return wallet;
   };
 
-    // setTimeout(()=>{
-    //   getAllBalance().catch((e) => {
-    //     console.log(e);
-    //   });
-    // },10000)
-  useEffect(()=>{
+  // setTimeout(()=>{
+  //   getAllBalance().catch((e) => {
+  //     console.log(e);
+  //   });
+  // },10000)
+  useEffect(() => {
     getAllBalance().catch((e) => {
-          console.log(e);
-        });
-  },[])
+      console.log(e);
+    });
+     setTimeout(()=>{
+      const addressToMonitor= store.getState().wallet.address;
+      console.log('><<<<',addressToMonitor)
+     listion(addressToMonitor)
+     },6000)
+  }, [])
 
   const renderTabBar = (props) => (
     <TabBar
@@ -363,12 +313,12 @@ const Home2 = ({ navigation }) => {
       activeColor={"#4CA6EA"}
       inactiveColor={"black"}
       pressColor={"black"}
-      
+
     />
   );
 
   const FirstRoute = () => (
-    <ScrollView style={{ flex: 1}}>
+    <ScrollView style={{ flex: 1 }}>
       <InvestmentChart />
     </ScrollView>
   );
@@ -412,7 +362,7 @@ const Home2 = ({ navigation }) => {
       await SetCurrentWallet().catch((e) => {
         console.log(e);
       });
-     
+
     } catch (e) {
       console.log(e);
     }
@@ -430,7 +380,7 @@ const Home2 = ({ navigation }) => {
         /* if(routeName.name!=='exchangeLogin'){
             
           }*/
-          setVisible(true)
+        setVisible(true)
       }
     });
   }, []);
@@ -458,9 +408,9 @@ const Home2 = ({ navigation }) => {
     requestUserPermission();
     getToken();
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     console.log('wallet changed')
-  },[state.wallet.name])
+  }, [state.wallet.name])
 
   /*useFocusEffect(
     React.useCallback(() => {
@@ -484,10 +434,10 @@ const Home2 = ({ navigation }) => {
           renderTabBar={renderTabBar}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          initialLayout={{width: Dimensions.get('window').width}}
-          // style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
+          initialLayout={{ width: Dimensions.get('window').width }}
+        // style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
         />
-        <LockAppModal pinViewVisible={visible} setPinViewVisible={setVisible}/>
+        <LockAppModal pinViewVisible={visible} setPinViewVisible={setVisible} />
       </View>
     </View>
   );
@@ -578,3 +528,4 @@ const Styles = StyleSheet.create({
   
 
 */
+

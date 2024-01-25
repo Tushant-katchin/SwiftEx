@@ -86,7 +86,7 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
         setPinViewVisible(false)
       } else {
         pinView.current.clearAll();
-        alert("error","invalid pin");
+        alert("error","Incorrect pin try again.");
       }
 
     } else {
@@ -175,7 +175,7 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
                   setPinViewVisible(false)
                 } else {
                   pinView.current.clearAll();
-                  alert("error","invalid pin");
+                  alert("error","Incorrect pin try again.");
 
                 }
               }

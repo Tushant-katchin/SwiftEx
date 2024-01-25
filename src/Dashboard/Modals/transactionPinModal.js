@@ -358,7 +358,7 @@ const TransactionPinModal = ({
                     setLoader(false);
                     setDisable(false);
                     pinView.current.clearAll();
-                    alert("error", "invalid pin.please try again!");
+                    alert("error", "Incorrect pin try again.");
                   }
                 }
               }}

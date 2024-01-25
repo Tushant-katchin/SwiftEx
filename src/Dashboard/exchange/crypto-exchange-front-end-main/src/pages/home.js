@@ -33,6 +33,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 import { alert } from "../../../../reusables/Toasts";
+import { LineChart } from "react-native-chart-kit";
+// import StellarSdk from '@stellar/stellar-sdk';
 
 export const HomeView = ({ setPressed }) => {
   const state = useSelector((state) => state);
@@ -47,6 +49,16 @@ export const HomeView = ({ setPressed }) => {
     email: "xyz@gmail.com",
     phoneNumber: "93400xxxx",
     isEmailVerified: false,
+  });
+  const base_asset_code='XETH';
+  const counter_asset_code='XUSD';
+  const [chartData, setChartData] = useState({
+    datasets: [
+      {
+        data: [0],
+        color: () => 'green',
+      },
+    ],
   });
   const [offers, setOffers] = useState();
   const [walletType, setWalletType] = useState(null);
@@ -161,13 +173,54 @@ export const HomeView = ({ setPressed }) => {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      const response =await fetch('https://horizon-testnet.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code='+base_asset_code+'&base_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&counter_asset_type=credit_alphanum4&counter_asset_code='+counter_asset_code+'&counter_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&resolution=60000&offset=0&limit=6&order=desc')
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const apiResponse = await response.json();
+      const records = apiResponse._embedded.records;
+      // console.log(records);
+      const parsedData = {
+        labels : records.map((record) => {
+          const date = new Date(parseFloat(record.timestamp));
+          const hours = date.getHours().toString().padStart(2, '0');
+          const minutes = date.getMinutes().toString().padStart(2, '0');
+          return `${hours}:${minutes}`;
+        }),
+        
+        datasets: [
+          {
+            data: records.map((record) => parseFloat(record.high)),
+            color: (opacity = 1) => `rgba(0, 186, 0, ${opacity})`, // Green high
+            strokeWidth: 3
+          },
+          {
+            data: records.map((record) => parseFloat(record.low)),
+            color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Red low
+            strokeWidth: 3
+          }
+        ]
+      };
+      setChartData(parsedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {
+    fetchData()
+    const intervalId = setInterval(fetchData, 3000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   useEffect(() => {
     AsyncStorageLib.getItem("walletType").then((walletType) => {
       console.log(walletType);
       setWalletType(JSON.parse(walletType));
+      
     });
   }, []);
-
   return (
     <ScrollView
       contentContainerStyle={{
@@ -175,7 +228,9 @@ export const HomeView = ({ setPressed }) => {
         backgroundColor: "#131E3A",
       }}
     >
+      
       <View style={styles.container}>
+      
         <LinearGradient
           start={[1, 0]}
           end={[0, 1]}
@@ -355,8 +410,32 @@ export const HomeView = ({ setPressed }) => {
             </TouchableOpacity>
           </LinearGradient>
         </View>
-
-        {route === "Offers" ? (
+        
+      
+      </View>
+  <View style={{justifyContent:'center',alignItems:'center',marginTop:30}}>
+<LineChart
+        data={chartData}
+        width={370}
+        height={310}
+        withDots={true}
+        withVerticalLines={false}
+        withHorizontalLines={false}
+        style={{borderRadius:5}}
+        bezier
+        chartConfig={{
+          backgroundColor: 'white',
+          backgroundGradientFrom: 'white',
+          backgroundGradientTo: 'white',
+          decimalPlaces: 3,
+          paddingTop:3,
+          color: (opacity = 1) => `rgba(255,255,255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity.toFixed(1)})`,
+        }}
+        />
+        </View> 
+      <View style={{}}>
+  {route === "Offers" ? (
           <View>
             <View style={styles.addofferText}>
               <Text style={styles.whiteColor}>My Offers</Text>
@@ -383,14 +462,14 @@ export const HomeView = ({ setPressed }) => {
             )}
           </View>
         )}
-      </View>
+  </View>
     </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   container: {
     width: wp(100),
-    height: hp(100),
+    height: hp(50),
     display: "flex",
     alignContent: "center",
     alignItems: "center",
@@ -1045,3 +1124,4 @@ const styles = StyleSheet.create({
 //     right: -13,
 //   },
 // });
+

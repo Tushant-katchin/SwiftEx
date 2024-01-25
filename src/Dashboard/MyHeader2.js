@@ -388,6 +388,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     <SafeAreaView style={{ backgroundColor: "#fff",marginTop:0 }}>
     <View>
       <View style={styles.headerContainer}>
+      
         <Pressable onPress={() => alert("Notifications will be added soon")}>
           <Icon name="bell" type={"fontisto"} size={24} />
         </Pressable>

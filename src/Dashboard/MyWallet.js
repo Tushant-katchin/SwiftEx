@@ -157,11 +157,12 @@ const MyWallet = (props) => {
     <View style={styles.mainView}>
       <View style={styles.labelInputContainer}>
         <Text style={styles.label}>Name</Text>
-        <TextInput
+        {/* <TextInput
           style={{ width: wp("78%") }}
           placeholder={user ? user : "Main Wallet 1"}
           placeholderTextColor={"gray"}
-        />
+        /> */}
+        <Text style={{width:wp("78%"),color:'gray'}}>{user ? user : "Main Wallet 1"}</Text>
       </View>
 
       <View>
@@ -176,7 +177,9 @@ const MyWallet = (props) => {
             <Text style={styles.secretText}>Show Secret Phrase</Text>
           </TouchableOpacity>
           <View style={styles.rightIcon}>
-            <Icon name="right" type={"antDesign"} color={"#DADADA"} size={20} />
+            <Icon name="right" type={"antDesign"} color={"#DADADA"} size={20} onPress={() => {
+              setVisible(!visible);
+            }}/>
           </View>
         </View>
       </View>

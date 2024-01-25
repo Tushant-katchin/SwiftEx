@@ -626,7 +626,7 @@ const SwapPinModal = ({
                     } else {
                       setLoader(false);
                       setLoading(false);
-                      alert("error", "invalid pin.please try again!");
+                      alert("error", "Incorrect pin try again.");
                       pinView.current.clearAll();//for clear the pin when pin worng.
                     }
                   

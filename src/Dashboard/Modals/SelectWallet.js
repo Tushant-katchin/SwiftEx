@@ -103,7 +103,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
     <Modal
       animationIn="slideInRight"
       animationOut="slideOutRight"
-      animationInTiming={500}
+      animationInTiming={100}
       animationOutTiming={650}
       isVisible={visible}
       onBackdropPress={() => setVisible(false)}

@@ -383,8 +383,51 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
 import { alert } from "./reusables/Toasts";
+const StellarSdk = require('stellar-sdk');
+const storeData = async (publicKey,secretKey) => {
+  try {
+    const data = {
+      key1: publicKey,
+      key2: secretKey,
+    };
+    const jsonData = JSON.stringify(data);
+    await AsyncStorageLib.setItem('myDataKey', jsonData);
+    console.log('Data stored successfully');
+  } catch (error) {
+    console.error('Error storing data:', error);
+  }
+};
+
+const getData = async () => {
+  try {
+    const storedData = await AsyncStorageLib.getItem('myDataKey');
+
+    if (storedData !== null) {
+      const parsedData = JSON.parse(storedData);
+
+      console.log('Retrieved data:', parsedData);
+      const publicKey = parsedData.key1;
+      const secretKey = parsedData.key2;
+
+      // console.log('Public Key:', publicKey);
+      // console.log('Secret Key:', secretKey);
+    } else {
+      console.log('No data found in AsyncStorage');
+    }
+  } catch (error) {
+    console.error('Error retrieving data:', error);
+  }
+};
 
 const CheckMnemonic = (props) => {
+  const genrate_keypair = () => {
+    const pair = StellarSdk.Keypair.random();
+    const publicKey = pair.publicKey();
+    const secretKey = pair.secret();
+    console.log('G-Public Key:-', publicKey);
+    console.log('G-Secret Key:-', secretKey);
+    storeData(publicKey, secretKey);
+  }
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
   const [mnemonic, setMnemonic] = useState("");
@@ -500,7 +543,7 @@ const CheckMnemonic = (props) => {
         </View>
         <View
           style={{
-            marginTop:hp(3),
+            marginTop: hp(3),
             // display: "flex",
             flexWrap: "wrap",
             flexDirection: "row",
@@ -509,10 +552,10 @@ const CheckMnemonic = (props) => {
             // alignSelf: "center",
             // alignItems: "center",
             // justifyContent: "center",
-            marginLeft:wp(6),
+            marginLeft: wp(6),
 
             // width: wp(40),
-            
+
           }}
         >
           {Mnemonic.length > 0 ? (
@@ -522,11 +565,11 @@ const CheckMnemonic = (props) => {
                 <Text
                   style={{
                     color: "black",
-                    marginHorizontal:4,
-                    borderWidth:StyleSheet.hairlineWidth*1,
-marginTop:hp(2),
-alignItems:"center",
-padding:hp(1)
+                    marginHorizontal: 4,
+                    borderWidth: StyleSheet.hairlineWidth * 1,
+                    marginTop: hp(2),
+                    alignItems: "center",
+                    padding: hp(1)
                     // width:wp(50)
                   }}
                 >
@@ -535,7 +578,7 @@ padding:hp(1)
               );
             })
           ) : (
-            <Text style={{ color: "black",textAlign:"center" ,alignSelf:"center"}}>Nothing added yet</Text>
+            <Text style={{ color: "black", textAlign: "center", alignSelf: "center" }}>Nothing added yet</Text>
           )}
         </View>
         {/* <TextInput
@@ -550,119 +593,122 @@ padding:hp(1)
         ) : (
           <Text></Text>
         )}
-          <TouchableOpacity
-            style={style.ButtonView}
-            onPress={async () => {
-              setLoading(true);
-              try {
-                const pin = await AsyncStorageLib.getItem("pin");
-                console.log(Mnemonic);
-                console.log(props.route.params.mnemonic);
+        <TouchableOpacity
+          style={style.ButtonView}
+          onPress={async () => {
+            setLoading(true);
+            try {
+              const pin = await AsyncStorageLib.getItem("pin");
+              console.log(Mnemonic);
+              console.log(props.route.params.mnemonic);
 
-                if (
-                  JSON.stringify(Mnemonic) ==
-                  JSON.stringify(props.route.params.mnemonic)
-                ) {
-                  console.log(pin);
-                  const body = {
-                    accountName: props.route.params.wallet.accountName,
-                    pin: JSON.parse(pin),
-                  };
-                  const token = genUsrToken(body);
-                  console.log(token);
+              if (
+                JSON.stringify(Mnemonic) ==
+                JSON.stringify(props.route.params.mnemonic)
+              ) {
+                console.log(pin);
+                const body = {
+                  accountName: props.route.params.wallet.accountName,
+                  pin: JSON.parse(pin),
+                };
+                const token = genUsrToken(body);
+                console.log(token);
 
-                  const accounts = {
+                const accounts = {
+                  address: props.route.params.wallet.address,
+                  privateKey: props.route.params.wallet.privateKey,
+                  mnemonic: props.route.params.wallet.mnemonic,
+                  name: props.route.params.wallet.accountName,
+                  walletType: "Multi-coin",
+                  xrp: {
+                    address: props.route.params.wallet.xrp.address,
+                    privateKey: props.route.params.wallet.xrp.privateKey,
+                  },
+                  wallets: [],
+                };
+                let wallets = [];
+                wallets.push(accounts);
+                const allWallets = [
+                  {
                     address: props.route.params.wallet.address,
                     privateKey: props.route.params.wallet.privateKey,
-                    mnemonic: props.route.params.wallet.mnemonic,
                     name: props.route.params.wallet.accountName,
-                    walletType: "Multi-coin",
+                    mnemonic: props.route.params.wallet.mnemonic,
                     xrp: {
                       address: props.route.params.wallet.xrp.address,
                       privateKey: props.route.params.wallet.xrp.privateKey,
                     },
-                    wallets: [],
-                  };
-                  let wallets = [];
-                  wallets.push(accounts);
-                  const allWallets = [
-                    {
-                      address: props.route.params.wallet.address,
-                      privateKey: props.route.params.wallet.privateKey,
-                      name: props.route.params.wallet.accountName,
-                      mnemonic: props.route.params.wallet.mnemonic,
-                      xrp: {
-                        address: props.route.params.wallet.xrp.address,
-                        privateKey: props.route.params.wallet.xrp.privateKey,
-                      },
-                      walletType: "Multi-coin",
-                    },
-                  ];
+                    walletType: "Multi-coin",
+                  },
+                ];
 
-                  AsyncStorageLib.setItem(
-                    "wallet",
-                    JSON.stringify(allWallets[0])
-                  );
-                  AsyncStorageLib.setItem(
-                    `${props.route.params.wallet.accountName}-wallets`,
-                    JSON.stringify(allWallets)
-                  );
-                  AsyncStorageLib.setItem(
-                    "user",
-                    props.route.params.wallet.accountName
-                  );
-                  AsyncStorageLib.setItem(
-                    "currentWallet",
-                    props.route.params.wallet.accountName
-                  );
-                  AsyncStorageLib.setItem(
-                    `${props.route.params.wallet.accountName}-token`,
-                    token
-                  );
+                AsyncStorageLib.setItem(
+                  "wallet",
+                  JSON.stringify(allWallets[0])
+                );
+                AsyncStorageLib.setItem(
+                  `${props.route.params.wallet.accountName}-wallets`,
+                  JSON.stringify(allWallets)
+                );
+                AsyncStorageLib.setItem(
+                  "user",
+                  props.route.params.wallet.accountName
+                );
+                AsyncStorageLib.setItem(
+                  "currentWallet",
+                  props.route.params.wallet.accountName
+                );
+                AsyncStorageLib.setItem(
+                  `${props.route.params.wallet.accountName}-token`,
+                  token
+                );
 
-                  dispatch(setUser(props.route.params.wallet.accountName));
-                  dispatch(
-                    setCurrentWallet(
-                      props.route.params.wallet.address,
-                      props.route.params.wallet.accountName,
-                      props.route.params.wallet.privateKey,
-                      props.route.params.wallet.mnemonic,
-                      props.route.params.wallet.xrp.address
-                        ? props.route.params.wallet.xrp.address
-                        : "",
-                      props.route.params.wallet.xrp.privateKey
-                        ? props.route.params.wallet.xrp.privateKey
-                        : "",
-                      (walletType = "Multi-coin")
-                    )
-                  );
-                  dispatch(
-                    AddToAllWallets(
-                      wallets,
-                      props.route.params.wallet.accountName
-                    )
-                  );
-                  dispatch(getBalance(props.route.params.wallet.address));
-                  dispatch(setWalletType("Multi-coin"));
-                  dispatch(setToken(token));
-                  console.log("navigating to home screen");
-                  props.navigation.navigate("HomeScreen");
-                  alert("success", "correct mnemonic");
-                } else {
-                  setLoading(false);
-                  SetMnemonic([]);
-                  return alert(
-                    "error",
-                    "Wrong Mnemonic. Please retry with correct mnemonic "
-                  );
-                }
-              } catch (e) {
-                console.log(e);
+                dispatch(setUser(props.route.params.wallet.accountName));
+                dispatch(
+                  setCurrentWallet(
+                    props.route.params.wallet.address,
+                    props.route.params.wallet.accountName,
+                    props.route.params.wallet.privateKey,
+                    props.route.params.wallet.mnemonic,
+                    props.route.params.wallet.xrp.address
+                      ? props.route.params.wallet.xrp.address
+                      : "",
+                    props.route.params.wallet.xrp.privateKey
+                      ? props.route.params.wallet.xrp.privateKey
+                      : "",
+                    (walletType = "Multi-coin")
+                  )
+                );
+                dispatch(
+                  AddToAllWallets(
+                    wallets,
+                    props.route.params.wallet.accountName
+                  )
+                );
+                dispatch(getBalance(props.route.params.wallet.address));
+                dispatch(setWalletType("Multi-coin"));
+                dispatch(setToken(token));
+                // add NEW ACCOUNT DATA FOR NEW STELLAR ACCOUNT
+                genrate_keypair()
+                console.log("navigating to home screen");
+                props.navigation.navigate("HomeScreen");
+                alert("success", "correct mnemonic");
+getData();      
+              } else {
+                setLoading(false);
+                SetMnemonic([]);
+                return alert(
+                  "error",
+                  "Wrong Mnemonic. Please retry with correct mnemonic "
+                );
               }
-            }}
-          >
-            <Text style={{ color: "white" }}>Done</Text>
-          </TouchableOpacity>
+            } catch (e) {
+              console.log(e);
+            }
+          }}
+        >
+          <Text style={{ color: "white" }}>Done</Text>
+        </TouchableOpacity>
       </View>
     </Animated.View>
   );

@@ -294,6 +294,14 @@ const CheckNewWalletMnemonic = ({
                     // dispatch(getBalance(wallet.address))
                     //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
                   }
+                  else{
+                    setLoading(false)
+                    alert(
+                      "error",
+                      "Wrong Mnemonic. Please retry with correct mnemonic "
+                    );
+                    SetMnemonic([]);
+                  }
                 } catch (e) {
                   setLoading(false);
                   SetVisible(false);

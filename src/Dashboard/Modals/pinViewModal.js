@@ -208,7 +208,7 @@ const PinViewModal = ({
                         alert("error","please enter username first");
                       }
                     } else {
-                      alert("error","invalid pin");
+                      alert("error","Incorrect pin try again.");
                     }
                   } else {
                     /* setPin(enteredPin)

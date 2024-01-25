@@ -16,6 +16,7 @@ import { TransactionsListView } from "./pages/transaction";
 import { AccountView } from "./pages/account";
 import { TransactionView } from "./pages/transaction";
 import { ExchangeHeader, ExchangeHeaderIcon } from "../../../header";
+import Payout from "./pages/payout";
 const Tab = createBottomTabNavigator();
 
 export function ExchangeNavigation() {
@@ -45,6 +46,10 @@ export function ExchangeNavigation() {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "card-sharp";
           }
+          if (route.name === "Payout") {
+            iconName = focused ? "ios-home-sharp" : "ios-home-outline";
+            iconName = "receipt";
+          }
           if (route.name === "Profile") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "wallet";
@@ -61,8 +66,8 @@ export function ExchangeNavigation() {
           backgroundColor: "#4CA6EA",
         },
         headerTitleAlign: "center",
-        
-        
+
+
       })}
     >
       <Tab.Screen
@@ -95,6 +100,17 @@ export function ExchangeNavigation() {
             return <ExchangeHeaderIcon />;
           },
           //Tab bar styles can be added here
+        }}
+      />
+
+      <Tab.Screen
+        name="Payout"
+        component={Payout}
+        options={{
+          headerShown: true,
+          header: () => {
+            return <ExchangeHeaderIcon />;
+          },
         }}
       />
 

@@ -125,7 +125,7 @@ const Passcode = (props) => {
           }
         } else {
           pinView.current.clearAll();
-          alert("error","invalid pin");
+          alert("error","Incorrect pin try again.");
         }
       } else {
         setPin(enteredPin);
@@ -293,7 +293,7 @@ const Passcode = (props) => {
                     if (biometric === "SET") {
                       useBiometrics(props.navigation);
                     }else{
-                      alert('error','please enable biometrics from settings')
+                      alert('error','Enable biometrics in your device settings.')
                     }
                 
                   }}

@@ -142,7 +142,14 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
           ) : (
             <Text> </Text>
           )}
-
+      <TouchableOpacity
+              disabled={loading ? true : Checked && Checked2 ? false : true}
+              onPress={() => {
+                // setLoading(true);
+                setVisible(false);
+                navigation.navigate("My PrivateKey");
+              }}
+            >
           <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
@@ -153,17 +160,10 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
             }
             style={style.PresssableBtn}
           >
-            <TouchableOpacity
-              disabled={loading ? true : Checked && Checked2 ? false : true}
-              onPress={() => {
-                // setLoading(true);
-                setVisible(false);
-                navigation.navigate("My PrivateKey");
-              }}
-            >
+      
               <Text>Continue</Text>
-            </TouchableOpacity>
           </LinearGradient>
+            </TouchableOpacity>
         </View>
       </Modal>
     </Animated.View>
