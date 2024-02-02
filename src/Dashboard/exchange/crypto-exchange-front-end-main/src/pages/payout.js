@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TextInput, Pressable, FlatList } from "react-native"
+import { View, Text, StyleSheet, Image,ScrollView, ActivityIndicator,TouchableOpacity, TextInput, Pressable, FlatList } from "react-native"
 import { SafeAreaView } from "react-navigation"
 import {
     widthPercentageToDP as wp,
@@ -7,15 +7,21 @@ import {
 import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { alert } from "../../../../reusables/Toasts";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { Keyboard } from "react-native";
 import { SavePayout, getAllDataAndShow} from "../../../../../utilities/utilities";
-import { times } from "lodash";
+import { authRequest, GET, POST } from "../api";
+import darkBlue from "../../../../../../assets/darkBlue.png";
+import Icon from "../../../../../icon";
+import { useNavigation } from "@react-navigation/native";
+import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
+
 const StellarSdk = require('stellar-sdk');
 
 
 const Payout = () => {
-
+  const navigation = useNavigation();
     const [balance, setbalance] = useState('');
     const [XETH, setXETH] = useState('GCW6DBA7KLB5HZEJEQ2F5F552SLQ66KZFKEPPIPI3OF7XNLIAGCP6JER');
     const [XUSD, setXUSD] = useState('GBCNZEEQXSVQ3O6DWJXAOVGUT3VRI2ZOU2JB4ZQC27SE3UU4BX7OZ5DN');
@@ -25,14 +31,30 @@ const Payout = () => {
     const inActiveColor = ["#131E3A", "#131E3A"];
     const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
     const [Available, setAvailable] = useState("");
-    const [PublicKey, setPublicKey] = useState("GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI");//comment for user
-    const [SecretKey, setSecretKey] = useState("SC5O7VZUXDJ6JBDSZ74DSERXL7W3Y5LTOAMRF7RQRL3TAGAPS7LUVG3L");//comment for user
-    // const[PublicKey,setPublicKey]=useState("");//uncomment for user
-    // const[SecretKey,setSecretKey]=useState("");//uncomment for user
-    // useEffect(()=>{ //uncomment for user
-    //     getData();
-    // },[])
+    const [email, setemail] = useState("");
+    // const [PublicKey, setPublicKey] = useState("GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI");//comment for user
+    // const [SecretKey, setSecretKey] = useState("SC5O7VZUXDJ6JBDSZ74DSERXL7W3Y5LTOAMRF7RQRL3TAGAPS7LUVG3L");//comment for user
+    const[PublicKey,setPublicKey]=useState("");//uncomment for user
+    const[SecretKey,setSecretKey]=useState("");//uncomment for user
     const [transactions, setTransactions] = useState([]);
+    useEffect(()=>{ //uncomment for user
+        getData();
+        fetchProfileData();
+    },[route])
+
+    const fetchProfileData = async () => {
+        try {
+          const { res, err } = await authRequest("/users/getUserDetails", GET);
+          if (err) return console.log(` ${err.message} please log in again!`);
+          setemail(res.email)
+        } catch (err) {
+          console.log(":|:|L|",err)
+        }
+      };
+    
+
+
+
     const getData = async () => {
         try {
             const storedData = await AsyncStorageLib.getItem('myDataKey');
@@ -51,7 +73,6 @@ const Payout = () => {
             console.error('Error retrieving data:', error);
         }
     };
-
     const sendPayment = async (senderSecretKey, recipientPublicKey, g_amount, g_ASSET) => {
         setshow(true);
         StellarSdk.Network.useTestNetwork();
@@ -72,7 +93,7 @@ const Payout = () => {
                         amount: g_amount,
                     })
                 )
-                .addMemo(StellarSdk.Memo.text("Dev"))
+                .addMemo(StellarSdk.Memo.text(email+"-"+g_amount))//TODO
                 .setTimeout(30)
                 .build();
 
@@ -109,11 +130,11 @@ const Payout = () => {
                 })
                 .catch(error => {
                     console.log('Error loading account:', error);
-                    alert("error", "Account Balance not found.");
+                    // alert("error", "Account Balance not found.");
                 });
         } catch (error) {
             console.log("Error in get_stellar")
-            alert("error", "Account Balance not found.");
+            alert("error", "Something went wrong.");
         }
     }
     const fetchData = async () => {
@@ -142,6 +163,53 @@ const Payout = () => {
         }
     }
     return (
+        <>
+        <View style={styles.headerContainer1_TOP}>
+        <View
+          style={{
+            justifyContent: "space-around",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity onPress={() => navigation.navigate("/")}>
+            <Icon
+              name={"left"}
+              type={"antDesign"}
+              size={28}
+              color={"white"}
+            />
+          </TouchableOpacity>
+        </View>
+      
+        {Platform.OS === "android" ? (
+          <Text style={styles.text_TOP}>Exchange</Text>
+        ) : (
+          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+        )}
+      
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image source={darkBlue} style={styles.logoImg_TOP} />
+        </TouchableOpacity>
+      
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('clicked');
+              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+              AsyncStorage.removeItem(LOCAL_TOKEN);
+              navigation.navigate('exchangeLogin');
+            }}
+          >
+            <Icon
+              name={"logout"}
+              type={"materialCommunity"}
+              size={30}
+              color={"#fff"}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
         <SafeAreaView style={styles.contener}>
             <View style={[styles.toggleContainer]}>
                 <LinearGradient
@@ -240,6 +308,7 @@ const Payout = () => {
       )}
     </View>
         </SafeAreaView>
+        </>
     )
 }
 const styles = StyleSheet.create({
@@ -312,6 +381,35 @@ const styles = StyleSheet.create({
     },
     width_scrroll:{
         marginLeft: 1.9
-    }
+    },
+    headerContainer1_TOP: {
+        backgroundColor: "#4CA6EA",
+        justifyContent: "space-between",
+        alignItems: "center",
+        alignSelf: "center",
+        flexDirection: "row",
+        width: wp(100),
+        paddingHorizontal: wp(2),
+      },
+      logoImg_TOP: {
+        height: hp("9"),
+        width: wp("12"),
+        marginLeft: wp(14),
+      },
+      text_TOP: {
+        color: "white",
+        fontSize:19,
+        fontWeight:"bold",
+        alignSelf: "center",
+        marginStart:wp(30)
+      },
+      text1_ios_TOP: {
+        color: "white",
+        fontWeight: "700",
+        alignSelf: "center",
+        marginStart: wp(31),
+        top:19,
+        fontSize:17
+      }
 })
 export default Payout;

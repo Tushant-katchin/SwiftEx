@@ -233,8 +233,10 @@ function InvestmentChart(setCurrentWallet) {
       console.log("Error in get_stellar")
     }
   }
-  getData();
-  get_stellar()
+ useEffect(()=>{
+    getData();
+  get_stellar();
+ },[])
 
   return (
     <ScrollView
@@ -244,6 +246,8 @@ function InvestmentChart(setCurrentWallet) {
           onRefresh={() => {
             setPull(true);
             getTokenBalance();
+            get_stellar();
+            getData();
           }}
         />
       }

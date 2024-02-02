@@ -172,8 +172,8 @@ export const ExchangeLogin = (props) => {
 
   return (
     <>
-    <ExchangeHeaderIcon title="Exchange-Login" isLogOut={false} />
-      <ScrollView style={styles.container}>
+    <ExchangeHeaderIcon title="Exchange " isLogOut={false} />
+      <SafeAreaView style={styles.container}>
         <View
           // style={styles.container}
           onStartShouldSetResponder={() => Keyboard.dismiss()}
@@ -212,12 +212,6 @@ export const ExchangeLogin = (props) => {
                   withDarkTheme
                   withShadow
                 />
-                <LinearGradient
-                  colors={["#12c2e9", "#c471ed", "#f64f59"]}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.button}
-                >
                   <TouchableOpacity
                     onPress={() => {
                       setLoading(true);
@@ -238,13 +232,19 @@ export const ExchangeLogin = (props) => {
                       }
                       setShowMessage(true);
                       setValid(checkValid ? checkValid : false);
-
                       console.log(checkValid);
+                      Keyboard.dismiss();
                     }}
                   >
+                <LinearGradient
+                  colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.button}
+                >
                     <Text style={{ color: "white" }}>Login</Text>
-                  </TouchableOpacity>
                 </LinearGradient>
+                  </TouchableOpacity>
                 {showMessage ? (
                   <Text
                     style={{
@@ -336,15 +336,17 @@ export const ExchangeLogin = (props) => {
                   onPress={() => {
                     setLoading("true");
                     submitOtp();
+                    Keyboard.dismiss()
                   }}
                 >
                   <Text style={styles.buttonText}>Verify</Text>
                 </TouchableOpacity>
               </LinearGradient>
+              <Text style={{marginTop:10,color:"gray"}} onPress={()=>{navigation.navigate("exchangeLogin")}}>Edit Phone Number</Text>
             </View>
           )}
         </View>
-      </ScrollView>
+      </SafeAreaView>
     </>
   );
 };

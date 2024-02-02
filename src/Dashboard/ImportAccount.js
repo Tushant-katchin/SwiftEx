@@ -28,6 +28,7 @@ import Bnbimage from "../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../assets/ethereum.png";
 import darkBlue from "../../assets/darkBlue.png"
 import Xrpimage from "../../assets/xrp.png";
+import stellar from "../../assets/Stellar_(XLM).png"
 import Maticimage from "../../assets/matic.png";
 
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -140,6 +141,17 @@ const ImportAccount = (props) => {
           <Image source={Xrpimage} style={style.img} />
 
           <Text style={style.text}>Xrp</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={style.Box}
+          onPress={() => {
+            props.navigation.navigate("ImportStellar");
+          }}
+        >
+          <Image source={stellar} style={style.img} />
+
+          <Text style={style.text}>Stellar</Text>
         </TouchableOpacity>
       </View>
     </Animated.View>

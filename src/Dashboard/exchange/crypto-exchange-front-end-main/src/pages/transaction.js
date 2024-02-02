@@ -3,6 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { authRequest, GET, POST } from "../api";
 import { GOERLI_ETHERSCAN } from "../utils/constants";
 import { DataTable } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+const StellarSdk = require('stellar-sdk');
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -10,7 +14,10 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  Image
 } from "react-native";
+import darkBlue from "../../../../../../assets/darkBlue.png";
+
 import { WebView } from "react-native-webview";
 import {
   widthPercentageToDP as wp,
@@ -19,10 +26,10 @@ import {
 import { useWindowDimensions } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import Modal from "react-native-modal";
-import { useNavigation } from "@react-navigation/native";
 import { CHAIN_ID_TO_SCANNER } from "../web3";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
+import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import OffersButton from "../../../../offersButton";
 import { OfferListView } from "./offers";
 import { alert } from "../../../../reusables/Toasts";
@@ -42,53 +49,7 @@ export const TransactionsListView = ({
     console.log(tx.tx);
     return (
       <View>
-        <Modal
-          animationIn="slideInRight"
-          animationOut="slideOutRight"
-          animationInTiming={100}
-          animationOutTiming={200}
-          isVisible={open}
-          useNativeDriver={true}
-          onBackdropPress={() => {
-            setOpen(false);
-          }}
-          onBackButtonPress={() => {
-            //setShowModal(!showModal);
-            setOpen(false);
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: "#fff",
-              marginTop: 50,
-              height: 10,
-            }}
-          >
-            <WebView
-              source={{ uri: `${tx.tx}` }}
-              onNavigationStateChange={(data) => {
-                if (data.url.includes(`offers?session_id`)) {
-                  ///do if payment successfull
-                  setOpen(false);
-                  setUpdateTx(true);
-
-                  alert("success", "Payment Successful");
-                  navigation.navigate("/offers");
-                  fetchTxPageData();
-                }
-
-                if (data.url.includes("offers?payFailed=true")) {
-                  ///do if payment is cancelled
-                  setOpen(false);
-                  setUpdateTx(true);
-                  alert("error", "Payment failed. Please try again");
-                  fetchTxPageData();
-                }
-              }}
-            />
-          </View>
-        </Modal>
+        
       </View>
     );
   };
@@ -302,159 +263,162 @@ const OffersListView = ({ transactions, self = false }) => {
 };
 
 export const TransactionView = () => {
-  const [route, setRoute] = useState("BID");
-  const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
-  const inActiveColor = ["#131E3A", "#131E3A"];
-  const [message, setMessage] = useState();
-  const [value, setValue] = useState(0);
-  const [transactions, setTransactions] = useState([]);
-  const [profile, setProfile] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  // const [searchParams] = useSearchParams();
-  const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
-  const [updateTx, setUpdateTx] = useState();
-  const [routes] = useState([
-    { key: "first", title: "Bids Transactions" },
-    { key: "second", title: "Offers Transactions" },
-  ]);
-
-  /*useEffect(() => {
-    if (searchParams) {
-      const newTx = searchParams.get("newTx");
-      if (newTx) {
-        setMessage("You have new transaction payment pending");
-      }
+  StellarSdk.Network.useTestNetwork();
+        const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+  const navigation = useNavigation();
+  const [pull, setPull] = useState([])
+const getData = async () => {
+  try {
+    const storedData = await AsyncStorageLib.getItem('myDataKey');
+    if (storedData !== null) {
+      const parsedData = JSON.parse(storedData);
+      console.log('Retrieved data:', parsedData);
+      const Key = parsedData.key1;
+      console.log(":::",Key)
+      getTrades(Key)
     }
-  }, [searchParams]);*/
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  useEffect(() => {
-    fetchTxPageData();
-  }, []);
-  useEffect(() => {
-    fetchTxPageData();
-  }, [updateTx]);
-
-  const fetchTxPageData = async () => {
-    await fetchTransactionData();
-    await fetchProfileData();
-  };
-
-  const fetchTransactionData = async () => {
-    try {
-      const { res, err } = await authRequest(
-        "/transactions/getUserTansactions",
-        GET
-      );
-      if (err) return setMessage(`${err.status}: ${err.message}`);
-      setTransactions(res);
-    } catch (err) {
-      console.log(err);
-      setMessage(err.message || "Something went wrong");
+    else {
+      console.log('No data found in AsyncStorage');
     }
-  };
-
-  const fetchProfileData = async () => {
-    try {
-      const { res, err } = await authRequest("/users/getUserDetails", GET);
-      if (err) return setMessage(`${err.status}: ${err.message}`);
-      setProfile(res);
-    } catch (err) {
-      console.log(err);
-      setMessage(err.message || "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <TransactionsListView
-        transactions={transactions.filter(
-          (tx) => tx.customerId === profile._id
-        )}
-        fetchTxPageData={fetchTxPageData}
-        setUpdateTx={setUpdateTx}
-      />
-    </View>
-  );
-
-  const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <OffersListView
-        transactions={transactions.filter(
-          (tx) => tx.assetOwner === profile._id
-        )}
-        self={true}
-      />
-    </View>
-  );
-
-  // const renderScene = SceneMap({
-  //   first: FirstRoute,
-  //   second: SecondRoute,
-  // });
-
+  } catch (error) {
+    console.error('Error retrieving data:', error);
+  }
+};
+async function getTrades(accountId) {
+  try {
+    const account = await server.loadAccount(accountId);
+    const trades = await server.trades().forAccount(accountId).call();
+    console.log('Trades for account:', accountId);
+    setPull(trades.records)
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+useEffect(()=>{
+  getData();
+},[])
+setTimeout(()=>{
+    getData();
+},3000)
   return (
     <>
+    <View style={styles.headerContainer1_TOP}>
+  <View
+    style={{
+      justifyContent: "space-around",
+      flexDirection: "row",
+      alignItems: "center",
+    }}
+  >
+    <TouchableOpacity onPress={() => navigation.navigate("/")}>
+      <Icon
+        name={"left"}
+        type={"antDesign"}
+        size={28}
+        color={"white"}
+      />
+    </TouchableOpacity>
+  </View>
+
+  {Platform.OS === "android" ? (
+    <Text style={styles.text_TOP}>Exchange</Text>
+  ) : (
+    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+  )}
+
+  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+    <Image source={darkBlue} style={styles.logoImg_TOP} />
+  </TouchableOpacity>
+
+  <View style={{ alignItems: "center" }}>
+    <TouchableOpacity
+      onPress={() => {
+        console.log('clicked');
+        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        AsyncStorage.removeItem(LOCAL_TOKEN);
+        // Navigate();
+        navigation.navigate('exchangeLogin');
+      }}
+    >
+      <Icon
+        name={"logout"}
+        type={"materialCommunity"}
+        size={30}
+        color={"#fff"}
+      />
+    </TouchableOpacity>
+  </View>
+</View>
       <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
-        <Text style={styles.transactionText}>Transactions</Text>
-        <Text style={{ textAlign: "center", color: "#fff" }}>{message}</Text>
-        {isLoading ? (
-          <Text style={{ textAlign: "center" }}>Loading...</Text>
-        ) : (
-          <>
-            <OffersButton
-              onPressBid={() => {
-                setRoute("BID");
-              }}
-              textStyle1={
-                route == "BID" ? { color: "#fff" } : { color: "#5D9EEA" }
-              }
-              textStyle2={
-                route != "BID" ? { color: "#fff" } : { color: "#5D9EEA" }
-              }
-              title1="Of My Bids"
-              title2="Of My Offers"
-              firstColor={route == "BID" ? activeColor : inActiveColor}
-              secondColor={route != "BID" ? activeColor : inActiveColor}
-              onPressOffer={() => {
-                setRoute("OFFERS");
-              }}
-            />
-            {route == "BID" && (
-              <View>
-                <TransactionsListView
-                  transactions={transactions.filter(
-                    (tx) => tx.customerId === profile._id
-                  )}
-                  fetchTxPageData={fetchTxPageData}
-                  setUpdateTx={setUpdateTx}
-                />
-                <TouchableOpacity style={styles.transactionBtn}>
-                  <Text style={{ color: "#EE96DF" }}>Bid On Offers</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            {route == "OFFERS" && (
-              <View>
-                <OffersListView
-                  transactions={transactions.filter(
-                    (tx) => tx.assetOwner === profile._id
-                  )}
-                  self={true}
-                />
-                <TouchableOpacity style={styles.transactionBtn}>
-                  <Text style={{ color: "#EE96DF" }}>Add Offer</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </>
-        )}
+      <Text style={{color:"white",marginLeft:13,marginTop:13,fontWeight:"bold",fontSize:19}}>All Trades Transaction.</Text>
+    <View style={{ backgroundColor: "#131E3A" }}>
+      <LinearGradient
+        style={styles.linearStyle1}
+        start={[1, 0]}
+        end={[0, 1]}
+        colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
+      >
+        <ScrollView nestedScrollEnabled horizontal>
+          <ScrollView nestedScrollEnabled={true}>
+            <View style={styles.tableHeader}>
+              <Text style={styles.AssetText}>Base Asset</Text>
+              <Text style={styles.AssetText}>Base Amount</Text>
+              <Text style={styles.AssetText}>Counter Asset</Text>
+              <Text style={styles.AssetText}>Counter Amount</Text>
+              <Text style={styles.textColor}>Status</Text>
+              <Text style={styles.AssetText}>Created</Text>
+            </View>
+            <>
+            {pull.length===0?<Text style={{color:"white",margin:10,fontWeight:"bold",fontSize:19}}>No Trade Records.</Text>: pull.map((offer,index) => {
+                 return (
+                   <>
+                   <View key={index}>
+                     <ScrollView horizontal={true} key={offer._id}>
+                       <View
+                         key={index}
+                         style={styles.mainDataContainer}
+                       >
+                         <Text style={styles.textColor}>
+                           {offer.base_asset_code}
+                         </Text>
+
+                         <Text style={styles.textColor}>
+                           {offer.base_amount}
+                         </Text>
+
+                         <Text style={styles.textColor}>
+                           {offer.counter_asset_code}
+                         </Text>
+                         <Text style={styles.textColor}>
+                           {offer.counter_amount}
+                         </Text>
+                         <Text style={[styles.textColor,{color:"green",fontWeight: "bold",}]}>
+                           {"Success"}
+                         </Text>
+                         <Text
+                           style={{
+                             textAlign: "center",
+                             width: wp(20),
+                             color: "#4CA6EA",
+                           }}
+                         >
+                           {offer.ledger_close_time}
+                         </Text>
+                       </View>
+                     </ScrollView>
+                   </View>
+                 </>
+                   )
+                 })
+               }
+                 </>
+          </ScrollView>
+        </ScrollView>
+      </LinearGradient>
+    </View>
+
+
+
       </View>
     </>
   );
@@ -567,44 +531,124 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginLeft: wp(5),
   },
+  mainDataContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: hp(1),
+    margin: 10,
+  },
+  tableHeader: {
+    // width: wp(90),
+    alignSelf: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    borderColor: "#EE96DF",
+    paddingVertical: hp(1),
+  },
+  table: {
+    display: "flex",
+    alignContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    backgroundColor: "white",
+  },
+  content: {
+    display: "flex",
+    alignContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    height: hp(100),
+    backgroundColor: "white",
+  },
+  textColor: {
+    color: "#fff",
+    width: wp(20),
+    textAlign: "center",
+  },
+  Table1Container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    // width: wp(90),
+    marginTop: hp(2),
+    marginBottom: hp(1),
+    alignSelf: "center",
+  },
+  statusColor: {
+    color: "#38B0EA",
+    width: wp(17),
+    textAlign: "center",
+  },
+  PriceText: {
+    color: "#fff",
+    width: wp(15),
+  },
+  AssetText: {
+    color: "#fff",
+    width: wp(20),
+    textAlign: "center",
+  },
+  currencyText: {
+    color: "#fff",
+    width: wp(15),
+    marginLeft: wp(10),
+  },
+  amountText: {
+    color: "#fff",
+    width: wp(10),
+    textAlign: "center",
+    marginHorizontal: wp(5),
+  },
+  amountText1: {
+    color: "#fff",
+    width: wp(10),
+    marginHorizontal: wp(5),
+    textAlign: "center",
+  },
+
+
+
+  headerContainer1_TOP: {
+    backgroundColor: "#4CA6EA",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+    width: wp(100),
+    paddingHorizontal: wp(2),
+  },
+  logoImg_TOP: {
+    height: hp("9"),
+    width: wp("12"),
+    marginLeft: wp(14),
+  },
+  text_TOP: {
+    color: "white",
+    fontSize:19,
+    fontWeight:"bold",
+    alignSelf: "center",
+    // textAlign: "center",
+    marginStart:wp(30)
+  },
+  text1_ios_TOP: {
+    color: "white",
+    fontWeight: "700",
+    alignSelf: "center",
+    marginStart: wp(27),
+    top:19,
+    fontSize:17
+  },
+  linearStyle1: {
+    width: wp(95),
+    height: hp(70),
+    marginBottom: hp(3),
+    marginVertical: hp(2),
+    borderRadius: 10,
+    paddingBottom: hp(1),
+    alignSelf: "center",
+  },
 });
-
-/* 
-<View style={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Button
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              />
-                <Tab label="Bids Transactions" {...a11yProps(0)} />
-                <Tab label="Offer Trasactions" {...a11yProps(1)} />
-              </Tabs>
-            </Box>
-            <div
-              role="tabpanel"
-              hidden={value !== 0}
-              id={`simple-tabpanel-${0}`}
-              aria-labelledby={`simple-tab-${0}`}
-            >
-              <TransactionsListView
-                transactions={transactions.filter(
-                  (tx) => tx.customerId === profile._id,
-                )}
-              />
-            </div>
-            <div
-              role="tabpanel"
-              hidden={value !== 1}
-              id={`simple-tabpanel-${1}`}
-              aria-labelledby={`simple-tab-${1}`}
-            >
-              <TransactionsListView
-                transactions={transactions.filter(
-                  (tx) => tx.assetOwner === profile._id,
-                )}
-                self={true}
-              />
-            </div>
-          </Box>
-
-*/

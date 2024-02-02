@@ -62,13 +62,14 @@ import ImportMultiCoinWalletModal from "../Dashboard/Modals/importMultiCoinWalle
 import SelectWallet from "../Dashboard/Modals/SelectWallet";
 import TokenList from "../Dashboard/tokens/TokenList";
 import Payout from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/payout";
+import Payment from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/Payment";
+import importStellar from "../Dashboard/importStellar";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
   <NavigationContainer
     // theme={{ colors: { background: "#000C66" } }}
     theme={{ colors: { background: "#fff" } }}
-
     ref={navigationRef}
   >
     <Stack.Navigator
@@ -384,6 +385,16 @@ const AuthStack = () => (
         }}
       />
 
+<Stack.Screen
+        name="ImportStellar"
+        component={importStellar}
+        options={{
+          header: () => {
+            return <WalletHeader title="Import Stellar" />;
+          },
+        }}
+      />
+
       <Stack.Screen
         name="Check Mnemonic"
         component={CheckMnemonic}
@@ -469,7 +480,7 @@ const AuthStack = () => (
         options={{
           header: () => {
             return (
-              <ExchangeHeaderIcon isLogOut={false} title="Exchange-Register" />
+              <ExchangeHeaderIcon isLogOut={false} title="Exchange " />
             );
           },
         }}
@@ -482,6 +493,7 @@ const AuthStack = () => (
           headerTintColor: "white",
           headerTitleStyle: {
             fontWeight: "bold",
+            gestureEnabled: false
           },
         }}
       />
@@ -503,12 +515,26 @@ const AuthStack = () => (
         component={Payout}
         options={{
           headerShown: false,
-          headerStyle: { backgroundColor: "#000C66" },
+          headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {
             fontWeight: "bold",
           },
         }}
+      />
+
+<Stack.Screen
+        name="Payment"
+        component={Payment}
+        options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#4CA6EA',
+          },
+          headerTitleAlign: 'center',
+          headerTintColor:'white'
+        }}
+        
       />
     </Stack.Navigator>
   </NavigationContainer>

@@ -13,12 +13,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import editImage from "../../../../../../assets/editImage.png";
 import girlProfile from "../../../../../../assets/girlProfile.jpg";
 import Profile from "../../../../../../assets/Profile.png"
 import walletImg from "../../../../../../assets/walletImg.png";
 import copyRide from "../.././../../../../assets/copyRide.png";
-
+import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
+import darkBlue from "../../../../../../assets/darkBlue.png";
+import { useNavigation } from "@react-navigation/native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -417,8 +420,56 @@ export const ProfileView = (props) => {
     //   currency: "INR",
     // },
   ];
+  const navigation = useNavigation();
 
   return (
+    <>
+       <View style={styles.headerContainer1_TOP}>
+  <View
+    style={{
+      justifyContent: "space-around",
+      flexDirection: "row",
+      alignItems: "center",
+    }}
+  >
+    <TouchableOpacity onPress={() => navigation.navigate("/")}>
+      <Icon
+        name={"left"}
+        type={"antDesign"}
+        size={28}
+        color={"white"}
+      />
+    </TouchableOpacity>
+  </View>
+
+  {Platform.OS === "android" ? (
+    <Text style={styles.text_TOP}>Exchange</Text>
+  ) : (
+    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+  )}
+
+  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+    <Image source={darkBlue} style={styles.logoImg_TOP} />
+  </TouchableOpacity>
+
+  <View style={{ alignItems: "center" }}>
+    <TouchableOpacity
+      onPress={() => {
+        console.log('clicked');
+        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        AsyncStorage.removeItem(LOCAL_TOKEN);
+        navigation.navigate('exchangeLogin');
+      }}
+    >
+      <Icon
+        name={"logout"}
+        type={"materialCommunity"}
+        size={30}
+        color={"#fff"}
+      />
+    </TouchableOpacity>
+  </View>
+</View>
     <ScrollView>
       <View style={styles.content}>
         <Text style={{ color: "#fff" }}>{message}</Text>
@@ -625,6 +676,7 @@ export const ProfileView = (props) => {
         )} 
       </View>
     </ScrollView>
+    </>
   );
 };
 
@@ -931,6 +983,37 @@ const styles = StyleSheet.create({
     borderRadius: hp(1),
     padding: hp(0.7),
     marginTop: hp(1),
+  },
+  headerContainer1_TOP: {
+    backgroundColor: "#4CA6EA",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+    width: wp(100),
+    paddingHorizontal: wp(2),
+  },
+  logoImg_TOP: {
+    height: hp("9"),
+    width: wp("12"),
+    marginLeft: wp(14),
+  },
+  text_TOP: {
+    color: "white",
+    fontSize:19,
+    fontWeight:"bold",
+    alignSelf: "center",
+    // textAlign: "center",
+    // marginStart:wp(34)
+    marginStart:wp(30)
+  },
+  text1_ios_TOP: {
+    color: "white",
+    fontWeight: "700",
+    alignSelf: "center",
+    marginStart: wp(31),
+    top:19,
+    fontSize:17
   }
 });
 

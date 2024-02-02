@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity,Pressable, Platform } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Icon from "../icon";
 import {
   widthPercentageToDP as wp,
@@ -174,10 +174,10 @@ export const ExchangeHeaderIcon = (props) => {
         <Icon
           name={"left"}
           type={"antDesign"}
-          size={23}
+          size={28}
           color={"white"}
           onPress={() => {
-            navigation.goBack();
+            navigation.navigate("Home")
           //  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
           //  AsyncStorage.removeItem(LOCAL_TOKEN);
           //  Navigate()
@@ -186,7 +186,23 @@ export const ExchangeHeaderIcon = (props) => {
         />
         </TouchableOpacity>
       </View>
-      {Platform.OS==="android"?<Text style={styles.text}>{title}</Text>:<Text style={[styles.text,styles.text1_ios]}>{title}</Text>}
+      { isLogOut ?Platform.OS==="android"?<Text style={styles.text}>Exchange</Text>:<Text style={[styles.text,styles.text1_ios]}>Exchange</Text>:Platform.OS==="android"?<Text style={{ color: "white",
+    fontSize:19,
+    fontWeight:"bold",
+    alignSelf: "center",
+    // textAlign: "center",
+    marginStart:wp(21)}}>Exchange</Text>:<Text style={{ color: "white",
+    fontSize:19,
+    fontWeight:"bold",
+    alignSelf: "center",
+    // textAlign: "center",
+    marginStart:wp(31),color: "white",
+    fontWeight: "700",
+    alignSelf: "center",
+    marginStart: wp(23),
+    top:19,
+    fontSize:17}}>Exchange</Text>}
+      
         <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
         <Image source={darkBlue} style={styles.logoImg} />
         </TouchableOpacity>
@@ -196,23 +212,27 @@ export const ExchangeHeaderIcon = (props) => {
            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
            AsyncStorage.removeItem(LOCAL_TOKEN);
            Navigate()
-           navigation.navigate('exchangeLogin')
+           
+      navigation.navigate('exchangeLogin')
         }}>
 
         <Icon
           name={"logout"}
           type={"materialCommunity"}
-          size={20}
-          color={"#E96A6A"}
+          size={30}
+          // color={"#E96A6A"}
+          color={"#fff"}
           onPress={() => {
-            // const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-            // AsyncStorage.removeItem(LOCAL_TOKEN);
-           // navigation.navigate("Settings");
+            const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+            AsyncStorage.removeItem(LOCAL_TOKEN);
+          //  navigation.navigate("Settings");
+      navigation.navigate('exchangeLogin')
+
           }}
           />
-        <Text style={{ color: "#E96A6A" }}>Logout</Text>
+        {/* <Text style={{ color: "#E96A6A" }}>Logout</Text> */}
           </TouchableOpacity>
-      </View> :  <Text style={{ width: "10%" }}>{""}</Text>}
+      </View> :  <></>}
     </View>
   );
 };
@@ -312,7 +332,7 @@ const styles = StyleSheet.create({
   logoImg: {
     height: hp("9"),
     width: wp("12"),
-    marginLeft: wp(24),
+    marginLeft: wp(14),
   },
   logoImg_ios: {
     height: hp("9"),
@@ -321,18 +341,17 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize:17,
-    fontWeight: "700",
+    fontSize:19,
+    fontWeight:"bold",
     alignSelf: "center",
-    textAlign: "center",
-    marginStart:wp(34)
+    // textAlign: "center",
+    marginStart:wp(31)
   },
   text1: {
     color: "white",
     fontWeight: "700",
     marginLeft:wp(31),
     fontSize:17,
-    fontWeight:"700"
   },
   text_1: {
     color: "white",
@@ -345,7 +364,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "700",
     alignSelf: "center",
-    marginStart: wp(33),
+    marginStart: wp(31),
     top:19,
     fontSize:17
   },

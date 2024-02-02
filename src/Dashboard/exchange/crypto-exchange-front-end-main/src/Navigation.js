@@ -77,7 +77,7 @@ export function ExchangeNavigation() {
           tabBarLabel: "Home",
           headerShown: true,
           header: () => {
-            return <ExchangeHeaderIcon />;
+            // return <ExchangeHeaderIcon />;
           },
         }}
       />
@@ -87,7 +87,7 @@ export function ExchangeNavigation() {
         options={{
           headerShown: true,
           header: () => {
-            return <ExchangeHeaderIcon />;
+            // return <ExchangeHeaderIcon />;
           },
         }}
       />
@@ -97,7 +97,7 @@ export function ExchangeNavigation() {
         options={{
           headerShown: true,
           header: () => {
-            return <ExchangeHeaderIcon />;
+            // return <ExchangeHeaderIcon />;
           },
           //Tab bar styles can be added here
         }}
@@ -109,7 +109,7 @@ export function ExchangeNavigation() {
         options={{
           headerShown: true,
           header: () => {
-            return <ExchangeHeaderIcon />;
+            // return <ExchangeHeaderIcon />;
           },
         }}
       />
@@ -120,7 +120,7 @@ export function ExchangeNavigation() {
         options={{
           headerShown: true,
           header: () => {
-            return <ExchangeHeaderIcon />;
+            // return <ExchangeHeaderIcon />;
           },
         }}
       />

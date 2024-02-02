@@ -29,14 +29,17 @@ import Bnbimage from "../../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../../assets/ethereum.png";
 import Xrpimage from "../../../assets/xrp.png";
 import Maticimage from "../../../assets/matic.png";
+import stellarImg from "../../../assets/Stellar_(XLM).png"
 import Modal from "react-native-modal";
 import ImportBinanceWallet from "./importBinance";
 import ImportEthereumModal from "./importEthereumModal";
 import ImportMultiCoinWalletModal from "./importMultiCoinWalletModal";
 import ImportPolygonWalletModal from "./ImportPolygonWalletModal";
+import ImportStellar from "./importStellarModal";
 import ImportXrpWalletModal from "./importXrpWalletModal";
 import ModalHeader from "../reusables/ModalHeader";
 import { WalletHeader } from "../header";
+import ImportStellarModal from "./importStellarModal";
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
   const [MultiCoinModal, setMultiCoinMoodal] = useState(false);
@@ -44,6 +47,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
   const [EthereumWallet, setEthereumWallet] = useState(false);
   const [PolygonWallet, setPolygonwallet] = useState(false);
   const [XrpWallet, setXrpWallet] = useState(false);
+  const [Stellar_wallet,setStellar_wallet]=useState(false);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -163,6 +167,15 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           <Image source={Xrpimage} style={style.img} />
           <Text style={style.text}> Xrp</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={style.Box}
+          onPress={() => {
+            setStellar_wallet(true);
+          }}
+        >
+          <Image source={stellarImg} style={style.img} />
+          <Text style={style.text}> Stellar</Text>
+        </TouchableOpacity>
       </View>
       <View>
         <ImportBinanceWallet
@@ -200,6 +213,13 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           setModalVisible={setVisible}
           setVisible={setVisible}
         />
+        <ImportStellarModal
+        Visible={Stellar_wallet}
+        onCrossPress={()=>{setStellar_wallet(false)}}
+        setWalletVisible={setStellar_wallet}
+        setModalVisible={setVisible}
+        setVisible={setVisible}
+      />
       </View>
     </Modal>
   );
