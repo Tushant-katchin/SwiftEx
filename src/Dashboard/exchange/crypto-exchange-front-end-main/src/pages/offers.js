@@ -28,6 +28,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
+import { useIsFocused } from '@react-navigation/native';
 
 
 
@@ -163,6 +164,7 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
   );
 };
 export const OfferListViewHome = () => {
+  const isFocused = useIsFocused();
   const [history, sethistory] = useState([]);
   const [pull, setPull] = useState(false)
   const getAllTransactions = async () => {
@@ -186,7 +188,7 @@ export const OfferListViewHome = () => {
 
 useEffect(()=>{
   getAllTransactions();
-},[])
+},[isFocused])
   return (
     <View style={{ backgroundColor: "#131E3A" }}>
       <Text style={{color:"white",marginLeft:13,marginTop:13,fontWeight:"bold",fontSize:19}}>Created Offers.</Text>
@@ -207,7 +209,8 @@ useEffect(()=>{
               <Text style={styles.AssetText}>Created</Text>
             </View>
             <>
-            { history.map((offer,index) => {
+            {history.length===0?<Text style={{color:"white",margin:10,fontWeight:"bold",fontSize:19}}>{"No Offer Records."}</Text>:
+            history.map((offer,index) => {
                  return (
                    <>
                    <View key={index}>

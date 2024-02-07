@@ -78,7 +78,35 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
   }
+  const openModal1 = () => {
+    setModalVisible(true);
+    setModalVisible2(false);
+    setModalVisible3(false);
+  };
 
+  const openModal2 = () => {
+    setModalVisible(false);
+    setModalVisible2(true);
+    setModalVisible3(false);
+  };
+
+  const openModal3= async()=>{
+      const walletType = await AsyncStorageLib.getItem("walletType");
+      console.log(JSON.parse(walletType));
+      if (!JSON.parse(walletType))
+        return alert("please select a wallet first to swap tokens");
+      if (
+        JSON.parse(walletType) === "BSC" ||
+        JSON.parse(walletType) === "Ethereum" ||
+        JSON.parse(walletType) === "Multi-coin"
+      ) {
+        setModalVisible(false);
+        setModalVisible2(false);
+        setModalVisible3(true);
+      } else {
+        alert("Swapping is only supported for Ethereum and Binance ");
+      }
+  }
   const Logo = () => {
     return <Icons name="bitcoin" size={20} color="white" />;
   };
@@ -427,7 +455,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         </Text>
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+        <TouchableOpacity onPress={() => {openModal1()}}>
         <IconWithCircle
           name={"arrowup"}
           type={"antDesign"}
@@ -435,7 +463,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           // onPress={() => setModalVisible(!modalVisible)}
         />
        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setModalVisible2(true)}>
+        <TouchableOpacity onPress={() => {openModal2()}}>
         <IconWithCircle
           name={"arrowdown"}
           type={"antDesign"}
@@ -443,21 +471,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           // onPress={() => setModalVisible2(true)}
         />
         </TouchableOpacity>
-        <TouchableOpacity onPress={async () => {
-            const walletType = await AsyncStorageLib.getItem("walletType");
-            console.log(JSON.parse(walletType));
-            if (!JSON.parse(walletType))
-              return alert("please select a wallet first to swap tokens");
-            if (
-              JSON.parse(walletType) === "BSC" ||
-              JSON.parse(walletType) === "Ethereum" ||
-              JSON.parse(walletType) === "Multi-coin"
-            ) {
-              setModalVisible3(true);
-            } else {
-              alert("Swapping is only supported for Ethereum and Binance ");
-            }
-          }}>
+        <TouchableOpacity onPress={async () => {openModal3()}}>
         <IconWithCircle
           name={"swap-horizontal"}
           type={"ionicon"}

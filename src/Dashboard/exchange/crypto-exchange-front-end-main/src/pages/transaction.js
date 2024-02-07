@@ -33,7 +33,8 @@ import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import OffersButton from "../../../../offersButton";
 import { OfferListView } from "./offers";
 import { alert } from "../../../../reusables/Toasts";
-
+import { ActivityIndicator } from "react-native";
+import { useIsFocused } from '@react-navigation/native';
 export const TransactionsListView = ({
   transactions,
   self = false,
@@ -263,43 +264,54 @@ const OffersListView = ({ transactions, self = false }) => {
 };
 
 export const TransactionView = () => {
+  const isFocused = useIsFocused();
   StellarSdk.Network.useTestNetwork();
         const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
   const navigation = useNavigation();
   const [pull, setPull] = useState([])
+  const [Key,setKey]=useState("");
+  const [load,setload]=useState(false);
 const getData = async () => {
   try {
     const storedData = await AsyncStorageLib.getItem('myDataKey');
     if (storedData !== null) {
       const parsedData = JSON.parse(storedData);
       console.log('Retrieved data:', parsedData);
-      const Key = parsedData.key1;
-      console.log(":::",Key)
-      getTrades(Key)
+      fetchData_(parsedData.key1);
     }
     else {
       console.log('No data found in AsyncStorage');
     }
   } catch (error) {
-    console.error('Error retrieving data:', error);
+    console.log('Error retrieving data:', error);
   }
 };
-async function getTrades(accountId) {
-  try {
-    const account = await server.loadAccount(accountId);
-    const trades = await server.trades().forAccount(accountId).call();
-    console.log('Trades for account:', accountId);
-    setPull(trades.records)
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
 useEffect(()=>{
   getData();
-},[])
-setTimeout(()=>{
-    getData();
-},3000)
+},[isFocused]);
+const fetchData_ = async (key) => {
+  setload(true);
+  try {
+    const response =await fetch('https://horizon-testnet.stellar.org/accounts/'+key+'/trades?limit=30&order=desc')
+    if (!response.ok) {
+      console.log("`HTTP error! Status: ${response.status}")
+    }
+    if(response.status==='404')
+    {
+     setPull([]);
+     setload(false);
+    }
+    else{
+    const apiResponse = await response.json();
+    const records = apiResponse._embedded.records;
+    setPull(records)
+    setload(false);
+  }
+  } catch (error) {
+    console.log('Error fetching data:', error);
+    setload(false);
+  }
+};
   return (
     <>
     <View style={styles.headerContainer1_TOP}>
@@ -369,7 +381,7 @@ setTimeout(()=>{
               <Text style={styles.AssetText}>Created</Text>
             </View>
             <>
-            {pull.length===0?<Text style={{color:"white",margin:10,fontWeight:"bold",fontSize:19}}>No Trade Records.</Text>: pull.map((offer,index) => {
+            {pull.length===0?<Text style={{color:"white",margin:10,fontWeight:"bold",fontSize:19}}>{load===true?<ActivityIndicator color={"white"}/>:"No Trade Records."}</Text>: pull.map((offer,index) => {
                  return (
                    <>
                    <View key={index}>

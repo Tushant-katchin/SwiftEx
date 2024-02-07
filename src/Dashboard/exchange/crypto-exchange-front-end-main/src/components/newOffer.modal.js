@@ -23,10 +23,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native'
+import { useIsFocused } from '@react-navigation/native';
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress }) => {
+  const isFocused = useIsFocused();
   const state = useSelector((state) => state);
   const [loading, setloading] = useState(false)
   const [show, setshow] = useState(false)
@@ -349,11 +351,19 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
     getData();
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
-  },[show_bal,selectedValue, route])
+    setTimeout(()=>{
+      setemail(user.email);
+      setPostData({
+        email: u_email,
+        publicKey: PublicKey,
+      })
+      console.log("MAIL:===",u_email)
+     },1000)
+  },[isFocused])
   useEffect(() => {
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
-  }, [show_bal,selectedValue, route])
+  }, [show_bal,selectedValue, route,isFocused])
 
  useEffect(()=>{
    setTimeout(()=>{
@@ -364,7 +374,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
     })
     console.log("MAIL:===",u_email)
    },1000)
- },[selectedValue, route])
+ },[selectedValue, route,isFocused])
 
   return (
     <Modal

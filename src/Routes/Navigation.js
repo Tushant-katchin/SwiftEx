@@ -221,7 +221,18 @@ const AuthStack = () => (
        <Stack.Screen
         name="buycrypto"
         component={Generate}
-        options={{ headerShown: true ,headerStyle:{backgroundColor:"#4CA6EA"},headerTintColor:"white"}}
+        // options={{ headerShown: true ,headerStyle:{backgroundColor:"#4CA6EA"},headerTintColor:"white"}}
+        options={{
+          header: () => {
+            return (
+              <WalletHeader
+                title={"Buy"}
+                IconName="delete"
+                IconType="material"
+              />
+            );
+          },
+        }}
       />
 
       <Stack.Screen

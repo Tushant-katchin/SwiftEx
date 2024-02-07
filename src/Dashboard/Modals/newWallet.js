@@ -137,18 +137,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
           ) : (
             <Text> </Text>
           )}
-
-          <LinearGradient
-            start={[1, 0]}
-            end={[0, 1]}
-            colors={
-              Checked && Checked2
-                ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]
-                : ["gray", "gray"]
-            }
-            style={style.PresssableBtn}
-          >
-            <TouchableOpacity
+<TouchableOpacity
             style={{width:wp(30),alignItems:"center"}}
               disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
@@ -183,9 +172,20 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
                 }, 1);
               }}
             >
-              <Text style={{ color: "black" }}>Continue</Text>
-            </TouchableOpacity>
+          <LinearGradient
+            start={[1, 0]}
+            end={[0, 1]}
+            colors={
+              Checked && Checked2
+                ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]
+                : ["gray", "gray"]
+            }
+            style={style.PresssableBtn}
+          >
+
+              <Text style={{ color: "white" }}>Continue</Text>
           </LinearGradient>
+            </TouchableOpacity>
           </View>
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
           

@@ -36,7 +36,7 @@ import { AreaChart, Grid, LineChart, XAxis, YAxis } from "react-native-svg-chart
 
 export const CoinDetails = (props) => {
 
-
+  const [load,setload]=useState(false);
   const [trades, setTrades] = useState();
   const [percent, setPercent] = useState(1);
   console.log(props?.route?.params?.data);
@@ -78,6 +78,12 @@ export const CoinDetails = (props) => {
     chooseStyle(percent);
     //fetchKline()
   }, [timeFrame]);
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      setload("true");
+    },500)
+  })
 
   async function getChart(name, timeFrame) {
     if (timeFrame === "1h") {
@@ -338,7 +344,7 @@ export const CoinDetails = (props) => {
           zIndex: 10,
           marginLeft:wp(3),
         }}
-        contentInset={{ top: 20 }}
+        contentInset={{ top: 10,bottom:20 }}
         // contentInset={contentInset}
         svg={{
           fill: "gray",
@@ -361,20 +367,35 @@ export const CoinDetails = (props) => {
           fontWeight: "500"
         }}
       />
-
-      <LineChart
-        style={{
+    <View style={{
           height: hp(30),
           width: wp(70),
           marginLeft:hp(8),
           alignSelf: "center",
           marginTop: hp(6),
+        }}>
+           {/* <LineChart
+        style={{
+          height: hp(30),
+          width: wp(70),
+          alignSelf: "center",
         }}
         data={Data ? Data : data}
         svg={{ stroke: "rgb(134, 65, 244)" }}
         contentInset={{ top: 10, bottom: 10 }}
-      />
+      /> */}
 
+{load===false?<ActivityIndicator color={"green"} size={"large"} style={{marginTop:hp(13),marginLeft:-40}}/>:
+      <LineChart
+      style={{ flex: 1 }}
+      data={Data ? Data : data}
+      svg={{ stroke: 'rgb(134, 65, 244)' }}
+      contentInset={{ top: 10, bottom: 10 }}
+      >
+      <Grid />
+    </LineChart>
+}
+          </View>
       {/* <AreaChart
         style={{
           height: hp(30),
