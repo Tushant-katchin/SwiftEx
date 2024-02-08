@@ -139,7 +139,7 @@ const Payout = () => {
     }
     const fetchData = async () => {
         try {
-          const result = await getAllDataAndShow(PublicKey);
+          const result = await getAllDataAndShow('GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI');
           setTransactions(result);
           console.log(";;;;;;;",transactions)
         } catch (error) {

@@ -364,24 +364,58 @@ const Generate_Wallet = async (
   }
 };
 
+// const Generate_Wallet2 = async () => {
+//   console.log("starting");
+//   const wallet = ethers.Wallet.createRandom();
+//   const words = wallet.mnemonic.phrase;
+//   const xrpWalletFromM = xrpl.Wallet.fromMnemonic(words);
+//   const entropy = ethers.utils.mnemonicToEntropy(words);
+//   console.log("\t===> seed Created from mnemonic", entropy.split("x")[1]);
+//   const xrpWallet = xrpl.Wallet.fromEntropy(entropy.split("x")[1]); // This is suggested because we will get seeds also
+//   console.log(xrpWallet); // Produces different addresses
+
+//   console.log("address:", wallet.address);
+//   console.log("mnemonic:", wallet.mnemonic.phrase);
+//   console.log("privateKey:", wallet.privateKey);
+//   console.log(ethers.utils.mnemonicToSeed(words));
+//   let node = ethers.utils.HDNode.fromMnemonic(words);
+//   let account1 = node.derivePath("m/44'/60'/0'/0/0");
+//   let account2 = node.derivePath("m/44'/60'/0'/0/1");
+//   console.log(account1, account2, node);
+//   const Wallet = {
+//     address: account1.address,
+//     privateKey: account1.privateKey,
+//     mnemonic: account1.mnemonic.phrase,
+//     xrp:{
+//       address:xrpWallet.classicAddress,
+//       privateKey:xrpWallet.seed
+//     },
+//     walletType: "Multi-coin",
+//   };
+//   //U2FsdGVkX1/SRbuXM6TDBLUvaesi/GDEZvnfyv5cQsJfuJ/EmJKOu4Dsa0H69vd17YHoou1e9TD44Sc4fgM0AXQkKyPE2kWYkkOvB/3hyuoX4sfjFSTJMVhEfwKKHoy0
+//   //console.log("accountFromMnemonic", accountFromMnemonic.address);
+//   //return wallet.mnemonic.phrase
+//   console.log(wallet);
+
+//   if (wallet) {
+//     AsyncStorage.setItem("Wallet", JSON.stringify(Wallet));
+
+//     return {
+//       status: "success",
+//       message: "Wallet generation successful",
+//       wallet: Wallet,
+//     };
+//   }
+// };
+
 const Generate_Wallet2 = async () => {
   console.log("starting");
   const wallet = ethers.Wallet.createRandom();
   const words = wallet.mnemonic.phrase;
-  const xrpWalletFromM = xrpl.Wallet.fromMnemonic(words);
   const entropy = ethers.utils.mnemonicToEntropy(words);
-  console.log("\t===> seed Created from mnemonic", entropy.split("x")[1]);
-  const xrpWallet = xrpl.Wallet.fromEntropy(entropy.split("x")[1]); // This is suggested because we will get seeds also
-  console.log(xrpWallet); // Produces different addresses
-
-  console.log("address:", wallet.address);
-  console.log("mnemonic:", wallet.mnemonic.phrase);
-  console.log("privateKey:", wallet.privateKey);
-  console.log(ethers.utils.mnemonicToSeed(words));
+  const xrpWallet = xrpl.Wallet.fromEntropy(entropy.split("x")[1]);
   let node = ethers.utils.HDNode.fromMnemonic(words);
   let account1 = node.derivePath("m/44'/60'/0'/0/0");
-  let account2 = node.derivePath("m/44'/60'/0'/0/1");
-  console.log(account1, account2, node);
   const Wallet = {
     address: account1.address,
     privateKey: account1.privateKey,
@@ -392,11 +426,6 @@ const Generate_Wallet2 = async () => {
     },
     walletType: "Multi-coin",
   };
-  //U2FsdGVkX1/SRbuXM6TDBLUvaesi/GDEZvnfyv5cQsJfuJ/EmJKOu4Dsa0H69vd17YHoou1e9TD44Sc4fgM0AXQkKyPE2kWYkkOvB/3hyuoX4sfjFSTJMVhEfwKKHoy0
-  //console.log("accountFromMnemonic", accountFromMnemonic.address);
-  //return wallet.mnemonic.phrase
-  console.log(wallet);
-
   if (wallet) {
     AsyncStorage.setItem("Wallet", JSON.stringify(Wallet));
 
