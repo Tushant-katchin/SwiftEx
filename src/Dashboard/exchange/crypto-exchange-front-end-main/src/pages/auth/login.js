@@ -18,7 +18,7 @@ export const LoginView = (props) => {
     if (searchParams) {
       const phoneNumber = searchParams.get('phone')
       if (phoneNumber) {
-        setFormContent({ ...formContent, phoneNumber: phoneNumber.trim() })
+        setFormContent({ ...formContent, phoneNumber: phoneNumber })
         setIsOtpSent(true)
       }
     }

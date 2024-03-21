@@ -14,6 +14,8 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useSelector } from "react-redux";
@@ -68,6 +70,7 @@ export const HomeView = ({ setPressed }) => {
   const [change, setChange] = useState(false);
   const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
   const inActiveColor = ["#131E3A", "#131E3A"];
+  const [Offer_active,setOffer_active]=useState(false);
 
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
@@ -84,7 +87,21 @@ export const HomeView = ({ setPressed }) => {
       });
     });
   };
+
+  const getAccountDetails = async () => {
+    try {
+      const { res, err } = await authRequest("/users/getStripeAccount", GET);
+    if(res)
+    {
+      setOffer_active(true);
+    }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
+    getAccountDetails();
     fetchProfileData();
     getOffersData();
     getBidsData();
@@ -133,6 +150,7 @@ export const HomeView = ({ setPressed }) => {
   const fetchProfileData = async () => {
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
+      console.log("_+++++++",res)
       if (err) return setMessage(` ${err.message} please log in again!`);
       setProfile(res);
     } catch (err) {
@@ -224,7 +242,29 @@ export const HomeView = ({ setPressed }) => {
     });
   }, []);
 
-
+const kyc=()=>{
+  console.log("called");
+  applyForKyc();
+}
+  
+const Offer_condition=()=>{
+  getAccountDetails()
+  if(Offer_active===true)
+  {
+    if (
+      walletType === "Ethereum" ||
+      walletType === "Multi-coin"
+    ) {
+      setOpen(true);
+    } else {
+      
+      alert('error',"Only Ethereum wallet are supported");
+    }
+  }
+  else{
+    Alert.alert("Account","Add Bank Account from Profile Tab.");
+  }
+}
   return (
     <>
 <View style={styles.headerContainer1_TOP}>
@@ -262,7 +302,7 @@ export const HomeView = ({ setPressed }) => {
         const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
         AsyncStorage.removeItem(LOCAL_TOKEN);
         Navigate();
-        navigation.navigate('exchangeLogin');
+        navigation.navigate('Home');
       }}
     >
       <Icon
@@ -291,7 +331,7 @@ export const HomeView = ({ setPressed }) => {
           colors={["rgba(223, 172, 196, 1)", "rgba(192, 197, 234, 1)"]}
           style={styles.linearContainer}
         >
-          <View>
+
             {state.wallet ? (
               <View>
                 <View style={styles.iconwithTextContainer}>
@@ -315,9 +355,9 @@ export const HomeView = ({ setPressed }) => {
                 Please select a wallet first!
               </Text>
             )}
-          </View>
 
-          <View>
+
+
             {message ? (
               <>
                 <View style={styles.copyRideContainer}>
@@ -336,55 +376,22 @@ export const HomeView = ({ setPressed }) => {
             ) : (
               null
             )}
-          </View>
-        </LinearGradient>
 
-        {walletType === "Ethereum" || walletType === "Multi-coin" ? (
-          <Text style={{ color: "white" }}>{walletType} Wallet Connected</Text>
-        ) : (
-          <Text style={styles.whiteColor}>
-            Only Ethereum and Multi-coin based wallets are supported.
-          </Text>
-        )}
-        <Text style={styles.actionText}>Actions</Text>
-        {profile && (
+        </LinearGradient>
+       
+{profile && (
           <View>
-            <FieldView
-              style={{ color: "#fff" }}
-              title="KYC Status"
-              value={profile.isVerified}
-              applyForKyc={applyForKyc}
-              type="kyc"
-            />
-            <View>
               {profile.isVerified ? (
-                <>
-                  {/* <LinearGradient
-                    start={[1, 0]}
-                    end={[0, 1]}
-                    colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-                    style={styles.PresssableBtn}
-                  > */}
-                  <TouchableOpacity
+                <View >
+                  <TouchableOpacity 
                     style={styles.PresssableBtn}
                     onPress={() => {
-                      console.log(walletType)
                      // setOpen(true)
-                      if (
-                        walletType === "Ethereum" ||
-                        walletType === "Multi-coin"
-                      ) {
-                        setOpen(true);
-                      } else {
-                        
-                        alert('error',"Only Ethereum wallet are supported");
-                      }
+                        Offer_condition(Offer_active)
                     }}
                   >
                     <Text style={{ color: "#fff" }}>Create Offer</Text>
                   </TouchableOpacity>
-                  {/* </LinearGradient> */}
-
                   <NewOfferModal
                     user={profile}
                     open={open}
@@ -392,29 +399,23 @@ export const HomeView = ({ setPressed }) => {
                     setOpen={setOpen}
                     getOffersData={getOffersData}
                   />
-                </>
+                </View>
               ) : (
-                <Text style={styles.kycText}>
-                  Please do KYC to start adding offers
-                </Text>
+                <Text style={styles.kycText}>KYC UPDATING <ActivityIndicator color={"green"}/>{profile.isVerified===false?kyc():""}</Text>
+
               )}
             </View>
-          </View>
+          // </View>
         )}
-        {/* <View style={{ marginTop: 5 }}>
-          <Button
-            title="logout"
-            color="red"
-            onPress={() => {
-              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-              AsyncStorage.removeItem(LOCAL_TOKEN);
-              navigation.navigate("Settings");
-            }}
-          ></Button>
-        </View> */}
-
+         {walletType === "Ethereum" || walletType === "Multi-coin" ? (
+          <Text style={{ color: "white" }}>{walletType} Wallet Connected</Text>
+        ) : (
+          <Text style={styles.whiteColor}>
+            Only Ethereum and Multi-coin based wallets are supported.
+          </Text>
+        )}
       </View>
-  <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',marginTop:-35} :{justifyContent:'center',alignItems:'center',marginTop:-70}}>
+  <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center'} :{justifyContent:'center',alignItems:'center'}}>
 <LineChart
         data={chartData}
         width={370}
@@ -499,7 +500,7 @@ export const HomeView = ({ setPressed }) => {
 const styles = StyleSheet.create({
   container: {
     width: wp(100),
-    height: hp(50),
+    height: hp(30),
     display: "flex",
     alignContent: "center",
     alignItems: "center",
@@ -617,8 +618,9 @@ const styles = StyleSheet.create({
     marginBottom: hp(2),
   },
   kycText: {
-    color: "#fff",
-    marginTop: hp(2),
+    color: "green",
+    // marginTop: hp(2),
+    fontSize:19,
   },
   bidText: {
     color: "#fff",

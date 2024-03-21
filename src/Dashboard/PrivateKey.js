@@ -113,8 +113,7 @@ const PrivateKey = (props) => {
         <View style={style.dotView1}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={style.welcomeText}>
-            Don't share and store Mnemonic with a network, such as email,photo,
-            social apps, and so on
+            Don't share such as email,photo,social apps,etc
           </Text>
         </View>
 
@@ -129,7 +128,7 @@ const PrivateKey = (props) => {
           placeholder="Enter your account name"
           value={accountName}
           onChangeText={(text) => setAccountName(text)}
-          placeholderTextColor="#FFF"
+          placeholderTextColor="gray"
           autoCapitalize={"none"}
         />
         <TouchableOpacity
@@ -259,7 +258,7 @@ const style = StyleSheet.create({
     marginLeft: 18,
     marginTop: hp(2),
   },
-  accountText: { color: "black", marginHorizontal: wp(9), marginTop: hp(4) },
+  accountText: { color: "black", marginHorizontal: wp(9), marginTop: hp(1) },
   nextButton: {
     alignSelf: "center",
     alignItems: "center",

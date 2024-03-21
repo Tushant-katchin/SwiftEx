@@ -22,11 +22,13 @@ import darkBlue from "../../../../../../../assets/darkBlue.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
 import PhoneInput from "react-native-phone-number-input";
-import { login, verifyLoginOtp } from "../../api";
+import { getAuth, login, saveToken, verifyLoginOtp } from "../../api";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import RNOtpVerify from "react-native-otp-verify";
 import { alert } from "../../../../../reusables/Toasts";
 import { ExchangeHeaderIcon } from "../../../../../header";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { REACT_APP_HOST } from "../../ExchangeConstants";
 
 export const ExchangeLogin = (props) => {
   const [value, setValue] = useState("");
@@ -39,6 +41,14 @@ export const ExchangeLogin = (props) => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState();
   const dispatch = useDispatch();
+  const [Email, setEmail] = useState("");
+  const [passcode_view, setpasscode_view] = useState(false);
+  const [passcode, setpasscode] = useState("");
+  const [con_passcode, setcon_passcode] = useState("");
+  const [disable, setdisable] = useState(true);
+  const [login_Passcode,setlogin_Passcode]=useState("");
+  const [active_forgot,setactive_forgot]=useState(false);
+  const [Loading_fog,setLoading_fog]=useState(false);
   const navigation = useNavigation();
 
   const otpHandler = (message) => {
@@ -61,46 +71,94 @@ export const ExchangeLogin = (props) => {
     }
   };
 
+  // const submitPhoneNumber = async () => {
+    // try {
+    //   // if (!value) {
+    //   //   return setMessage("phone number is required to proceed");
+    //   // }
+
+    //   console.log('formatted value', formattedValue);
+    //   const { err } = await login({ email: `${Email}` });
+    //   if (err) {
+    //     return setMessage(err.message);
+    //   }
+    //   setMessage("OTP is sent");
+    //   setIsOtpSent(true);
+    // } catch (err) {
+    //   console.log(err)
+    //   setMessage(err.message);
+    // } finally {
+    //   setLoading(false);
+    // }
+  // };
+
+
+
   const submitPhoneNumber = async () => {
-    try {
-      if (!value) {
-        return setMessage("phone number is required to proceed");
-      }
+     if(!Email||!login_Passcode)
+     {
+      alert("error","Both filed Requirde");
+      setEmail("");
+      setlogin_Passcode("");
+      setLoading(false)
+     }
+     else{
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+  
+      const raw = JSON.stringify({
+        "email": Email,
+        "otp": login_Passcode
+      });
+  
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+      };
+  
+      fetch(REACT_APP_HOST+"/users/login", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if(result.message==="Invalid credintials"||result.statusCode===400)
+          {
+            alert("error","Invalid credintials");
+            setEmail("");
+            setlogin_Passcode("");
+            setLoading(false);
+          }
+          else{
+            saveToken(result.token);
+            alert("success","Success");
+            setEmail("");
+            setlogin_Passcode("");
+            navigation.navigate("exchange");
+          }
 
-      console.log('formatted value',formattedValue);
-      const { err } = await login({ phoneNumber: `${formattedValue}` });
-      if (err) {
-        return setMessage(err.message);
-      }
-
-      setMessage("OTP is sent");
-      setIsOtpSent(true);
-    } catch (err) {
-      console.log(err)
-      setMessage(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      })
+        .catch((error) => {console.log(error)})
+     }
+  }
 
   const submitOtp = async () => {
     try {
       if (!otp) {
+        alert("error","OTP is required");
         return setMessage("OTP is required");
       }
-
       const { err } = await verifyLoginOtp({
-        phoneNumber: `${formattedValue}`,
+        email: `${Email}`,
         otp: otp,
       });
       if (err) {
         setMessage(err.message);
         setOtp(null);
       } else {
+        setOtp(null);
         setIsOtpSent(false);
         setMessage("");
-        navigation.navigate("exchange");
-        alert("success", "success");
+        setpasscode_view(true);
       }
     } catch (err) {
       setMessage(err.message);
@@ -108,6 +166,121 @@ export const ExchangeLogin = (props) => {
       setLoading(false);
     }
   };
+
+  const submitpasscode = async () => {
+    const token = await getAuth();
+
+    if (!passcode || !con_passcode) {
+      setLoading(false);
+      setcon_passcode("");
+      setpasscode("");
+      alert("error", "both field requird.");
+    }
+    else {
+      const result = passcode === con_passcode;
+      if (result === true) {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer " + token);
+        const raw = JSON.stringify({
+          "email": Email,
+          "passcode": con_passcode
+        });
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow"
+        };
+
+        fetch(REACT_APP_HOST + "/users/updatePasscode", requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            setLoading(false);
+            if (result.success === true) {
+              setpasscode_view(false);
+              setpasscode("");
+              setcon_passcode("");
+              alert("success", "Exchange Account Ready.");
+              navigation.navigate("exchange");
+            } else {
+              setpasscode("");
+             setcon_passcode("");
+              alert("error", "Something went worng.");
+            }
+          })
+          .catch((error) => {
+            setLoading(false);
+            console.error(error)
+          });
+      }
+      else {
+        setLoading(false);
+        setpasscode("");
+        setcon_passcode("");
+        alert("error", "Password Not Match.");
+      }
+    }
+
+  }
+
+  const forgot_pass=()=>{
+      setactive_forgot(true);
+  }
+
+  const get_otp_forget = async () => {
+    setLoading_fog(true);
+    if (!Email) {
+       setLoading_fog(false);
+      alert("error", "Email reqired.");
+    } else {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        const raw = JSON.stringify({
+          "email": Email
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow"
+        };
+
+        fetch(REACT_APP_HOST + "/users/forgot_passcode", requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.message === "Otp Send successfully") {
+              setLoading_fog(true);
+              setEmail("");
+              alert("success", "OTP sent in your mail.");
+              setLoading_fog(false);
+              navigation.navigate("exchangeLogin", {
+                phoneNumber: Email,
+              });
+            }
+            else {
+              setLoading_fog(true);
+              alert("error", "User not found.");
+              setEmail("");
+              setLoading_fog(false);
+            }
+            console.log(result)
+          })
+          .catch((error) => console.error(error));
+      } catch (err) {
+         setLoading_fog(true);
+        setMessage(err.message);
+        setLoading_fog(false);
+      } finally {
+        setLoading_fog(true);
+        setLoading(false);
+        setLoading_fog(false);
+      }
+    }
+    setLoading_fog(false);
+  }
 
   const HideKeyboard = ({ children }) => (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss()}>
@@ -120,11 +293,11 @@ export const ExchangeLogin = (props) => {
     try {
       if (props.route.params) {
         if (props.route.params.phoneNumber) {
-          console.log(props.route.params.phoneNumber);
           setIsOtpSent(true);
           const phoneNumber = props.route.params.phoneNumber;
           if (phoneNumber) {
-            setFormattedValue(phoneNumber);
+            setEmail(phoneNumber);
+            console.log(Email);
             setIsOtpSent(true);
           }
         }
@@ -135,6 +308,8 @@ export const ExchangeLogin = (props) => {
   });
 
   useEffect(() => {
+    setLoading(false);
+    setactive_forgot(false);
     try {
       if (props.route.params) {
         if (props.route.params.phoneNumber) {
@@ -142,7 +317,7 @@ export const ExchangeLogin = (props) => {
           setIsOtpSent(true);
           const phoneNumber = props.route.params.phoneNumber;
           if (phoneNumber) {
-            setFormattedValue(phoneNumber);
+            setEmail(phoneNumber);
             setIsOtpSent(true);
           }
         }
@@ -172,7 +347,7 @@ export const ExchangeLogin = (props) => {
 
   return (
     <>
-    <ExchangeHeaderIcon title="Exchange " isLogOut={false} />
+      <ExchangeHeaderIcon title="Exchange " isLogOut={false} />
       <SafeAreaView style={styles.container}>
         <View
           // style={styles.container}
@@ -193,9 +368,9 @@ export const ExchangeLogin = (props) => {
                     marginBottom: hp(3),
                   }}
                 >
-                  Login to your account
+                  {active_forgot===true?"Recover to your account":"Login to your account"}
                 </Text>
-                <PhoneInput
+                {/* <PhoneInput
                   textContainerStyle={{ paddingVertical: hp(1) }}
                   textInputStyle={{ paddingVertical: hp(0.1) }}
                   ref={phoneInput}
@@ -211,8 +386,8 @@ export const ExchangeLogin = (props) => {
                   }}
                   withDarkTheme
                   withShadow
-                />
-                  <TouchableOpacity
+                /> */}
+                {/* <TouchableOpacity
                     onPress={() => {
                       setLoading(true);
                       const checkValid =
@@ -235,17 +410,40 @@ export const ExchangeLogin = (props) => {
                       console.log(checkValid);
                       Keyboard.dismiss();
                     }}
-                  >
-                <LinearGradient
-                  colors={["#12c2e9", "#c471ed", "#f64f59"]}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.button}
+                  > */}
+                <TextInput textContentType="emailAddress" placeholder={"Email Adderss"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { setEmail(text) }} />
+                {active_forgot===false?<TextInput placeholder={"Password"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
+                <TouchableOpacity
+                  onPress={() => {
+                    if (active_forgot === false) {
+                      setLoading(true);
+                      try {
+                        setMessage("Your Mail is valid");
+                        submitPhoneNumber();
+                      } catch (e) {
+                        setLoading(true);
+                        console.log(e);
+                        alert("error", e);
+                      }
+                      setShowMessage(true);
+                      Keyboard.dismiss();
+                    }
+                    else{
+                      get_otp_forget();
+                    }
+                  }}
                 >
-                    <Text style={{ color: "white" }}>Login</Text>
-                </LinearGradient>
-                  </TouchableOpacity>
-                {showMessage ? (
+
+                  <LinearGradient
+                    colors={["#12c2e9", "#c471ed", "#f64f59"]}
+                    start={{ x: 0, y: 0.5 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.button}
+                  >
+                    <Text style={{ color: "white" }}>{active_forgot===false?"Login":Loading_fog===false?"Verify":<ActivityIndicator color={"white"}/>}</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                {/* {showMessage ? (
                   <Text
                     style={{
                       color: "white",
@@ -257,7 +455,10 @@ export const ExchangeLogin = (props) => {
                   </Text>
                 ) : (
                   <Text></Text>
-                )}
+                )} */}
+                <TouchableOpacity style={{alignSelf:"center",marginTop:15}} onPress={()=>{active_forgot===false?forgot_pass():[setactive_forgot(false),setEmail("")]}}>
+                {active_forgot===false?<Text style={{color:"white"}}>Forgot Password</Text>:<Text style={{color:"white"}}>Login</Text>}
+                </TouchableOpacity>
               </View>
 
               {loading ? (
@@ -292,33 +493,58 @@ export const ExchangeLogin = (props) => {
               <Text
                 style={{ color: "#FFFFFF", marginBottom: 20, fontSize: 16 }}
               >
-                Please Enter the OTP
+                Setup Exchange Account
               </Text>
-              <View style={styles.inp}>
-                <TextInput
-                  placeholderTextColor="#FFF"
-                  style={styles.input}
-                  theme={{ colors: { text: "white" } }}
-                  value={otp}
-                  placeholder={"OTP"}
-                  onChangeText={(text) => {
-                    console.log(text);
-                    setOtp(text);
-                  }}
-                  autoComplete={"sms-otp"}
-                  textContentType={"oneTimeCode"}
-                  keyboardType={"number-pad"}
-                  maxLength={6}
-                />
+
+              <View style={{ marginVertical: 3 }}>
+                {passcode_view === false ? <><Text style={{ marginVertical: 15, color: "white" }}>Verfication OTP</Text>
+                  <TextInput
+                    placeholderTextColor="gray"
+                    style={styles.input}
+                    theme={{ colors: { text: "white" } }}
+                    value={otp}
+                    placeholder={"OTP"}
+                    onChangeText={(text) => {
+                      console.log(text);
+                      setOtp(text);
+                    }}
+                    autoComplete={"sms-otp"}
+                    textContentType={"oneTimeCode"}
+                    keyboardType={"number-pad"}
+                    maxLength={6}
+                  /></> : <>{/* Set pass code  */}
+                  <Text style={{ marginVertical: 15, color: "white" }}>Password</Text>
+                  <TextInput
+                    placeholderTextColor="gray"
+                    style={styles.input}
+                    theme={{ colors: { text: "white" } }}
+                    value={passcode}
+                    placeholder={"ABC@!1234"}
+                    onChangeText={(text) => {
+                      setpasscode(text);
+                    }}
+                  />
+                  {/* Set con-pass code  */}
+                  <Text style={{ marginVertical: 15, color: "white" }}>Confirm Password</Text>
+                  <TextInput
+                    placeholderTextColor="gray"
+                    style={styles.input}
+                    theme={{ colors: { text: "white" } }}
+                    value={con_passcode}
+                    placeholder={"ABC@!1234"}
+                    onChangeText={(text) => {
+                      setcon_passcode(text);
+                    }}
+                  /></>}
               </View>
 
-              <View style={{ marginTop: 10 }}>
+              {/* <View style={{ marginTop: 10 }}>
                 {showMessage ? (
                   <Text style={{ color: "white" }}>{Message}</Text>
                 ) : (
                   <Text></Text>
                 )}
-              </View>
+              </View> */}
 
               {loading ? (
                 <ActivityIndicator size="large" color="white" />
@@ -333,16 +559,19 @@ export const ExchangeLogin = (props) => {
                 style={styles.verifyBtn}
               >
                 <TouchableOpacity
+                  disabled={!disable}
                   onPress={() => {
                     setLoading("true");
-                    submitOtp();
+                    { passcode_view === false ? submitOtp() : submitpasscode() }
                     Keyboard.dismiss()
                   }}
                 >
                   <Text style={styles.buttonText}>Verify</Text>
                 </TouchableOpacity>
               </LinearGradient>
-              <Text style={{marginTop:10,color:"gray"}} onPress={()=>{navigation.navigate("exchangeLogin")}}>Edit Phone Number</Text>
+              <TouchableOpacity onPress={() => { navigation.navigate("exchangeLogin") }}>
+                <Text style={{ marginTop: 14, color: "gray" }}>Edit Email Id</Text>
+              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -465,3 +694,4 @@ const styles = StyleSheet.create({
     marginTop: hp(10),
   },
 });
+

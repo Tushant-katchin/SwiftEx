@@ -159,14 +159,17 @@ export const FieldView = ({
                 </View>
               </View>
             </>
-          ) : (
-            <Button
-              title="apply"
-              onPress={() => {
-                applyForKyc();
-              }}
-            />
-          )}
+          ) : 
+          // (
+            // <Button
+            //   title="apply"
+            //   onPress={() => {
+            //     applyForKyc();
+            //   }}
+            // />
+            // )
+            <></>
+          }
         </>
       ) : (
         <>
@@ -301,7 +304,7 @@ const EmailView = ({ value, isVerified, emailStyle }) => {
           justifyContent: "space-between",
         }}
       >
-        <TextInput
+        {/* <TextInput
           numberOfLines={1}
           style={[styles.input, emailStyle]}
           theme={{ colors: { text: "white" } }}
@@ -314,7 +317,7 @@ const EmailView = ({ value, isVerified, emailStyle }) => {
           autoCapitalize={"none"}
           placeholderTextColor="#FFF"
         />
-        <OutlinedInput EndAdornment={VerifyActionButtonView} type="email" />
+        <OutlinedInput EndAdornment={VerifyActionButtonView} type="email" /> */}
       </View>
       {verificationStatus === VERIFICATION_STATUS.OTP_SENT && (
         <View>
@@ -506,7 +509,7 @@ export const ProfileView = (props) => {
 
         <View style={styles.emailphoneView}>
           <FieldView
-            title="Phone Number"
+            title="Email"
             value={profile.phoneNumber}
             type="text"
           />

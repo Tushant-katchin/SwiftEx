@@ -19,7 +19,7 @@ import Etherimage from "../../assets/ethereum.png";
 import monkey from "../../assets/monkey.png"
 import wl from "../../assets/wl.jpg"
 import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
-import profile from "../../assets/profile.jpg"
+// import profile from "../../assets/profile.jpg"
 import { style } from "@mui/system";
 
 const Nfts = () => {

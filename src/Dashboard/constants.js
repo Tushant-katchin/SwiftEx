@@ -19,6 +19,7 @@ export const EthereumSecret = {
   // apiKey: "nVTR_gZ2GAO_KlSuvS2kCj7NyD0WxzNg",
   apiKey: "favrOyEWGeWQfG-rjh2KkqhJyUriu72j",
 };
+export const smart_contract_Address="0xc8e3e8c2bAf9f3b4d99b76A6AA152Ae1DF08D7B8";
 export const tokenAddresses = {
   BNB: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
   ETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",

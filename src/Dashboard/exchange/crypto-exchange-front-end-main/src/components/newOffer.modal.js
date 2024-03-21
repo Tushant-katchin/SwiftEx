@@ -8,7 +8,9 @@ import {
   Picker,
   ScrollView,
   Pressable,
-  Platform
+  Platform,
+  Alert,
+  Button
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -24,8 +26,14 @@ import Icon from "../../../../../icon";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native'
 import { useIsFocused } from '@react-navigation/native';
+import { EthereumSecret, smart_contract_Address } from "../../../../constants";
+import contractABI from './contractABI.json';
+import { authRequest, GET, getToken, POST } from "../api";
+import { REACT_APP_HOST } from "../ExchangeConstants";
+const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
+const alchemyUrl = 'https://eth-goerli.alchemyapi.io/v2/'+EthereumSecret.apiKey;
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress }) => {
   const isFocused = useIsFocused();
@@ -49,11 +57,27 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
   const inActiveColor = ["#131E3A", "#131E3A"];
   const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
   const navigation = useNavigation()
-  const [show_bal,setshow_bal]=useState(false)
+  const [show_bal,setshow_bal]=useState(false);
+  const [deposit_loading,setdeposit_loading]=useState(false);
   const [postData, setPostData] = useState({
     email: "",
     publicKey: "",
   });
+const [eth_modal_visible,seteth_modal_visible]=useState(false);
+const [eth_modal_amount,seteth_modal_amount]=useState("");
+const [eth_modal_load,seteth_modal_load]=useState(false);
+const [account_message,setaccount_message]=useState('');
+const getAccountDetails = async () => {
+  try {
+    const { res, err } = await authRequest("/users/getStripeAccount", GET);
+  if(!res)
+  {
+    setaccount_message('#  Add Bank Account From Profile.');
+  }
+  } catch (err) {
+    console.log(err);
+  }
+};
   ///////////////////////////////////start offer function
  const Save_offer = async (asset, amount, price, forTransaction, status, date) => {
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + asset + amount + date);
@@ -231,30 +255,33 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
 
   const get_stellar = async (asset) => {
     try {
-      setbalance("");
-      setshow(true)
-      console.log("<><", PublicKey)
-      StellarSdk.Network.useTestNetwork();
-      const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-      server.loadAccount(PublicKey)
-        .then(account => {
-          console.log('Balances for account:', PublicKey);
-          account.balances.forEach(balance => {
-            if (balance.asset_code === asset) {
-              console.log(`${balance.asset_code}: ${balance.balance}`);
-              setbalance(balance.balance)
-              setshow_bal(true)
-              setactiv(false)
-            }
-          });
-          setshow(false)
-        })
-        .catch(error => {
-          console.log('Error loading account:', error);
-          // alert("error", "Account Balance not found.");
-          setshow(false)
-          setactiv(true)
-        });
+        if(asset==="XUSD")
+        {
+          setbalance("");
+          setshow(true)
+          console.log("<><", PublicKey)
+          StellarSdk.Network.useTestNetwork();
+          const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+          server.loadAccount(PublicKey)
+            .then(account => {
+              console.log('Balances for account:', PublicKey);
+              account.balances.forEach(balance => {
+                if (balance.asset_code === asset) {
+                  console.log(`${balance.asset_code}: ${balance.balance}`);
+                  setbalance(balance.balance)
+                  setshow_bal(true)
+                  setactiv(false)
+                }
+              });
+              setshow(false)
+            })
+            .catch(error => {
+              console.log('Error loading account:', error);
+              // alert("error", "Account Balance not found.");
+              setshow(false)
+              setactiv(true)
+            });
+        }
     } catch (error) {
       console.log("Error in get_stellar")
       alert("error", "Something went wrong.");
@@ -263,6 +290,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
   }
 
   const offer_creation = () => {
+    getData();
     if (offer_amount !== "" && offer_price !== "") {
       { route === "SELL" ? Sell() : Buy() }
     }
@@ -273,12 +301,17 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
   }
 
   const active_account=async()=>{
-    console.log("<<<<<<<clicked")
+    console.log("<<<<<<<clicked");
+    
+    // const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+    const token = await getToken();
+    console.log(token)
   try {
-    const response = await fetch('http://localhost:3001/users/updatePublicKeyByEmail', {
+    const response = await fetch(REACT_APP_HOST+'/users/updatePublicKeyByEmail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(postData),
     });
@@ -345,9 +378,109 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
         setactiv(false)
     });
   }
+ 
+  // for get user balance from smart contract.
+  async function deposited_Ether_in_smart()
+  {
+    setshow(true);
+    const web3 = new Web3(alchemyUrl);
+    const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
+    // const addressToCheck = '0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA';//for test ether account.
+    const addressToCheck=PublicKey;
+    contract.methods.reservedEth(addressToCheck).call()
+        .then(balance => {
+          setshow(false);
+          const balanceInEth = web3.utils.fromWei(balance, 'ether');
+          setbalance(balanceInEth);
+        })
+        .catch(error => {
+          setshow(false);
+            console.error('Error:-----', error);
+        });        
+  }
+  
+  const eth_services=()=>{
+    selectedValue==="XUSD"?getData():
+    setPublicKey(state.wallet.address);
+    setactiv(false);
+    deposited_Ether_in_smart();
+  }
 
+
+
+  const Deposit_Eth=()=>{
+    seteth_modal_visible(true)
+    setdeposit_loading(true);
+
+    // Platform.OS==='android'?handleOpenModal():  Alert.prompt(
+    //   'Deposit Ether',
+    //   'Please Enter Amount of Ether',
+    //   (pin) => {
+    //     if (!pin) {
+    //       setdeposit_loading(false);
+    //       alert("error","worng pin try agin.")
+    //     } else {
+    //       deposit_Ether(pin);
+    //     }
+    //   },
+    //   'plain-text', 
+    //   '',
+    //   'numeric',
+    // );
+  }
+
+  /// service for deposit ether
+  async function deposit_Ether(offer_amount) {
+    seteth_modal_load(true);
+    // const PublicKey="0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA";
+    if(!offer_amount){
+      alert("error","Input correct value.");
+    seteth_modal_load(false);
+    }
+    else
+    {
+    const web3 = new Web3();
+    setshow(true);
+    const valueInWei = web3.utils.toWei(offer_amount, 'ether');
+    try {
+      const web3 = new Web3(new Web3.providers.HttpProvider(alchemyUrl));
+          const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
+          const txData = contract.methods.depositEth(valueInWei).encodeABI();
+      
+          const nonce = await web3.eth.getTransactionCount(PublicKey);
+          const txObject = {
+            nonce: web3.utils.toHex(nonce),
+            gasLimit: web3.utils.toHex(300000), 
+            gasPrice: web3.utils.toHex(await web3.eth.getGasPrice()),
+            to: smart_contract_Address,
+            data: txData,
+            value: web3.utils.toHex(valueInWei)
+      };
+  
+      const signedTx = await web3.eth.accounts.signTransaction(txObject, state.wallet.privateKey);
+  
+      const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+      setshow(false);
+      seteth_modal_amount('');
+      alert("success","Ether Deposited.");
+      setdeposit_loading(false);
+      seteth_modal_load(false);
+      console.log('Transaction hash:', txReceipt.transactionHash);
+      console.log('Transaction receipt:', txReceipt);
+    } catch (error) {
+    seteth_modal_load(false);
+      setshow(false);
+      setLoading(false);
+      setdeposit_loading(false);
+      seteth_modal_amount('');
+      alert("error",error);
+      console.error('Error:', error);
+    }
+  }
+  }
 
   useEffect(()=>{
+    getAccountDetails();
     getData();
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
@@ -363,6 +496,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
   useEffect(() => {
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
+    eth_services()
   }, [show_bal,selectedValue, route,isFocused])
 
  useEffect(()=>{
@@ -372,6 +506,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
       email: u_email,
       publicKey: PublicKey,
     })
+    seteth_modal_amount('');
     console.log("MAIL:===",u_email)
    },1000)
  },[selectedValue, route,isFocused])
@@ -479,8 +614,8 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
             >
 
               <View style={{ flexDirection: "row" }}>
-              {activ===true?<TouchableOpacity onPress={()=>{active_account()}}><View><Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text></View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(2) : 0.0} </Text>}
-                {show === true ? <ActivityIndicator color={"green"} /> : <></>}
+              {activ===true?<TouchableOpacity onPress={()=>{active_account()}}><View><Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text></View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
+                { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
               </View>
             </View>
 
@@ -500,13 +635,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
 
               <View style={{ width: '40%', marginTop: 19 }}>
                 <Text style={Platform.OS === "ios" ? [styles.currencyText, styles.down_] : styles.currencyText}> Curency</Text>
-                <Picker
-                  selectedValue={selectedValue}
-                  style={Platform.OS === "ios" ? { marginTop: -60, width: '90%' } : { marginTop: 3, width: '100%', marginLeft: 3 }}
-                  onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                >
-                  <Picker.Item label="USD" value="USD" color="white" />
-                </Picker>
+                <Text style={Platform.OS === "ios" ? { marginTop: 35, width: '90%',color:"white",fontSize:22,marginLeft:21 } : {marginTop: 16, width: '90%',color:"white",fontSize:16,marginLeft:21 }}>{selectedValue==="XUSD"?"USD":"ETH"}</Text>
               </View>
               <View>
                 <TouchableOpacity
@@ -520,14 +649,36 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
                     marginTop: 51,
                     backgroundColor: 'green',
                   }}
-                  onPress={() => { setOpen(false), navigation.navigate("Payment") }}
+                  onPress={() => { selectedValue==="XUSD"? [setOpen(false),navigation.navigate("Payment")]:Deposit_Eth()}}
                 >
-                  <Text style={styles.cancelText}>Add Funds</Text>
+                  <Text style={styles.cancelText}>{selectedValue==="XUSD"?"Add Funds":"Deposit"}</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-
+          <Modal visible={eth_modal_visible} animationType="slide" transparent={true}>
+        <View style={{backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,}}>
+          <View>
+            <Text style={{fontSize:19,marginBottom:3}}>Ether Amout</Text>
+            <TextInput
+              value={eth_modal_amount}
+              onChangeText={seteth_modal_amount}
+              placeholder="10.999"
+              style={{backgroundColor:"gray"}}
+              keyboardType="number-pad"
+            />
+            <View style={{flexDirection:"row",width:"100%",justifyContent:"space-evenly",marginTop:10}}>
+              <Button title="Cancel"  color="red" onPress={()=>{seteth_modal_visible(false)}}/>
+              <TouchableOpacity disabled={!eth_modal_amount} style={{width:"30%",height:"100%",backgroundColor:eth_modal_amount!==''?"green":"gray",borderRadius:5,elevation:5}} onPress={()=>{deposit_Ether(eth_modal_amount)}}>
+                    <Text style={{textAlign:'center',marginTop:6,fontSize:15,color:"white"}}>{eth_modal_load===true?<ActivityIndicator color={"white"}/>:"Deposit ETH"}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
           <View
             style={{
               display: "flex",
@@ -581,7 +732,7 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
                 onPress={() => { setLoading(true), offer_creation() }}
                 color="green"
               >
-                <Text style={styles.textColor}>{Loading === true ? <ActivityIndicator color={"white"} /> : "Create Offer"}</Text>
+                <Text style={styles.textColor}>{Loading === true ? <ActivityIndicator color={"white"} /> : "Create"}</Text>
               </TouchableOpacity>
             </LinearGradient>
           </View>
@@ -592,10 +743,11 @@ export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress
           )}
 
         </View>
-        <Text style={styles.noteText}>
+          <Text style={styles.noteText}>{account_message}</Text>
+        {/* <Text style={styles.noteText}>
           <Text style={{ fontWeight: "700" }}>Note:</Text> The above totals are
           just estimations that can vary depending on currency rates.
-        </Text>
+        </Text> */}
       </View>
 
     </Modal>
@@ -677,6 +829,7 @@ const styles = StyleSheet.create({
     marginVertical: hp(3),
     marginHorizontal: wp(17),
     width: wp(58),
+    color:"orange"
   },
   confirmButton: {
     alignItems: "center",

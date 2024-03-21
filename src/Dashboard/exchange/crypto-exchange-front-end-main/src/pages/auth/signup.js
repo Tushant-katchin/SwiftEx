@@ -38,7 +38,7 @@ export const ExchangeRegister = (props) => {
   const [formContent, setFormContent] = useState({
     firstName: "",
     lastName: "",
-    phoneNumber: "",
+    phoneNumber: email,
     email: "",
     accountAddress: "",
     walletAddress: state.wallet ? state.wallet.address : "",
@@ -53,7 +53,7 @@ export const ExchangeRegister = (props) => {
     setLoading(true);
     const { err } = await signup({
       ...formContent,
-      phoneNumber: `${formContent.phoneNumber}`,
+      phoneNumber: `${formContent.email}`,
     });
     setLoading(false);
     console.log(err)
@@ -62,7 +62,7 @@ export const ExchangeRegister = (props) => {
       return setMessage(err.message);
     }
     navigation.navigate("exchangeLogin", {
-      phoneNumber: formContent.phoneNumber,
+      phoneNumber: formContent.email,
     });
   };
 
@@ -117,7 +117,7 @@ export const ExchangeRegister = (props) => {
                 }
               />
             </View>
-            <View>
+            {/* <View>
                 <Text style={styles.text}>
                   Phone Number
                 </Text>
@@ -140,7 +140,7 @@ export const ExchangeRegister = (props) => {
                 withShadow
                 autoFocus
               />
-            </View>
+            </View> */}
             <View style={styles.inp}>
                 <Text style={styles.text}>
                   Email address
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     // fontSize: 24,
   },
   lowerbox: {
-    marginTop: hp(2),
+    marginTop: hp(11),
     height:hp(6),
     width: 400,
     backgroundColor: "#003166",

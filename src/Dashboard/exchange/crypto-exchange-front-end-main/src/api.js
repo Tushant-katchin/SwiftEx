@@ -15,7 +15,7 @@ export const getAuth = async () => {
 }
 
 // Getting Refreshed Tokens
-const getToken = async () => {
+export const getToken = async () => {
   const token = await AsyncStorageLib.getItem(LOCAL_TOKEN)
   if(token){
 
@@ -24,8 +24,8 @@ const getToken = async () => {
   return TOKEN
 }
 
-const saveToken = (token) => {
-  AsyncStorageLib.setItem(LOCAL_TOKEN, token)
+export const saveToken = (token) => {
+  AsyncStorageLib.setItem(LOCAL_TOKEN, token) 
 }
 
 export const removeAuth = () => {
@@ -70,6 +70,7 @@ export const verifyLoginOtp = async (loginOtpData) => {
     saveToken(token)
     return 'success'
   } catch (error) {
+    console.log("===",error)
     console.log('LOGIN_ERROR: \n' + error.response)
     const err = {
       message: error.response.data.message,
@@ -95,6 +96,30 @@ export const signup = async (userData) => {
     }
     return { err }
   }
+}
+
+// passcode adding
+export const Add_pin = async (userData) => {
+ try {
+  console.log("___",userData+await getToken())
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Bearer "+await getToken());  
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: userData,
+    redirect: "follow"
+  };
+  
+  fetch("http://localhost:3001/users/updatePasscode", requestOptions)
+    .then((response) => response.text())
+    .then((result) => console.log(result))
+    .catch((error) => console.error(error));
+
+ } catch (error) {
+      return {error}
+ }
 }
 
 // Authorized Requests

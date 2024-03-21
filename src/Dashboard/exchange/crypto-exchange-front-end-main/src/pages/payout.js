@@ -14,7 +14,7 @@ import { SavePayout, getAllDataAndShow} from "../../../../../utilities/utilities
 import { authRequest, GET, POST } from "../api";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Icon from "../../../../../icon";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 
 const StellarSdk = require('stellar-sdk');
@@ -22,6 +22,7 @@ const StellarSdk = require('stellar-sdk');
 
 const Payout = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
     const [balance, setbalance] = useState('');
     const [XETH, setXETH] = useState('GCW6DBA7KLB5HZEJEQ2F5F552SLQ66KZFKEPPIPI3OF7XNLIAGCP6JER');
     const [XUSD, setXUSD] = useState('GBCNZEEQXSVQ3O6DWJXAOVGUT3VRI2ZOU2JB4ZQC27SE3UU4BX7OZ5DN');
@@ -40,7 +41,7 @@ const Payout = () => {
     useEffect(()=>{ //uncomment for user
         getData();
         fetchProfileData();
-    },[route])
+    },[route,isFocused])
 
     const fetchProfileData = async () => {
         try {
@@ -74,6 +75,7 @@ const Payout = () => {
         }
     };
     const sendPayment = async (senderSecretKey, recipientPublicKey, g_amount, g_ASSET) => {
+        const local_asset=g_ASSET;
         setshow(true);
         StellarSdk.Network.useTestNetwork();
         const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
@@ -106,7 +108,14 @@ const Payout = () => {
             SavePayout(issuingAccountPublicKey, recipientPublicKey, transactionResult.created_at, "", g_amount, XETHAsset, "Success");
         } catch (error) {
             setshow(false);
-            SavePayout(issuingAccountPublicKey, recipientPublicKey, "19-JAN", "11:11", g_amount, g_ASSET, "Faild");
+            const currentdate = new Date();
+            var datetime =currentdate.getDate() + "/"
+                      + (currentdate.getMonth()+1)  + "/" 
+                      + currentdate.getFullYear() + " at "
+                      + currentdate.getHours() + ":"  
+                      + currentdate.getMinutes() + ":" 
+                      + currentdate.getSeconds();
+            SavePayout(issuingAccountPublicKey, recipientPublicKey, datetime, "", g_amount, local_asset, "Faild");
             console.error('Error making payment:', error);
             alert("error", "Payout failed.");
         }
@@ -150,7 +159,7 @@ const Payout = () => {
         get_stellar();
         // payout_amount("")
         fetchData();
-    }, [PublicKey,route])
+    }, [PublicKey,route,isFocused])
 
     const sub_function = (senderSecretKey, recipientPublicKey, g_amount, g_ASSET) => {
         Keyboard.dismiss();
@@ -272,7 +281,7 @@ const Payout = () => {
            <Text style={{alignSelf:'flex-end',color:'white'}}>MAX</Text>
            </Pressable>
             </View>
-            <Pressable style={styles.button} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}>
+            <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}>
                 <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : "Payout"}</Text>
             </Pressable>
             <Text style={{color:'white',fontSize:20,marginLeft:19,marginTop:"10%",fontWeight:"bold"}}>History</Text>
@@ -297,7 +306,7 @@ const Payout = () => {
                     </ScrollView>
                 </View>
               <Text style={styles.text_color}>Amount: {item.g_amount}</Text>
-              <Text style={styles.text_color}>Asset: {item.g_ASSET.code}</Text>
+              <Text style={styles.text_color}>Asset: {item.g_ASSET}</Text>
               <Text style={styles.text_color}>Created: {item.date}</Text>
               {/* <Text style={styles.text_color}>Time: {item.time}</Text> */}
             </View>
