@@ -237,8 +237,10 @@ const Market = (props) => {
   ) => {
     try {
       await fetch(
-        `http://${urls.testUrl}/user/getcryptodata`,
+        // `http://${urls.testUrl}/user/getcryptodata`,
         // `http://157.230.10.52:2000/user/getcryptodata`,
+        // `http://localhost:2000/user/getcryptodata`,
+
         {
           method: "GET",
           headers: {

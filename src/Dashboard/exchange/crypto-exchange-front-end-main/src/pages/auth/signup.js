@@ -22,6 +22,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import PhoneInput from "react-native-phone-number-input";
 import { signup } from "../../api";
 import { useSelector } from "react-redux";
+import {alert} from '../../../../../reusables/Toasts'
 
 export const ExchangeRegister = (props) => {
   const state = useSelector((state) => state);
@@ -57,13 +58,24 @@ export const ExchangeRegister = (props) => {
     });
     setLoading(false);
     console.log(err)
+    if (err.message === "Otp Send successfully") {
+        navigation.navigate("exchangeLogin", {
+        phoneNumber: formContent.email,
+      });
+    }
+    if(err.message==="Email already registered")
+    {
+      alert("error","Email already registered");
+    }
+    if(err.message==="Wallet already registered")
+    {
+      alert("error","Wallet already registered");
+    }
+    
     if (err) {
       setShowMessage(true);
       return setMessage(err.message);
     }
-    navigation.navigate("exchangeLogin", {
-      phoneNumber: formContent.email,
-    });
   };
 
   return (

@@ -131,6 +131,7 @@ export const ExchangeLogin = (props) => {
           else{
             saveToken(result.token);
             alert("success","Success");
+            setLoading(false);
             setEmail("");
             setlogin_Passcode("");
             navigation.navigate("exchange");
@@ -521,7 +522,6 @@ export const ExchangeLogin = (props) => {
               <View style={{ marginVertical: 3 }}>
                 {passcode_view === false ? <><Text style={{ marginVertical: 15, color: "white" }}>Verfication OTP</Text>
                   <TextInput
-                    secureTextEntry={true}
                     placeholderTextColor="gray"
                     style={styles.input}
                     theme={{ colors: { text: "white" } }}
@@ -538,12 +538,12 @@ export const ExchangeLogin = (props) => {
                   /></> : <>{/* Set pass code  */}
                   <Text style={{ marginVertical: 15, color: "white" }}>Password</Text>
                   <TextInput
-                    secureTextEntry={true}
+                  secureTextEntry={true}
                     placeholderTextColor="gray"
                     style={styles.input}
                     theme={{ colors: { text: "white" } }}
                     value={passcode}
-                    placeholder={"ABC@!1234"}
+                    placeholder={"ABC@!123"}
                     onChangeText={(text) => {
                       setpasscode(text);
                     }}
@@ -551,13 +551,12 @@ export const ExchangeLogin = (props) => {
                   {/* Set con-pass code  */}
                   <Text style={{ marginVertical: 15, color: "white" }}>Confirm Password</Text>
                   <TextInput
+                    secureTextEntry={true}
                     placeholderTextColor="gray"
                     style={styles.input}
                     theme={{ colors: { text: "white" } }}
-                    textContentType="password"
                     value={con_passcode}
-                    secureTextEntry={true}
-                    placeholder={"ABC@!1234"}
+                    placeholder={"ABC@!123"}
                     onChangeText={(text) => {
                       setcon_passcode(text);
                     }}
