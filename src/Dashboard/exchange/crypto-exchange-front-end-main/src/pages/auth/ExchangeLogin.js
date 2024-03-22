@@ -169,6 +169,8 @@ export const ExchangeLogin = (props) => {
 
   const submitpasscode = async () => {
     const token = await getAuth();
+   const len=passcode.length;
+   const len0=con_passcode.length;
 
     if (!passcode || !con_passcode) {
       setLoading(false);
@@ -177,49 +179,58 @@ export const ExchangeLogin = (props) => {
       alert("error", "both field requird.");
     }
     else {
-      const result = passcode === con_passcode;
-      if (result === true) {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Bearer " + token);
-        const raw = JSON.stringify({
-          "email": Email,
-          "passcode": con_passcode
-        });
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow"
-        };
-
-        fetch(REACT_APP_HOST + "/users/updatePasscode", requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            setLoading(false);
-            if (result.success === true) {
-              setpasscode_view(false);
-              setpasscode("");
-              setcon_passcode("");
-              alert("success", "Exchange Account Ready.");
-              navigation.navigate("exchange");
-            } else {
-              setpasscode("");
-             setcon_passcode("");
-              alert("error", "Something went worng.");
-            }
-          })
-          .catch((error) => {
-            setLoading(false);
-            console.error(error)
+       if(len===8||len0===8)
+       {
+        const result = passcode === con_passcode;
+        if (result === true) {
+          const myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+          myHeaders.append("Authorization", "Bearer " + token);
+          const raw = JSON.stringify({
+            "email": Email,
+            "passcode": con_passcode
           });
-      }
-      else {
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+          };
+  
+          fetch(REACT_APP_HOST + "/users/updatePasscode", requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              setLoading(false);
+              if (result.success === true) {
+                setpasscode_view(false);
+                setpasscode("");
+                setcon_passcode("");
+                alert("success", "Exchange Account Ready.");
+                navigation.navigate("exchange");
+              } else {
+                setpasscode("");
+               setcon_passcode("");
+                alert("error", "Something went worng.");
+              }
+            })
+            .catch((error) => {
+              setLoading(false);
+              console.error(error)
+            });
+        }
+        else {
+          setLoading(false);
+          setpasscode("");
+          setcon_passcode("");
+          alert("error", "Password Not Match.");
+        }
+       }
+       else{
         setLoading(false);
         setpasscode("");
         setcon_passcode("");
-        alert("error", "Password Not Match.");
-      }
+        alert("error","Password min length Eight.")
+       }  
     }
 
   }
@@ -469,7 +480,18 @@ export const ExchangeLogin = (props) => {
                 <Text> </Text>
               )}
 
-              <View style={styles.lowerbox}>
+              <View style={{
+    marginTop: active_forgot===false?hp(15):hp(25),
+    height: hp(6),
+    width: 400,
+    backgroundColor: "#003166",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+  }}>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("exchangeRegister");
@@ -499,6 +521,7 @@ export const ExchangeLogin = (props) => {
               <View style={{ marginVertical: 3 }}>
                 {passcode_view === false ? <><Text style={{ marginVertical: 15, color: "white" }}>Verfication OTP</Text>
                   <TextInput
+                    secureTextEntry={true}
                     placeholderTextColor="gray"
                     style={styles.input}
                     theme={{ colors: { text: "white" } }}
@@ -515,6 +538,7 @@ export const ExchangeLogin = (props) => {
                   /></> : <>{/* Set pass code  */}
                   <Text style={{ marginVertical: 15, color: "white" }}>Password</Text>
                   <TextInput
+                    secureTextEntry={true}
                     placeholderTextColor="gray"
                     style={styles.input}
                     theme={{ colors: { text: "white" } }}
@@ -530,7 +554,9 @@ export const ExchangeLogin = (props) => {
                     placeholderTextColor="gray"
                     style={styles.input}
                     theme={{ colors: { text: "white" } }}
+                    textContentType="password"
                     value={con_passcode}
+                    secureTextEntry={true}
                     placeholder={"ABC@!1234"}
                     onChangeText={(text) => {
                       setcon_passcode(text);
@@ -650,18 +676,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
   },
-  lowerbox: {
-    marginTop: hp(33),
-    height: hp(6),
-    width: 400,
-    backgroundColor: "#003166",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    display: "flex",
-    alignItems: "center",
-    textAlign: "center",
-    justifyContent: "center",
-  },
+  
   lowerboxtext: {
     fontSize: 16,
     color: "#FFFFFF",
