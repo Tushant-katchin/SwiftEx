@@ -112,7 +112,7 @@ export const Add_pin = async (userData) => {
     redirect: "follow"
   };
   
-  fetch("http://localhost:3001/users/updatePasscode", requestOptions)
+  fetch(REACT_APP_HOST+"/users/updatePasscode", requestOptions)
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.error(error));

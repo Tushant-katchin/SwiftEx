@@ -259,7 +259,7 @@ export const ExchangeLogin = (props) => {
           redirect: "follow"
         };
 
-        fetch(REACT_APP_HOST + "/users/forgot_passcode", requestOptions)
+        fetch(REACT_APP_HOST +"/users/forgot_passcode", requestOptions)
           .then((response) => response.json())
           .then((result) => {
             if (result.message === "Otp Send successfully") {
