@@ -215,6 +215,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Icon from "../icon";
 import { alert } from "./reusables/Toasts";
+import { REACT_APP_HOST } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 
 const Market = (props) => {
   const [data, setData] = useState();
@@ -236,35 +237,29 @@ const Market = (props) => {
     setImageUrl
   ) => {
     try {
-      await fetch(
-        // `http://${urls.testUrl}/user/getcryptodata`,
-        // `http://157.230.10.52:2000/user/getcryptodata`,
-        // `http://localhost:2000/user/getcryptodata`,
-
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((response) => response.json())
-        .then((responseJson) => {
-          console.log(responseJson);
-
-          setLoading(false);
+const raw = "";
+const requestOptions = {
+  method: "GET",
+  body: raw,
+  redirect: "follow"
+};
+     await fetch(REACT_APP_HOST+"/market-data/getcryptodata", requestOptions)
+      .then((response) => response.json())
+      .then((responseJson) => {
+         setLoading(false);
           setData(responseJson);
-          setUpdatedData(responseJson)
-          //setTrades(responseJson.trades)
-          setPrice(responseJson.current_price);
-          setPercent(responseJson.price_change_percentage_24h);
-          setImageUrl(responseJson.image);
-        })
-        .catch((error) => {
-          console.error(error);
+          setUpdatedData(responseJson[0].MarketData)
+          setTrades(responseJson[0].MarketData[0].trades)
+          setPrice(responseJson[0].MarketData[0].current_price);
+          setPercent(responseJson[0].MarketData[0].price_change_percentage_24h);
+          setImageUrl(responseJson[0].MarketData[0].image);
 
-          alert("error", error);
-        });
+    })
+      .catch((error) =>{ 
+       setLoading(false);
+        console.error(error);
+        alert("error", error);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -341,11 +336,10 @@ const Market = (props) => {
           }
         >
           {data ? (
-            data.map((item,index) => {
+            data[0].MarketData.map((item,index) => {
               const image = item.image;
               const color = item.price_change_24h > 0 ? "green" : "red";
               let data = item
-
               return (
                   <View key={index}>
                 <ScrollView>
