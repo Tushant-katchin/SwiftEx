@@ -240,8 +240,9 @@ const Market = (props) => {
 const raw = "";
 const requestOptions = {
   method: "GET",
-  body: raw,
-  redirect: "follow"
+  headers: {
+    "Content-Type": "application/json",
+  },
 };
      await fetch(REACT_APP_HOST+"/market-data/getcryptodata", requestOptions)
       .then((response) => response.json())
