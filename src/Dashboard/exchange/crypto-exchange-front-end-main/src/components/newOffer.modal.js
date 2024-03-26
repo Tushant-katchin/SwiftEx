@@ -307,6 +307,7 @@ const getAccountDetails = async () => {
     const token = await getToken();
     console.log(token)
   try {
+        settitel("Activating.....");
     const response = await fetch(REACT_APP_HOST+'/users/updatePublicKeyByEmail', {
       method: 'POST',
       headers: {
@@ -326,9 +327,11 @@ const getAccountDetails = async () => {
     } else {
       console.error('Error:', data);
       setactiv(false)
+      settitel("Activate Account");
       alert("error","Internal server error.")
     }
   } catch (error) {
+    settitel("Activate Account");
     console.error('Network error:', error);
     alert("error","Something went worng.")
     setactiv(true)
@@ -649,7 +652,7 @@ const getAccountDetails = async () => {
                     marginTop: 51,
                     backgroundColor: 'green',
                   }}
-                  onPress={() => { selectedValue==="XUSD"? [setOpen(false),navigation.navigate("Payment")]:Deposit_Eth()}}
+                  onPress={() => { selectedValue==="XUSD"? [activ===true?alert("error","Activate account..."):setOpen(false),navigation.navigate("Payment")]:Deposit_Eth()}}
                 >
                   <Text style={styles.cancelText}>{selectedValue==="XUSD"?"Add Funds":"Deposit"}</Text>
                 </TouchableOpacity>
