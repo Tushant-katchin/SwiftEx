@@ -218,7 +218,7 @@ import { alert } from "./reusables/Toasts";
 import { REACT_APP_HOST } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 
 const Market = (props) => {
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState();
   const [trades, setTrades] = useState();
   const [price, setPrice] = useState();
@@ -248,13 +248,12 @@ const requestOptions = {
       .then((response) => response.json())
       .then((responseJson) => {
          setLoading(false);
-          setData(responseJson);
+         setData(responseJson[0].MarketData);
           setUpdatedData(responseJson[0].MarketData)
           setTrades(responseJson[0].MarketData[0].trades)
           setPrice(responseJson[0].MarketData[0].current_price);
           setPercent(responseJson[0].MarketData[0].price_change_percentage_24h);
           setImageUrl(responseJson[0].MarketData[0].image);
-
     })
       .catch((error) =>{ 
        setLoading(false);
@@ -337,7 +336,7 @@ const requestOptions = {
           }
         >
           {data ? (
-            data[0].MarketData.map((item,index) => {
+            data.map((item,index) => {
               const image = item.image;
               const color = item.price_change_24h > 0 ? "green" : "red";
               let data = item
