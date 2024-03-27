@@ -746,7 +746,7 @@ const getAccountDetails = async () => {
           )}
 
         </View>
-          <Text style={styles.noteText}>{account_message}</Text>
+          {/* <Text style={styles.noteText}>{account_message}</Text> */}
         {/* <Text style={styles.noteText}>
           <Text style={{ fontWeight: "700" }}>Note:</Text> The above totals are
           just estimations that can vary depending on currency rates.
