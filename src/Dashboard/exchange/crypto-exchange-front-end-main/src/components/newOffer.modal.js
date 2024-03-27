@@ -665,7 +665,7 @@ const getAccountDetails = async () => {
     borderRadius: 10,
     elevation: 5,}}>
           <View>
-            <Text style={{fontSize:19,marginBottom:3}}>Ether Amout</Text>
+            <Text style={{fontSize:19,marginBottom:3}}>Ether Amount</Text>
             <TextInput
               value={eth_modal_amount}
               onChangeText={seteth_modal_amount}
