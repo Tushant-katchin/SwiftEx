@@ -138,6 +138,7 @@ const Payout = () => {
                     });
                 })
                 .catch(error => {
+                    setshow(false);
                     console.log('Error loading account:', error);
                     // alert("error", "Account Balance not found.");
                 });
@@ -267,7 +268,7 @@ const Payout = () => {
                 <View style={{ width: wp(13) }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9) }}>
                         <Text style={{ marginLeft: 1.9, color: 'white' }}>
-                            {balance ? balance : show === false ? <Text style={{ color: "white" }}>{Available}</Text> : <></>}
+                            {balance ? balance : show === false ? <Text style={{ color: "white" }}>{Available===""?"0.00":Available}</Text> : <></>}
                         </Text>
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
