@@ -652,7 +652,7 @@ const getAccountDetails = async () => {
                     marginTop: 51,
                     backgroundColor: 'green',
                   }}
-                  onPress={() => { selectedValue==="XUSD"? activ===true?alert("error","Activate account..."):[setOpen(false),navigation.navigate]("Payment"):Deposit_Eth()}}
+                  onPress={() => { selectedValue==="XUSD"? activ===true?alert("error","Stellar Account Activation Require for Add Funds."):[setOpen(false),navigation.navigate("Payment")]:Deposit_Eth()}}
                 >
                   <Text style={styles.cancelText}>{selectedValue==="XUSD"?"Add Funds":"Deposit"}</Text>
                 </TouchableOpacity>
