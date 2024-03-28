@@ -861,16 +861,16 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
               ) : (
                 <View></View>
               )}
+                <TouchableOpacity onPress={handleSubmit}>
               <LinearGradient
                 start={[1, 0]}
                 end={[0, 1]}
                 style={styles.submitgradientContainer}
                 colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
               >
-                <TouchableOpacity onPress={handleSubmit}>
                   <Text style={{ color: "#fff" }}>Submit</Text>
-                </TouchableOpacity>
               </LinearGradient>
+                </TouchableOpacity>
             </View>
           </View>
         </LinearGradient>

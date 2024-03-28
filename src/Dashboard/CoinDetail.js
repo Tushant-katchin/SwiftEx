@@ -257,7 +257,7 @@ export const CoinDetails = (props) => {
 
 
   return (
-    <SafeAreaView>
+    <ScrollView>
     {/* // <ScrollView
     //   contentContainerStyle={{ backgroundColor: "white"}}
     // > */}
@@ -412,7 +412,7 @@ export const CoinDetails = (props) => {
         <Grid />
       </AreaChart> */}
     <View style={{ marginTop: hp(9) }}>
-        <View style={styles.iconText}>
+    <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
           <Text> Last 24h :</Text>
           <View style={styles.arrowText}>
             <Text style={styles.heading}>
@@ -421,7 +421,7 @@ export const CoinDetails = (props) => {
             <Icon name="arrow-up-right" type={"feather"} size={20} />
           </View>
         </View>
-        <View style={styles.iconText}>
+        <View style={[styles.iconText]}>
           <Text>USD :</Text>
           <View style={styles.arrowText}>
             <Text style={styles.heading}>$ {props?.route?.params?.data?.current_price}</Text>
@@ -429,34 +429,33 @@ export const CoinDetails = (props) => {
           </View>
         </View>
 
-        <View style={styles.iconText}>
+        <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
           <Text>Market Cap : </Text>
           <Text style={styles.heading}> ${props?.route?.params?.data?.market_cap}</Text>
         </View>
 
-        <View style={styles.iconText}>
+        <View style={[styles.iconText]}>
           <Text>Total Supply :</Text>
           <Text style={styles.heading}>${props?.route?.params?.data?.total_supply}</Text>
         </View>
 
-        <View style={styles.iconText}>
+        <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
           <Text> 24H high :</Text>
           <Text style={styles.heading}>${props?.route?.params?.data?.high_24h} </Text>
         </View>
+        <View style={[styles.iconText]}>
 
-        <View style={styles.iconText}>
           <Text> 24H low :</Text>
           <Text style={styles.heading}>${props?.route?.params?.data?.low_24h}</Text>
         </View>
-
-        <View style={styles.iconText}>
+        <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
           <Text> All Time High :</Text>
           <Text style={styles.heading}>${props?.route?.params?.data?.ath}</Text>
         </View>
       </View>
 
   {/* </ScrollView> */}
-  </SafeAreaView>
+  </ScrollView>
   );
 };
 
@@ -476,7 +475,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignSelf: "center",
     width: wp(88),
-    marginTop: hp(3),
+    marginTop: hp(1),
+    // backgroundColor:"gray",
+    padding:10
   },
   arrowText: {
     flexDirection: "row",

@@ -23,7 +23,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
 import PhoneInput from "react-native-phone-number-input";
 import { getAuth, login, saveToken, verifyLoginOtp } from "../../api";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import RNOtpVerify from "react-native-otp-verify";
 import { alert } from "../../../../../reusables/Toasts";
 import { ExchangeHeaderIcon } from "../../../../../header";
@@ -50,7 +50,7 @@ export const ExchangeLogin = (props) => {
   const [active_forgot,setactive_forgot]=useState(false);
   const [Loading_fog,setLoading_fog]=useState(false);
   const navigation = useNavigation();
-
+const FOCUSED=useIsFocused();
   const otpHandler = (message) => {
     try {
       if (message) {
@@ -337,7 +337,7 @@ export const ExchangeLogin = (props) => {
     } catch (e) {
       console.log(e);
     }
-  }, []);
+  }, [FOCUSED]);
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -355,7 +355,7 @@ export const ExchangeLogin = (props) => {
     }
 
     return () => removeListener();
-  }, [isOtpSent]);
+  }, [isOtpSent,FOCUSED]);
 
   return (
     <>
@@ -423,8 +423,8 @@ export const ExchangeLogin = (props) => {
                       Keyboard.dismiss();
                     }}
                   > */}
-                <TextInput textContentType="emailAddress" placeholder={"Email Adderss"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { setEmail(text) }} />
-                {active_forgot===false?<TextInput placeholder={"Password"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
+                <TextInput textContentType="emailAddress" placeholder={"Email Adderss"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { setEmail(text) }} />
+                {active_forgot===false?<TextInput placeholder={"Password"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
                 <TouchableOpacity
                   onPress={() => {
                     if (active_forgot === false) {
@@ -541,12 +541,13 @@ export const ExchangeLogin = (props) => {
                   secureTextEntry={true}
                     placeholderTextColor="gray"
                     style={styles.input}
-                    theme={{ colors: { text: "white" } }}
+                    // theme={{ colors: { text: "white" } }}
                     value={passcode}
                     placeholder={"ABC@!123"}
                     onChangeText={(text) => {
                       setpasscode(text);
                     }}
+                    keyboardType="default"
                   />
                   {/* Set con-pass code  */}
                   <Text style={{ marginVertical: 15, color: "white" }}>Confirm Password</Text>
@@ -554,12 +555,13 @@ export const ExchangeLogin = (props) => {
                     secureTextEntry={true}
                     placeholderTextColor="gray"
                     style={styles.input}
-                    theme={{ colors: { text: "white" } }}
+                    // theme={{ colors: { text: "white" } }}
                     value={con_passcode}
                     placeholder={"ABC@!123"}
                     onChangeText={(text) => {
                       setcon_passcode(text);
                     }}
+                    keyboardType="default"
                   /></>}
               </View>
 

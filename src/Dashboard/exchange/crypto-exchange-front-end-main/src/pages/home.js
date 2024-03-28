@@ -21,7 +21,7 @@ import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useSelector } from "react-redux";
 import { getRegistrationToken } from "../utils/fcmHandler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import { CommonActions, useIsFocused, useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import walletImg from "../../../../../../assets/walletImg.png";
 import idCard from "../../../../../../assets/idCard.png";
@@ -41,6 +41,7 @@ import { Platform } from "react-native";
 // import StellarSdk from '@stellar/stellar-sdk';
 
 export const HomeView = ({ setPressed }) => {
+  const Focused_screen=useIsFocused();
   const [new_update,set_new_update]=useState(false);
   const state = useSelector((state) => state);
   const [open, setOpen] = useState(false);
@@ -99,7 +100,9 @@ export const HomeView = ({ setPressed }) => {
       console.log(err);
     }
   };
-
+  useEffect(()=>{
+    getAccountDetails();
+  },[Focused_screen]);
   useEffect(() => {
     getAccountDetails();
     fetchProfileData();
