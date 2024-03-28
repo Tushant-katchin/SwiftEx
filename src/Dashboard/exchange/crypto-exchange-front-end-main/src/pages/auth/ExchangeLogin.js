@@ -97,7 +97,7 @@ const FOCUSED=useIsFocused();
   const submitPhoneNumber = async () => {
      if(!Email||!login_Passcode)
      {
-      alert("error","Both filed Requirde");
+      alert("error","Both fields are required");
       setEmail("");
       setlogin_Passcode("");
       setLoading(false)
@@ -107,7 +107,7 @@ const FOCUSED=useIsFocused();
       myHeaders.append("Content-Type", "application/json");
   
       const raw = JSON.stringify({
-        "email": Email,
+        "email": Email.toLowerCase(),
         "otp": login_Passcode
       });
   
@@ -149,11 +149,12 @@ const FOCUSED=useIsFocused();
         return setMessage("OTP is required");
       }
       const { err } = await verifyLoginOtp({
-        email: `${Email}`,
+        email: `${Email.toLowerCase()}`,
         otp: otp,
       });
       if (err) {
         setMessage(err.message);
+        alert("error","Worng OTP")
         setOtp(null);
       } else {
         setOtp(null);
@@ -177,7 +178,7 @@ const FOCUSED=useIsFocused();
       setLoading(false);
       setcon_passcode("");
       setpasscode("");
-      alert("error", "both field requird.");
+      alert("error", "Both fields are required");
     }
     else {
        if(len===8||len0===8)
@@ -188,7 +189,7 @@ const FOCUSED=useIsFocused();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Authorization", "Bearer " + token);
           const raw = JSON.stringify({
-            "email": Email,
+            "email": Email.toLowerCase(),
             "passcode": con_passcode
           });
           const requestOptions = {
@@ -250,7 +251,7 @@ const FOCUSED=useIsFocused();
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         const raw = JSON.stringify({
-          "email": Email
+          "email": Email.toLowerCase()
         });
 
         const requestOptions = {
@@ -356,7 +357,16 @@ const FOCUSED=useIsFocused();
 
     return () => removeListener();
   }, [isOtpSent,FOCUSED]);
-
+  const onChangepass = (input) => {
+    const formattedInput = input.replace(/\s/g, '');
+    setpasscode(formattedInput);
+    // setcon_passcode
+    // onChangeconpass
+  };
+  const onChangeconpass = (input) => {
+    const formattedInput = input.replace(/\s/g, '');
+    setcon_passcode(formattedInput);
+  };
   return (
     <>
       <ExchangeHeaderIcon title="Exchange " isLogOut={false} />
@@ -520,7 +530,7 @@ const FOCUSED=useIsFocused();
               </Text>
 
               <View style={{ marginVertical: 3 }}>
-                {passcode_view === false ? <><Text style={{ marginVertical: 15, color: "white" }}>Verfication OTP</Text>
+                {passcode_view === false ? <><Text style={{ marginVertical: 15, color: "white" }}>Verification OTP</Text>
                   <TextInput
                     placeholderTextColor="gray"
                     style={styles.input}
@@ -545,7 +555,7 @@ const FOCUSED=useIsFocused();
                     value={passcode}
                     placeholder={"ABC@!123"}
                     onChangeText={(text) => {
-                      setpasscode(text);
+                      onChangepass(text)
                     }}
                     keyboardType="default"
                   />
@@ -559,7 +569,7 @@ const FOCUSED=useIsFocused();
                     value={con_passcode}
                     placeholder={"ABC@!123"}
                     onChangeText={(text) => {
-                      setcon_passcode(text);
+                      onChangeconpass(text);
                     }}
                     keyboardType="default"
                   /></>}

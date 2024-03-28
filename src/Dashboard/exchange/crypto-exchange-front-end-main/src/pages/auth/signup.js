@@ -78,6 +78,19 @@ export const ExchangeRegister = (props) => {
     }
   };
 
+  const onChangename = (input) => {
+    const formattedInput = input.replace(/\s/g, '');
+    setFormContent({ ...formContent, firstName: formattedInput })
+  };
+  const onChangelast = (input) => {
+    const formattedInput = input.replace(/\s/g, '');
+    setFormContent({ ...formContent, lastName: formattedInput })
+  };
+  const onChangelmail = (input) => {
+    const formattedInput = input.replace(/\s/g, '').toLowerCase();
+    setFormContent({ ...formContent, email: formattedInput })
+  };
+
   return (
     <>
       <KeyboardAvoidingView style={styles.container} behavior="height">
@@ -107,10 +120,11 @@ export const ExchangeRegister = (props) => {
                 value={formContent.firstName}
                 placeholder={"Enter your first name"}
                 onChangeText={(text) =>
-                  setFormContent({ ...formContent, firstName: text })
+                  onChangename(text)
                 }
                 autoCapitalize={"none"}
                 placeholderTextColor="gray"
+                
               />
             </View>
 
@@ -125,7 +139,7 @@ export const ExchangeRegister = (props) => {
                 value={formContent.lastName}
                 placeholder={"Enter your last name"}
                 onChangeText={(text) =>
-                  setFormContent({ ...formContent, lastName: text })
+                  onChangelast(text)
                 }
               />
             </View>
@@ -164,7 +178,7 @@ export const ExchangeRegister = (props) => {
                 value={formContent.email}
                 placeholder={"Enter your email address"}
                 onChangeText={(text) =>
-                  setFormContent({ ...formContent, email: text })
+                   onChangelmail(text)
                 }
               />
             </View>
@@ -172,22 +186,13 @@ export const ExchangeRegister = (props) => {
                 <Text style={styles.text}>
                   Wallet Address
                 </Text>
-              <TextInput
-                placeholderTextColor="gray"
+              <Text
                 style={styles.input}
-                theme={{ colors: { text: "white" } }}
-                value={formContent.walletAddress}
-                placeholder={
-                  state.wallet ? state.wallet.address : "Wallet address"
-                }
-                // disabled={true}
-                onChangeText={(text) =>
-                  setFormContent({ ...formContent, walletAddress: text })
-                }
-              />
+              >{formContent.walletAddress}
+              </Text>
             </View>
             {showMessage ? (
-              <Text style={{ color: "white" }}>{message}</Text>
+              <Text style={{ color: "white",marginStart:13}}>{message}</Text>
             ) : (
               <View></View>
             )}
