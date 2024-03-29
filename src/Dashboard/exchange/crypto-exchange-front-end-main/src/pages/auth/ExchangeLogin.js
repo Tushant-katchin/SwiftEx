@@ -209,6 +209,7 @@ const FOCUSED=useIsFocused();
                 setpasscode("");
                 setcon_passcode("");
                 alert("success", "Exchange Account Ready.");
+                setIsOtpSent(false);
                 navigation.navigate("exchange");
               } else {
                 setpasscode("");
@@ -614,7 +615,8 @@ const FOCUSED=useIsFocused();
                   <Text style={styles.buttonText}>Verify</Text>
                 </TouchableOpacity>
               </LinearGradient>
-              <TouchableOpacity onPress={() => { navigation.navigate("exchangeLogin") }}>
+              {/* <TouchableOpacity onPress={() => { navigation.navigate("exchangeLogin") }}> */}
+              <TouchableOpacity onPress={() => { navigation.goBack() }}>
                 <Text style={{ marginTop: 14, color: "gray" }}>Edit Email Id</Text>
               </TouchableOpacity>
             </View>
