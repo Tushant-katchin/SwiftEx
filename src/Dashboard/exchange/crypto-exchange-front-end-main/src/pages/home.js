@@ -153,7 +153,7 @@ export const HomeView = ({ setPressed }) => {
   const fetchProfileData = async () => {
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
-      console.log("_+++++++",res)
+      // console.log("_+++++++",res)
       if (err) return setMessage(` ${err.message} please log in again!`);
       setProfile(res);
     } catch (err) {
