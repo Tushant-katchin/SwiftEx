@@ -42,7 +42,7 @@ import { Platform } from "react-native";
 
 export const HomeView = ({ setPressed }) => {
   const Focused_screen=useIsFocused();
-  const [new_update,set_new_update]=useState(false);
+  const [steller_key,setsteller_key]=useState("");
   const state = useSelector((state) => state);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState();
@@ -89,6 +89,23 @@ export const HomeView = ({ setPressed }) => {
     });
   };
 
+  const getData = async () => {
+    try {
+      const storedData = await AsyncStorageLib.getItem('myDataKey');
+      if (storedData !== null) {
+        const parsedData = JSON.parse(storedData);
+        console.log('Retrieved data:', parsedData);
+        const publicKey = parsedData.key1
+        setsteller_key(publicKey)
+      }
+      else {
+        console.log('No data found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error retrieving data:', error);
+    }
+  };
+
   const getAccountDetails = async () => {
     try {
       const { res, err } = await authRequest("/users/getStripeAccount", GET);
@@ -104,6 +121,7 @@ export const HomeView = ({ setPressed }) => {
     getAccountDetails();
   },[Focused_screen]);
   useEffect(() => {
+    getData()
     getAccountDetails();
     fetchProfileData();
     getOffersData();
@@ -320,6 +338,7 @@ const Offer_condition=()=>{
 
       
     <ScrollView
+    style={{ backgroundColor: "#011434"}}
       contentContainerStyle={{
         // paddingBottom: hp(20),
         backgroundColor: "#131E3A",
@@ -328,7 +347,7 @@ const Offer_condition=()=>{
       
       <View style={styles.container}>
       
-        <LinearGradient
+        {/* <LinearGradient
           start={[1, 0]}
           end={[0, 1]}
           colors={["rgba(223, 172, 196, 1)", "rgba(192, 197, 234, 1)"]}
@@ -380,7 +399,75 @@ const Offer_condition=()=>{
               null
             )}
 
-        </LinearGradient>
+        </LinearGradient> */}
+              <View style={[styles.linearContainer,{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)"}]}>
+
+            {state.wallet ? (
+              <View>
+                <View style={styles.iconwithTextContainer}>
+                  <View style={styles.walletContainer}>
+                    <Text style={styles.myWallet}>My Wallet </Text>
+                    <Icon
+                      name={"wallet"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={24}
+                    />
+                    {/* <Image source={walletImg} style={styles.walletImg} /> */}
+                  </View>
+                  <View style={styles.walletContainer}>
+                    {/* <Icon
+                      name={"check-outline"}
+                      type={"materialCommunity"}
+                      color={"#008C62"}
+                    /> */}
+                    <Text style={styles.connectedText}>Connected!</Text>
+                  </View>
+                </View>
+                <View style={{}}>
+                  <View style={{flexDirection:"row",marginTop:19}}>
+                    <Text style={styles.textColor}>Ethereum Key  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
+                   <Text style={[styles.textColor,styles.width_scrroll]}>{state.wallet.address}</Text>
+                    </ScrollView>
+                  </View> 
+
+                  <View style={{flexDirection:"row",marginTop:10}}>
+                    <Text style={styles.textColor}>Stellar Key       </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
+                   <Text style={[styles.textColor,styles.width_scrroll]}>{steller_key}</Text>
+                    </ScrollView>
+                  </View> 
+                </View>
+              </View>
+            ) : (
+              <Text style={styles.textColor}>
+                Please select a wallet first!
+              </Text>
+            )}
+
+
+
+            {/* {message ? (
+              <>
+                <View style={styles.copyRideContainer}>
+                  <Text style={styles.messageStyle}>{message}</Text>
+                  <View>
+                    <Image
+                      source={copyRide}
+                      style={styles.walletImg}
+                      color={"#1D7FA3"}
+                    />
+
+                    <Text style={styles.copyText}>copy</Text>
+                  </View>
+                </View>
+              </>
+            ) : (
+              null
+            )} */}
+
+        </View>
        
 {profile && (
           <View>
@@ -393,7 +480,7 @@ const Offer_condition=()=>{
                         Offer_condition(Offer_active)
                     }}
                   >
-                    <Text style={{ color: "#fff" }}>Create Offer</Text>
+                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Create Offer</Text>
                   </TouchableOpacity>
                   <NewOfferModal
                     user={profile}
@@ -405,7 +492,6 @@ const Offer_condition=()=>{
                 </View>
               ) : (
                 <Text style={styles.kycText}>KYC UPDATING <ActivityIndicator color={"green"}/>{profile.isVerified===false?kyc():""}</Text>
-
               )}
             </View>
           // </View>
@@ -419,27 +505,35 @@ const Offer_condition=()=>{
           </Text>
         )}
       </View>
-  <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center'} :{justifyContent:'center',alignItems:'center'}}>
+  <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center'}}>
 <LineChart
         data={chartData}
-        width={370}
+        width={375}
         height={310}
         withDots={true}
         withVerticalLines={false}
         withHorizontalLines={false}
-        style={{borderRadius:5}}
+        style={{backgroundColor:"011434",borderRadius:15}}
         bezier
         chartConfig={{
-          backgroundColor: 'white',
-          backgroundGradientFrom: 'white',
-          backgroundGradientTo: 'white',
+          backgroundColor: '#011434',
+          backgroundGradientFrom: '#212B53',
+          backgroundGradientTo: '#1C294D',
           decimalPlaces: 3,
-          paddingTop:3,
-          color: (opacity = 1) => `rgba(255,255,255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity.toFixed(1)})`,
+          paddingTop:10,
+          color: (opacity = 0) => `rgba(33,43,83, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity.toFixed(1)})`,
         }}
         />
-              <Text style={{fontSize: 19,color: "gray",marginVertical: hp(1),width: wp(80),marginTop:1,textAlign:"center"}}>Trade between XETH vs XUSD</Text>
+        <View style={{backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
+    padding: hp(0.5),
+    width: wp(96),
+    alignSelf: "center",
+    borderRadius: hp(1.6),
+    marginBottom: hp(1),
+    marginTop:hp(1.4)}}>
+              <Text style={{fontSize: 19,color: "white",textAlign:"center",fontWeight:"500"}}>Trade between XETH vs XUSD</Text>
+        </View>
         </View> 
         {/* <View style={[styles.toggleContainer]}> */}
           {/* <LinearGradient
@@ -492,11 +586,9 @@ const Offer_condition=()=>{
             </TouchableOpacity>
           </LinearGradient> */}
         {/* </View> */}
-      <View style={{}}>
-          <View>
+          {/* <View> */}
             <OfferListViewHome/>
-          </View>
-  </View>
+          {/* </View> */}
     </ScrollView>
     </>
   );
@@ -509,17 +601,18 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
-    backgroundColor: "#131E3A",
+    // backgroundColor: "#131E3A",   //OLD
+    backgroundColor: "#011434",
   },
   linearContainer: {
-    width: wp(90),
+    width: wp(95),
     padding: hp(2),
     paddingVertical: hp(3),
     borderRadius: hp(2),
     marginTop: hp(3),
   },
   textColor: {
-    color: "black",
+    color: "#fff",
   },
   iconwithTextContainer: {
     flexDirection: "row",
@@ -534,15 +627,20 @@ const styles = StyleSheet.create({
     color: "#2027AC",
   },
   myWallet: {
-    fontWeight: "700",
+    fontWeight: "bold",
+    fontSize:20,
+    color:"#fff"
   },
+  width_scrroll:{
+    marginLeft: 1.9
+},
   walletContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
   },
   connectedText: {
-    color: "#008C62",
+    color: "#35CA1D",
   },
   walletImg: {
     height: hp(2.8),
@@ -565,15 +663,17 @@ const styles = StyleSheet.create({
     width: wp(45),
   },
   PresssableBtn: {
-    backgroundColor: "#4CA6EA",
-    padding: hp(1),
-    width: wp(30),
+    backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
+    padding: hp(2),
+    width: wp(96),
+    borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:1.3,
     alignSelf: "center",
     paddingHorizontal: wp(3),
-    borderRadius: hp(0.8),
-    marginBottom: hp(2),
+    borderRadius: hp(2.5),
+    marginBottom: hp(1),
     alignItems: "center",
-    marginTop:hp(2)
+    marginTop:hp(1.4)
   },
   addofferText: {
     flexDirection: "row",

@@ -361,15 +361,16 @@ const fetchData_ = async (key) => {
     </TouchableOpacity>
   </View>
 </View>
-      <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
+      <View style={{ height: hp(100), backgroundColor: "#011434" }}>
       <Text style={{color:"white",marginLeft:13,marginTop:13,fontWeight:"bold",fontSize:19}}>All Trades Transaction.</Text>
-    <View style={{ backgroundColor: "#131E3A" }}>
-      <LinearGradient
+    <View style={{ backgroundColor: "#011434" }}>
+      {/* <LinearGradient
         style={styles.linearStyle1}
         start={[1, 0]}
         end={[0, 1]}
         colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
-      >
+      > */}
+      <View style={[styles.linearStyle1,{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)"}]}>
         <ScrollView nestedScrollEnabled horizontal>
           <ScrollView nestedScrollEnabled={true}>
             <View style={styles.tableHeader}>
@@ -426,7 +427,8 @@ const fetchData_ = async (key) => {
                  </>
           </ScrollView>
         </ScrollView>
-      </LinearGradient>
+      {/* </LinearGradient> */}
+      </View>
     </View>
 
 
