@@ -49,6 +49,7 @@ export const ExchangeLogin = (props) => {
   const [login_Passcode,setlogin_Passcode]=useState("");
   const [active_forgot,setactive_forgot]=useState(false);
   const [Loading_fog,setLoading_fog]=useState(false);
+  const [lodaing_ver,setlodaing_ver]=useState(false);
   const navigation = useNavigation();
 const FOCUSED=useIsFocused();
   const otpHandler = (message) => {
@@ -242,8 +243,10 @@ const FOCUSED=useIsFocused();
   }
 
   const get_otp_forget = async () => {
+    setlodaing_ver(true);
     setLoading_fog(true);
     if (!Email) {
+      setlodaing_ver(false);
        setLoading_fog(false);
       alert("error", "Email reqired.");
     } else {
@@ -265,6 +268,7 @@ const FOCUSED=useIsFocused();
           .then((response) => response.json())
           .then((result) => {
             if (result.message === "Otp Send successfully") {
+              setlodaing_ver(false);
               setLoading_fog(true);
               setEmail("");
               alert("success", "OTP sent in your mail.");
@@ -274,19 +278,22 @@ const FOCUSED=useIsFocused();
               });
             }
             else {
+              setlodaing_ver(false);
               setLoading_fog(true);
-              alert("error", "User not found.");
               setEmail("");
               setLoading_fog(false);
+              alert("error", "User not found.");
             }
             console.log(result)
           })
           .catch((error) => console.error(error));
       } catch (err) {
+        setLoading_fog(false);
          setLoading_fog(true);
         setMessage(err.message);
         setLoading_fog(false);
       } finally {
+        setLoading_fog(false);
         setLoading_fog(true);
         setLoading(false);
         setLoading_fog(false);
@@ -369,6 +376,7 @@ const FOCUSED=useIsFocused();
   };
   return (
     <>
+     {lodaing_ver==true?alert("success","Email Verifying...."):<></>}
       <ExchangeHeaderIcon title="Exchange " isLogOut={false} />
       <SafeAreaView style={styles.container}>
         <View
