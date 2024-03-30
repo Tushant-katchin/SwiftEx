@@ -538,7 +538,7 @@ const getAccountDetails = async () => {
           // paddingBottom:hp(10),
           paddingVertical: hp(1),
           width: wp(95),
-          backgroundColor: "#131E3A",
+          backgroundColor: "#011434",
           borderRadius: 10,
           borderBottomLeftRadius: 10,
           alignSelf: "center",
@@ -660,17 +660,17 @@ const getAccountDetails = async () => {
             </View>
           </View>
           <Modal visible={eth_modal_visible} animationType="slide" transparent={true}>
-        <View style={{backgroundColor: 'white',
+        <View style={{backgroundColor: '#212B53',
     padding: 20,
     borderRadius: 10,
     elevation: 5,}}>
           <View>
-            <Text style={{fontSize:19,marginBottom:3}}>Ether Amount</Text>
+            <Text style={{fontSize:19,marginBottom:3,color:"#fff"}}>Ether Amount</Text>
             <TextInput
               value={eth_modal_amount}
               onChangeText={seteth_modal_amount}
               placeholder="10.999"
-              style={{backgroundColor:"gray"}}
+              style={{backgroundColor:"#fff"}}
               keyboardType="number-pad"
             />
             <View style={{flexDirection:"row",width:"100%",justifyContent:"space-evenly",marginTop:10}}>
@@ -720,25 +720,26 @@ const getAccountDetails = async () => {
         </View>
 
         <View style={styles.Buttons}>
-          <View>
-            <LinearGradient
+          {/* <View style={styles.confirmButton}> */}
+            {/* <LinearGradient
               style={styles.confirmButton}
               start={[1, 0]}
               end={[0, 1]}
               colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-            >
+            > */}
+
               <TouchableOpacity
                 activeOpacity={true}
-                style={{
+                style={[{
                   alignItems: "center", paddingVertical: hp(1.3), paddingHorizontal: wp(1),
-                }}
+                },styles.confirmButton]}
                 onPress={() => { setLoading(true), offer_creation() }}
                 color="green"
               >
                 <Text style={styles.textColor}>{Loading === true ? <ActivityIndicator color={"white"} /> : "Create"}</Text>
               </TouchableOpacity>
-            </LinearGradient>
-          </View>
+            {/* </LinearGradient> */}
+          {/* </View> */}
           {loading ? (
             <ActivityIndicator size="small" color="blue" />
           ) : (
@@ -837,7 +838,11 @@ const styles = StyleSheet.create({
   confirmButton: {
     alignItems: "center",
     width: wp(23),
-    borderRadius: 6,
+    borderRadius:10,
+    borderRadius: 9,
+    backgroundColor:"#212B53",
+    borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:0.9,
   },
   cancelButton: {
     alignItems: "center",

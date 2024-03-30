@@ -760,12 +760,13 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
         }}
       >
         <View style={styles.modalmainContainer}>
-        <LinearGradient
+        {/* <LinearGradient
           start={[1, 0]}
           style={{ borderRadius: 20 ,width:wp(92),alignSelf:"center"}}
           end={[0, 1]}
           colors={["rgba(22, 19, 107, 1)", "rgba(210, 88, 150, 1)"]}
-        >
+        > */}
+<View style={{ backgroundColor:"#011434",borderRadius: hp(2),borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:0.9,width:wp(92),alignSelf:"center"}}>
           <View style={styles.modelmainContainer}>
             <TouchableOpacity onPress={()=>{
               handleClose()
@@ -857,23 +858,24 @@ export const NewAccountModal = ({ getAccountDetails,isVisible,setModalVisible,on
             </View>
             <View style={{ marginTop: hp(5) }}>
               {loading ? (
-                <ActivityIndicator color={"blue"} size={"large"} />
+                <ActivityIndicator color={"green"} size={"large"} />
               ) : (
                 <View></View>
               )}
-                <TouchableOpacity onPress={handleSubmit}>
-              <LinearGradient
+                <TouchableOpacity  style={styles.submitgradientContainer} onPress={handleSubmit}>
+              {/* <LinearGradient
                 start={[1, 0]}
                 end={[0, 1]}
                 style={styles.submitgradientContainer}
                 colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-              >
+              > */}
                   <Text style={{ color: "#fff" }}>Submit</Text>
-              </LinearGradient>
+              {/* </LinearGradient> */}
                 </TouchableOpacity>
             </View>
           </View>
-        </LinearGradient>
+          </View>
+        {/* </LinearGradient> */}
         </View>
         
       </Modal>
@@ -1030,6 +1032,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 9,
+    backgroundColor:"#212B53",
+    borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:0.9,
   },
   dropText: {
     color: "#fff",

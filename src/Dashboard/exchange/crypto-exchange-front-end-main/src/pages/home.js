@@ -433,7 +433,7 @@ const Offer_condition=()=>{
                   </View> 
 
                   <View style={{flexDirection:"row",marginTop:10}}>
-                    <Text style={styles.textColor}>Stellar Key       </Text>
+                    <Text style={styles.textColor}>Stellar Key        </Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{steller_key}</Text>
                     </ScrollView>
@@ -469,7 +469,7 @@ const Offer_condition=()=>{
 
         </View>
        
-{profile && (
+{/* {profile && (
           <View>
               {profile.isVerified ? (
                 <View >
@@ -491,11 +491,11 @@ const Offer_condition=()=>{
                   />
                 </View>
               ) : (
-                <Text style={styles.kycText}>KYC UPDATING <ActivityIndicator color={"green"}/>{profile.isVerified===false?kyc():""}</Text>
+                <Text style={styles.kycText}>ACCOUNT UPDATING <ActivityIndicator color={"green"}/>{profile.isVerified===false?kyc():""}</Text>
               )}
             </View>
           // </View>
-        )}
+        )} */}
          {walletType === "Ethereum" || walletType === "Multi-coin" ? (
           // <Text style={{ color: "white" }}>{walletType} Wallet Connected</Text>
           <></>
@@ -505,6 +505,40 @@ const Offer_condition=()=>{
           </Text>
         )}
       </View>
+
+<View style={{backgroundColor:"#011434"}}>
+{profile && (
+          <View>
+              {profile.isVerified===true ? (
+                <View >
+                  <TouchableOpacity 
+                    style={styles.PresssableBtn}
+                    onPress={() => {
+                     // setOpen(true)
+                        Offer_condition(Offer_active)
+                    }}
+                  >
+                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Create Offer</Text>
+                  </TouchableOpacity>
+                  <NewOfferModal
+                    user={profile}
+                    open={open}
+                    onCrossPress={()=>{setOpen(false)}}
+                    setOpen={setOpen}
+                    getOffersData={getOffersData}
+                  />
+                </View>
+              ) : (
+               <View style={{flexDirection:"row",justifyContent:"center",marginVertical:5}}>
+                <Text style={styles.kycText}>FATCHING UPDATING {profile.isVerified===false?kyc():""}</Text>
+                <ActivityIndicator color={"green"}/>
+               </View>
+              )}
+            </View>
+          // </View>
+        )}
+</View>
+
   <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"}}>
 <LineChart
         data={chartData}
@@ -513,7 +547,7 @@ const Offer_condition=()=>{
         withDots={true}
         withVerticalLines={false}
         withHorizontalLines={false}
-        style={{backgroundColor:"011434",borderRadius:15,marginTop:Platform==="android"||24}}
+        style={{backgroundColor:"011434",borderRadius:15}}
         bezier
         chartConfig={{
           backgroundColor: '#011434',
@@ -596,7 +630,7 @@ const Offer_condition=()=>{
 const styles = StyleSheet.create({
   container: {
     width: wp(100),
-    height: hp(30),
+    // height: hp(20),
     display: "flex",
     alignContent: "center",
     alignItems: "center",

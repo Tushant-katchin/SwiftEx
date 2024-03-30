@@ -679,17 +679,22 @@ export const ProfileView = (props) => {
         ) : (
           <View>
             <Text style={styles.addedText}>No Bank Account Added!</Text>
-            <LinearGradient
+            {/* <LinearGradient
               style={styles.addacountBtn}
               start={[1, 0]}
               end={[0, 1]}
               colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-            >
+            > */}
+               <View style={styles.addacountBtn}>
               <TouchableOpacity
                 style={{
                   paddingVertical: hp(1),
                   width: wp(50),
                   alignItems: "center",
+                  backgroundColor:"#212B53",
+                  borderRadius: hp(2),
+                  borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+                  borderWidth:0.9
                 }}
                 onPress={() => {
                   setModalVisible(!modalVisible);
@@ -697,7 +702,8 @@ export const ProfileView = (props) => {
               >
                 <Text style={styles.accounttextColor}>Add Bank Account</Text>
               </TouchableOpacity>
-            </LinearGradient>
+              </View>
+            {/* </LinearGradient> */}
             <NewAccountModal
               onCrossIcon={() => {
                 setModalVisible(false);
