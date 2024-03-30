@@ -275,7 +275,7 @@ const Payout = () => {
                 </View>
             </View>
             <View style={[styles.Id_text,styles.white]}>
-            <TextInput style={{width:"90%",color:"white"}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" value={payout_amount} onChangeText={(amount) => {
+            <TextInput style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" value={payout_amount} onChangeText={(amount) => {
                 setpayout_amount(amount)
             }} />
            <Pressable onPress={()=>{setpayout_amount(Available)}}>
@@ -329,11 +329,11 @@ const styles = StyleSheet.create({
         color: 'gray'
     },
     contener: {
-        backgroundColor: '#131E3A',
+        backgroundColor: '#011434',
         flex: 1
     },
     Id_text: {
-        borderColor: 'white',
+        borderColor: 'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)',
         padding: 13,
         borderWidth: 1,
         margin: 19,

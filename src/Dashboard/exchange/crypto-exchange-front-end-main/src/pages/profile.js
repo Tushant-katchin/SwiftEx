@@ -11,6 +11,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -32,7 +33,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { NewAccountModal } from "../components/newAccount.model";
 import BankModel from "../components/bankModel";
 import idCard from "../../../../../../assets/idCard.png";
-
+import * as Clipboard from "expo-clipboard";
+import { alert } from "../../../../reusables/Toasts";
 const VERIFICATION_STATUS = {
   VERIFIED: "VERIFIED",
   UNVERIFIED: "UNVERIFIED",
@@ -424,7 +426,10 @@ export const ProfileView = (props) => {
     // },
   ];
   const navigation = useNavigation();
-
+  const copyToClipboard = () => {
+    Clipboard.setString(profile.walletAddress);
+    alert("success", "Copied");
+  };
   return (
     <>
        <View style={styles.headerContainer1_TOP}>
@@ -479,9 +484,9 @@ export const ProfileView = (props) => {
 
         <View style={styles.profileContainer}>
           <Image source={Profile} style={styles.img}  />
-          <View style={styles.fnlnTextView}>
+          <View style={[styles.fnlnTextView,{marginTop:Platform==="android"||-19}]}>
             <FieldView
-              value={profile.firstName + profile.lastName}
+              value={profile.firstName +" "+ profile.lastName}
               valueStyle={styles.nameText}
               numberOfLines={1}
             />
@@ -493,72 +498,98 @@ export const ProfileView = (props) => {
           </View>
 
           <View style={{ flexDirection: "row", marginLeft: wp(10) }}>
-            <Icon
+            {/* <Icon
               type={"materialCommunity"}
               name={"check-outline"}
               size={hp(2)}
               color={"#698C81"}
-            />
-            <Text style={styles.verifiedText}>Identity Verified!</Text>
+            /> */}
+            <Text style={styles.verifiedText}>   Verified!</Text>
 
             {/* <OutlinedInput EndAdornment={VerifyActionButtonView} type="email" /> */}
           </View>
         </View>
 
-        <Image source={editImage} style={styles.editimgStyle} />
+        {/* <Image source={editImage} style={styles.editimgStyle} /> */}
 
         <View style={styles.emailphoneView}>
-          <FieldView
+          {/* <FieldView
             title="Email"
             value={profile.phoneNumber}
             type="text"
-          />
-          <FieldView
+          /> */}
+          <Text style={{color:"white",fontSize:16}}>Email</Text>
+          <Text style={{color:"white",marginTop:4,fontSize:16}}>{profile.email}</Text>
+          {/* <FieldView
             valueStyle={{ width: 100 }}
             value={profile.email}
             disabled={profile.isEmailVerified}
             // disabled={profile.email ? true : false}
             type="email"
-          />
+          /> */}
         </View>
 
         <View style={styles.walletCard}>
-          <LinearGradient
+          {/* <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
             colors={["rgba(223, 172, 196, 1)", "rgba(192, 197, 234, 1)"]}
             style={styles.linearContainer}
-          >
+          > */}
+
+<View  style={[styles.linearContainer,{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)"}]}>
             <View style={styles.iconwithTextContainer}>
               <View style={styles.walletContainer}>
                 <Text style={styles.myWallet}>My Wallet </Text>
-                <Image source={walletImg} style={styles.walletImg} />
+                <Icon
+                      name={"wallet"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={24}
+                    />
+                {/* <Image source={walletImg} style={styles.walletImg} /> */}
               </View>
               <View style={styles.walletContainer}>
-                <Icon
+                {/* <Icon
                   name={"check-outline"}
                   type={"materialCommunity"}
                   color={"#008C62"}
-                />
+                /> */}
                 <Text style={styles.connectedText}>Connected!</Text>
               </View>
             </View>
 
             <View style={styles.copyRideContainer}>
-              <FieldView
+              {/* <FieldView
                 valueStyle={{ color: "black", fontSize: hp(2) }}
                 value={profile.walletAddress}
-              />
-              <View style={{ alignSelf: "center", alignItems: "center" }}>
-                <Image
+              /> */}
+              <View style={{borderColor:"#485DCA",borderWidth:0.9,borderRadius:5,flexDirection:"row"}}>
+
+               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(70),marginTop:1.9}}>
+                   <Text style={{color:"#fff",margin:5,padding:3}}>{profile.walletAddress}</Text>
+                    </ScrollView>
+              <View style={{ marginHorizontal:1,marginLeft:10 }}>
+                {/* <Image
                   source={copyRide}
                   style={styles.walletImg}
                   color={"#1D7FA3"}
-                />
+                /> */}
+                <TouchableOpacity onPress={()=>{copyToClipboard()}}>
+                <Icon
+                      name={"content-copy"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={24}
+                      style={{marginTop:0.3}}
+                      />
                 <Text style={styles.copyText}>copy</Text>
+                </TouchableOpacity>
               </View>
+                      </View>
             </View>
-          </LinearGradient>
+            </View>
+          {/* </LinearGradient> */}
         </View>
         <View>
           <EmailView
@@ -596,7 +627,7 @@ export const ProfileView = (props) => {
         {account ? (
           <>
             <View style={styles.tableContainer}>
-              <LinearGradient
+              {/* <LinearGradient
                 style={{
                   borderRadius: wp(3),
                   borderColor: "#EE96DF",
@@ -605,11 +636,20 @@ export const ProfileView = (props) => {
                 start={[1, 0]}
                 end={[0, 1]}
                 colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
-              >
+              > */}
+              <View  style={{
+                  borderRadius: wp(3),
+                  borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+                  borderWidth: 1,
+                  backgroundColor:"#212B53"
+                }} >
                 <View style={styles.assetTextContainer}>
-                  <Text style={styles.amountText}>Bank Name</Text>
+                  {/* <Text style={styles.amountText}>Bank Name</Text>
                   <Text style={styles.amountText}>Bank Holder</Text>
-                  <Text style={styles.amountText}>Payout Type</Text>
+                  <Text style={styles.amountText}>Payout Type</Text> */}
+                   <Text style={styles.amountText}>Bank</Text>
+                  <Text style={styles.amountText}>Holder</Text>
+                  <Text style={styles.amountText}>Payout</Text>
                   <Text style={styles.amountText}>Country</Text>
                   <Text style={styles.amountText}>Currency</Text>
                 </View>
@@ -628,7 +668,8 @@ export const ProfileView = (props) => {
                     </View>
                   );
                 })}
-              </LinearGradient>
+              {/* </LinearGradient> */}
+              </View>
             </View>
             <View style={styles.enableContainer}>
               <Text style={styles.enableText}>Charges Enabled: No</Text>
@@ -700,7 +741,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   content: {
-    backgroundColor: "#131E3A",
+    backgroundColor: "#011434",
     alignItems: "center",
     textAlign: "center",
     height: hp(100),
@@ -722,32 +763,34 @@ const styles = StyleSheet.create({
     height: hp(6),
     width: wp(12),
     borderRadius: hp(5),
-    marginLeft: wp(3),
+    // marginLeft: wp(3),
+    borderColor:"gray",
+    borderWidth:1.9
   },
   profileContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignSelf: "center",
     alignItems: "center",
-    marginTop: hp(2),
+    // marginTop: hp(2),
     width: wp(90),
     // marginLeft: wp(3),
   },
   verifiedText: {
-    color: "#698C81",
+    color: "#35CA1D",
     fontSize: hp(2),
     width: wp(25),
   },
   fnlnTextView: {
     flexDirection: "row",
-    marginRight: wp(10),
+    marginRight: wp(19),
     justifyContent: "space-evenly",
     width: wp(21),
   },
   emailphoneView: {
-    flexDirection: "row",
+    // flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: hp(1),
+    marginTop: hp(4),
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
     paddingBottom: hp(1.6),
     borderColor: "#659DEA",
@@ -763,6 +806,9 @@ const styles = StyleSheet.create({
   nameText: {
     width: wp(30),
     marginLeft: wp(10),
+    fontSize:16,
+    color:"white",
+    fontWeight:"bold"
   },
   walletCard: {
     width: wp(90),
@@ -775,7 +821,8 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth * 1,
     paddingVertical: hp(4),
     borderRadius: hp(2),
-    borderColor: "#659DEA",
+    borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:0.9
   },
   iconwithTextContainer: {
     flexDirection: "row",
@@ -788,7 +835,9 @@ const styles = StyleSheet.create({
     marginBottom: hp(1),
   },
   myWallet: {
-    fontWeight: "700",
+    fontWeight: "bold",
+    fontSize:20,
+    color:"#fff"
   },
   walletImg: {
     height: hp(2),
@@ -808,8 +857,9 @@ const styles = StyleSheet.create({
     paddingRight: wp(4),
   },
   copyText: {
-    color: "#2027AC",
+    color: "#fff",
     textAlign: "center",
+    marginBottom:1
   },
   emailText: {
     color: "#fff",
@@ -834,7 +884,7 @@ const styles = StyleSheet.create({
     padding: hp(2),
     alignItems: "center",
     paddingVertical: hp(2),
-    borderBottomColor: "#EE96DF",
+    borderBottomColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
   },
   tableContainer: {
@@ -951,7 +1001,8 @@ const styles = StyleSheet.create({
     marginHorizontal: hp(0.6),
   },
   connectedText: {
-    color: "#008C62",
+    // color: "#008C62",
+        color: "#35CA1D",
   },
   readyText: {
     color: "#fff",

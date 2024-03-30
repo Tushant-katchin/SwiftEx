@@ -505,7 +505,7 @@ const Offer_condition=()=>{
           </Text>
         )}
       </View>
-  <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center'}}>
+  <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"}}>
 <LineChart
         data={chartData}
         width={375}
@@ -513,7 +513,7 @@ const Offer_condition=()=>{
         withDots={true}
         withVerticalLines={false}
         withHorizontalLines={false}
-        style={{backgroundColor:"011434",borderRadius:15}}
+        style={{backgroundColor:"011434",borderRadius:15,marginTop:Platform==="android"||24}}
         bezier
         chartConfig={{
           backgroundColor: '#011434',
