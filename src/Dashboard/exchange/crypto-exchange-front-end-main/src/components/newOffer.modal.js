@@ -67,6 +67,9 @@ const [eth_modal_visible,seteth_modal_visible]=useState(false);
 const [eth_modal_amount,seteth_modal_amount]=useState("");
 const [eth_modal_load,seteth_modal_load]=useState(false);
 const [account_message,setaccount_message]=useState('');
+const [info_amount,setinfo_amount]=useState(false);
+const [info_price,setinfo_price]=useState(false);
+const [info_,setinfo_]=useState(false);
 const getAccountDetails = async () => {
   try {
     const { res, err } = await authRequest("/users/getStripeAccount", GET);
@@ -497,6 +500,9 @@ const getAccountDetails = async () => {
      },1000)
   },[isFocused])
   useEffect(() => {
+    setinfo_(false);
+    setinfo_amount(false);
+    setinfo_price(false);
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
     eth_services()
@@ -637,10 +643,17 @@ const getAccountDetails = async () => {
               </View>
 
               <View style={{ width: '40%', marginTop: 19 }}>
+                <View style={{flexDirection:"row"}}>
                 <Text style={Platform.OS === "ios" ? [styles.currencyText, styles.down_] : styles.currencyText}> Curency</Text>
+                </View>
                 <Text style={Platform.OS === "ios" ? { marginTop: 35, width: '90%',color:"white",fontSize:22,marginLeft:21 } : {marginTop: 16, width: '90%',color:"white",fontSize:16,marginLeft:21 }}>{selectedValue==="XUSD"?"USD":"ETH"}</Text>
+             
               </View>
               <View>
+              {info_===true?<View style={{backgroundColor:"gray",backgroundColor:"#212B53",padding:3.6,borderRadius:10,marginTop:-20,zIndex:20,position:"absolute",marginStart:-30,width:120}}>
+                      <Text style={{color:"white",width:"100%"}}>Deposit money to increase account balance.</Text>
+                    </View>:<></>}
+              <View style={{flexDirection:"row"}}>
                 <TouchableOpacity
                   style={{
                     alignItems: "center",
@@ -653,11 +666,22 @@ const getAccountDetails = async () => {
                     backgroundColor: 'green',
                   }}
                   onPress={() => { selectedValue==="XUSD"? activ===true?alert("error","Stellar Account Activation Require for Add Funds."):[setOpen(false),navigation.navigate("Payment")]:Deposit_Eth()}}
-                >
+                  >
                   <Text style={styles.cancelText}>{selectedValue==="XUSD"?"Add Funds":"Deposit"}</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{info_===false?setinfo_(true):setinfo_(false)}}>
+                <Icon
+                      name={"information-outline"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={21}
+                      style={{marginTop:31}}
+                      />
+              </TouchableOpacity>
               </View>
+              
             </View>
+                      </View>
           </View>
           <Modal visible={eth_modal_visible} animationType="slide" transparent={true}>
         <View style={{backgroundColor: '#212B53',
@@ -688,7 +712,21 @@ const getAccountDetails = async () => {
             }}
           >
             <View style={styles.inputContainer}>
+             <View style={{flexDirection:"row"}}>  
               <Text style={styles.unitText}>Amount</Text>
+               <TouchableOpacity onPress={()=>{info_amount===false?setinfo_amount(true):setinfo_amount(false)}}>
+               <Icon
+                      name={"information-outline"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={21}
+                      style={{marginLeft:10}}
+                    />
+               </TouchableOpacity>
+{info_amount===true?<View style={{backgroundColor:"gray",backgroundColor:"#212B53",padding:3.6,borderRadius:10,zIndex:20,position:"absolute",marginStart:95}}>
+                      <Text style={{color:"white"}}>Offered Amount for {selectedValue}</Text>
+                    </View>:<></>}
+             </View>
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
@@ -700,10 +738,24 @@ const getAccountDetails = async () => {
                     alert("error", "Inputed Balance not found in account.");
                   }
                 }}
+                disabled={Balance==="0.0000000"}
                 autoCapitalize={"none"}
               />
-
+              <View style={{flexDirection:"row"}}> 
               <Text style={styles.unitText}>Price</Text>
+              <TouchableOpacity onPress={()=>{info_price===false?setinfo_price(true):setinfo_price(false)}}>
+               <Icon
+                      name={"information-outline"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={21}
+                      style={{marginLeft:10}}
+                    />
+               </TouchableOpacity>
+{info_price===true?<View style={{backgroundColor:"gray",backgroundColor:"#212B53",padding:3.6,borderRadius:10,zIndex:20,position:"absolute",marginStart:70}}>
+                      <Text style={{color:"white"}}>Offered Price for {selectedValue}</Text>
+                    </View>:<></>}
+              </View>
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
@@ -713,6 +765,7 @@ const getAccountDetails = async () => {
                   setoffer_price(text)
                 }}
                 autoCapitalize={"none"}
+                disabled={Balance==="0.0000000"}
               />
             </View>
 
