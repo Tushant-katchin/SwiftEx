@@ -89,7 +89,7 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
     if (JSON.parse(walletType) == "Ethereum") {
       const settings = {
         apiKey: EthereumSecret.apiKey,
-        network: Network.ETH_GOERLI,
+        network: Network.ETH_SEPOLIA,
       };
 
       alchemyProvider = new Alchemy(settings);

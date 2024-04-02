@@ -60,7 +60,9 @@ import PushNotification from 'react-native-push-notification';
 function listion(addressToMonitor) {
 // const addressToMonitor= store.getState().wallet.address;
   console.log('>>>>>>',addressToMonitor)
-  const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-goerli.g.alchemy.com/v2/favrOyEWGeWQfG-rjh2KkqhJyUriu72j'))
+  // const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-goerli.g.alchemy.com/v2/favrOyEWGeWQfG-rjh2KkqhJyUriu72j')) //OLD
+  const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo'))
+
   web3.eth.subscribe('newBlockHeaders', (error, blockHeader) => {
     if (!error) {
       try {

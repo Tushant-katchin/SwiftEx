@@ -17,7 +17,9 @@ export const API_KEYS ={
 export const EthereumSecret = {
   // apiKey: "47dae78319124500ac4a20ef91175f8c",
   // apiKey: "nVTR_gZ2GAO_KlSuvS2kCj7NyD0WxzNg",
-  apiKey: "favrOyEWGeWQfG-rjh2KkqhJyUriu72j",
+  // apiKey: "favrOyEWGeWQfG-rjh2KkqhJyUriu72j",// OLD
+  apiKey: "k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
+
 };
 export const smart_contract_Address="0xc8e3e8c2bAf9f3b4d99b76A6AA152Ae1DF08D7B8";
 export const tokenAddresses = {
@@ -44,8 +46,10 @@ export const RPC = {
     "https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/testnet/",
   MATICRPC:
     "https://polygon-mumbai.g.alchemy.com/v2/WUJnVsFyDvgwlbSdNrpr-lMg0-NKaNLH",
-  ETHRPC:"https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG",
-    ETHRPC2:"https://eth-goerli.g.alchemy.com/v2/kXUtx7JDweb570vdSTAU3yFOR_cPiL9L",
+  // ETHRPC:"https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG",  //OLD
+    // ETHRPC2:"https://eth-goerli.g.alchemy.com/v2/kXUtx7JDweb570vdSTAU3yFOR_cPiL9L",  //OLD
+    ETHRPC:"https://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
+    ETHRPC2:"https://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
   XRPRPC:"https://s.altnet.rippletest.net:51234"
 };
 

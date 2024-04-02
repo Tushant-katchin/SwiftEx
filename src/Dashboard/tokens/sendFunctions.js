@@ -23,8 +23,8 @@ const sendEth = async (
   let alchemyProvider;
 
   const settings = {
-    apiKey: EthereumSecret.apiKey,
-    network: Network.ETH_GOERLI,
+    apiKey: "k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
+    network: Network.ETH_SEPOLIA,
   };
 
   alchemyProvider = new Alchemy(settings);
@@ -55,7 +55,7 @@ const sendEth = async (
     maxFeePerGas: maxFee.maxFeePerGas,
     nonce: nonce,
     type: 2,
-    chainId: 5,
+    chainId: 11155111,
   };
   console.log(transaction);
 

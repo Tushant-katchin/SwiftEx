@@ -26,6 +26,7 @@ import { useToast } from "native-base";
 import { alert, ShowToast } from "./reusables/Toasts";
 import { CommonActions } from "@react-navigation/native";
 import Icon from "../icon";
+const { Alchemy, Network, Wallet, Utils } = require("alchemy-sdk");
 
 var ethers = require("ethers");
 const ConfirmTransaction = (props) => {
@@ -62,45 +63,52 @@ const ConfirmTransaction = (props) => {
     const token = await state.token;
     setLoading(true);
     setDisable(true);
-
     if (type === "Eth") {
-      let txx = await provider.core
-        .sendTransaction(rawTransaction)
-        .catch((e) => {
-          console.log(e);
-          setLoading(false);
-        });
-      const tx = txx.wait();
-      console.log("Sent transaction", await tx);
+      
+      console.log("________________________________________________")
+      console.log("----",rawTransaction)
+      console.log("________________________________________________")
+      // const settings = {
+      //   apiKey: "k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
+      //   network: Network.ETH_SEPOLIA,
+      // }
+      // const alchemy = new Alchemy(settings);
+      // let txx = await alchemy.core.sendTransaction(rawTransaction)
+      //   .catch((e) => {
+      //     console.log(e);
+      //     setLoading(false);
+      //   });
+      // const tx = txx.wait();
+      // console.log("Sent transaction", await tx);
 
-      if (txx.hash) {
-        try {
-          const type = "Send";
-          const chainType = "Eth";
-          const saveTransaction = await SaveTransaction(
-            type,
-            txx.hash,
-            emailid,
-            token,
-            walletType,
-            chainType
-          );
+      // if (txx.hash) {
+      //   try {
+      //     const type = "Send";
+      //     const chainType = "Eth";
+      //     const saveTransaction = await SaveTransaction(
+      //       type,
+      //       txx.hash,
+      //       emailid,
+      //       token,
+      //       walletType,
+      //       chainType
+      //     );
 
-          console.log(saveTransaction);
-          ShowToast(toast, "Transaction Successful");
+      //     console.log(saveTransaction);
+      //     ShowToast(toast, "Transaction Successful");
 
-          setLoading(false);
-          setDisable(false);
-          Navigate();
-          navigation.navigate("Transactions");
-        } catch (e) {
-          setLoading(false);
-          setDisable(false);
-          console.log(e);
+      //     setLoading(false);
+      //     setDisable(false);
+      //     Navigate();
+      //     navigation.navigate("Transactions");
+      //   } catch (e) {
+      //     setLoading(false);
+      //     setDisable(false);
+      //     console.log(e);
 
-          alert("error", e);
-        }
-      }
+      //     alert("error", e);
+      //   }
+      // }
     } else if (type === "Matic") {
       let alchemy = provider;
       let txx = await alchemy.core.sendTransaction(rawTransaction);
