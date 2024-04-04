@@ -44,7 +44,8 @@ export const jwtSecret = "0xC02aaA3MunziAppTestMode0xbb4CdB9";
 export const RPC = {
   BSCRPC: "https://data-seed-prebsc-1-s1.binance.org:8545",
   BSCRPC2:
-    "https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/testnet/",
+    // "https://bsc.getblock.io/a011daa0-3099-4f55-b22c-c3a3d55898d0/testnet/", //OLD
+    "https://bsc-testnet.blockpi.network/v1/rpc/public",
   MATICRPC:
     "https://polygon-mumbai.g.alchemy.com/v2/WUJnVsFyDvgwlbSdNrpr-lMg0-NKaNLH",
   // ETHRPC:"https://eth-goerli.g.alchemy.com/v2/E1L1Ovo8ZG9-8UjFrNY39wcjPSa0uYLG",  //OLD

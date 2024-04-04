@@ -26,14 +26,14 @@ import Icon from "../../../../../icon";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native'
 import { useIsFocused } from '@react-navigation/native';
-import { EthereumSecret, smart_contract_Address } from "../../../../constants";
+import { EthereumSecret, smart_contract_Address,RPC } from "../../../../constants";
 import contractABI from './contractABI.json';
 import { authRequest, GET, getToken, POST } from "../api";
 import { REACT_APP_HOST } from "../ExchangeConstants";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
-const alchemyUrl = 'https://eth-goerli.alchemyapi.io/v2/'+EthereumSecret.apiKey;
+const alchemyUrl = RPC.ETHRPC;
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress }) => {
   const isFocused = useIsFocused();
@@ -412,7 +412,31 @@ const getAccountDetails = async () => {
     deposited_Ether_in_smart();
   }
 
+  const add_XETH=async()=>{
+    console.log("======= called")
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6Imh1bm55QGthdGNoaW50ZWNoLmNvbSIsIl9pZCI6IjY2MGNlMTgwMjFmN2VmMTZiMzYwYjAxOSIsImlhdCI6MTcxMjEyMDIxOSwiZXhwIjoxNzEyMzc5NDE5fQ.1oEqP79IoJBtApQ31JJ5O2MlSOCYX3dLwvkJycdOfdw");
 
+const raw = JSON.stringify({
+  "email": u_email,
+  "amount": eth_modal_amount
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
+  .then((response) => response.text())
+  .then((result) => {
+    alert("success","XETH Recived");
+    console.log("===res get xeth===>",result)})
+  .catch((error) => console.error(error));
+  }
 
   const Deposit_Eth=()=>{
     seteth_modal_visible(true)
@@ -463,16 +487,25 @@ const getAccountDetails = async () => {
             value: web3.utils.toHex(valueInWei)
       };
   
+      // const signedTx = await web3.eth.accounts.signTransaction(txObject, "9d9e1e7a8fdb0ed51a40a4c6b3e32c91f64615e37281150932fa1011d1a59daf");
       const signedTx = await web3.eth.accounts.signTransaction(txObject, state.wallet.privateKey);
+
   
       const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
       setshow(false);
-      seteth_modal_amount('');
+      // seteth_modal_amount('');
       alert("success","Ether Deposited.");
       setdeposit_loading(false);
       seteth_modal_load(false);
       console.log('Transaction hash:', txReceipt.transactionHash);
-      console.log('Transaction receipt:', txReceipt);
+      console.log('Transaction from:', txReceipt.from);
+      console.log('Transaction status:', txReceipt.status);
+       if(txReceipt.status===true)
+       {
+         add_XETH();
+       }
+      // console.log('Transaction hash:', txReceipt.transactionHash);
+      // console.log('Transaction receipt:', txReceipt);
     } catch (error) {
     seteth_modal_load(false);
       setshow(false);
@@ -700,7 +733,10 @@ const getAccountDetails = async () => {
             <View style={{flexDirection:"row",width:"100%",justifyContent:"space-evenly",marginTop:10}}>
               <Button title="Cancel"  color="red" onPress={()=>{seteth_modal_visible(false)}}/>
               <TouchableOpacity disabled={!eth_modal_amount} style={{width:"30%",height:"100%",backgroundColor:eth_modal_amount!==''?"green":"gray",borderRadius:5,elevation:5}} onPress={()=>{deposit_Ether(eth_modal_amount)}}>
-                    <Text style={{textAlign:'center',marginTop:6,fontSize:15,color:"white"}}>{eth_modal_load===true?<ActivityIndicator color={"white"}/>:"Deposit ETH"}</Text>
+                    {/* <Text style={{textAlign:'center',marginTop:6,fontSize:15,color:"white"}}>{eth_modal_load===true?<ActivityIndicator color={"white"}/>:"Deposit ETH"}</Text> */}
+                    {Platform==="android"? 
+                      <Text style={{ textAlign: 'center', marginTop: 6, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} /> : "Deposit ETH"}</Text>:
+                      <Text style={{ marginTop: 10, margin: 3, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} style={{justifyContent:"center"}}/> : "Deposit ETH"}</Text>}
               </TouchableOpacity>
             </View>
           </View>
@@ -738,7 +774,7 @@ const getAccountDetails = async () => {
                     alert("error", "Inputed Balance not found in account.");
                   }
                 }}
-                disabled={Balance==="0.0000000"}
+                disabled={Balance==="0.0000000"||Balance==="0"}
                 autoCapitalize={"none"}
               />
               <View style={{flexDirection:"row"}}> 
@@ -765,7 +801,7 @@ const getAccountDetails = async () => {
                   setoffer_price(text)
                 }}
                 autoCapitalize={"none"}
-                disabled={Balance==="0.0000000"}
+                disabled={Balance==="0.0000000"||Balance==="0"}
               />
             </View>
 
