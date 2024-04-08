@@ -17,6 +17,7 @@ import { AccountView } from "./pages/account";
 import { TransactionView } from "./pages/transaction";
 import { ExchangeHeader, ExchangeHeaderIcon } from "../../../header";
 import Payout from "./pages/payout";
+import AddFunds_screen from "./components/AddFunds_screen";
 const Tab = createBottomTabNavigator();
 
 export function ExchangeNavigation() {
@@ -33,6 +34,10 @@ export function ExchangeNavigation() {
           if (route.name === "/") {
             iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
             iconName = "ios-home-sharp";
+          }
+          if (route.name === "Deposits") {
+            iconName = focused ? "ios-home-sharp" : "ios-home-outline";
+            iconName = "card-outline";
           }
           if (route.name === "profile") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
@@ -75,6 +80,16 @@ export function ExchangeNavigation() {
         component={HomeView}
         options={{
           tabBarLabel: "Home",
+          headerShown: true,
+          header: () => {
+            // return <ExchangeHeaderIcon />;
+          },
+        }}
+      />
+       <Tab.Screen
+        name="Deposits"
+        component={AddFunds_screen}
+        options={{
           headerShown: true,
           header: () => {
             // return <ExchangeHeaderIcon />;

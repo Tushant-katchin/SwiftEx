@@ -37,7 +37,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 import { alert } from "../../../../reusables/Toasts";
 import { LineChart } from "react-native-chart-kit";
-import { Platform } from "react-native";
+import { Platform,Modal} from "react-native";
+import * as Clipboard from "expo-clipboard";
 // import StellarSdk from '@stellar/stellar-sdk';
 
 export const HomeView = ({ setPressed }) => {
@@ -72,6 +73,18 @@ export const HomeView = ({ setPressed }) => {
   const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
   const inActiveColor = ["#131E3A", "#131E3A"];
   const [Offer_active,setOffer_active]=useState(false);
+  const Anchor=[
+    {name:"SwiftEx",status:"Verified",image: require('../../../../../../assets/darkBlue.png'),city:"India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia",Crypto_Assets:"XETH, XUSD",Fiat_Assets:"$ USD, € EUR",Payment_Rails:"Card, Bank Transfer, Local Method" },
+    {name:"APS",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden",Fiat_Assets:"$ BRL€ EUR$ CLP",Crypto_Assets:"XETH, XUSD" },
+    {name:"BILIRA",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Turkey",Fiat_Assets:"$ USD",Crypto_Assets:"XETH, XUSD, USDC"},
+    {name:"ALFRED",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Argentina / Brazil / Chile / Colombia / Dominican Republic / Mexico",Crypto_Assets:"XETH, XUSD, USDC",Fiat_Assets:"$ USD",Payment_Rails:"Bank Transfer" },
+    {name:"ANCLAP",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Argentina / Chile / Colombia / Mexico / Peru",Crypto_Assets:"XETH, XUSD, ARS,PEN,USDC,XLM",Fiat_Assets:"$ ARS $ USD",Payment_Rails:"CashCard, Bank Transfer, Local Method"},
+    {name:"ARF",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"China / Colombia / Singapore / Turkey / United States",Crypto_Assets:"XETH, XUSD, USDC",Fiat_Assets:"$ USD" },
+  ];
+  const [steller_key_private,setsteller_key_private]=useState("");
+  const [show_steller_key,setshow_steller_key]=useState("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  const [Anchor_modal,setAnchor_modal]=useState(false);
+  const [index_Anchor,setindex_Anchor]=useState(0);
 
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
@@ -97,6 +110,8 @@ export const HomeView = ({ setPressed }) => {
         console.log('Retrieved data:', parsedData);
         const publicKey = parsedData.key1
         setsteller_key(publicKey)
+        const secretKey_Key = parsedData.key2
+        setsteller_key_private(secretKey_Key)
       }
       else {
         console.log('No data found in AsyncStorage');
@@ -268,7 +283,7 @@ const kyc=()=>{
   applyForKyc();
 }
   
-const Offer_condition=()=>{
+const Offer_condition=(data,para)=>{
   getAccountDetails()
   if(Offer_active===true)
   {
@@ -276,7 +291,14 @@ const Offer_condition=()=>{
       walletType === "Ethereum" ||
       walletType === "Multi-coin"
     ) {
-      setOpen(true);
+      // setOpen(true);
+      navigation.navigate("newOffer_modal",{
+        user:{profile},
+                    open:{open},
+                    // onCrossPress={()=>{setOpen(false)}},
+                    // setOpen:{setOpen}
+                    getOffersData:{getOffersData}
+      });
     } else {
       
       alert('error',"Only Ethereum wallet are supported");
@@ -285,6 +307,17 @@ const Offer_condition=()=>{
   else{
     Alert.alert("Account","Add Bank Account from Profile Tab.");
   }
+}
+const copyToClipboard = (data) => {
+  Clipboard.setString(data);
+  alert("success", "Copied");
+};
+
+const priview_steller=()=>{
+  setshow_steller_key(steller_key_private);
+  setTimeout(()=>{
+  setshow_steller_key("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  },3000);
 }
   return (
     <>
@@ -346,60 +379,143 @@ const Offer_condition=()=>{
     >
       
       <View style={styles.container}>
-      
         {/* <LinearGradient
           start={[1, 0]}
           end={[0, 1]}
           colors={["rgba(223, 172, 196, 1)", "rgba(192, 197, 234, 1)"]}
           style={styles.linearContainer}
-        >
-
-            {state.wallet ? (
-              <View>
-                <View style={styles.iconwithTextContainer}>
-                  <View style={styles.walletContainer}>
-                    <Text style={styles.myWallet}>My Wallet </Text>
-                    <Image source={walletImg} style={styles.walletImg} />
-                  </View>
-                  <View style={styles.walletContainer}>
-                    <Icon
-                      name={"check-outline"}
-                      type={"materialCommunity"}
-                      color={"#008C62"}
-                    />
-                    <Text style={styles.connectedText}>Connected!</Text>
-                  </View>
-                </View>
-                <Text style={styles.textColor}>{state.wallet.address}</Text>
-              </View>
+          >
+          
+          {state.wallet ? (
+            <View>
+            <View style={styles.iconwithTextContainer}>
+            <View style={styles.walletContainer}>
+            <Text style={styles.myWallet}>My Wallet </Text>
+            <Image source={walletImg} style={styles.walletImg} />
+            </View>
+            <View style={styles.walletContainer}>
+            <Icon
+            name={"check-outline"}
+            type={"materialCommunity"}
+            color={"#008C62"}
+            />
+            <Text style={styles.connectedText}>Connected!</Text>
+            </View>
+            </View>
+            <Text style={styles.textColor}>{state.wallet.address}</Text>
+            </View>
             ) : (
               <Text style={styles.textColor}>
-                Please select a wallet first!
+              Please select a wallet first!
               </Text>
-            )}
-
-
-
-            {message ? (
-              <>
+              )}
+              
+              
+              
+              {message ? (
+                <>
                 <View style={styles.copyRideContainer}>
-                  <Text style={styles.messageStyle}>{message}</Text>
-                  <View>
-                    <Image
-                      source={copyRide}
-                      style={styles.walletImg}
-                      color={"#1D7FA3"}
-                    />
-
-                    <Text style={styles.copyText}>copy</Text>
-                  </View>
+                <Text style={styles.messageStyle}>{message}</Text>
+                <View>
+                <Image
+                source={copyRide}
+                style={styles.walletImg}
+                color={"#1D7FA3"}
+                />
+                
+                <Text style={styles.copyText}>copy</Text>
                 </View>
-              </>
-            ) : (
-              null
-            )}
+                </View>
+                </>
+                ) : (
+                  null
+                  )}
+                  
+                </LinearGradient> */}
+                {/* <View style={{width:"96%",margin:10,padding:10,justifyContent:"center",borderRadius:10,borderColor:"white",borderWidth:1.9,borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)"}}>
+                   <Text style={{fontWeight: "bold",fontSize:20,color:"#fff",marginBottom:2.9}}>Anchor</Text>
+                   <View style={{flexDirection:"row"}}>
+                   <View style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",borderRadius:15,width:"33%"}}>
+                      <Image source={darkBlue} style={styles.Anchor_img}/>
+                      <Text style={{color:"#35CA1D",textAlign:"center"}}>SwiftEx</Text>
+                   </View>
+                   </View>
+                </View> */}
+               <View style={styles.container_a}>
+                <Text style={{textAlign:"left",marginHorizontal:10,marginTop:10,fontWeight: "bold",fontSize:20,color:"#fff"}}>Anchors</Text>
+      <ScrollView horizontal style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",padding:8,borderRadius:10}} showsHorizontalScrollIndicator={false}>
+              {Anchor.map((list, index) => {
+                return (
+                  <TouchableOpacity onPress={()=>{setAnchor_modal(true),setindex_Anchor(index)}}>
+                    <View style={[styles.card,{backgroundColor:list.status==="Pending"?"#2b3c57":"#011434"}]} key={index}>
+                      <View style={{ width: "30%", height: "27%", borderBottomLeftRadius: 10, borderColor: 'rgba(122, 59, 144, 1)rgba(100, 115, 197, 1)', borderWidth: 1.9, position: "absolute", alignSelf: "flex-end", borderTopRightRadius: 10 }}>
+                        <Icon name={list.status === "Pending" ? "clock-time-two-outline" : "check-circle-outline"} type={"materialCommunity"} color={list.status === "Pending" ? "yellow" : "#35CA1D"} size={24} />
+                      </View>
+                      <Image
+                        source={list.image}
+                        style={styles.image}
+                      />
+                      <Text style={styles.name}>{list.name}</Text>
+                      <Text style={[styles.status, { color: list.status === "Pending" ? "yellow" : "#35CA1D" }]}>{list.status}</Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              })}
+      </ScrollView>
 
-        </LinearGradient> */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={Anchor_modal}
+        // onRequestClose={closeModal}
+      >
+      
+      <View style={{backgroundColor: '#fff',borderRadius: 10,marginHorizontal:10,height:hp(80),marginTop:hp(10)}}>
+          <TouchableOpacity style={{alignSelf:"flex-end",padding:10}} onPress={()=>{setAnchor_modal(false),setindex_Anchor(0)}}>
+          <Icon name={"close"} type={"materialCommunity"} size={30} color={"black"}/>
+          </TouchableOpacity>
+           {Anchor.map((list,index)=>{
+              if(index===index_Anchor)
+              {
+                  return(
+                    <View style={{flex:1}}>
+                     <View style={{flexDirection:"row"}}>
+                     <Image
+                        source={list.image}
+                        style={styles.image}
+                      />
+                     <Text style={{fontSize:19,textAlign:"center",marginTop:19,fontWeight:"bold"}}>{list.name}</Text>
+                     </View>
+                     <View style={{flexDirection:"row",marginStart:10,marginTop:10,borderWidth:1.3,margin:10,padding:5,borderBottomColor:"black",borderTopColor:"white",borderLeftColor:"white",borderRightColor:"white"}}>
+                       <Icon name={"map-marker"} type={"materialCommunity"} size={30} color={"#212B53"}/>
+                       <ScrollView style={{height:hp(14)}}>
+                        <Text style={{marginStart:10,marginTop:5}}>{list.city}</Text>
+                       </ScrollView>
+                      <View>
+                      </View>
+                     </View>
+                     <View style={{borderWidth:1.3,margin:10,padding:5,borderBottomColor:"black",borderTopColor:"white",borderLeftColor:"white",borderRightColor:"white"}}>
+                     <Text style={{marginStart:21,marginTop:5,fontSize:20}}>Crypto Assets</Text>
+                      <Text style={{marginStart:29,marginTop:9,fontSize:16}}>{list.Crypto_Assets}</Text>
+                     </View>
+
+                     <View style={{borderWidth:1.3,margin:10,padding:5,borderBottomColor:"black",borderTopColor:"white",borderLeftColor:"white",borderRightColor:"white"}}>
+                     <Text style={{marginStart:26,marginTop:5,fontSize:20}}>Fiat Assets</Text>
+                      <Text style={{marginStart:29,marginTop:9,fontSize:16}}>{list.Fiat_Assets}</Text>
+                     </View>
+
+                     <View style={{borderWidth:1.3,margin:10,padding:5,borderBottomColor:"black",borderTopColor:"white",borderLeftColor:"white",borderRightColor:"white"}}>
+                     <Text style={{marginStart:26,marginTop:5,fontSize:20}}>Payment Rails</Text>
+                      <Text style={{marginStart:29,marginTop:9,fontSize:16}}>{list.Payment_Rails}</Text>
+                     </View>
+                    </View>
+                  )
+              }
+           })}
+        </View>
+
+      </Modal>
+    </View>
               <View style={[styles.linearContainer,{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)"}]}>
 
             {state.wallet ? (
@@ -430,6 +546,15 @@ const Offer_condition=()=>{
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{state.wallet.address}</Text>
                     </ScrollView>
+                    <TouchableOpacity onPress={()=>{copyToClipboard(state.wallet.address)}}>
+                    <Icon
+                      name={"content-copy"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={24}
+                      style={{marginTop:0.3,marginLeft:2.9}}
+                      />
+                    </TouchableOpacity>
                   </View> 
 
                   <View style={{flexDirection:"row",marginTop:10}}>
@@ -437,6 +562,31 @@ const Offer_condition=()=>{
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{steller_key}</Text>
                     </ScrollView>
+                    <TouchableOpacity onPress={()=>{copyToClipboard(steller_key)}}>
+                    <Icon
+                      name={"content-copy"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={24}
+                      style={{marginTop:0.3,marginLeft:2.9}}
+                      />
+                    </TouchableOpacity>
+                  </View> 
+
+                  <View style={{flexDirection:"row",marginTop:10}}>
+                    <Text style={styles.textColor}>Stellar Private  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
+                   <Text style={[styles.textColor,styles.width_scrroll]}>{show_steller_key}</Text>
+                    </ScrollView>
+                    <TouchableOpacity onPress={()=>{priview_steller()}}>
+                    <Icon
+                      name={show_steller_key==="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"?"eye":"eye-off"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={24}
+                      style={{marginTop:0.3,marginLeft:2.9}}
+                      />
+                    </TouchableOpacity>
                   </View> 
                 </View>
               </View>
@@ -520,13 +670,13 @@ const Offer_condition=()=>{
                   >
                     <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Create Offer</Text>
                   </TouchableOpacity>
-                  <NewOfferModal
+                  {/* <NewOfferModal
                     user={profile}
                     open={open}
                     onCrossPress={()=>{setOpen(false)}}
                     setOpen={setOpen}
                     getOffersData={getOffersData}
-                  />
+                  /> */}
                 </View>
               ) : (
                <View style={{flexDirection:"row",justifyContent:"center",marginVertical:5}}>
@@ -643,7 +793,7 @@ const styles = StyleSheet.create({
     padding: hp(2),
     paddingVertical: hp(3),
     borderRadius: hp(2),
-    marginTop: hp(3),
+    // marginTop: hp(3),
   },
   textColor: {
     color: "#fff",
@@ -792,6 +942,38 @@ const styles = StyleSheet.create({
     marginStart: wp(31),
     top:19,
     fontSize:17
+  },
+  container_a: {
+    flex: 1,
+    width:"94%",
+    // alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
+    margin:10,
+    borderRadius:10
+  },
+  card: {
+    marginRight: 10,
+    borderWidth: 1.9,
+    borderColor: 'rgba(122, 59, 144, 1)rgba(100, 115, 197, 1)',
+    borderRadius: 10,
+    padding: 8,
+    backgroundColor:"#011434"
+  },
+  image: {
+    width: 90,
+    height: 65,
+    borderRadius: 50,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 3,
+    color:"#fff"
+  },
+  status: {
+    fontSize: 14,
+    color: 'yellow',
   },
   
 });

@@ -234,7 +234,7 @@ const getBalance = async (address) => {
 const getEthBalance = async (address) => {
   try {
     if (address) {
-      const provider = ethers.getDefaultProvider("goerli");
+      const provider = ethers.getDefaultProvider("sepolia");
       const EthBalance = await provider.getBalance(address);
       const balanceInEth = ethers.utils.formatEther(EthBalance);
 

@@ -182,7 +182,7 @@ const FOCUSED=useIsFocused();
       alert("error", "Both fields are required");
     }
     else {
-       if(len===8||len0===8)
+       if(len>8||len0>8)
        {
         const result = passcode === con_passcode;
         if (result === true) {

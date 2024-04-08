@@ -64,6 +64,7 @@ import TokenList from "../Dashboard/tokens/TokenList";
 import Payout from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/payout";
 import Payment from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/Payment";
 import importStellar from "../Dashboard/importStellar";
+import { NewOfferModal } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/newOffer.modal";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -533,6 +534,19 @@ const AuthStack = () => (
           },
         }}
       />
+
+<Stack.Screen
+        name="newOffer_modal"
+        component={NewOfferModal}
+        options={{
+          headerShown: false,
+          headerStyle: { backgroundColor: "#4CA6EA" },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />    
 
 <Stack.Screen
         name="Payment"

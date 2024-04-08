@@ -13,7 +13,9 @@ import {
   ScrollView,
   RefreshControl,
   useWindowDimensions,
-  Image
+  Image,
+  Linking,
+  Modal
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -29,15 +31,16 @@ import { SafeAreaView } from "react-native";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { useIsFocused } from '@react-navigation/native';
+import WebView from "react-native-webview";
 
 
 
 export const OfferListView = ({ self = false, offers, profile, setChange }) => {
   const [open, setOpen] = useState(false);
-  useEffect(()=>{
+  useEffect(() => {
     OfferListViewHome()
     OfferListView()
-  },[open,offers,profile,setChange])
+  }, [open, offers, profile, setChange])
   return (
     <View style={{ backgroundColor: "#131E3A" }}>
       <LinearGradient
@@ -166,102 +169,119 @@ export const OfferListView = ({ self = false, offers, profile, setChange }) => {
 export const OfferListViewHome = () => {
   const isFocused = useIsFocused();
   const [history, sethistory] = useState([]);
-  const [pull, setPull] = useState(false)
+  const [open_details, setopen_details] = useState(false);
+  const [id,setid]=useState("");
   const getAllTransactions = async () => {
     try {
-        const transactions = await AsyncStorageLib.getItem("offer_data");
+      const transactions = await AsyncStorageLib.getItem("offer_data");
 
-        if (transactions) {
-            const parsedTransactions = JSON.parse(transactions);
-            sethistory(parsedTransactions)
-            console.log("<<<<<>",parsedTransactions)
-            return parsedTransactions;
-        } else {
-            console.log("No transactions found.");
-            return [];
-        }
+      if (transactions) {
+        const parsedTransactions = JSON.parse(transactions);
+        sethistory(parsedTransactions)
+        console.log("<<<<<>", parsedTransactions)
+        return parsedTransactions;
+      } else {
+        console.log("No transactions found.");
+        return [];
+      }
     } catch (error) {
-        console.error("Error getting all transactions:", error);
-        throw error;
+      console.error("Error getting all transactions:", error);
+      throw error;
     }
-};
+  };
 
-useEffect(()=>{
-  getAllTransactions();
-},[isFocused])
+  useEffect(() => {
+    getAllTransactions();
+    setid("");
+  }, [isFocused])
   return (
     // <View style={{ backgroundColor: "#131E3A" }}>
-    <View style={{backgroundColor: "#011434",flex:1}}>
+    <View style={{ backgroundColor: "#011434", flex: 1 }}>
 
-      <Text style={{color:"white",marginLeft:13,marginTop:13,fontWeight:"bold",fontSize:19}}>Created Offers</Text>
+      <Text style={{ color: "white", marginLeft: 13, marginTop: 13, fontWeight: "bold", fontSize: 19 }}>Created Offers</Text>
       {/* <LinearGradient
         style={styles.linearStyle1}
         start={[1, 0]}
         end={[0, 1]}
         colors={["rgba(1, 12, 102, 1)", "rgba(224, 93, 154, 1)"]}
       > */}
-      <View style={[styles.linearStyle1,{backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)"}]}>
+      <View style={[styles.linearStyle1, { backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)" }]}>
         <ScrollView nestedScrollEnabled horizontal>
           <ScrollView nestedScrollEnabled={true}>
             <View style={styles.tableHeader}>
+              <Text style={styles.AssetText}>View</Text>
               <Text style={styles.AssetText}>Asset</Text>
               <Text style={styles.AssetText}>Amount</Text>
               <Text style={styles.AssetText}>Price</Text>
               <Text style={styles.AssetText}>Type</Text>
               <Text style={styles.textColor}>Status</Text>
-              <Text style={styles.AssetText}>Created</Text>
             </View>
             <>
-            {history.length===0?<Text style={{color:"white",margin:10,fontWeight:"bold",fontSize:19}}>{"No Offer Records."}</Text>:
-            history.map((offer,index) => {
-                 return (
-                   <>
-                   <View key={index}>
-                     <ScrollView horizontal={true} key={offer._id}>
-                       <View
-                         key={index}
-                         style={styles.mainDataContainer}
-                       >
-                         <Text style={styles.textColor}>
-                           {offer.asset.code}
-                         </Text>
+              {history.length === 0 ? <Text style={{ color: "white", margin: 10, fontWeight: "bold", fontSize: 19 }}>{"No Offer Records."}</Text> :
+                history.map((offer, index) => {
+                  return (
+                    <>
+                      <View key={index}>
+                        <ScrollView horizontal={true} key={offer._id}>
+                          <View
+                            key={index}
+                            style={styles.mainDataContainer}
+                          >
+                            <Text
+                              style={{
+                                textAlign: "center",
+                                width: wp(20),
+                                color: "#4CA6EA",
+                              }}
+                              //  onPress={()=>{ Linking.openURL("https://stellar.expert/explorer/testnet/tx/"+offer.date);}}
+                              onPress={() => { setopen_details(true),setid(offer.date) }}
+                            >
+                              Details
+                            </Text>
 
-                         <Text style={styles.textColor}>
-                           {offer.amount}
-                         </Text>
+                            <Text style={styles.textColor}>
+                              {offer.asset.code}
+                            </Text>
 
-                         <Text style={styles.textColor}>
-                           {offer.price}
-                         </Text>
-                         <Text style={styles.textColor}>
-                           {offer.forTransaction}
-                         </Text>
-                         <Text style={[styles.textColor,{color:"green",fontWeight: "bold",}]}>
-                           {offer.status}
-                         </Text>
-                         <Text
-                           style={{
-                             textAlign: "center",
-                             width: wp(20),
-                             color: "#4CA6EA",
-                           }}
-                         >
-                           {offer.date}
-                         </Text>
-                       </View>
-                     </ScrollView>
-                   </View>
-                 </>
-                   )
-                 })
-               }
-                 </>
+                            <Text style={styles.textColor}>
+                              {offer.amount}
+                            </Text>
+
+                            <Text style={styles.textColor}>
+                              {offer.price}
+                            </Text>
+                            <Text style={styles.textColor}>
+                              {offer.forTransaction}
+                            </Text>
+                            <Text style={[styles.textColor, { color: "green", fontWeight: "bold", }]}>
+                              {offer.status}
+                            </Text>
+                            <Modal
+                              animationType="slide"
+                              transparent={true}
+                              visible={open_details}
+                            >
+                              <View style={{ height: hp(70.8), width: "94%", backgroundColor: "white", margin: 10, borderRadius: 10, marginTop: hp(15) }}>
+                                <TouchableOpacity style={{ alignSelf: "flex-end", marginRight: 10, marginTop: 10 }} onPress={() => { setopen_details(false); }}>
+                                  <Icon name={"close"} type={"antDesign"} size={28} color={"black"} />
+                                </TouchableOpacity>
+                                <WebView source={{ uri: `https://stellar.expert/explorer/testnet/tx/${id}`}} />
+                              </View>
+                            </Modal>
+                          </View>
+                        </ScrollView>
+                      </View>
+                    </>
+                  )
+                })
+              }
+            </>
           </ScrollView>
         </ScrollView>
-        </View>
+      </View>
       {/* </LinearGradient> */}
     </View>
-)
+  )
 };
 
 export const OfferView = () => {
@@ -280,59 +300,59 @@ export const OfferView = () => {
   return (
     <>
       <View style={styles.headerContainer1_TOP}>
-  <View
-    style={{
-      justifyContent: "space-around",
-      flexDirection: "row",
-      alignItems: "center",
-    }}
-  >
-    <TouchableOpacity onPress={() => navigation.navigate("/")}>
-      <Icon
-        name={"left"}
-        type={"antDesign"}
-        size={28}
-        color={"white"}
-      />
-    </TouchableOpacity>
-  </View>
+        <View
+          style={{
+            justifyContent: "space-around",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity onPress={() => navigation.navigate("/")}>
+            <Icon
+              name={"left"}
+              type={"antDesign"}
+              size={28}
+              color={"white"}
+            />
+          </TouchableOpacity>
+        </View>
 
-  {Platform.OS === "android" ? (
-    <Text style={styles.text_TOP}>Exchange</Text>
-  ) : (
-    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
-  )}
+        {Platform.OS === "android" ? (
+          <Text style={styles.text_TOP}>Exchange</Text>
+        ) : (
+          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+        )}
 
-  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    <Image source={darkBlue} style={styles.logoImg_TOP} />
-  </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image source={darkBlue} style={styles.logoImg_TOP} />
+        </TouchableOpacity>
 
-  <View style={{ alignItems: "center" }}>
-    <TouchableOpacity
-      onPress={() => {
-        console.log('clicked');
-        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        AsyncStorage.removeItem(LOCAL_TOKEN);
-        navigation.navigate('exchangeLogin');
-      }}
-    >
-      <Icon
-        name={"logout"}
-        type={"materialCommunity"}
-        size={30}
-        color={"#fff"}
-      />
-    </TouchableOpacity>
-  </View>
-</View>
-    <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
-          <OfferListViewHome
-            self={true}
-            profile={profile}
-            offers={offers}
-            setChange={setChange}
-          />
-    </View>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('clicked');
+              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+              AsyncStorage.removeItem(LOCAL_TOKEN);
+              navigation.navigate('exchangeLogin');
+            }}
+          >
+            <Icon
+              name={"logout"}
+              type={"materialCommunity"}
+              size={30}
+              color={"#fff"}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={{ height: hp(100), backgroundColor: "#131E3A" }}>
+        <OfferListViewHome
+          self={true}
+          profile={profile}
+          offers={offers}
+          setChange={setChange}
+        />
+      </View>
     </>
   );
 };
@@ -497,17 +517,17 @@ const styles = StyleSheet.create({
   },
   text_TOP: {
     color: "white",
-    fontSize:19,
-    fontWeight:"bold",
+    fontSize: 19,
+    fontWeight: "bold",
     alignSelf: "center",
-    marginStart:wp(30)
+    marginStart: wp(30)
   },
   text1_ios_TOP: {
     color: "white",
     fontWeight: "700",
     alignSelf: "center",
     marginStart: wp(31),
-    top:19,
-    fontSize:17
+    top: 19,
+    fontSize: 17
   }
 });

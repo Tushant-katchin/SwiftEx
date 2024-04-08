@@ -10,7 +10,8 @@ import {
   Pressable,
   Platform,
   Alert,
-  Button
+  Button,
+  Image
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -24,18 +25,21 @@ import { alert } from "../../../../reusables/Toasts";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { useIsFocused } from '@react-navigation/native';
 import { EthereumSecret, smart_contract_Address,RPC } from "../../../../constants";
 import contractABI from './contractABI.json';
 import { authRequest, GET, getToken, POST } from "../api";
 import { REACT_APP_HOST } from "../ExchangeConstants";
+import darkBlue from "../../../../../../assets/darkBlue.png";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const alchemyUrl = RPC.ETHRPC;
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-export const NewOfferModal = ({ user, open, setOpen, getOffersData, onCrossPress }) => {
+export const NewOfferModal = () => {
+  const back_data=useRoute();
+  const { user, open, getOffersData, onCrossPress }=back_data.params;
   const isFocused = useIsFocused();
   const state = useSelector((state) => state);
   const [loading, setloading] = useState(false)
@@ -70,16 +74,19 @@ const [account_message,setaccount_message]=useState('');
 const [info_amount,setinfo_amount]=useState(false);
 const [info_price,setinfo_price]=useState(false);
 const [info_,setinfo_]=useState(false);
+const [isVisible, setIsVisible] = useState(true);
+
 const getAccountDetails = async () => {
-  try {
-    const { res, err } = await authRequest("/users/getStripeAccount", GET);
-  if(!res)
-  {
-    setaccount_message('#  Add Bank Account From Profile.');
-  }
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+      const { res, err } = await authRequest("/users/getUserDetails", GET);
+      // console.log("_+++++++",res.email)
+      setemail(res.email);
+      if (err) return setMessage(` ${err.message} please log in again!`);
+
+    } catch (err) {
+      //console.log(err)
+      setMessage(err.message || "Something went wrong");
+    }
 };
   ///////////////////////////////////start offer function
  const Save_offer = async (asset, amount, price, forTransaction, status, date) => {
@@ -162,11 +169,11 @@ const getAccountDetails = async () => {
         .build();
       offerTx.sign(sourceKeypair);
       const offerResult = await server.submitTransaction(offerTx);
-      console.log('=> Sell Offer placed...');
-      Save_offer(base_asset_sell, offer_amount, offer_price, "Sell", "Success", "1234");
+      console.log('=> Sell Offer placed...',offerResult.hash);
+      Save_offer(base_asset_sell, offer_amount, offer_price, "Sell", "Success", offerResult.hash);
       alert("success", "Sell offer created.");
       setLoading(false)
-      setOpen(false);
+      // setOpen(false);
       return 'Sell Offer placed successfully';
     } catch (error) {
       console.error('Error occurred:', error.response ? error.response.data.extras.result_codes : error);
@@ -204,11 +211,12 @@ const getAccountDetails = async () => {
         .build();
       offerTx.sign(sourceKeypair);
       const offerResult = await server.submitTransaction(offerTx);
+      console.log("++++++++++++++++++++++++++++",offerResult)
       console.log('=> Buy Offer placed...');
       Save_offer(counter_asset_buy, offer_amount, offer_price, "Buy", "Success", "1234");
       alert("success", "Buy offer created.")
       setLoading(false)
-      setOpen(false);
+      // setOpen(false);
       return 'Sell Offer placed successfully';
     } catch (error) {
       alert("error", "Buy offer not-created.");
@@ -258,8 +266,8 @@ const getAccountDetails = async () => {
 
   const get_stellar = async (asset) => {
     try {
-        if(asset==="XUSD")
-        {
+        // if(asset==="XUSD")
+        // {
           setbalance("");
           setshow(true)
           console.log("<><", PublicKey)
@@ -284,7 +292,7 @@ const getAccountDetails = async () => {
               setshow(false)
               setactiv(true)
             });
-        }
+        // }
     } catch (error) {
       console.log("Error in get_stellar")
       alert("error", "Something went wrong.");
@@ -386,145 +394,144 @@ const getAccountDetails = async () => {
   }
  
   // for get user balance from smart contract.
-  async function deposited_Ether_in_smart()
-  {
-    setshow(true);
-    const web3 = new Web3(alchemyUrl);
-    const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
-    // const addressToCheck = '0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA';//for test ether account.
-    const addressToCheck=PublicKey;
-    contract.methods.reservedEth(addressToCheck).call()
-        .then(balance => {
-          setshow(false);
-          const balanceInEth = web3.utils.fromWei(balance, 'ether');
-          setbalance(balanceInEth);
-        })
-        .catch(error => {
-          setshow(false);
-            console.error('Error:-----', error);
-        });        
-  }
+  // async function deposited_Ether_in_smart()
+  // {
+  //   setshow(true);
+  //   const web3 = new Web3(alchemyUrl);
+  //   const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
+  //   // const addressToCheck = '0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA';//for test ether account.
+  //   const addressToCheck=PublicKey;
+  //   contract.methods.reservedEth(addressToCheck).call()
+  //       .then(balance => {
+  //         setshow(false);
+  //         const balanceInEth = web3.utils.fromWei(balance, 'ether');
+  //         setbalance(balanceInEth);
+  //       })
+  //       .catch(error => {
+  //         setshow(false);
+  //           console.error('Error:-----', error);
+  //       });        
+  // }
   
-  const eth_services=()=>{
-    selectedValue==="XUSD"?getData():
-    setPublicKey(state.wallet.address);
-    setactiv(false);
-    deposited_Ether_in_smart();
-  }
+  // const eth_services=()=>{
+  //   selectedValue==="XUSD"?getData():
+  //   setPublicKey(state.wallet.address);
+  //   setactiv(false);
+  //   deposited_Ether_in_smart();
+  // }
 
-  const add_XETH=async()=>{
-    console.log("======= called")
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6Imh1bm55QGthdGNoaW50ZWNoLmNvbSIsIl9pZCI6IjY2MGNlMTgwMjFmN2VmMTZiMzYwYjAxOSIsImlhdCI6MTcxMjEyMDIxOSwiZXhwIjoxNzEyMzc5NDE5fQ.1oEqP79IoJBtApQ31JJ5O2MlSOCYX3dLwvkJycdOfdw");
+//   const add_XETH=async()=>{
+//     console.log("======= called")
+//     const myHeaders = new Headers();
+//     myHeaders.append("Content-Type", "application/json");
+// myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6Imh1bm55QGthdGNoaW50ZWNoLmNvbSIsIl9pZCI6IjY2MGNlMTgwMjFmN2VmMTZiMzYwYjAxOSIsImlhdCI6MTcxMjEyMDIxOSwiZXhwIjoxNzEyMzc5NDE5fQ.1oEqP79IoJBtApQ31JJ5O2MlSOCYX3dLwvkJycdOfdw");
 
-const raw = JSON.stringify({
-  "email": u_email,
-  "amount": eth_modal_amount
-});
+// const raw = JSON.stringify({
+//   "email": u_email,
+//   "amount": eth_modal_amount
+// });
 
-const requestOptions = {
-  method: "POST",
-  headers: myHeaders,
-  body: raw,
-  redirect: "follow"
-};
+// const requestOptions = {
+//   method: "POST",
+//   headers: myHeaders,
+//   body: raw,
+//   redirect: "follow"
+// };
 
-fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
-  .then((response) => response.text())
-  .then((result) => {
-    alert("success","XETH Recived");
-    console.log("===res get xeth===>",result)})
-  .catch((error) => console.error(error));
-  }
+// fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
+//   .then((response) => response.text())
+//   .then((result) => {
+//     alert("success","XETH Recived");
+//     console.log("===res get xeth===>",result)})
+//   .catch((error) => console.error(error));
+//   }
 
-  const Deposit_Eth=()=>{
-    seteth_modal_visible(true)
-    setdeposit_loading(true);
+  // const Deposit_Eth=()=>{
+  //   seteth_modal_visible(true)
+  //   setdeposit_loading(true);
 
-    // Platform.OS==='android'?handleOpenModal():  Alert.prompt(
-    //   'Deposit Ether',
-    //   'Please Enter Amount of Ether',
-    //   (pin) => {
-    //     if (!pin) {
-    //       setdeposit_loading(false);
-    //       alert("error","worng pin try agin.")
-    //     } else {
-    //       deposit_Ether(pin);
-    //     }
-    //   },
-    //   'plain-text', 
-    //   '',
-    //   'numeric',
-    // );
-  }
+  //   // Platform.OS==='android'?handleOpenModal():  Alert.prompt(
+  //   //   'Deposit Ether',
+  //   //   'Please Enter Amount of Ether',
+  //   //   (pin) => {
+  //   //     if (!pin) {
+  //   //       setdeposit_loading(false);
+  //   //       alert("error","worng pin try agin.")
+  //   //     } else {
+  //   //       deposit_Ether(pin);
+  //   //     }
+  //   //   },
+  //   //   'plain-text', 
+  //   //   '',
+  //   //   'numeric',
+  //   // );
+  // }
 
   /// service for deposit ether
-  async function deposit_Ether(offer_amount) {
-    seteth_modal_load(true);
-    // const PublicKey="0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA";
-    if(!offer_amount){
-      alert("error","Input correct value.");
-    seteth_modal_load(false);
-    }
-    else
-    {
-    const web3 = new Web3();
-    setshow(true);
-    const valueInWei = web3.utils.toWei(offer_amount, 'ether');
-    try {
-      const web3 = new Web3(new Web3.providers.HttpProvider(alchemyUrl));
-          const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
-          const txData = contract.methods.depositEth(valueInWei).encodeABI();
+  // async function deposit_Ether(offer_amount) {
+  //   seteth_modal_load(true);
+  //   // const PublicKey="0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA";
+  //   if(!offer_amount){
+  //     alert("error","Input correct value.");
+  //   seteth_modal_load(false);
+  //   }
+  //   else
+  //   {
+  //   const web3 = new Web3();
+  //   setshow(true);
+  //   const valueInWei = web3.utils.toWei(offer_amount, 'ether');
+  //   try {
+  //     const web3 = new Web3(new Web3.providers.HttpProvider(alchemyUrl));
+  //         const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
+  //         const txData = contract.methods.depositEth(valueInWei).encodeABI();
       
-          const nonce = await web3.eth.getTransactionCount(PublicKey);
-          const txObject = {
-            nonce: web3.utils.toHex(nonce),
-            gasLimit: web3.utils.toHex(300000), 
-            gasPrice: web3.utils.toHex(await web3.eth.getGasPrice()),
-            to: smart_contract_Address,
-            data: txData,
-            value: web3.utils.toHex(valueInWei)
-      };
+  //         const nonce = await web3.eth.getTransactionCount(PublicKey);
+  //         const txObject = {
+  //           nonce: web3.utils.toHex(nonce),
+  //           gasLimit: web3.utils.toHex(300000), 
+  //           gasPrice: web3.utils.toHex(await web3.eth.getGasPrice()),
+  //           to: smart_contract_Address,
+  //           data: txData,
+  //           value: web3.utils.toHex(valueInWei)
+  //     };
   
-      // const signedTx = await web3.eth.accounts.signTransaction(txObject, "9d9e1e7a8fdb0ed51a40a4c6b3e32c91f64615e37281150932fa1011d1a59daf");
-      const signedTx = await web3.eth.accounts.signTransaction(txObject, state.wallet.privateKey);
+  //     // const signedTx = await web3.eth.accounts.signTransaction(txObject, "9d9e1e7a8fdb0ed51a40a4c6b3e32c91f64615e37281150932fa1011d1a59daf");
+  //     const signedTx = await web3.eth.accounts.signTransaction(txObject, state.wallet.privateKey);
 
   
-      const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-      setshow(false);
-      // seteth_modal_amount('');
-      alert("success","Ether Deposited.");
-      setdeposit_loading(false);
-      seteth_modal_load(false);
-      console.log('Transaction hash:', txReceipt.transactionHash);
-      console.log('Transaction from:', txReceipt.from);
-      console.log('Transaction status:', txReceipt.status);
-       if(txReceipt.status===true)
-       {
-         add_XETH();
-       }
-      // console.log('Transaction hash:', txReceipt.transactionHash);
-      // console.log('Transaction receipt:', txReceipt);
-    } catch (error) {
-    seteth_modal_load(false);
-      setshow(false);
-      setLoading(false);
-      setdeposit_loading(false);
-      seteth_modal_amount('');
-      alert("error",error);
-      console.error('Error:', error);
-    }
-  }
-  }
-
+  //     const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+  //     setshow(false);
+  //     // seteth_modal_amount('');
+  //     alert("success","Ether Deposited.");
+  //     setdeposit_loading(false);
+  //     seteth_modal_load(false);
+  //     console.log('Transaction hash:', txReceipt.transactionHash);
+  //     console.log('Transaction from:', txReceipt.from);
+  //     console.log('Transaction status:', txReceipt.status);
+  //      if(txReceipt.status===true)
+  //      {
+  //        add_XETH();
+  //      }
+  //     // console.log('Transaction hash:', txReceipt.transactionHash);
+  //     // console.log('Transaction receipt:', txReceipt);
+  //   } catch (error) {
+  //   seteth_modal_load(false);
+  //     setshow(false);
+  //     setLoading(false);
+  //     setdeposit_loading(false);
+  //     seteth_modal_amount('');
+  //     alert("error",error);
+  //     console.error('Error:', error);
+  //   }
+  // }
+  // }
   useEffect(()=>{
     getAccountDetails();
     getData();
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
     setTimeout(()=>{
-      setemail(user.email);
+      // setemail(user.email);
       setPostData({
         email: u_email,
         publicKey: PublicKey,
@@ -533,17 +540,19 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
      },1000)
   },[isFocused])
   useEffect(() => {
+    getAccountDetails();
     setinfo_(false);
     setinfo_amount(false);
     setinfo_price(false);
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
-    eth_services()
+    // eth_services()
   }, [show_bal,selectedValue, route,isFocused])
 
  useEffect(()=>{
    setTimeout(()=>{
-    setemail(user.email);
+    // setemail(user.email);
+    getAccountDetails();
     setPostData({
       email: u_email,
       publicKey: PublicKey,
@@ -553,39 +562,130 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
    },1000)
  },[selectedValue, route,isFocused])
 
+ useEffect(() => {
+   const intervalId = setInterval(() => {
+     setIsVisible((prevVisible) => !prevVisible);
+   }, 1000); // Toggle every 1000 milliseconds (1 second)
+
+   return () => clearInterval(intervalId);
+ }, []);
   return (
-    <Modal
-      animationIn="slideInRight"
-      animationOut="slideOutRight"
-      animationInTiming={100}
-      animationOutTiming={200}
-      isVisible={open}
-      useNativeDriver={true}
-      useNativeDriverForBackdrop={true}
-      backdropTransitionOutTiming={0}
-      hideModalContentWhileAnimating
-      onBackdropPress={() => {
-        setOpen(false);
-      }}
-      onBackButtonPress={() => {
-        setOpen(false);
-      }}
-    >
+    // <Modal
+    //   animationIn="slideInRight"
+    //   animationOut="slideOutRight"
+    //   animationInTiming={100}
+    //   animationOutTiming={200}
+    //   isVisible={open}
+    //   useNativeDriver={true}
+    //   useNativeDriverForBackdrop={true}
+    //   backdropTransitionOutTiming={0}
+    //   hideModalContentWhileAnimating
+    //   onBackdropPress={() => {
+    //     setOpen(false);
+    //   }}
+    //   onBackButtonPress={() => {
+    //     setOpen(false);
+    //   }}
+    // >
+    <>
+    <View style={styles.headerContainer1_TOP}>
+        <View
+          style={{
+            justifyContent: "space-around",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity onPress={() => navigation.navigate("/")}>
+            <Icon
+              name={"left"}
+              type={"antDesign"}
+              size={28}
+              color={"white"}
+            />
+          </TouchableOpacity>
+        </View>
+      
+        {Platform.OS === "android" ? (
+          <Text style={styles.text_TOP}>Exchange</Text>
+        ) : (
+          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+        )}
+      
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image source={darkBlue} style={styles.logoImg_TOP} />
+        </TouchableOpacity>
+      
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('clicked');
+              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+              AsyncStorage.removeItem(LOCAL_TOKEN);
+              navigation.navigate('exchangeLogin');
+            }}
+          >
+            <Icon
+              name={"logout"}
+              type={"materialCommunity"}
+              size={30}
+              color={"#fff"}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <View
         style={{
-          height: hp(90),
-          // paddingBottom:hp(10),
-          paddingVertical: hp(1),
-          width: wp(95),
           backgroundColor: "#011434",
-          borderRadius: 10,
-          borderBottomLeftRadius: 10,
-          alignSelf: "center",
-          display: "flex",
-          // alignItems: "center",
+          flex:1
         }}
       >
-        <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={styles.crossIcon} onPress={onCrossPress} />
+       <Text style={{marginStart:20,color:"#fff",fontSize:19,marginTop:19}}>Select Asset Type</Text>
+
+        <View style={[styles.toggleContainer]}>
+          <LinearGradient
+            colors={selectedValue == "XUSD" ? activeColor : inActiveColor}
+            style={{ borderRadius: 8 }}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <Pressable
+              activeOpacity={0.8}
+              style={[
+                styles.toggleBtn,
+                selectedValue == "XUSD"
+                  ? { borderRadius: hp(4) }
+                  : { borderRadius: null },
+              ]}
+              onPress={() => {
+                setSelectedValue("XUSD")
+                setoffer_amount("");
+                setoffer_price("");
+              }}
+            >
+              <Text style={[selectedValue === "XUSD" ? { color: "#fff" } : { color: "#407EC9" }]}>XUSD</Text>
+            </Pressable>
+          </LinearGradient>
+          <LinearGradient
+            style={{ borderRadius: 8 }}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            colors={selectedValue == "XETH" ? activeColor : inActiveColor}
+          >
+            <Pressable
+              activeOpacity={0.8}
+              style={[styles.toggleBtn2]}
+              onPress={() => {
+                setSelectedValue("XETH")
+                setoffer_amount("");
+                setoffer_price("");
+              }}>
+              <Text style={[selectedValue === "XETH" ? { color: "#fff" } : { color: "#407EC9" }]}>XETH</Text>
+            </Pressable>
+          </LinearGradient>
+        </View>
+        {/* <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={styles.crossIcon} onPress={onCrossPress} /> */}
+       <Text style={{marginStart:20,color:"#fff",fontSize:19}}>Select Offer Type</Text>
         <View style={[styles.toggleContainer]}>
           <LinearGradient
             colors={route == "BUY" ? activeColor : inActiveColor}
@@ -626,8 +726,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
               }}>
               <Text style={[route == "SELL" ? { color: "#fff" } : { color: "#407EC9" }]}>SELL</Text>
             </Pressable>
-          </LinearGradient>{
-          }
+          </LinearGradient>
         </View>
         <View
           style={{
@@ -656,92 +755,14 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
             >
 
               <View style={{ flexDirection: "row" }}>
-              {activ===true?<TouchableOpacity onPress={()=>{active_account()}}><View><Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text></View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
+              {activ===true?<TouchableOpacity style={{height:45}} onPress={()=>{active_account()}}><View>{isVisible&&<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
                 { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
               </View>
             </View>
 
-            <View style={[styles.dropdownContainer, Platform.OS === "ios" ? styles.down : <></>]}>
-
-              <View style={{ width: '30%', marginTop: 19 }}>
-                <Text style={Platform.OS === "ios" ? [styles.assetText, styles.down_] : styles.assetText}>Select Asset</Text>
-                <Picker
-                  selectedValue={selectedValue}
-                  style={Platform.OS === "ios" ? { marginTop: -60, width: '120%', color: "white", marginLeft: -25 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
-                  onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                >
-                  <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="XETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
-                </Picker>
-              </View>
-
-              <View style={{ width: '40%', marginTop: 19 }}>
-                <View style={{flexDirection:"row"}}>
-                <Text style={Platform.OS === "ios" ? [styles.currencyText, styles.down_] : styles.currencyText}> Curency</Text>
-                </View>
-                <Text style={Platform.OS === "ios" ? { marginTop: 35, width: '90%',color:"white",fontSize:22,marginLeft:21 } : {marginTop: 16, width: '90%',color:"white",fontSize:16,marginLeft:21 }}>{selectedValue==="XUSD"?"USD":"ETH"}</Text>
-             
-              </View>
-              <View>
-              {info_===true?<View style={{backgroundColor:"gray",backgroundColor:"#212B53",padding:3.6,borderRadius:10,marginTop:-20,zIndex:20,position:"absolute",marginStart:-30,width:120}}>
-                      <Text style={{color:"white",width:"100%"}}>Deposit money to increase account balance.</Text>
-                    </View>:<></>}
-              <View style={{flexDirection:"row"}}>
-                <TouchableOpacity
-                  style={{
-                    alignItems: "center",
-                    borderWidth: StyleSheet.hairlineWidth * 1,
-                    borderColor: "green",
-                    width: wp(23),
-                    paddingVertical: hp(1.3),
-                    borderRadius: 6,
-                    marginTop: 51,
-                    backgroundColor: 'green',
-                  }}
-                  onPress={() => { selectedValue==="XUSD"? activ===true?alert("error","Stellar Account Activation Require for Add Funds."):[setOpen(false),navigation.navigate("Payment")]:Deposit_Eth()}}
-                  >
-                  <Text style={styles.cancelText}>{selectedValue==="XUSD"?"Add Funds":"Deposit"}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{info_===false?setinfo_(true):setinfo_(false)}}>
-                <Icon
-                      name={"information-outline"}
-                      type={"materialCommunity"}
-                      color={"rgba(129, 108, 255, 0.97)"}
-                      size={21}
-                      style={{marginTop:31}}
-                      />
-              </TouchableOpacity>
-              </View>
-              
-            </View>
-                      </View>
+           
           </View>
-          <Modal visible={eth_modal_visible} animationType="slide" transparent={true}>
-        <View style={{backgroundColor: '#212B53',
-    padding: 20,
-    borderRadius: 10,
-    elevation: 5,}}>
-          <View>
-            <Text style={{fontSize:19,marginBottom:3,color:"#fff"}}>Ether Amount</Text>
-            <TextInput
-              value={eth_modal_amount}
-              onChangeText={seteth_modal_amount}
-              placeholder="10.999"
-              style={{backgroundColor:"#fff"}}
-              keyboardType="number-pad"
-            />
-            <View style={{flexDirection:"row",width:"100%",justifyContent:"space-evenly",marginTop:10}}>
-              <Button title="Cancel"  color="red" onPress={()=>{seteth_modal_visible(false)}}/>
-              <TouchableOpacity disabled={!eth_modal_amount} style={{width:"30%",height:"100%",backgroundColor:eth_modal_amount!==''?"green":"gray",borderRadius:5,elevation:5}} onPress={()=>{deposit_Ether(eth_modal_amount)}}>
-                    {/* <Text style={{textAlign:'center',marginTop:6,fontSize:15,color:"white"}}>{eth_modal_load===true?<ActivityIndicator color={"white"}/>:"Deposit ETH"}</Text> */}
-                    {Platform==="android"? 
-                      <Text style={{ textAlign: 'center', marginTop: 6, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} /> : "Deposit ETH"}</Text>:
-                      <Text style={{ marginTop: 10, margin: 3, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} style={{justifyContent:"center"}}/> : "Deposit ETH"}</Text>}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+         
           <View
             style={{
               display: "flex",
@@ -843,7 +864,9 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         </Text> */}
       </View>
 
-    </Modal>
+
+    </>
+
   );
 };
 
@@ -971,7 +994,7 @@ const styles = StyleSheet.create({
   },
   toggleContainer: {
     alignSelf: "center",
-    marginVertical: hp(4),
+    marginVertical: hp(3),
     borderColor: "#407EC9",
     borderWidth: StyleSheet.hairlineWidth * 1,
     flexDirection: "row",
@@ -994,4 +1017,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
   },
+  headerContainer1_TOP: {
+    backgroundColor: "#4CA6EA",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+    width: wp(100),
+    paddingHorizontal: wp(2),
+  },
+  logoImg_TOP: {
+    height: hp("9"),
+    width: wp("12"),
+    marginLeft: wp(14),
+  },
+  text_TOP: {
+    color: "white",
+    fontSize:19,
+    fontWeight:"bold",
+    alignSelf: "center",
+    marginStart:wp(30)
+  },
+  text1_ios_TOP: {
+    color: "white",
+    fontWeight: "700",
+    alignSelf: "center",
+    marginStart: wp(31),
+    top:19,
+    fontSize:17
+  }
 });
+

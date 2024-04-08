@@ -528,7 +528,15 @@ export const ProfileView = (props) => {
             type="email"
           /> */}
         </View>
-
+        <View style={{justifyContent:"center",marginTop:hp(2.7)}}>
+        <Text style={{color:"#35CA1D",fontSize:16,alignSelf:"flex-end",position:"absolute"}}>SwiftEx</Text>
+        <FieldView
+          title="KYC Status"
+          value={profile.isVerified}
+          applyForKyc={applyForKyc}
+          type="kyc"
+        />
+        </View>
         <View style={styles.walletCard}>
           {/* <LinearGradient
             start={[1, 0]}
@@ -599,13 +607,6 @@ export const ProfileView = (props) => {
             isVerified={profile.isEmailVerified}
           />
         </View>
-
-        <FieldView
-          title="KYC Status"
-          value={profile.isVerified}
-          applyForKyc={applyForKyc}
-          type="kyc"
-        />
 
         {account ? (
           <View style={styles.deleteContainer}>
@@ -795,12 +796,12 @@ const styles = StyleSheet.create({
   },
   emailphoneView: {
     // flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     marginTop: hp(4),
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
     paddingBottom: hp(1.6),
     borderColor: "#659DEA",
-    width: wp(80),
+    width: wp(88),
   },
   editimgStyle: {
     height: hp(4),
@@ -817,7 +818,7 @@ const styles = StyleSheet.create({
     fontWeight:"bold"
   },
   walletCard: {
-    width: wp(90),
+    width: wp(95),
     marginTop: hp(1.5),
     alignSelf: "center",
   },
@@ -877,7 +878,7 @@ const styles = StyleSheet.create({
   deleteContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: hp(3),
+    marginTop: hp(0),
     width: wp(85),
   },
   deleteText: {
@@ -906,7 +907,7 @@ const styles = StyleSheet.create({
   },
   amountText: {
     color: "#fff",
-    width: wp(15),
+    width: wp(16),
     // textAlign:"center"
   },
   standardText: {
