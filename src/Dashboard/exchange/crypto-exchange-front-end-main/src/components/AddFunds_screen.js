@@ -588,7 +588,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
             <Button title="Cancel"  color="red" onPress={()=>{seteth_modal_visible(false)}}/>
             <TouchableOpacity disabled={!eth_modal_amount} style={{width:"30%",height:"100%",backgroundColor:eth_modal_amount!==''?"green":"gray",borderRadius:5,elevation:5}} onPress={()=>{deposit_Ether(eth_modal_amount)}}>
                   {/* <Text style={{textAlign:'center',marginTop:6,fontSize:15,color:"white"}}>{eth_modal_load===true?<ActivityIndicator color={"white"}/>:"Deposit ETH"}</Text> */}
-                  {Platform==="android"? 
+                  {Platform.OS==="android"? 
                     <Text style={{ textAlign: 'center', marginTop: 6, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} /> : "Deposit ETH"}</Text>:
                     <Text style={{ marginTop: 10, margin: 3, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} style={{justifyContent:"center"}}/> : "Deposit ETH"}</Text>}
             </TouchableOpacity>
