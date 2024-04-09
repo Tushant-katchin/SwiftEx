@@ -6,13 +6,14 @@ import darkBlue from "../../../../../../assets/darkBlue.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alert } from "../../../../reusables/Toasts";
 
 
 import { smart_contract_Address,RPC } from "../../../../constants";
 import contractABI from './contractABI.json';
 import { useSelector } from "react-redux";
-import { REACT_APP_HOST } from "../ExchangeConstants";
+import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { GET, authRequest, getAuth } from "../api";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
@@ -120,7 +121,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
   
            const deposit_Ether=async(offer_amount)=> {
              seteth_modal_load(true);
-             const Ether_public="0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA";
+            //  const Ether_public="0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA";
              if(!offer_amount){
                alert("error","Input correct value.");
                seteth_modal_load(false);
@@ -145,8 +146,8 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
                       value: web3.utils.toHex(valueInWei)
                 };
         
-                const signedTx = await web3.eth.accounts.signTransaction(txObject, "9d9e1e7a8fdb0ed51a40a4c6b3e32c91f64615e37281150932fa1011d1a59daf");
-                // const signedTx = await web3.eth.accounts.signTransaction(txObject, state.wallet.privateKey);
+                // const signedTx = await web3.eth.accounts.signTransaction(txObject, "9d9e1e7a8fdb0ed51a40a4c6b3e32c91f64615e37281150932fa1011d1a59daf");
+                const signedTx = await web3.eth.accounts.signTransaction(txObject, state.wallet.privateKey);
         
         
                 const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
@@ -237,7 +238,8 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
                   }
                   if(asset==="XETH")
                   {
-                    setbalance(state.EthBalance)
+                    setEther_public(state.wallet.address);
+                    setbalance(state.EthBalance);
                   }
                   if(asset==="XRP")
                   {

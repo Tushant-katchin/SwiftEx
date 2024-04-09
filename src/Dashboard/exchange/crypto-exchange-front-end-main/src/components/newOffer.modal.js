@@ -266,16 +266,25 @@ const getAccountDetails = async () => {
 
   const get_stellar = async (asset) => {
     try {
+       const storedData = await AsyncStorageLib.getItem('myDataKey');
+      if (storedData !== null) {
+        const parsedData = JSON.parse(storedData);
+        console.log('Retrieved data:', parsedData);
+        const publicKey = parsedData.key1
+        const secretKey = parsedData.key2
+        setPublicKey(publicKey)
+        setSecretKey(secretKey)
+     
         // if(asset==="XUSD")
         // {
           setbalance("");
           setshow(true)
-          console.log("<><", PublicKey)
+          console.log("<><", publicKey)
           StellarSdk.Network.useTestNetwork();
           const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-          server.loadAccount(PublicKey)
+          server.loadAccount(publicKey)
             .then(account => {
-              console.log('Balances for account:', PublicKey);
+              console.log('Balances for account:', publicKey);
               account.balances.forEach(balance => {
                 if (balance.asset_code === asset) {
                   console.log(`${balance.asset_code}: ${balance.balance}`);
@@ -293,6 +302,10 @@ const getAccountDetails = async () => {
               setactiv(true)
             });
         // }
+      }
+      else {
+        console.log('No data found in AsyncStorage');
+      }
     } catch (error) {
       console.log("Error in get_stellar")
       alert("error", "Something went wrong.");
