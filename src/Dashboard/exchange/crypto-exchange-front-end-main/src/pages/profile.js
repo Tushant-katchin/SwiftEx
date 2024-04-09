@@ -528,7 +528,11 @@ export const ProfileView = (props) => {
             type="email"
           /> */}
         </View>
+
+        <View>
+    <Image source={darkBlue} style={{ height: hp("9"),width: wp("12"),alignSelf:"flex-end",position:"absolute"}} />
         <View style={{justifyContent:"center",marginTop:hp(2.7)}}>
+
         <Text style={{color:"#35CA1D",fontSize:16,alignSelf:"flex-end",position:"absolute"}}>SwiftEx</Text>
         <FieldView
           title="KYC Status"
@@ -537,6 +541,8 @@ export const ProfileView = (props) => {
           type="kyc"
         />
         </View>
+        </View>
+
         <View style={styles.walletCard}>
           {/* <LinearGradient
             start={[1, 0]}

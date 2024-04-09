@@ -4,7 +4,7 @@ import { View, Platform, Text, StyleSheet, TouchableOpacity, Image, Pressable, A
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { alert } from "../../../../reusables/Toasts";
 
@@ -13,11 +13,19 @@ import { smart_contract_Address,RPC } from "../../../../constants";
 import contractABI from './contractABI.json';
 import { useSelector } from "react-redux";
 import { REACT_APP_HOST } from "../ExchangeConstants";
-import { GET, authRequest } from "../api";
+import { GET, authRequest, getAuth } from "../api";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 const alchemyUrl = RPC.ETHRPC;
 const AddFunds_screen = () => {
+  const AnchorViewRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(0);
+
+  const handleScroll = (xOffset) => {
+    if (AnchorViewRef.current) {
+      AnchorViewRef.current.scrollTo({ x: xOffset, animated: true });
+    }
+  };
   const navigation = useNavigation();
   const state = useSelector((state) => state);
   const [route, setRoute] = useState(null);
@@ -43,11 +51,11 @@ const AddFunds_screen = () => {
 
   const Anchor = [
     { name: "SwiftEx", status: "Verified", image: require('../../../../../../assets/darkBlue.png'), city: "India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia", Crypto_Assets: "XETH, XUSD", Fiat_Assets: "$ USD, € EUR", Payment_Rails: "Card, Bank Transfer, Local Method" },
-    { name: "APS", status: "Pending", image: require('../../../../../../assets/darkBlue.png'), city: "Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden", Fiat_Assets: "$ BRL€ EUR$ CLP", Crypto_Assets: "XETH, XUSD" },
-    { name: "BILIRA", status: "Pending", image: require('../../../../../../assets/darkBlue.png'), city: "Turkey", Fiat_Assets: "$ USD", Crypto_Assets: "XETH, XUSD, USDC" },
-    { name: "ALFRED", status: "Pending", image: require('../../../../../../assets/darkBlue.png'), city: "Argentina / Brazil / Chile / Colombia / Dominican Republic / Mexico", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD", Payment_Rails: "Bank Transfer" },
-    { name: "ANCLAP", status: "Pending", image: require('../../../../../../assets/darkBlue.png'), city: "Argentina / Chile / Colombia / Mexico / Peru", Crypto_Assets: "XETH, XUSD, ARS,PEN,USDC,XLM", Fiat_Assets: "$ ARS $ USD", Payment_Rails: "CashCard, Bank Transfer, Local Method" },
-    { name: "ARF", status: "Pending", image: require('../../../../../../assets/darkBlue.png'), city: "China / Colombia / Singapore / Turkey / United States", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD" },
+    { name: "APS", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden", Fiat_Assets: "$ BRL€ EUR$ CLP", Crypto_Assets: "XETH, XUSD" },
+    { name: "BILIRA", status: "Pending", image: require('../../../../../../assets/BIRLA.png'), city: "Turkey", Fiat_Assets: "$ USD", Crypto_Assets: "XETH, XUSD, USDC" },
+    { name: "ALFRED", status: "Pending", image: require('../../../../../../assets/ALFRED.png'), city: "Argentina / Brazil / Chile / Colombia / Dominican Republic / Mexico", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD", Payment_Rails: "Bank Transfer" },
+    { name: "ANCLAP", status: "Pending", image: require('../../../../../../assets/ANCLAP.png'), city: "Argentina / Chile / Colombia / Mexico / Peru", Crypto_Assets: "XETH, XUSD, ARS,PEN,USDC,XLM", Fiat_Assets: "$ ARS $ USD", Payment_Rails: "CashCard, Bank Transfer, Local Method" },
+    { name: "ARF", status: "Pending", image: require('../../../../../../assets/ARF.png'), city: "China / Colombia / Singapore / Turkey / United States", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD" },
 ];
 
 const fetchProfileData = async () => {
@@ -82,10 +90,12 @@ const fetchProfileData = async () => {
 
 
   const add_XETH=async()=>{
+    const token = await getAuth();
     console.log("======= called")
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6Imh1bm55QGthdGNoaW50ZWNoLmNvbSIsIl9pZCI6IjY2MGNlMTgwMjFmN2VmMTZiMzYwYjAxOSIsImlhdCI6MTcxMjEyMDIxOSwiZXhwIjoxNzEyMzc5NDE5fQ.1oEqP79IoJBtApQ31JJ5O2MlSOCYX3dLwvkJycdOfdw");
+    myHeaders.append("Authorization", "Bearer " + token);
+
 
 const raw = JSON.stringify({
   "email": u_email,
@@ -329,12 +339,12 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
 
       <View style={{ backgroundColor: "#011434",height:hp(100) }}>
 
-        <View style={{flexDirection:"row",justifyContent:"space-evenly"}}>
+        <View style={{flexDirection:Platform.OS==="ios"?"row":"column",justifyContent:"space-evenly"}}>
         <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Crypto Deposit</Text>
+                <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="android"&&25}}>Crypto Deposit</Text>
                 <Picker
                   selectedValue={route}
-                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
+                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "210%", color: "white", marginLeft: 35 }}
                   onValueChange={(itemValue, itemIndex) => {
                     setRoute(itemValue)
                     setroute_fiat(null);
@@ -350,10 +360,10 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
               </View>
 
               <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:19}}>Fiat Deposit</Text>
+                <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="ios"?19:10}}>Fiat Deposit</Text>
                 <Picker
                   selectedValue={route_fiat}
-                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -11 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
+                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -11 } : { marginTop: 3, width: "210%", color: "white", marginLeft: 35 }}
                   onValueChange={(itemValue, itemIndex) => {
                     setroute_fiat(itemValue);
                     setRoute(null);
@@ -412,7 +422,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
           </LinearGradient>
         </View> */}
 
-        <View style={{ flexDirection: "row", alignSelf: "center",marginTop:-0 }}>
+        <View style={{ flexDirection: "row", alignSelf: "center",marginTop:Platform.OS==="ios"?-0:49 }}>
           <Text style={styles.balance}>{route==="XETH"?"Ether":route} Balance: {route_fiat !==null? "Add Funds":Balance ? Number(Balance).toFixed(8) : 0.0}</Text>
           { show === true ? <ActivityIndicator color={"green"} /> : <></>}
         </View>
@@ -499,6 +509,21 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         visible={Anchor_modal}
       >
         <View style={styles.container_a}>
+        <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:90}}>
+                  <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
+          if (AnchorViewRef.current && contentWidth !== 0) {
+            const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;
+            handleScroll(backOffset);
+
+          }}}><Icon name={"left"} type={"antDesign"} size={25} color={"white"}/>
+               </TouchableOpacity>
+               <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
+          if (AnchorViewRef.current && contentWidth !== 0) {
+            const nextOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Anchor.length;
+            handleScroll(nextOffset);
+          }
+        }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
+                  </View>
           <View style={{flexDirection:"row",justifyContent:"space-between"}}>
           <Text style={{ textAlign: "left", marginHorizontal: 10, marginTop: 10, fontWeight: "bold", fontSize: 20, color: "#fff" }}>Anchors</Text>
            <TouchableOpacity onPress={()=>{setAnchor_modal(false)}} style={{padding:10}}>
@@ -510,7 +535,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
             />
            </TouchableOpacity>
             </View>
-            <ScrollView horizontal style={{ backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)", padding: 8, borderRadius: 10 }} showsHorizontalScrollIndicator={false}>
+            <ScrollView ref={AnchorViewRef} horizontal style={{ backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)", padding: 8, borderRadius: 10 }} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
                 {Anchor.map((list, index) => {
                     return (
                         <TouchableOpacity onPress={() => {anchor_res(list.name)}}>
@@ -518,10 +543,14 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
                                 <View style={{ width: "30%", height: "27%", borderBottomLeftRadius: 10, borderColor: 'rgba(122, 59, 144, 1)rgba(100, 115, 197, 1)', borderWidth: 1.9, position: "absolute", alignSelf: "flex-end", borderTopRightRadius: 10 }}>
                                     <Icon name={list.status === "Pending" ? "clock-time-two-outline" : "check-circle-outline"} type={"materialCommunity"} color={list.status === "Pending" ? "yellow" : "#35CA1D"} size={24} />
                                 </View>
-                                <Image
-                                    source={list.image}
-                                    style={styles.image}
-                                />
+                                <View style={styles.image}>
+                     <Image
+                        source={list.image}
+                        style={{width: 70,
+                          height: 65,
+                          borderRadius: 10,}}
+                      />
+                     </View>
                                 <Text style={styles.name}>{list.name}</Text>
                                 <Text style={[styles.status, { color: list.status === "Pending" ? "yellow" : "#35CA1D" }]}>{list.status}</Text>
                             </View>
@@ -649,7 +678,7 @@ const styles = StyleSheet.create({
     height:hp(23),
     width:"94%",
     // alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     margin:10,
     borderRadius:10,

@@ -39,9 +39,18 @@ import { alert } from "../../../../reusables/Toasts";
 import { LineChart } from "react-native-chart-kit";
 import { Platform,Modal} from "react-native";
 import * as Clipboard from "expo-clipboard";
+import { useRef } from "react";
 // import StellarSdk from '@stellar/stellar-sdk';
 
 export const HomeView = ({ setPressed }) => {
+  const AnchorViewRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(0);
+
+  const handleScroll = (xOffset) => {
+    if (AnchorViewRef.current) {
+      AnchorViewRef.current.scrollTo({ x: xOffset, animated: true });
+    }
+  };
   const Focused_screen=useIsFocused();
   const [steller_key,setsteller_key]=useState("");
   const state = useSelector((state) => state);
@@ -75,14 +84,14 @@ export const HomeView = ({ setPressed }) => {
   const [Offer_active,setOffer_active]=useState(false);
   const Anchor=[
     {name:"SwiftEx",status:"Verified",image: require('../../../../../../assets/darkBlue.png'),city:"India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia",Crypto_Assets:"XETH, XUSD",Fiat_Assets:"$ USD, € EUR",Payment_Rails:"Card, Bank Transfer, Local Method" },
-    {name:"APS",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden",Fiat_Assets:"$ BRL€ EUR$ CLP",Crypto_Assets:"XETH, XUSD" },
-    {name:"BILIRA",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Turkey",Fiat_Assets:"$ USD",Crypto_Assets:"XETH, XUSD, USDC"},
-    {name:"ALFRED",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Argentina / Brazil / Chile / Colombia / Dominican Republic / Mexico",Crypto_Assets:"XETH, XUSD, USDC",Fiat_Assets:"$ USD",Payment_Rails:"Bank Transfer" },
-    {name:"ANCLAP",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"Argentina / Chile / Colombia / Mexico / Peru",Crypto_Assets:"XETH, XUSD, ARS,PEN,USDC,XLM",Fiat_Assets:"$ ARS $ USD",Payment_Rails:"CashCard, Bank Transfer, Local Method"},
-    {name:"ARF",status:"Pending",image: require('../../../../../../assets/darkBlue.png'),city:"China / Colombia / Singapore / Turkey / United States",Crypto_Assets:"XETH, XUSD, USDC",Fiat_Assets:"$ USD" },
+    {name:"APS",status:"Pending",image: require('../../../../../../assets/APS.png'),city:"Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden",Fiat_Assets:"$ BRL€ EUR$ CLP",Crypto_Assets:"XETH, XUSD" },
+    {name:"BILIRA",status:"Pending",image: require('../../../../../../assets/BIRLA.png'),city:"Turkey",Fiat_Assets:"$ USD",Crypto_Assets:"XETH, XUSD, USDC"},
+    {name:"ALFRED",status:"Pending",image: require('../../../../../../assets/ALFRED.png'),city:"Argentina / Brazil / Chile / Colombia / Dominican Republic / Mexico",Crypto_Assets:"XETH, XUSD, USDC",Fiat_Assets:"$ USD",Payment_Rails:"Bank Transfer" },
+    {name:"ANCLAP",status:"Pending",image: require('../../../../../../assets/ANCLAP.png'),city:"Argentina / Chile / Colombia / Mexico / Peru",Crypto_Assets:"XETH, XUSD, ARS,PEN,USDC,XLM",Fiat_Assets:"$ ARS $ USD",Payment_Rails:"CashCard, Bank Transfer, Local Method"},
+    {name:"ARF",status:"Pending",image: require('../../../../../../assets/ARF.png'),city:"China / Colombia / Singapore / Turkey / United States",Crypto_Assets:"XETH, XUSD, USDC",Fiat_Assets:"$ USD" },
   ];
   const [steller_key_private,setsteller_key_private]=useState("");
-  const [show_steller_key,setshow_steller_key]=useState("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  const [show_steller_key,setshow_steller_key]=useState("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
   const [Anchor_modal,setAnchor_modal]=useState(false);
   const [index_Anchor,setindex_Anchor]=useState(0);
 
@@ -316,7 +325,7 @@ const copyToClipboard = (data) => {
 const priview_steller=()=>{
   setshow_steller_key(steller_key_private);
   setTimeout(()=>{
-  setshow_steller_key("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  setshow_steller_key("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
   },3000);
 }
   return (
@@ -442,19 +451,38 @@ const priview_steller=()=>{
                    </View>
                 </View> */}
                <View style={styles.container_a}>
+                  <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:80}}>
+                  <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
+          if (AnchorViewRef.current && contentWidth !== 0) {
+            const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;
+            handleScroll(backOffset);
+
+          }}}><Icon name={"left"} type={"antDesign"} size={25} color={"white"}/>
+               </TouchableOpacity>
+               <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
+          if (AnchorViewRef.current && contentWidth !== 0) {
+            const nextOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Anchor.length;
+            handleScroll(nextOffset);
+          }
+        }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
+                  </View>
                 <Text style={{textAlign:"left",marginHorizontal:10,marginTop:10,fontWeight: "bold",fontSize:20,color:"#fff"}}>Anchors</Text>
-      <ScrollView horizontal style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",padding:8,borderRadius:10}} showsHorizontalScrollIndicator={false}>
+      <ScrollView ref={AnchorViewRef} horizontal style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",padding:8,borderRadius:10}} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
               {Anchor.map((list, index) => {
                 return (
                   <TouchableOpacity onPress={()=>{setAnchor_modal(true),setindex_Anchor(index)}}>
                     <View style={[styles.card,{backgroundColor:list.status==="Pending"?"#2b3c57":"#011434"}]} key={index}>
-                      <View style={{ width: "30%", height: "27%", borderBottomLeftRadius: 10, borderColor: 'rgba(122, 59, 144, 1)rgba(100, 115, 197, 1)', borderWidth: 1.9, position: "absolute", alignSelf: "flex-end", borderTopRightRadius: 10 }}>
+                      <View style={{ width: "30%", height: "27%", borderBottomLeftRadius: 10, borderColor: 'rgba(122, 59, 144, 1)rgba(100, 115, 197, 1)', borderWidth: 1.9, position: "absolute", alignSelf: "flex-end", borderTopRightRadius: 10,zIndex:20 }}>
                         <Icon name={list.status === "Pending" ? "clock-time-two-outline" : "check-circle-outline"} type={"materialCommunity"} color={list.status === "Pending" ? "yellow" : "#35CA1D"} size={24} />
                       </View>
-                      <Image
+                     <View style={styles.image}>
+                     <Image
                         source={list.image}
-                        style={styles.image}
+                        style={{width: 70,
+                          height: 65,
+                          borderRadius: 10,}}
                       />
+                     </View>
                       <Text style={styles.name}>{list.name}</Text>
                       <Text style={[styles.status, { color: list.status === "Pending" ? "yellow" : "#35CA1D" }]}>{list.status}</Text>
                     </View>
@@ -480,10 +508,14 @@ const priview_steller=()=>{
                   return(
                     <View style={{flex:1}}>
                      <View style={{flexDirection:"row"}}>
+                     <View style={styles.image}>
                      <Image
                         source={list.image}
-                        style={styles.image}
+                        style={{width: 70,
+                          height: 65,
+                          borderRadius: 10,marginLeft:10}}
                       />
+                     </View>
                      <Text style={{fontSize:19,textAlign:"center",marginTop:19,fontWeight:"bold"}}>{list.name}</Text>
                      </View>
                      <View style={{flexDirection:"row",marginStart:10,marginTop:10,borderWidth:1.3,margin:10,padding:5,borderBottomColor:"black",borderTopColor:"white",borderLeftColor:"white",borderRightColor:"white"}}>
@@ -580,7 +612,7 @@ const priview_steller=()=>{
                     </ScrollView>
                     <TouchableOpacity onPress={()=>{priview_steller()}}>
                     <Icon
-                      name={show_steller_key==="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"?"eye":"eye-off"}
+                      name={show_steller_key==="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"?"eye":"eye-off"}
                       type={"materialCommunity"}
                       color={"rgba(129, 108, 255, 0.97)"}
                       size={24}
@@ -947,7 +979,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width:"94%",
     // alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     margin:10,
     borderRadius:10
@@ -963,7 +995,7 @@ const styles = StyleSheet.create({
   image: {
     width: 90,
     height: 65,
-    borderRadius: 50,
+    borderRadius: 10,
   },
   name: {
     fontSize: 16,

@@ -787,6 +787,7 @@ const getAccountDetails = async () => {
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
+                returnKeyType="done"
                 value={offer_amount}
                 placeholder={"Amount of " + selectedValue}
                 onChangeText={(text) => {
@@ -815,6 +816,7 @@ const getAccountDetails = async () => {
               </View>
               <TextInput
                 style={styles.input}
+                returnKeyType="done"
                 keyboardType="numeric"
                 value={offer_price}
                 placeholder={"Price of " + route.toLocaleLowerCase()}
