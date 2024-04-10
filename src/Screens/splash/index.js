@@ -15,7 +15,7 @@ const SplashScreen = ({ navigation }) => {
   }, []);
   return (
     <ImageBackground source={splashImg} style={styles.mainContainer}>
-      <Text style={{ marginTop: hp(28), color: "white" }}>
+      <Text style={{ marginTop: hp(35), color: "white",fontSize:16.5,fontWeight:"bold" }}>
         Security, Control, Confidence
       </Text>
     </ImageBackground>

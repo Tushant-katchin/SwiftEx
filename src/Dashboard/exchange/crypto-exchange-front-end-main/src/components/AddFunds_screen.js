@@ -122,7 +122,8 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
            const deposit_Ether=async(offer_amount)=> {
              seteth_modal_load(true);
             //  const Ether_public="0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA";
-             if(!offer_amount){
+            const temp=parseFloat(offer_amount)
+            if (temp<=0) {
                alert("error","Input correct value.");
                seteth_modal_load(false);
               }
@@ -240,6 +241,8 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
                   {
                     setEther_public(state.wallet.address);
                     setbalance(state.EthBalance);
+                    // setEther_public("0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA");
+                    // setbalance("123456");
                   }
                   if(asset==="XRP")
                   {
@@ -285,6 +288,10 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
     fetchProfileData();
    },[route,route_fiat])
 
+   const onChangeamount = (input) => {
+    const formattedInput = input.replace(/[,\s-]/g, '');
+    seteth_modal_amount(formattedInput);
+};
 
 
 
@@ -354,10 +361,10 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
                   }}
                 >
                   <Picker.Item label="Select Crypto" value={null} color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="BNB" value="BNB" color={Platform.OS === "ios" ? "white" : "black"} />
                   <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="Matic" value="Matic" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="XRP" value="XRP" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="BNB" value="BNB" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="Matic" value="Matic" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="XRP" value="XRP" color={Platform.OS === "ios" ? "gray" : "gray"} />
                 </Picker>
               </View>
 
@@ -464,11 +471,14 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
             borderRadius: 6,
             marginTop: 40,
             marginStart:19,
-            backgroundColor: 'green',
+            backgroundColor: Balance==="0.0"?"gray":'green',
           }}
           onPress={() => { route==="XETH"?Deposit_Eth():Alert.alert("Anchor",route+" Anchor currently Pending.")}}
+          disabled={state.EthBalance==="0.0"}
+          // disabled={Balance==="0.0"}
+
           >
-          <Text style={styles.cancelText}>Deposit</Text>
+          <Text style={styles.cancelText}>{route==="XETH"?"Deposit":"Available Soon"}</Text>
         </TouchableOpacity> 
         )}
         {route_fiat && (
@@ -503,7 +513,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
                       />
               </TouchableOpacity>
               </View>
-
+              {state.EthBalance==="0.0"&&route==="XETH"&&<View style={{width:wp(40),alignSelf:"center"}}><Text style={{textAlign:"center",marginTop:19,borderColor:"red",color:"red",borderWidth:1.3,borderRadius:10,padding:5}}>Insufficient Balance</Text></View>}
        <View style={{backgroundColor:"black",}}>
        <Modal
         animationType="slide"
@@ -579,17 +589,20 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
           <Text style={{fontSize:19,marginBottom:3,color:"#fff"}}>Ether Amount</Text>
           <TextInput
             value={eth_modal_amount}
-            onChangeText={seteth_modal_amount}
+            onChangeText={(value)=>{onChangeamount(value)}}
             placeholder="10.999"
             style={{backgroundColor:"#fff",padding:10,fontSize:20}}
             keyboardType="number-pad"
           />
           <View style={{flexDirection:"row",width:"100%",justifyContent:"space-evenly",marginTop:10}}>
-            <Button title="Cancel"  color="red" onPress={()=>{seteth_modal_visible(false)}}/>
-            <TouchableOpacity disabled={!eth_modal_amount} style={{width:"30%",height:"100%",backgroundColor:eth_modal_amount!==''?"green":"gray",borderRadius:5,elevation:5}} onPress={()=>{deposit_Ether(eth_modal_amount)}}>
+            {/* <Button title="Cancel"  color="red" onPress={()=>{seteth_modal_visible(false)}}/> */}
+            <TouchableOpacity style={{width:"30%",height:"109%",backgroundColor:"red",borderRadius:10}} onPress={()=>{seteth_modal_visible(false)}}>
+              <Text style={{textAlign:"center",marginTop:4,fontSize:16,color:"#fff"}}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity disabled={!eth_modal_amount} style={{width:"30%",height:"109%",backgroundColor:eth_modal_amount!==''?"green":"gray",borderRadius:5,elevation:5}} onPress={()=>{deposit_Ether(eth_modal_amount)}}>
                   {/* <Text style={{textAlign:'center',marginTop:6,fontSize:15,color:"white"}}>{eth_modal_load===true?<ActivityIndicator color={"white"}/>:"Deposit ETH"}</Text> */}
                   {Platform.OS==="android"? 
-                    <Text style={{ textAlign: 'center', marginTop: 6, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} /> : "Deposit ETH"}</Text>:
+                    <Text style={{ textAlign: 'center', marginTop: 4, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} /> : "Deposit ETH"}</Text>:
                     <Text style={{ marginTop: 10, margin: 3, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} style={{justifyContent:"center"}}/> : "Deposit ETH"}</Text>}
             </TouchableOpacity>
           </View>

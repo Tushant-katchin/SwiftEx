@@ -574,8 +574,8 @@ const priview_steller=()=>{
                 </View>
                 <View style={{}}>
                   <View style={{flexDirection:"row",marginTop:19}}>
-                    <Text style={styles.textColor}>Ethereum Key  </Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
+                    <Text style={styles.textColor}>Ethereum Address </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:2.2,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{state.wallet.address}</Text>
                     </ScrollView>
                     <TouchableOpacity onPress={()=>{copyToClipboard(state.wallet.address)}}>
@@ -590,8 +590,8 @@ const priview_steller=()=>{
                   </View> 
 
                   <View style={{flexDirection:"row",marginTop:10}}>
-                    <Text style={styles.textColor}>Stellar Key        </Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
+                    <Text style={styles.textColor}>Stellar Public Key   </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:2.9,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{steller_key}</Text>
                     </ScrollView>
                     <TouchableOpacity onPress={()=>{copyToClipboard(steller_key)}}>
@@ -606,8 +606,8 @@ const priview_steller=()=>{
                   </View> 
 
                   <View style={{flexDirection:"row",marginTop:10}}>
-                    <Text style={styles.textColor}>Stellar Private  </Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:1.0,borderRadius:5}}>
+                    <Text style={styles.textColor}>Stellar Private Key  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:2.2,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{show_steller_key}</Text>
                     </ScrollView>
                     <TouchableOpacity onPress={()=>{priview_steller()}}>

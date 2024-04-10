@@ -141,7 +141,15 @@ const getAccountDetails = async () => {
     }
 };
   async function Sell() {
-    const sourceKeypair = StellarSdk.Keypair.fromSecret(SecretKey);
+    const temp_amount=parseInt(offer_amount);
+    const temp_offer_price=parseInt(offer_price);
+   if(temp_amount<=0||temp_offer_price<=0)
+   {
+    setLoading(false);
+    alert("error","Invalid value")
+
+   }else{
+     const sourceKeypair = StellarSdk.Keypair.fromSecret(SecretKey);
     console.log("Sell Offer Peram =>>>>>>>>>>>>", offer_amount, offer_price, SecretKey, AssetIssuerPublicKey)
     try {
       const account = await server.loadAccount(sourceKeypair.publicKey());
@@ -180,9 +188,18 @@ const getAccountDetails = async () => {
       setLoading(false)
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
+   }
   }
 
   async function Buy() {
+    const temp_amount=parseInt(offer_amount);
+    const temp_offer_price=parseInt(offer_price);
+   if(temp_amount<=0||temp_offer_price<=0)
+   {
+    setLoading(false);
+    alert("error","Invalid value")
+
+   }else{
     const sourceKeypair = StellarSdk.Keypair.fromSecret(SecretKey);
     console.log("Buy Offer Peram =>>>>>>>>>>>>", offer_amount, offer_price, SecretKey, AssetIssuerPublicKey)
     try {
@@ -223,6 +240,7 @@ const getAccountDetails = async () => {
       console.error('Error occurred:', error.response ? error.response.data.extras.result_codes : error);
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
+  }
   }
 
 
@@ -586,6 +604,16 @@ const getAccountDetails = async () => {
 
    return () => clearInterval(intervalId);
  }, []);
+
+ const onChangename = (input) => {
+  const formattedInput = input.replace(/[.,\s-]/g, '');
+  setoffer_price(formattedInput);
+};
+
+const onChangeamount = (input) => {
+  const formattedInput = input.replace(/[.,\s-]/g, '');
+  setoffer_amount(formattedInput)
+};
   return (
     // <Modal
     //   animationIn="slideInRight"
@@ -847,7 +875,8 @@ const getAccountDetails = async () => {
                 value={offer_amount}
                 placeholder={"Amount of " + selectedValue}
                 onChangeText={(text) => {
-                  setoffer_amount(text)
+                  onChangeamount(text)
+                  // setoffer_amount(text)
                   if (offer_amount > Balance) {
                     alert("error", "Inputed Balance not found in account.");
                   }
@@ -877,7 +906,7 @@ const getAccountDetails = async () => {
                 value={offer_price}
                 placeholder={"Price of " + route.toLocaleLowerCase()}
                 onChangeText={(text) => {
-                  setoffer_price(text)
+                  onChangename(text)
                 }}
                 autoCapitalize={"none"}
                 disabled={Balance==="0.0000000"||Balance==="0"}

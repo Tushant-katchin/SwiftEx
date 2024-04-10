@@ -54,13 +54,13 @@ const Payout = () => {
       { name: "ARF", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "China / Colombia / Singapore / Turkey / United States", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD" },
   ];
   
-    // const [PublicKey, setPublicKey] = useState("GCUOMNFW7YG55YHY5S5W7FE247PWODUDUZ4SOVZFEON47KZ7AXFG6D6A");//comment for user
-    // const [SecretKey, setSecretKey] = useState("SCJSKKPNYIZJSF6ROF7ZMVNXL6U6HVUA4RK4JLFDH6CLTNRCGZCUUU7S");//comment for user
-    const[PublicKey,setPublicKey]=useState("");//uncomment for user
-    const[SecretKey,setSecretKey]=useState("");//uncomment for user
+    const [PublicKey, setPublicKey] = useState("GCUOMNFW7YG55YHY5S5W7FE247PWODUDUZ4SOVZFEON47KZ7AXFG6D6A");//comment for user
+    const [SecretKey, setSecretKey] = useState("SCJSKKPNYIZJSF6ROF7ZMVNXL6U6HVUA4RK4JLFDH6CLTNRCGZCUUU7S");//comment for user
+    // const[PublicKey,setPublicKey]=useState("");//uncomment for user
+    // const[SecretKey,setSecretKey]=useState("");//uncomment for user
     const [transactions, setTransactions] = useState([]);
     useEffect(()=>{ //uncomment for user
-        getData();
+        // getData();
         fetchProfileData();
     },[route,isFocused])
 
@@ -204,14 +204,27 @@ const Payout = () => {
     const sub_function = (senderSecretKey, recipientPublicKey, g_amount, g_ASSET) => {
         Keyboard.dismiss();
         console.log(">>?", senderSecretKey, recipientPublicKey, g_amount, g_ASSET)
-        if (!payout_amount) {
+        const temp=parseFloat(payout_amount);
+        if(route==="XETH"||route==="XUSD")
+        {
+        if (temp<=0) {
             alert('error', "Invalid Amount Found.");
            setindex_Anchor(false);
         }
         else {
             sendPayment(senderSecretKey, recipientPublicKey, g_amount, g_ASSET);
         }
+      }
+      else{
+        alert("success","Available Soon");
+      }
     }
+
+    const onChangeamount = (input) => {
+      const formattedInput = input.replace(/[.,\s-]/g, '');
+      setpayout_amount(formattedInput)
+    };
+
     return (
         <>
         <View style={styles.headerContainer1_TOP}>
@@ -310,8 +323,11 @@ const Payout = () => {
                   style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
                   onValueChange={(itemValue, itemIndex) => setRoute(itemValue)}
                 >
-                  <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
                   <Picker.Item label="XETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="XGBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="XINR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />
                 </Picker>
               </View>
 
@@ -342,10 +358,12 @@ const Payout = () => {
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
                 </View>
+                {Available>0.0000000?<></>:<Text style={{color:"red",borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1.9,padding:1.3,borderRadius:10,paddingHorizontal:2.9}}>Insufficient Balance</Text>}
             </View>
             <View style={[styles.Id_text,styles.white]}>
-            <TextInput style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" returnKeyType="done" value={payout_amount} onChangeText={(amount) => {
-                setpayout_amount(amount)
+            <TextInput  editable={Available>0.0000000} style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" returnKeyType="done" value={payout_amount} onChangeText={(amount) => {
+                onChangeamount(amount)
+                // setpayout_amount(amount)
             }} />
            <Pressable onPress={()=>{setpayout_amount(Available)}}>
            <Text style={{alignSelf:'flex-end',color:'white'}}>MAX</Text>
@@ -355,9 +373,9 @@ const Payout = () => {
             <TextInput style={[styles.Id_text, styles.gray,{marginTop:5}]} value={route==="XETH"?state.wallet.address:"Your bank details shared with Anchor"}/>
             
 
-            {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> */}
-            <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), setAnchor_modal(true) }}>
-                <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : "Payout"}</Text>
+            <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}>
+            {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
+                <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"?"Payout":"Available Soon"}</Text>
             </Pressable>
             <Text style={{color:'white',fontSize:20,marginLeft:19,marginTop:"10%",fontWeight:"bold"}}>History</Text>
             <View style={{height:"30%",marginTop:10,justifyContent:'center'}}>
