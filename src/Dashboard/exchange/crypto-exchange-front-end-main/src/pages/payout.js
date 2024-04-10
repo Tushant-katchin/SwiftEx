@@ -416,7 +416,7 @@ const Payout = () => {
         visible={Anchor_modal}
       >
         <View style={styles.container_a}>
-        <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:90}}>
+        {/* <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:90}}>
                   <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
           if (AnchorViewRef.current && contentWidth !== 0) {
             const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;
@@ -430,7 +430,23 @@ const Payout = () => {
             handleScroll(nextOffset);
           }
         }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
-                  </View>
+                  </View> */}
+
+<TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
+          if (AnchorViewRef.current && contentWidth !== 0) {
+            const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;
+            handleScroll(backOffset);
+
+          }}}><Icon name={"left"} type={"antDesign"} size={25} color={"white"}/>
+               </TouchableOpacity>
+
+               <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5,alignSelf:"flex-end"}} onPress={() => {
+          if (AnchorViewRef.current && contentWidth !== 0) {
+            const nextOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Anchor.length;
+            handleScroll(nextOffset);
+          }
+        }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
+
           <View style={{flexDirection:"row",justifyContent:"space-between"}}>
           <Text style={{ textAlign: "left", marginHorizontal: 10, marginTop: 10, fontWeight: "bold", fontSize: 20, color: "#fff" }}>Anchors</Text>
             <TouchableOpacity onPress={()=>{setAnchor_modal(false)}}>
