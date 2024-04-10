@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 const Payment = () => {
-  alert("Use 4242 4242 4242 4242 Card Number for Payment");
+  // alert("Use 4242 4242 4242 4242 Card Number for Payment");
+  Alert.alert("Card Info","Use this 4242 4242 4242 4242 Card Number Test for Payments")
   return (
     <View style={styles.container}>
       <WebView
