@@ -75,7 +75,6 @@ const [info_amount,setinfo_amount]=useState(false);
 const [info_price,setinfo_price]=useState(false);
 const [info_,setinfo_]=useState(false);
 const [isVisible, setIsVisible] = useState(true);
-
 const getAccountDetails = async () => {
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
@@ -274,7 +273,6 @@ const getAccountDetails = async () => {
         const secretKey = parsedData.key2
         setPublicKey(publicKey)
         setSecretKey(secretKey)
-     
         // if(asset==="XUSD")
         // {
           setbalance("");
@@ -314,16 +312,22 @@ const getAccountDetails = async () => {
   }
 
   const offer_creation = () => {
+    if(selectedValue==="XETH"||selectedValue==="XUSD")
+    {
     getData();
-    if (offer_amount !== "" && offer_price !== "") {
+    if (offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
       { route === "SELL" ? Sell() : Buy() }
     }
     else {
-      alert("error", "Empty input found.")
+      alert("error", "Input Correct Value.")
       setLoading(false)
     }
+    }
+    else{
+      setLoading(false)
+      alert("success", "Available Soon.")
+    }
   }
-
   const active_account=async()=>{
     console.log("<<<<<<<clicked");
     
@@ -653,7 +657,7 @@ const getAccountDetails = async () => {
           flex:1
         }}
       >
-       <Text style={{marginStart:20,color:"#fff",fontSize:19,marginTop:19}}>Select Asset Type</Text>
+       {/* <Text style={{marginStart:20,color:"#fff",fontSize:19,marginTop:19}}>Select Asset Type</Text>
 
         <View style={[styles.toggleContainer]}>
           <LinearGradient
@@ -698,7 +702,7 @@ const getAccountDetails = async () => {
           </LinearGradient>
         </View>
         {/* <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={styles.crossIcon} onPress={onCrossPress} /> */}
-       <Text style={{marginStart:20,color:"#fff",fontSize:19}}>Select Offer Type</Text>
+       {/* <Text style={{marginStart:20,color:"#fff",fontSize:19}}>Select Offer Type</Text>
         <View style={[styles.toggleContainer]}>
           <LinearGradient
             colors={route == "BUY" ? activeColor : inActiveColor}
@@ -740,11 +744,45 @@ const getAccountDetails = async () => {
               <Text style={[route == "SELL" ? { color: "#fff" } : { color: "#407EC9" }]}>SELL</Text>
             </Pressable>
           </LinearGradient>
-        </View>
+        </View> */} 
+       
+       <View style={{flexDirection:"row",justifyContent:"space-between",padding:19}}>
+       <View style={{ width: '40%', marginTop: 19 }}>
+                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Select Assets</Text>
+                <Picker
+                mode={"dropdown"}
+                  selectedValue={selectedValue}
+                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "90%", color: "white", marginLeft:14 }}
+                  onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                >
+                  <Picker.Item label="XETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="XGBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="XINR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                </Picker>
+              </View>
+
+              <View style={{ width: '40%', marginTop: 19 }}>
+                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Select Offer</Text>
+                <Picker
+                  mode={"dropdown"}
+                  selectedValue={route}
+                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "90%", color: "white", marginLeft: 14 }}
+                  onValueChange={(itemValue, itemIndex) => setRoute(itemValue)}
+                >
+                  <Picker.Item label="BUY" value="BUY" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="SELL" value="SELL" color={Platform.OS === "ios" ? "white" : "black"} />
+                </Picker>
+              </View>
+       </View>
+
+        
         <View
           style={{
             display: "flex",
             alignItems: "center",
+            marginTop:Platform.OS==="ios"?-30:40
           }}
         >
           <View
@@ -781,6 +819,11 @@ const getAccountDetails = async () => {
               display: "flex",
             }}
           >
+            <View style={{width:wp(37),alignSelf:"center"}}>
+            {Balance==="0.0000000"&&<Text style={{textAlign:"center",color:"red",borderColor:"red",borderWidth:1.9,borderRadius:10}}>Insufficient Balance</Text>}
+            {selectedValue==="XETH"||selectedValue==="XUSD"?<></>:<Text style={{textAlign:"center",color:"orange",borderColor:"orange",borderWidth:1.9,borderRadius:10}}>Available Soon</Text>}
+
+            </View>
             <View style={styles.inputContainer}>
              <View style={{flexDirection:"row"}}>  
               <Text style={styles.unitText}>Amount</Text>
@@ -860,8 +903,9 @@ const getAccountDetails = async () => {
                 },styles.confirmButton]}
                 onPress={() => { setLoading(true), offer_creation() }}
                 color="green"
+                disabled={Loading||Balance==="0.0000000"}
               >
-                <Text style={styles.textColor}>{Loading === true ? <ActivityIndicator color={"white"} /> : "Create"}</Text>
+                <Text style={styles.textColor}>{Loading === true ? <ActivityIndicator color={"white"} /> :"Create Offer"}</Text>
               </TouchableOpacity>
             {/* </LinearGradient> */}
           {/* </View> */}
@@ -964,7 +1008,7 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     alignItems: "center",
-    width: wp(23),
+    width: wp(30),
     borderRadius:10,
     borderRadius: 9,
     backgroundColor:"#212B53",
