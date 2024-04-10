@@ -43,7 +43,7 @@ const Payout = () => {
     const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
     const [Available, setAvailable] = useState("");
     const [email, setemail] = useState("");
-    const [Anchor_modal,setAnchor_modal]=useState(true);
+    const [Anchor_modal,setAnchor_modal]=useState(false);
     const [index_Anchor,setindex_Anchor]=useState(false);
     const Anchor = [
       { name: "SwiftEx", status: "Verified", image: require('../../../../../../assets/darkBlue.png'), city: "India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia", Crypto_Assets: "XETH, XUSD", Fiat_Assets: "$ USD, € EUR", Payment_Rails: "Card, Bank Transfer, Local Method" },
@@ -358,7 +358,9 @@ const Payout = () => {
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
                 </View>
-                {Available>0.0000000?<></>:<Text style={{color:"red",borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1.9,padding:1.3,borderRadius:10,paddingHorizontal:2.9}}>Insufficient Balance</Text>}
+            {route==="XETH"||route==="XUSD"? Available>0.0000000?<></>:<Text style={{color:"red",borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1.9,padding:1.3,borderRadius:10,paddingHorizontal:2.9}}>Insufficient Balance</Text>:<Text style={{textAlign:"center",color:"orange",borderColor:"orange",borderWidth:1.9,borderRadius:10,paddingHorizontal:2.9}}>Available Soon</Text>}
+
+                {/* {Available>0.0000000?<></>:<Text style={{color:"red",borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1.9,padding:1.3,borderRadius:10,paddingHorizontal:2.9}}>Insufficient Balance</Text>} */}
             </View>
             <View style={[styles.Id_text,styles.white]}>
             <TextInput  editable={Available>0.0000000} style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" returnKeyType="done" value={payout_amount} onChangeText={(amount) => {
@@ -372,8 +374,9 @@ const Payout = () => {
             <Text style={{color:"#fff",marginLeft:19}}>{route==="XETH"?"Ether Address":"Bank"}</Text>
             <TextInput style={[styles.Id_text, styles.gray,{marginTop:5}]} value={route==="XETH"?state.wallet.address:"Your bank details shared with Anchor"}/>
             
+            <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), setAnchor_modal(true) }}>
 
-            <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}>
+            {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> */}
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
                 <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"?"Payout":"Available Soon"}</Text>
             </Pressable>

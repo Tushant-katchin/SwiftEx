@@ -847,7 +847,11 @@ const onChangeamount = (input) => {
     shadowOpacity: 1,
     shadowRadius: 4, // Adjust shadow radius for glow effect
     elevation: 5,
-    marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
+    // marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
+    marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <View style={{flexDirection:"row"}}><Text style={styles.balance}>Balance:</Text><ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9),marginLeft:1 }}>
+       <Text style={styles.balance}>{Balance ? Number(Balance).toFixed(8) : 0.0} </Text>
+</ScrollView></View>}
+
                 { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
               </View>
             </View>

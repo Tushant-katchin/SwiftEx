@@ -432,7 +432,13 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         </View> */}
 
         <View style={{ flexDirection: "row", alignSelf: "center",marginTop:Platform.OS==="ios"?-0:49 }}>
-          <Text style={styles.balance}>{route==="XETH"?"Ether":route} Balance: {route_fiat !==null? "Add Funds":Balance ? Number(Balance).toFixed(8) : 0.0}</Text>
+          <Text style={styles.balance}>{route==="XETH"?"Ether":route} Balance:</Text>
+           <View>
+           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9) }}>
+       <Text style={styles.balance}>{route_fiat !==null? "Add Funds":Balance ? Number(Balance).toFixed(8) : 0.0}</Text>
+</ScrollView>
+            </View>
+          {/* {route_fiat !==null? "Add Funds":Balance ? Number(Balance).toFixed(8) : 0.0} */}
           { show === true ? <ActivityIndicator color={"green"} /> : <></>}
         </View>
 
@@ -471,7 +477,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
             borderRadius: 6,
             marginTop: 40,
             marginStart:19,
-            backgroundColor: Balance==="0.0"?"gray":'green',
+            backgroundColor: route==="XETH"?Balance==="0.0"?"gray":'green':"gray",
           }}
           onPress={() => { route==="XETH"?Deposit_Eth():Alert.alert("Anchor",route+" Anchor currently Pending.")}}
           disabled={state.EthBalance==="0.0"}
@@ -514,6 +520,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
               </TouchableOpacity>
               </View>
               {state.EthBalance==="0.0"&&route==="XETH"&&<View style={{width:wp(40),alignSelf:"center"}}><Text style={{textAlign:"center",marginTop:19,borderColor:"red",color:"red",borderWidth:1.3,borderRadius:10,padding:5}}>Insufficient Balance</Text></View>}
+              {route===null?<></>:route==="XETH"?<></>:<View style={{width:wp(40),alignSelf:"center",marginTop:12}}><Text style={{textAlign:"center",color:"orange",borderColor:"orange",borderWidth:1.9,borderRadius:10,paddingHorizontal:2.9}}>Available Soon</Text></View>}
        <View style={{backgroundColor:"black",}}>
        <Modal
         animationType="slide"
