@@ -291,6 +291,10 @@ const getAccountDetails = async () => {
         const secretKey = parsedData.key2
         setPublicKey(publicKey)
         setSecretKey(secretKey)
+        // const publicKey = PublicKey
+
+
+
         // if(asset==="XUSD")
         // {
           setbalance("");
@@ -834,7 +838,16 @@ const onChangeamount = (input) => {
             >
 
               <View style={{ flexDirection: "row" }}>
-              {activ===true?<TouchableOpacity style={{height:45}} onPress={()=>{active_account()}}><View>{isVisible&&<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
+              {activ===true?<TouchableOpacity style={{ backgroundColor: '#011434', 
+    // paddingHorizontal: 10, 
+    // paddingVertical: 5,
+    borderRadius: 5,
+    shadowColor: isVisible===true?'#D7596C':'#011434',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 4, // Adjust shadow radius for glow effect
+    elevation: 5,
+    marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
                 { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
               </View>
             </View>
@@ -1135,4 +1148,3 @@ const styles = StyleSheet.create({
     fontSize:17
   }
 });
-
