@@ -54,13 +54,13 @@ const Payout = () => {
       { name: "ARF", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "China / Colombia / Singapore / Turkey / United States", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD" },
   ];
   
-    const [PublicKey, setPublicKey] = useState("GCUOMNFW7YG55YHY5S5W7FE247PWODUDUZ4SOVZFEON47KZ7AXFG6D6A");//comment for user
-    const [SecretKey, setSecretKey] = useState("SCJSKKPNYIZJSF6ROF7ZMVNXL6U6HVUA4RK4JLFDH6CLTNRCGZCUUU7S");//comment for user
-    // const[PublicKey,setPublicKey]=useState("");//uncomment for user
-    // const[SecretKey,setSecretKey]=useState("");//uncomment for user
+    // const [PublicKey, setPublicKey] = useState("GCUOMNFW7YG55YHY5S5W7FE247PWODUDUZ4SOVZFEON47KZ7AXFG6D6A");//comment for user
+    // const [SecretKey, setSecretKey] = useState("SCJSKKPNYIZJSF6ROF7ZMVNXL6U6HVUA4RK4JLFDH6CLTNRCGZCUUU7S");//comment for user
+    const[PublicKey,setPublicKey]=useState("");//uncomment for user
+    const[SecretKey,setSecretKey]=useState("");//uncomment for user
     const [transactions, setTransactions] = useState([]);
     useEffect(()=>{ //uncomment for user
-        // getData();
+        getData();
         fetchProfileData();
     },[route,isFocused])
 
