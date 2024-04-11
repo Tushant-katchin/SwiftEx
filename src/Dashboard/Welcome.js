@@ -36,12 +36,12 @@ const Welcome = (props) => {
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 0,
-      duration: 1000,
+      duration: 100,
     }).start();
 
     Animated.timing(Spin, {
       toValue: 0,
-      duration: 1500,
+      duration: 100,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
@@ -106,6 +106,8 @@ const Welcome = (props) => {
     <View style={style.imageContainer}>
 
       <SliderBox
+        disableOnPress={true}
+        scrollEnabled={false}
         images={Slider.images}
         autoplay
         circleLoop
@@ -204,7 +206,7 @@ const style = StyleSheet.create({
     justifyContent: "center",
   },
   imageStyle: {
-    width: hp(50),
-    height: hp(100),
+    width: "100%",
+    height: "100%",
   },
 });

@@ -337,11 +337,11 @@ const getAccountDetails = async () => {
     if(selectedValue==="XETH"||selectedValue==="XUSD")
     {
     getData();
-    if (offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
+    if (titel==="Activate Stellar Account for trading" && offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
       { route === "SELL" ? Sell() : Buy() }
     }
     else {
-      alert("error", "Input Correct Value.")
+      titel==="Activate Stellar Account for trading"? alert("success", "Activation Required"):alert("error", "Input Correct Value.")
       setLoading(false)
     }
     }
@@ -377,11 +377,11 @@ const getAccountDetails = async () => {
     } else {
       console.error('Error:', data);
       setactiv(false)
-      settitel("Activate Account");
+      settitel("Activate Stellar Account for trading");
       alert("error","Internal server error.")
     }
   } catch (error) {
-    settitel("Activate Account");
+    settitel("Activate Stellar Account for trading");
     console.error('Network error:', error);
     alert("error","Something went worng.")
     setactiv(true)
