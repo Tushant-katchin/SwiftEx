@@ -62,6 +62,7 @@ const Payout = () => {
     useEffect(()=>{ //uncomment for user
         getData();
         fetchProfileData();
+        setpayout_amount("");
     },[route,isFocused])
 
     const fetchProfileData = async () => {
@@ -221,9 +222,19 @@ const Payout = () => {
     }
 
     const onChangeamount = (input) => {
-      const formattedInput = input.replace(/[.,\s-]/g, '');
+      const formattedInput = input.replace(/[,\s-]/g, '');
       setpayout_amount(formattedInput)
     };
+
+    const manage_button=(data)=>{
+      if(data==="XETH"||data==="XUSD")
+      {
+        setAnchor_modal(true)
+      }
+      else{
+        alert("success","Available Soon");
+      }
+    }
 
     return (
         <>
@@ -374,7 +385,7 @@ const Payout = () => {
             <Text style={{color:"#fff",marginLeft:19}}>{route==="XETH"?"Ether Address":"Bank"}</Text>
             <TextInput style={[styles.Id_text, styles.gray,{marginTop:5}]} value={route==="XETH"?state.wallet.address:"Your bank details shared with Anchor"}/>
             
-            <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), setAnchor_modal(true) }}>
+            <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"?"#407EC9":"gray"}]} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), manage_button(route) }}>
 
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> */}
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
