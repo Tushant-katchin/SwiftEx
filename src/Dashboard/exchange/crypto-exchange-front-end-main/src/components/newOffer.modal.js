@@ -53,9 +53,9 @@ export const NewOfferModal = () => {
   const [route, setRoute] = useState("BUY");
   const [Loading, setLoading] = useState(false);
   const [u_email,setemail]=useState('');
-  const [titel,settitel]=useState("Activate Stellar Account for trading");
-  // const [PublicKey, setPublicKey] = useState("GCUOMNFW7YG55YHY5S5W7FE247PWODUDUZ4SOVZFEON47KZ7AXFG6D6A");
-  // const [SecretKey, setSecretKey] = useState("SCJSKKPNYIZJSF6ROF7ZMVNXL6U6HVUA4RK4JLFDH6CLTNRCGZCUUU7S");
+  const [titel,settitel]=useState("UPDATING..");
+  // const [PublicKey, setPublicKey] = useState("GBHRHA3KGRJBXBFER7VHI3WS5SKUXOP5TQ3YITVD7WJ2D3INGK62FZJR");
+  // const [SecretKey, setSecretKey] = useState("SB2IR7WZS3EDS2YEJGC3POI56E5CESRZPUVN72DWHTS4AACW5OYZXDTZ");
   const [PublicKey, setPublicKey] = useState("");
   const [SecretKey, setSecretKey] = useState("");
   const inActiveColor = ["#131E3A", "#131E3A"];
@@ -320,6 +320,7 @@ const getAccountDetails = async () => {
               // alert("error", "Account Balance not found.");
               setshow(false)
               setactiv(true)
+              settitel("Activate Stellar Account for trading")
             });
         // }
       }
@@ -337,7 +338,7 @@ const getAccountDetails = async () => {
     if(selectedValue==="XETH"||selectedValue==="XUSD")
     {
     getData();
-    if (titel==="Activate Stellar Account for trading" && offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
+    if (titel!=="Activate Stellar Account for trading" && offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
       { route === "SELL" ? Sell() : Buy() }
     }
     else {
@@ -610,12 +611,12 @@ const getAccountDetails = async () => {
  }, []);
 
  const onChangename = (input) => {
-  const formattedInput = input.replace(/[.,\s-]/g, '');
+  const formattedInput = input.replace(/[,\s-]/g, '');
   setoffer_price(formattedInput);
 };
 
 const onChangeamount = (input) => {
-  const formattedInput = input.replace(/[.,\s-]/g, '');
+  const formattedInput = input.replace(/[,\s-]/g, '');
   setoffer_amount(formattedInput)
 };
   return (
