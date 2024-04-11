@@ -845,8 +845,8 @@ const onChangeamount = (input) => {
     shadowColor: isVisible===true?'#D7596C':'#011434',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,
-    shadowRadius: 4, // Adjust shadow radius for glow effect
-    elevation: 5,
+    shadowRadius: Platform.OS==="ios"?4:90, // Adjust shadow radius for glow effect
+    elevation: Platform.OS==="ios"?5:40,
     // marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
     marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <View style={{flexDirection:"row"}}><Text style={styles.balance}>Balance:</Text><ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9),marginLeft:1 }}>
        <Text style={styles.balance}>{Balance ? Number(Balance).toFixed(8) : 0.0} </Text>
