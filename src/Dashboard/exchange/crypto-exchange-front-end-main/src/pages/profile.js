@@ -370,7 +370,7 @@ export const ProfileView = (props) => {
   });
   const [message, setMessage] = useState("");
   const [account, setAccount] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchProfileData();
@@ -380,13 +380,16 @@ export const ProfileView = (props) => {
   }, []);
 
   const getAccountDetails = async () => {
+    setIsLoading(true);
     try {
       const { res, err } = await authRequest("/users/getStripeAccount", GET);
       if (err) return setMessage(` ${err.message}`);
+      setIsLoading(false);
       setAccount(res);
     } catch (err) {
       console.log(err);
       setMessage(err.message || "Something went wrong");
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -613,8 +616,25 @@ export const ProfileView = (props) => {
             isVerified={profile.isEmailVerified}
           />
         </View>
-
-        {account ? (
+      {isLoading===true?<ActivityIndicator color="green"/>:
+        // account ? (
+        //   <View style={styles.deleteContainer}>
+        //     <Text style={styles.accountText}>Account Details</Text>
+        //     <View style={{ alignItems: "center" }}>
+        //       <Icon
+        //         name={"delete"}
+        //         type={"materialCommunity"}
+        //         size={hp(2)}
+        //         color={"#E96A6A"}
+        //       />
+        //       <Text style={styles.deleteText}>Delete</Text>
+        //     </View>
+        //   </View>
+        // ) : (
+        //   <Text></Text>
+        // )
+        account ? (
+          <>
           <View style={styles.deleteContainer}>
             <Text style={styles.accountText}>Account Details</Text>
             <View style={{ alignItems: "center" }}>
@@ -627,12 +647,6 @@ export const ProfileView = (props) => {
               <Text style={styles.deleteText}>Delete</Text>
             </View>
           </View>
-        ) : (
-          <Text></Text>
-        )}
-
-        {account ? (
-          <>
             <View style={styles.tableContainer}>
               {/* <LinearGradient
                 style={{
@@ -730,7 +744,7 @@ export const ProfileView = (props) => {
               }}
             />
           </View>
-        )} 
+        )}
       </View>
     </ScrollView>
     </>
