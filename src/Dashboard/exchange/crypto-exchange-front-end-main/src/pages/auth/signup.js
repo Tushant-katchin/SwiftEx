@@ -197,17 +197,17 @@ export const ExchangeRegister = (props) => {
               <View></View>
             )}
 
+<TouchableOpacity
+  onPress={() => {
+    handleSubmit();
+  }}
+>
               <LinearGradient
                 colors={["#12c2e9", "#c471ed", "#f64f59"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.button}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    handleSubmit();
-                  }}
-                >
                   <Text style={styles.buttonText}>
                     {loading ? (
                       <View style={{display:'flex', alignContent:'center', alignItems:'center', alignSelf:'center', marginLeft:wp(70)}}>
@@ -217,8 +217,8 @@ export const ExchangeRegister = (props) => {
                       "Create my account"
                     )}
                   </Text>
-                </TouchableOpacity>
               </LinearGradient>
+                </TouchableOpacity>
             <View style={styles.lowerbox}>
               <TouchableOpacity
                 onPress={() => {

@@ -369,7 +369,7 @@ const Payout = () => {
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
                 </View>
-            {route==="XETH"||route==="XUSD"? Available>0.0000000?<></>:<Text style={{color:"red",borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1.9,padding:1.3,borderRadius:10,paddingHorizontal:2.9}}>Insufficient Balance</Text>:<Text style={{textAlign:"center",color:"orange",borderColor:"orange",borderWidth:1.9,borderRadius:10,paddingHorizontal:2.9}}>Available Soon</Text>}
+            {route==="XETH"||route==="XUSD"? Available>0.0000000?<></>:<Text style={{color:"red",padding:1.3,paddingHorizontal:2.9}}>Insufficient Balance</Text>:<Text style={{textAlign:"center",color:"orange",paddingHorizontal:2.9}}>Available Soon</Text>}
 
                 {/* {Available>0.0000000?<></>:<Text style={{color:"red",borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1.9,padding:1.3,borderRadius:10,paddingHorizontal:2.9}}>Insufficient Balance</Text>} */}
             </View>
@@ -391,7 +391,7 @@ const Payout = () => {
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
                 <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"?"Payout":"Available Soon"}</Text>
             </Pressable>
-            <Text style={{color:'white',fontSize:20,marginLeft:19,marginTop:"10%",fontWeight:"bold"}}>History</Text>
+            <Text style={{color:'white',fontSize:20,marginLeft:25,marginTop:"10%",fontWeight:"bold"}}>History</Text>
             <View style={{height:"30%",marginTop:10,justifyContent:'center'}}>
       {transactions.length > 0 ? (
         <FlatList

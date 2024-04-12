@@ -182,8 +182,8 @@ const FOCUSED=useIsFocused();
       alert("error", "Both fields are required");
     }
     else {
-       if(len>8||len0>8)
-       {
+      //  if(len>8||len0>8)
+      //  {
         const result = passcode === con_passcode;
         if (result === true) {
           const myHeaders = new Headers();
@@ -228,13 +228,13 @@ const FOCUSED=useIsFocused();
           setcon_passcode("");
           alert("error", "Password Not Match.");
         }
-       }
-       else{
-        setLoading(false);
-        setpasscode("");
-        setcon_passcode("");
-        alert("error","Password min length Eight.")
-       }  
+      //  }
+      //  else{
+      //   setLoading(false);
+      //   setpasscode("");
+      //   setcon_passcode("");
+      //   alert("error","Password min length Eight.")
+      //  }  
     }
 
   }
@@ -566,6 +566,7 @@ const FOCUSED=useIsFocused();
                     onChangeText={(text) => {
                       onChangepass(text)
                     }}
+                    autoCapitalize="none"
                     keyboardType="default"
                   />
                   {/* Set con-pass code  */}
@@ -580,10 +581,11 @@ const FOCUSED=useIsFocused();
                     onChangeText={(text) => {
                       onChangeconpass(text);
                     }}
+                    autoCapitalize="none"
                     keyboardType="default"
                   /></>}
+               {passcode_view===false>0?<></>:passcode.length<8||con_passcode.length<8?<Text style={{color:"#B51E14",marginTop:6}}>Your password must be at least 8 characters long.</Text>:<></>}
               </View>
-
               {/* <View style={{ marginTop: 10 }}>
                 {showMessage ? (
                   <Text style={{ color: "white" }}>{Message}</Text>
@@ -598,23 +600,23 @@ const FOCUSED=useIsFocused();
                 <Text> </Text>
               )}
 
+<TouchableOpacity
+  disabled={passcode_view===false?false:passcode.length<8||con_passcode.length<8?true:false}
+  onPress={() => {
+    setLoading("true");
+    { passcode_view === false ? submitOtp() : submitpasscode() }
+    Keyboard.dismiss()
+  }}
+>
               <LinearGradient
                 colors={["#12c2e9", "#c471ed"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.verifyBtn}
               >
-                <TouchableOpacity
-                  disabled={!disable}
-                  onPress={() => {
-                    setLoading("true");
-                    { passcode_view === false ? submitOtp() : submitpasscode() }
-                    Keyboard.dismiss()
-                  }}
-                >
                   <Text style={styles.buttonText}>Verify</Text>
-                </TouchableOpacity>
               </LinearGradient>
+                </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => { navigation.navigate("exchangeLogin") }}> */}
               <TouchableOpacity onPress={() => { navigation.goBack() }}>
                 <Text style={{ marginTop: 14, color: "gray" }}>Edit Email Id</Text>

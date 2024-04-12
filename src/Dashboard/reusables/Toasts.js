@@ -41,7 +41,7 @@ export function alert(type,message){
     {
         Snackbar.show({
             text: message,
-            duration: Snackbar.LENGTH_SHORT,
+            duration: Snackbar.LENGTH_LONG,
             backgroundColor:'red',
             
         });

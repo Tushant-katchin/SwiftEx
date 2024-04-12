@@ -76,9 +76,17 @@ const [info_price,setinfo_price]=useState(false);
 const [info_,setinfo_]=useState(false);
 const [isVisible, setIsVisible] = useState(true);
 const getAccountDetails = async () => {
+      const storedData = await AsyncStorageLib.getItem('myDataKey');
+        const parsedData = JSON.parse(storedData);
+        console.log('Retrieved data:', parsedData);
+        const publicKey = parsedData.key1
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
       // console.log("_+++++++",res.email)
+      setPostData({
+        email: res.email,
+        publicKey: publicKey,
+      })
       setemail(res.email);
       if (err) return setMessage(` ${err.message} please log in again!`);
 
@@ -570,14 +578,14 @@ const getAccountDetails = async () => {
     getData();
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
-    setTimeout(()=>{
-      // setemail(user.email);
-      setPostData({
-        email: u_email,
-        publicKey: PublicKey,
-      })
-      console.log("MAIL:===",u_email)
-     },1000)
+    // setTimeout(()=>{
+    //   // setemail(user.email);
+      // setPostData({
+      //   email: u_email,
+      //   publicKey: PublicKey,
+      // })
+    //   console.log("MAIL:===",u_email)
+    //  },1000)
   },[isFocused])
   useEffect(() => {
     getAccountDetails();
@@ -593,12 +601,12 @@ const getAccountDetails = async () => {
    setTimeout(()=>{
     // setemail(user.email);
     getAccountDetails();
-    setPostData({
-      email: u_email,
-      publicKey: PublicKey,
-    })
+    // setPostData({
+    //   email: u_email,
+    //   publicKey: PublicKey,
+    // })
     seteth_modal_amount('');
-    console.log("MAIL:===",u_email)
+    // console.log("MAIL:===",u_email)
    },1000)
  },[selectedValue, route,isFocused])
 
