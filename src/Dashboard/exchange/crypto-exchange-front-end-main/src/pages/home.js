@@ -611,7 +611,7 @@ const priview_steller=()=>{
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:2.2,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{show_steller_key}</Text>
                     </ScrollView>
-                    <TouchableOpacity onPress={()=>{priview_steller()}}>
+                    <TouchableOpacity onPress={()=>{priview_steller()}} onLongPress={()=>{copyToClipboard(steller_key_private)}}>
                     <Icon
                       name={show_steller_key==="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"?"eye":"eye-off"}
                       type={"materialCommunity"}
