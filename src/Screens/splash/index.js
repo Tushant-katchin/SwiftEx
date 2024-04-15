@@ -9,9 +9,10 @@ import styles from "./style";
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
-    setTimeout(async () => {
-      navigation.navigate("Passcode");
-    }, 3000);
+    navigation.navigate("Passcode");
+    // setTimeout(async () => {
+    //   navigation.navigate("Passcode");
+    // }, 3000);
   }, []);
   return (
     <ImageBackground source={splashImg} style={styles.mainContainer}>
