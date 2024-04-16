@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,Picker,Image,ScrollView, ActivityIndicator,TouchableOpacity, TextInput, Pressable, FlatList,Modal, Platform } from "react-native"
+import { View, Text, StyleSheet,Picker,Image,ScrollView, ActivityIndicator,TouchableOpacity, TextInput, Pressable, FlatList,Modal, Platform, Alert } from "react-native"
 import { SafeAreaView } from "react-navigation"
 import {
     widthPercentageToDP as wp,
@@ -11,11 +11,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { Keyboard } from "react-native";
 import { SavePayout, getAllDataAndShow} from "../../../../../utilities/utilities";
-import { authRequest, GET, POST } from "../api";
+import { authRequest, GET, getToken, POST } from "../api";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Icon from "../../../../../icon";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
+import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { useSelector } from "react-redux";
 
 const StellarSdk = require('stellar-sdk');
@@ -59,8 +59,19 @@ const Payout = () => {
     const[PublicKey,setPublicKey]=useState("");//uncomment for user
     const[SecretKey,setSecretKey]=useState("");//uncomment for user
     const [transactions, setTransactions] = useState([]);
+    const [recipient_key,setrecipient_key]=useState("");
     useEffect(()=>{ //uncomment for user
         getData();
+        if(route==="XUSD")
+        {
+          setrecipient_key("Your bank details shared with Anchor");
+        }else if(route==="XETH")
+        {
+          setrecipient_key(state.wallet.address);
+        }
+        else{
+          setrecipient_key("This Assest Coming Soon.");
+        }
         fetchProfileData();
         setpayout_amount("");
     },[route,isFocused])
@@ -129,6 +140,11 @@ const Payout = () => {
             setindex_Anchor(false);
             console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/////")
             SavePayout(issuingAccountPublicKey, recipientPublicKey, transactionResult.created_at, "", g_amount, XETHAsset, "Success");
+            if(local_asset==="XETH")
+            {
+              const amount = parseInt(payout_amount);
+              XETH_Payout_backend(email,amount,recipient_key);
+            }
         } catch (error) {
             setshow(false);
             setindex_Anchor(false);
@@ -144,6 +160,43 @@ const Payout = () => {
             alert("error", "Payout failed.");
         }
     };
+
+    const XETH_Payout_backend=async(email,amount,recipient_key)=>{
+      console.log("----PAYOUT BACKEND CALLED---")
+      const token = await getToken()
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer "+token);
+        
+        const raw = JSON.stringify({
+          "email": email,
+          "amount": amount,
+          "recipient": recipient_key
+        });
+        
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow"
+        };
+        
+        fetch(REACT_APP_HOST+"/users/xeth_payout", requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log("status------",result.response.status);
+            console.log("hash-------",result.response.transactionHash)
+            if(result.response.status===1)
+            {
+              alert("Success","Payout Completed");
+            }
+          })
+          .catch((error) => console.error(error));
+      } catch (error) {
+        alert("error","Payout not Executed successfully.")
+      }
+    }
   
     const get_stellar = async () => {
         try {
@@ -227,13 +280,32 @@ const Payout = () => {
     };
 
     const manage_button=(data)=>{
-      if(data==="XETH"||data==="XUSD")
+      Alert.alert("Confirm the address",`${recipient_key} `,[
+        {
+          text:"Cancel",
+          onPress:()=>{}
+        },
+        {
+          text:"Confirm",
+          onPress:()=>{
+            if(data==="XETH"||data==="XUSD")
       {
         setAnchor_modal(true)
       }
       else{
         alert("success","Available Soon");
       }
+          }
+        }
+
+      ])
+      // if(data==="XETH"||data==="XUSD")
+      // {
+      //   setAnchor_modal(true)
+      // }
+      // else{
+      //   alert("success","Available Soon");
+      // }
     }
 
     return (
@@ -383,7 +455,9 @@ const Payout = () => {
            </Pressable>
             </View>
             <Text style={{color:"#fff",marginLeft:19}}>{route==="XETH"?"Ether Address":"Bank"}</Text>
-            <TextInput style={[styles.Id_text, styles.gray,{marginTop:5}]} value={route==="XETH"?state.wallet.address:"Your bank details shared with Anchor"}/>
+            <TextInput editable={route==="XETH"} style={[styles.Id_text, styles.white,{marginTop:5}]} value={recipient_key} onChangeText={(value)=>{
+              setrecipient_key(value)
+            }}/>
             
             <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"?"#407EC9":"gray"}]} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), manage_button(route) }}>
 
