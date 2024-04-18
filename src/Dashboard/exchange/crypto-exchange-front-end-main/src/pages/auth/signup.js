@@ -191,23 +191,26 @@ export const ExchangeRegister = (props) => {
               >{formContent.walletAddress}
               </Text>
             </View>
-            {showMessage ? (
+           <View style={{height:32}}>
+           {showMessage ? (
               <Text style={{ color: "white",marginStart:13}}>{message}</Text>
             ) : (
               <View></View>
             )}
+           </View>
 
 <TouchableOpacity
   onPress={() => {
     handleSubmit();
   }}
+  style={styles.PresssableBtn}
 >
-              <LinearGradient
+              {/* <LinearGradient
                 colors={["#12c2e9", "#c471ed", "#f64f59"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 1 }}
-                style={styles.button}
-              >
+                style={styles.PresssableBtn}
+              > */}
                   <Text style={styles.buttonText}>
                     {loading ? (
                       <View style={{display:'flex', alignContent:'center', alignItems:'center', alignSelf:'center', marginLeft:wp(70)}}>
@@ -217,7 +220,7 @@ export const ExchangeRegister = (props) => {
                       "Create my account"
                     )}
                   </Text>
-              </LinearGradient>
+              {/* </LinearGradient> */}
                 </TouchableOpacity>
             <View style={styles.lowerbox}>
               <TouchableOpacity
@@ -310,13 +313,26 @@ const styles = StyleSheet.create({
     marginBottom:hp(3)
 
   },
+  PresssableBtn: {
+    backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
+    padding: hp(2),
+    width: wp(80),
+    borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:1.3,
+    alignSelf: "center",
+    paddingHorizontal: wp(3),
+    borderRadius: hp(2.5),
+    marginBottom: hp(1),
+    alignItems: "center",
+    marginTop:hp(2),
+  },
   buttonText: {
     color: "#fff",
     textAlign: "center",
     // fontSize: 24,
   },
   lowerbox: {
-    marginTop: hp(11),
+    marginTop: hp(8),
     height:hp(6),
     width: 400,
     backgroundColor: "#003166",
@@ -326,6 +342,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     justifyContent: "center",
+    alignSelf:"center"
   },
   lowerboxtext: {
     fontSize: 16,

@@ -155,13 +155,13 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
             end={[0, 1]}
             colors={
               Checked && Checked2
-                ? ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]
+                ? ["rgba(33, 43, 83, 1)","rgba(28, 41, 77, 1)"]
                 : ["gray", "gray"]
             }
             style={style.PresssableBtn}
           >
       
-              <Text>Continue</Text>
+              <Text style={{color:"white"}}>Continue</Text>
           </LinearGradient>
             </TouchableOpacity>
         </View>
@@ -231,6 +231,8 @@ const style = StyleSheet.create({
     marginTop: hp(2),
     marginBottom: hp(2),
     alignItems: "center",
+    borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:1.3,
   },
   crossIcon: {
     alignSelf: "flex-end",

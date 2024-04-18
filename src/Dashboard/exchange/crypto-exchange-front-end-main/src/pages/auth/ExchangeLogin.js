@@ -442,9 +442,9 @@ const FOCUSED=useIsFocused();
                       Keyboard.dismiss();
                     }}
                   > */}
-                <TextInput textContentType="emailAddress" placeholder={"Email Adderss"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { setEmail(text) }} />
-                {active_forgot===false?<TextInput placeholder={"Password"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
-                <TouchableOpacity
+                <TextInput autoCapitalize="none" textContentType="emailAddress" placeholder={"Email Adderss"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { setEmail(text) }} />
+                {active_forgot===false?<TextInput autoCapitalize="none" placeholder={"Password"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
+                <TouchableOpacity style={styles.PresssableBtn}
                   onPress={() => {
                     if (active_forgot === false) {
                       setLoading(true);
@@ -465,14 +465,14 @@ const FOCUSED=useIsFocused();
                   }}
                 >
 
-                  <LinearGradient
+                  {/* <LinearGradient
                     colors={["#12c2e9", "#c471ed", "#f64f59"]}
                     start={{ x: 0, y: 0.5 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.button}
-                  >
-                    <Text style={{ color: "white" }}>{active_forgot===false?"Login":Loading_fog===false?"Verify":<ActivityIndicator color={"white"}/>}</Text>
-                  </LinearGradient>
+                  > */}
+                    <Text style={{ color: "white",fontWeight:"bold",fontSize:19 }}>{active_forgot===false?"Login":Loading_fog===false?"Verify":<ActivityIndicator color={"white"}/>}</Text>
+                  {/* </LinearGradient> */}
                 </TouchableOpacity>
                 {/* {showMessage ? (
                   <Text
@@ -607,15 +607,16 @@ const FOCUSED=useIsFocused();
     { passcode_view === false ? submitOtp() : submitpasscode() }
     Keyboard.dismiss()
   }}
+  style={styles.PresssableBtn}
 >
-              <LinearGradient
+              {/* <LinearGradient
                 colors={["#12c2e9", "#c471ed"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.verifyBtn}
-              >
+              > */}
                   <Text style={styles.buttonText}>Verify</Text>
-              </LinearGradient>
+              {/* </LinearGradient> */}
                 </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => { navigation.navigate("exchangeLogin") }}> */}
               <TouchableOpacity onPress={() => { navigation.goBack() }}>
@@ -693,6 +694,19 @@ const styles = StyleSheet.create({
     borderRadius: hp(1),
     paddingVertical: hp(1.5),
     alignItems: "center",
+  },
+  PresssableBtn: {
+    backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
+    padding: hp(2),
+    width: wp(80),
+    borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:1.3,
+    alignSelf: "center",
+    paddingHorizontal: wp(3),
+    borderRadius: hp(2.5),
+    marginBottom: hp(1),
+    alignItems: "center",
+    marginTop:hp(10),
   },
   buttonText: {
     color: "#fff",
