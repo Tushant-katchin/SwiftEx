@@ -350,7 +350,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
 
         <View style={{flexDirection:Platform.OS==="ios"?"row":"column",justifyContent:"space-evenly"}}>
         <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="android"&&25}}>Crypto Deposit</Text>
+                <Text style={{color:"#fff",fontSize:19,textAlign:"center",marginLeft:Platform.OS==="android"&&25}}>Crypto Deposit</Text>
                 <Picker
                   selectedValue={route}
                   style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "210%", color: "white", marginLeft: 35 }}
@@ -369,7 +369,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
               </View>
 
               <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="ios"?19:10}}>Fiat Deposit</Text>
+                <Text style={{color:"#fff",fontSize:19,textAlign:"center",marginLeft:Platform.OS==="ios"?19:10}}>Fiat Deposit</Text>
                 <Picker
                   selectedValue={route_fiat}
                   style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -11 } : { marginTop: 3, width: "210%", color: "white", marginLeft: 35 }}
