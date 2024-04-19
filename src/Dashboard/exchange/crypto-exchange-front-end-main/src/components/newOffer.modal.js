@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,9 @@ import {
   Platform,
   Alert,
   Button,
-  Image
+  Image,
+  Animated,
+  Easing
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -640,13 +642,13 @@ const getAccountDetails = async () => {
    },1000)
  },[selectedValue, route,isFocused])
 
- useEffect(() => {
-   const intervalId = setInterval(() => {
-     setIsVisible((prevVisible) => !prevVisible);
-   }, 1000); // Toggle every 1000 milliseconds (1 second)
+//  useEffect(() => {
+//    const intervalId = setInterval(() => {
+//      setIsVisible((prevVisible) => !prevVisible);
+//    }, 1000); // Toggle every 1000 milliseconds (1 second)
 
-   return () => clearInterval(intervalId);
- }, []);
+//    return () => clearInterval(intervalId);
+//  }, []);
 
  const onChangename = (input) => {
   const formattedInput = input.replace(/[,\s-]/g, '');
@@ -657,6 +659,27 @@ const onChangeamount = (input) => {
   const formattedInput = input.replace(/[,\s-]/g, '');
   setoffer_amount(formattedInput)
 };
+
+const animation = useRef(new Animated.Value(0)).current;
+
+useEffect(() => {
+  Animated.loop(
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 1500,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    })
+  ).start();
+}, []);
+
+const shiningAnimation = animation.interpolate({
+  inputRange: [0, 1],
+  outputRange: ['rgba(129, 108, 255, 0.97)', '#FF00FF'],
+});
+
+
+
   return (
     // <Modal
     //   animationIn="slideInRight"
@@ -876,7 +899,7 @@ const onChangeamount = (input) => {
               }}
             >
 
-              <View style={{ flexDirection: "row" }}>
+              {/* <View style={{ flexDirection: "row" }}>
               {activ===true?<TouchableOpacity style={{ backgroundColor: '#011434', 
     // paddingHorizontal: 10, 
     // paddingVertical: 5,
@@ -892,7 +915,30 @@ const onChangeamount = (input) => {
 </ScrollView></View>}
 
                 { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
+              </View> */}
+
+    <View style={{ flexDirection: "row",alignSelf:"center" }}>
+              {activ===true?
+              <TouchableOpacity style={styles.background_1} onPress={()=>{active_account()}}>
+               <Animated.View style={[styles.frame_1, { borderColor: shiningAnimation }]}>
+               <Text style={{color:'green',fontSize:19,textAlign:"center"}}>{titel}</Text>
+                </Animated.View>
+                </TouchableOpacity>
+                :
+                <View style={{flexDirection:"row"}}><Text style={styles.balance}>Balance:</Text><ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9),marginLeft:1 }}>
+                <Text style={styles.balance}>{Balance ? Number(Balance).toFixed(8) : 0.0} </Text></ScrollView>
+                </View>
+                }
+
+                { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
               </View>
+
+
+
+
+
+
+              
             </View>
 
            
@@ -1189,5 +1235,26 @@ const styles = StyleSheet.create({
     marginStart: wp(31),
     top:19,
     fontSize:17
+  },
+  background_1: {
+    // width: '8%',
+    height: '100%',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    marginTop:15,
+    marginBottom:5
+  },
+  frame_1: {
+    borderWidth: 3,
+    borderColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding:10
+  },
+  text_1: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   }
 });
