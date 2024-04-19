@@ -39,7 +39,7 @@ import { alert } from "../reusables/Toasts";
 import Icon from "../../icon";
 import { WalletHeader } from "../header";
 import { NavigationActions } from "react-navigation";
-import darkBlue from "../../../assets/Dark-Blue.png"
+import darkBlue from "../../../assets/darkBlue.png"
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
