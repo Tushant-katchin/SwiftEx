@@ -77,9 +77,10 @@ const [info_,setinfo_]=useState(false);
 const [isVisible, setIsVisible] = useState(true);
 const getAccountDetails = async () => {
       const storedData = await AsyncStorageLib.getItem('myDataKey');
-        const parsedData = JSON.parse(storedData);
-        console.log('Retrieved data:', parsedData);
-        const publicKey = parsedData.key1
+      const parsedData = JSON.parse(storedData);
+      const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+      console.log('Retrieved data:', matchedData);
+      const publicKey = matchedData[0].publicKey;
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
       // console.log("_+++++++",res.email)
@@ -272,33 +273,62 @@ const getAccountDetails = async () => {
   //////////////////////////////////end
   const getData = async () => {
     try {
-      const storedData = await AsyncStorageLib.getItem('myDataKey');
-      if (storedData !== null) {
-        const parsedData = JSON.parse(storedData);
-        console.log('Retrieved data:', parsedData);
-        const publicKey = parsedData.key1
-        const secretKey = parsedData.key2
+      const data = await AsyncStorageLib.getItem('myDataKey');
+      if (data) {
+        const parsedData = JSON.parse(data);
+        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        console.log('Retrieved data:', matchedData);
+        const publicKey = matchedData[0].publicKey;
+        console.log("===========",publicKey)
         setPublicKey(publicKey)
-        setSecretKey(secretKey)
-      }
-      else {
-        console.log('No data found in AsyncStorage');
+        const secretKey_Key = matchedData[0].secretKey;
+        console.log("===========",secretKey_Key)
+        setSecretKey(secretKey_Key)
+      } else {
+        console.log('No data found for key steller keys');
       }
     } catch (error) {
-      console.error('Error retrieving data:', error);
+      console.error('Error getting data for key steller keys:', error);
     }
   };
+  // const getData = async () => {
+  //   try {
+  //     const storedData = await AsyncStorageLib.getItem('myDataKey');
+  //     if (storedData !== null) {
+  //       const parsedData = JSON.parse(storedData);
+  //       console.log('Retrieved data:', parsedData);
+  //       const publicKey = parsedData.key1
+  //       const secretKey = parsedData.key2
+  //       setPublicKey(publicKey)
+  //       setSecretKey(secretKey)
+  //     }
+  //     else {
+  //       console.log('No data found in AsyncStorage');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error retrieving data:', error);
+  //   }
+  // };
 
   const get_stellar = async (asset) => {
     try {
        const storedData = await AsyncStorageLib.getItem('myDataKey');
       if (storedData !== null) {
         const parsedData = JSON.parse(storedData);
-        console.log('Retrieved data:', parsedData);
-        const publicKey = parsedData.key1
-        const secretKey = parsedData.key2
+        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        console.log('Retrieved data:', matchedData);
+        const publicKey = matchedData[0].publicKey;
+        console.log("===========",publicKey)
         setPublicKey(publicKey)
-        setSecretKey(secretKey)
+        const secretKey_Key = matchedData[0].secretKey;
+        console.log("===========",secretKey_Key)
+        setSecretKey(secretKey_Key)
+        // const parsedData = JSON.parse(storedData);
+        // console.log('Retrieved data:', parsedData);
+        // const publicKey = parsedData.key1
+        // const secretKey = parsedData.key2
+        // setPublicKey(publicKey)
+        // setSecretKey(secretKey)
         // const publicKey = PublicKey
 
 

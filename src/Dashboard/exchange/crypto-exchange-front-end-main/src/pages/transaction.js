@@ -35,6 +35,7 @@ import { OfferListView } from "./offers";
 import { alert } from "../../../../reusables/Toasts";
 import { ActivityIndicator } from "react-native";
 import { useIsFocused } from '@react-navigation/native';
+import { useDispatch, useSelector } from "react-redux";
 export const TransactionsListView = ({
   transactions,
   self = false,
@@ -264,6 +265,7 @@ const OffersListView = ({ transactions, self = false }) => {
 };
 
 export const TransactionView = () => {
+  const state = useSelector((state) => state);
   const isFocused = useIsFocused();
   StellarSdk.Network.useTestNetwork();
         const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
@@ -276,8 +278,10 @@ const getData = async () => {
     const storedData = await AsyncStorageLib.getItem('myDataKey');
     if (storedData !== null) {
       const parsedData = JSON.parse(storedData);
-      console.log('Retrieved data:', parsedData);
-      fetchData_(parsedData.key1);
+      const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+      console.log('Retrieved data:', matchedData);
+      const publicKey = matchedData[0].publicKey;
+      fetchData_(publicKey);
     }
     else {
       console.log('No data found in AsyncStorage');

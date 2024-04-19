@@ -93,12 +93,16 @@ const Payout = () => {
         try {
             const storedData = await AsyncStorageLib.getItem('myDataKey');
             if (storedData !== null) {
-                const parsedData = JSON.parse(storedData);
-                console.log('Retrieved data:', parsedData);
-                const publicKey = parsedData.key1
-                const secretKey = parsedData.key2
-                setPublicKey(publicKey)
-                setSecretKey(secretKey)
+
+              const parsedData = JSON.parse(storedData);
+              const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+              console.log('Retrieved data:', matchedData);
+              const publicKey = matchedData[0].publicKey;
+              console.log("===========",publicKey)
+              setPublicKey(publicKey)
+              const secretKey_Key = matchedData[0].secretKey;
+              console.log("===========",secretKey_Key)
+              setSecretKey(secretKey_Key)
             }
             else {
                 console.log('No data found in AsyncStorage');

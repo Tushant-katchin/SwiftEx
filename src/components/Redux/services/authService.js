@@ -6,6 +6,8 @@ import { ethers } from "ethers";
 import { saveFile, encryptFile } from "../../../utilities/utilities";
 import { urls, RPC, WSS } from "../../../Dashboard/constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+const StellarSdk = require('stellar-sdk');
+
 const xrpl = require("xrpl");
 
 const logIn = async (user) => {
@@ -609,6 +611,7 @@ async function AddToAllWallets(wallets, user) {
   else{
 
     if (wallets[0].walletType === "Multi-coin") {
+
       allWallets.push({
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
@@ -620,6 +623,49 @@ async function AddToAllWallets(wallets, user) {
           privateKey: wallets[0].xrp.privateKey,
         },
       });
+         const Ether_address= wallets[0].address;
+        const pair = StellarSdk.Keypair.random();
+        const publicKey = pair.publicKey();
+        const secretKey = pair.secret();
+        console.log('G-Public Key:-', publicKey);
+        console.log('G-Secret Key:-', secretKey);
+      
+        try {
+          let userTransactions = [];
+          const transactions = await AsyncStorageLib.getItem('myDataKey');
+          if (transactions) {
+            userTransactions = JSON.parse(transactions);
+            if (!Array.isArray(userTransactions)) {
+              userTransactions = [];
+            }
+          }
+          const newTransaction = {
+            Ether_address,
+            publicKey,
+            secretKey
+          };
+          userTransactions.push(newTransaction);
+          await AsyncStorageLib.setItem('myDataKey', JSON.stringify(userTransactions));
+          console.log('Updated userTransactions:', userTransactions);
+          // return userTransactions;
+        } catch (error) {
+          console.error('Error saving payout:', error);
+          throw error;
+        }
+        
+        // try {
+        //   const data = {
+        //     Ether_address: wallets[0].address,
+        //     key1: publicKey,
+        //     key2: secretKey,
+        //   };
+        //   const jsonData = JSON.stringify(data);
+        //   await AsyncStorageLib.setItem('myDataKey', jsonData);
+        //   console.log('Data stored successfully');
+        // } catch (error) {
+        //   console.error('Error storing data:', error);
+        // }
+        
     } else if (wallets[0].classicAddress) {
       allWallets.push({
         name: wallets[0].name,

@@ -384,17 +384,28 @@ import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
 import { alert } from "./reusables/Toasts";
 const StellarSdk = require('stellar-sdk');
-const storeData = async (publicKey,secretKey) => {
+const storeData = async (publicKey,secretKey,Ether_address) => {
   try {
-    const data = {
-      key1: publicKey,
-      key2: secretKey,
+    let userTransactions = [];
+    const transactions = await AsyncStorageLib.getItem('myDataKey');
+    if (transactions) {
+      userTransactions = JSON.parse(transactions);
+      if (!Array.isArray(userTransactions)) {
+        userTransactions = [];
+      }
+    }
+    const newTransaction = {
+      Ether_address,
+      publicKey,
+      secretKey
     };
-    const jsonData = JSON.stringify(data);
-    await AsyncStorageLib.setItem('myDataKey', jsonData);
-    console.log('Data stored successfully');
+    userTransactions.push(newTransaction);
+    await AsyncStorageLib.setItem('myDataKey', JSON.stringify(userTransactions));
+    console.log('Updated userTransactions:', userTransactions);
+    // return userTransactions;
   } catch (error) {
-    console.error('Error storing data:', error);
+    console.error('Error saving payout:', error);
+    throw error;
   }
 };
 
@@ -420,13 +431,15 @@ const getData = async () => {
 };
 
 const CheckMnemonic = (props) => {
-  const genrate_keypair = () => {
+  console.log("||||||||||||||||||||||||||||||||||||||||||||||",props.route.params.wallet.addres)
+
+  const genrate_keypair = (ether_add) => {
     const pair = StellarSdk.Keypair.random();
     const publicKey = pair.publicKey();
     const secretKey = pair.secret();
     console.log('G-Public Key:-', publicKey);
     console.log('G-Secret Key:-', secretKey);
-    storeData(publicKey, secretKey);
+    storeData(publicKey, secretKey,ether_add);
   }
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -689,7 +702,7 @@ const CheckMnemonic = (props) => {
                 dispatch(setWalletType("Multi-coin"));
                 dispatch(setToken(token));
                 // add NEW ACCOUNT DATA FOR NEW STELLAR ACCOUNT
-                genrate_keypair()
+                genrate_keypair(props.route.params.wallet.address)
                 console.log("navigating to home screen");
                 props.navigation.navigate("HomeScreen");
                 alert("success", "correct mnemonic");
