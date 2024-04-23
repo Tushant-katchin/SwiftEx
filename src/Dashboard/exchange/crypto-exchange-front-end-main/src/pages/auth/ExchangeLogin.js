@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tinyLogo: {
-    width: wp("13"),
+    width: wp("20"),
     height: hp("13"),
     marginTop: hp(5),
     alignSelf: "center",

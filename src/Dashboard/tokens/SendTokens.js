@@ -306,7 +306,7 @@ const SendTokens = (props) => {
 <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
 <Image source={darkBlue} style={{height: hp("9"),
     width: wp("12"),
-    marginLeft: wp(17)}}/>
+    marginLeft: wp(15)}}/>
 </TouchableOpacity>
 </View>}
       {/* <WalletHeader title={props.route.params.token}/> */}

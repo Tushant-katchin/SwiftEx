@@ -115,10 +115,10 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
       <View style={style.Body}>
         <Animated.Image
           style={{
-            width: wp("12"),
+            width: wp("30"),
             height: hp("12"),
             padding: 30,
-            marginTop: hp(2),
+            marginTop: hp(0),
             //transform: [{ rotate: SpinValue }],
           }}
           source={darkBlue}
@@ -217,8 +217,8 @@ const style = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     marginRight:wp(10),
-    marginTop:hp(3)
-    //justifyContent:"center"
+    marginTop:hp(3),
+    justifyContent:"center"
   },
   welcomeText: {
     fontSize: 16,

@@ -143,7 +143,7 @@ const Passcode = (props) => {
       <View style={style.Body}>
          <Animated.Image
           style={{
-            width: wp("15"),
+            width: wp("20"),
             height: hp("15"),
             padding: 30,
             marginTop: hp(2),

@@ -216,7 +216,7 @@ const style = StyleSheet.create({
     marginTop: hp(6),
   },
   logoStyle: {
-    width: wp("25"),
+    width: wp("40"),
     height: hp("25"),
     padding: 30,
     marginTop: hp(6),

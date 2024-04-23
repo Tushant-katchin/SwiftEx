@@ -89,7 +89,7 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
           <Animated.Image
             style={{
-              width: wp("12"),
+              width: wp("16"),
               height: hp("12"),
               // padding: 30,
             }}

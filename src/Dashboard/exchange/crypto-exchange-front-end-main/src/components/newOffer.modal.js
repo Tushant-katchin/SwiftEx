@@ -1217,7 +1217,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(2),
   },
   logoImg_TOP: {
-    height: hp("9"),
+    height: hp("8"),
     width: wp("12"),
     marginLeft: wp(14),
   },

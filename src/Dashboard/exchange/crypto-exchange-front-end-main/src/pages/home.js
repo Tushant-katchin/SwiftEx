@@ -531,7 +531,7 @@ const priview_steller=()=>{
                      <View style={styles.image}>
                      <Image
                         source={list.image}
-                        style={{width: 70,
+                        style={{width: 75,
                           height: 65,
                           borderRadius: 10,marginLeft:10}}
                       />
@@ -976,7 +976,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(2),
   },
   logoImg_TOP: {
-    height: hp("9"),
+    height: hp("8"),
     width: wp("12"),
     marginLeft: wp(14),
   },

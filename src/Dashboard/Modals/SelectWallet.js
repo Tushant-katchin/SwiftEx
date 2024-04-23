@@ -230,7 +230,7 @@ export default SelectWallet;
 const style = StyleSheet.create({
   Body: {
     backgroundColor: "white",
-    height: hp(100),
+    height: hp(102.9),
     borderRadius: hp(1),
     width: wp(100),
 
