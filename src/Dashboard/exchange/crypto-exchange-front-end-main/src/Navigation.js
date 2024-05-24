@@ -51,7 +51,7 @@ export function ExchangeNavigation() {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "card-sharp";
           }
-          if (route.name === "Payout") {
+          if (route.name === "Withdrawal") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "receipt";
           }
@@ -119,7 +119,7 @@ export function ExchangeNavigation() {
       />
 
       <Tab.Screen
-        name="Payout"
+        name="Withdrawal"
         component={Payout}
         options={{
           headerShown: true,

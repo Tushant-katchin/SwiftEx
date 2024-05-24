@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   linearStyle1: {
-    width: wp(95),
+    width: wp(94),
     height: hp(70),
     marginBottom: hp(3),
     marginVertical: hp(2),

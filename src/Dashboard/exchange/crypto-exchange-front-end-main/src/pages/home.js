@@ -16,6 +16,8 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Alert,
+  Animated,
+  Easing,
 } from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useSelector } from "react-redux";
@@ -94,6 +96,11 @@ export const HomeView = ({ setPressed }) => {
   const [show_steller_key,setshow_steller_key]=useState("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
   const [Anchor_modal,setAnchor_modal]=useState(false);
   const [index_Anchor,setindex_Anchor]=useState(0);
+  const [kyc_modal,setkyc_modal]=useState(false);
+  const [kyc_status,setkyc_status]=useState(false);
+  const [con_modal,setcon_modal]=useState(false)
+
+
 
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
@@ -109,6 +116,20 @@ export const HomeView = ({ setPressed }) => {
         index: routes.length - 1,
       });
     });
+  };
+
+  const getData_new_Kyc = async () => {
+    try {
+      const key = 'KYC_NEW';
+      const value = await AsyncStorage.getItem(key);
+    const parsedValue = JSON.parse(value); 
+    console.log("++++_+_+_",parsedValue)
+      setkyc_status(parsedValue);
+      console.log('Retrieved value:', parsedValue);
+    } catch (error) {
+      console.error('Error retrieving data', error);
+      setkyc_status(false);
+    }
   };
 
   const getData = async () => {
@@ -162,6 +183,7 @@ export const HomeView = ({ setPressed }) => {
   useEffect(()=>{
     getAccountDetails();
     getData()
+    getData_new_Kyc()
   },[Focused_screen]);
   useEffect(() => {
     getData()
@@ -347,9 +369,76 @@ const priview_steller=()=>{
   setshow_steller_key("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
   },3000);
 }
+
+
+const animation = useRef(new Animated.Value(0)).current;
+
+useEffect(() => {
+  Animated.loop(
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 1500,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    })
+  ).start();
+}, []);
+
+const shiningAnimation = animation.interpolate({
+  inputRange: [0, 1],
+  outputRange: ['rgba(129, 108, 255, 0.97)', '#fff'],
+});
+
+
+const submit_kyc=async()=>{
+  try {
+    const key = 'KYC_NEW';
+    const value = true;
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+    setkyc_modal(true);
+    setTimeout(()=>{
+      setkyc_modal(false);
+      setcon_modal(true)
+      setkyc_status(true);
+      close_()
+    },1300)
+  } catch (error) {
+    console.error('Error storing data', error);
+  }
+}
+const close_=()=>{
+  setTimeout(()=>{
+    setcon_modal(false)
+  },1500)
+}
   return (
     <>
 <View style={styles.headerContainer1_TOP}>
+<Modal
+      animationType="fade"
+      transparent={true}
+      visible={con_modal}>
+      <View style={{flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',}}> 
+      <View style={{ backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width:"90%",
+    height:"20%",
+    justifyContent:"center"}}>
+      <Icon
+        name={"check-circle-outline"}
+        type={"materialCommunity"}
+        size={60}
+        color={"green"}
+      />
+      <Text style={{fontSize:20,fontWeight:"bold",marginTop:10}} onPress={()=>{setcon_modal(false)}}>KYC Success</Text>
+      </View>
+      </View>
+    </Modal>
   <View
     style={{
       justifyContent: "space-around",
@@ -490,8 +579,8 @@ const priview_steller=()=>{
       <ScrollView ref={AnchorViewRef} horizontal style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",padding:8,borderRadius:10}} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
               {Anchor.map((list, index) => {
                 return (
-                  <TouchableOpacity onPress={()=>{setAnchor_modal(true),setindex_Anchor(index)}}>
-                    <View style={[styles.card,{backgroundColor:list.status==="Pending"?"#2b3c57":"#011434"}]} key={index}>
+                  <View>
+                    <TouchableOpacity  onPress={()=>{setAnchor_modal(true),setindex_Anchor(index)}} style={[styles.card,{backgroundColor:list.status==="Pending"?"#2b3c57":"#011434"}]} key={index}>
                       <View style={{ width: "30%", height: "27%", borderBottomLeftRadius: 10, borderColor: 'rgba(122, 59, 144, 1)rgba(100, 115, 197, 1)', borderWidth: 1.9, position: "absolute", alignSelf: "flex-end", borderTopRightRadius: 10,zIndex:20 }}>
                         <Icon name={list.status === "Pending" ? "clock-time-two-outline" : "check-circle-outline"} type={"materialCommunity"} color={list.status === "Pending" ? "yellow" : "#35CA1D"} size={24} />
                       </View>
@@ -505,8 +594,25 @@ const priview_steller=()=>{
                      </View>
                       <Text style={styles.name}>{list.name}</Text>
                       <Text style={[styles.status, { color: list.status === "Pending" ? "yellow" : "#35CA1D" }]}>{list.status}</Text>
-                    </View>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
+                        {kyc_status===false?<TouchableOpacity onPress={()=>{submit_kyc()}}>
+                      {list.name==="SwiftEx"&&<Animated.View style={[styles.frame_1, { borderColor: shiningAnimation }]}>
+               <Text style={{color:'green',fontSize:16,textAlign:"center"}}>Submit KYC</Text>
+                </Animated.View>}
+                    </TouchableOpacity>:<></>}
+                    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={kyc_modal}>
+      <View style={styles.kyc_Container}>
+        <View style={styles.kyc_Content}>
+    <Image source={darkBlue} style={styles.logoImg_kyc} />
+          <Text style={styles.kyc_text}>Document submiting for KYC</Text>
+          <ActivityIndicator size="large" color="green" />
+        </View>
+      </View>
+    </Modal>
+                  </View>
                 )
               })}
       </ScrollView>
@@ -744,7 +850,7 @@ const priview_steller=()=>{
   <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"}}>
 <LineChart
         data={chartData}
-        width={375}
+        width={388}
         height={310}
         withDots={true}
         withVerticalLines={false}
@@ -763,7 +869,7 @@ const priview_steller=()=>{
         />
         <View style={{backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     padding: hp(0.5),
-    width: wp(96),
+    width: wp(95),
     alignSelf: "center",
     borderRadius: hp(1.6),
     marginBottom: hp(1),
@@ -841,7 +947,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#011434",
   },
   linearContainer: {
-    width: wp(95),
+    width: wp(94),
     padding: hp(2),
     paddingVertical: hp(3),
     borderRadius: hp(2),
@@ -901,7 +1007,7 @@ const styles = StyleSheet.create({
   PresssableBtn: {
     backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     padding: hp(2),
-    width: wp(96),
+    width: wp(93.6),
     borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
     borderWidth:1.3,
     alignSelf: "center",
@@ -1026,6 +1132,37 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 14,
     color: 'yellow',
+  },
+  frame_1: {
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding:3,
+    width:"90%",
+    marginTop:3
+  },
+  kyc_Container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  kyc_Content: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  kyc_text: {
+    marginBottom: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  logoImg_kyc: {
+    height: hp("9"),
+    width: wp("12"),
   },
   
 });
