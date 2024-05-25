@@ -65,6 +65,7 @@ import Payout from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pag
 import Payment from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/Payment";
 import importStellar from "../Dashboard/importStellar";
 import { NewOfferModal } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/newOffer.modal";
+import classic from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/classic";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -249,6 +250,13 @@ const AuthStack = () => (
       <Stack.Screen
         name="Settings"
         component={Settings}
+        options={{
+          headerShown: false,
+        }}
+      />
+       <Stack.Screen
+        name="classic"
+        component={classic}
         options={{
           headerShown: false,
         }}

@@ -670,6 +670,11 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
 
 
       </View>
+      <View style={styles.bottom_text}>
+      <Text style={styles.text_heading}>Your Crypto not supported by the Anchor ?</Text>
+      <TouchableOpacity onPress={()=>{navigation.navigate("classic")}}><Text style={styles.text_heading}>Get your wrapped tokens here <Text style={[styles.text_heading,{color:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)"}]}>Bridge Tokens</Text></Text></TouchableOpacity>
+
+      </View>
     </View>
   )
 }
@@ -780,4 +785,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'yellow',
   },
+  bottom_text:{
+    justifyContent:"center",
+    alignSelf:"center",
+    marginTop:"165%",
+    position:"absolute"
+  },
+  text_heading:{
+    fontSize:15,
+    color:"#fff"
+  }
 });

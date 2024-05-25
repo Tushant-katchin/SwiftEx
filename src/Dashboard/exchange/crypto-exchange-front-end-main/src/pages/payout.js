@@ -410,10 +410,10 @@ const Payout = () => {
                   style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
                   onValueChange={(itemValue, itemIndex) => setRoute(itemValue)}
                 >
-                  <Picker.Item label="XETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="XGBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="XINR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="USD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="GBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="INR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />
                 </Picker>
               </View>
@@ -432,9 +432,12 @@ const Payout = () => {
         </View>
 
 
-
-
-            <Text style={[styles.Id_text, styles.gray,{marginTop:Platform.OS==="ios"?-19:10}]}>{route === "XUSD" ? index_Anchor===true?XUSD:"Anchor" : index_Anchor===true?XETH:"Anchor"}</Text>
+<View style={[styles.Id_text,{marginTop:Platform.OS==="ios"?-19:10,alignItems:"center"}]}>
+            <Text style={[ styles.gray,]}>{route === "XUSD" ? index_Anchor===true?XUSD:"SwiftEx" : index_Anchor===true?XETH:"SwiftEx"}</Text>
+            <View style={{width:19,height:19}}>
+            <Image source={darkBlue} style={{width:40,height:23}}/>
+            </View>
+</View>
             <View style={{ flexDirection: "row", width: wp(90) }}>
                 <Text style={styles.balance}>Available Balance:- </Text>
                 <View style={{ width: wp(13) }}>
@@ -469,7 +472,13 @@ const Payout = () => {
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
                 <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"?"Payout":"Available Soon"}</Text>
             </Pressable>
-            <Text style={{color:'white',fontSize:20,marginLeft:25,marginTop:"10%",fontWeight:"bold"}}>History</Text>
+            <View style={styles.bottom_text}>
+      <Text style={styles.text_heading}>Your Crypto not supported by the Anchor ?</Text>
+      <TouchableOpacity onPress={()=>{navigation.navigate("classic")}}><Text style={styles.text_heading}>Get your wrapped tokens here <Text style={[styles.text_heading,{color:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)"}]}>Bridge Tokens</Text></Text></TouchableOpacity>
+      <View>
+      </View>
+     </View>
+            {/* <Text style={{color:'white',fontSize:20,marginLeft:25,marginTop:"10%",fontWeight:"bold"}}>History</Text>
             <View style={{height:"30%",marginTop:10,justifyContent:'center'}}>
       {transactions.length > 0 ? (
         <FlatList
@@ -494,13 +503,13 @@ const Payout = () => {
               <Text style={styles.text_color}>Asset: {item.g_ASSET}</Text>
               <Text style={styles.text_color}>Created: {item.date}</Text>
               {/* <Text style={styles.text_color}>Time: {item.time}</Text> */}
-            </View>
-          )}
-        />
-      ) : (
-        <Text style={{textAlign:'center',color:'white',fontSize:19}}>No Payout found.</Text>
-      )}
-    </View>
+            {/* </View> */}
+          {/* )} */}
+        {/* /> */}
+      {/* ) : ( */}
+        {/* <Text style={{textAlign:'center',color:'white',fontSize:19}}>No Payout found.</Text> */}
+      {/* )} */}
+    {/* </View> */}
     <View style={{backgroundColor:"black",}}>
        <Modal
         animationType="slide"
@@ -711,6 +720,16 @@ const styles = StyleSheet.create({
       status: {
         fontSize: 14,
         color: 'yellow',
-      }
+      },
+  bottom_text:{
+    justifyContent:"center",
+    alignSelf:"center",
+    marginTop:"150%",
+    position:"absolute"
+  },
+  text_heading:{
+    fontSize:15,
+    color:"#fff"
+  }
 })
 export default Payout;

@@ -858,7 +858,7 @@ const close_=()=>{
           <TouchableOpacity
             style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1}]}
             onPress={() => {
-
+              navigation.navigate("classic")
             }}
           >
             <Text style={{ color: "#fff", fontSize: 19, fontWeight: "bold",marginStart:45 }}>Bridge Tokens</Text>
