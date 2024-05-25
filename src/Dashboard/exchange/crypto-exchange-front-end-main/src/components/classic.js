@@ -4,8 +4,11 @@ import Icon from "../../../../../icon";
 import { FlatList } from 'native-base';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import Bridge from "../../../../../../assets/Bridge.png";
+import { useSelector } from 'react-redux';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const classic = () => {
+  const state = useSelector((state) => state);
   const nav=useNavigation();
   const [chooseModalVisible, setChooseModalVisible] = useState(false);
   const [chooseSelectedItemId, setChooseSelectedItemId] = useState(null);
@@ -15,30 +18,31 @@ const classic = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [main_modal,setmain_modal]=useState(true);
   const [fianl_modal,setfianl_modal]=useState(false);
+  const [amount,setamount]=useState('');
+  const [chooseModalVisible_choose,setchooseModalVisible_choose]=useState(false);
   const chooseItemList = [
     { id: 1, name: "Bitcoin",url:"https://tokens.pancakeswap.finance/images/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" },
     { id: 2, name: "Ethereum",url:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" },
-    { id: 3, name: "Aave",url:"https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png?1601374110" },
-    { id: 4, name: "Alchemy Pay",url:"https://assets.coingecko.com/coins/images/12390/thumb/ACH_%281%29.png?1599691266" },
-    { id: 5, name: "Ambire AdEx",url:"https://assets.coingecko.com/coins/images/847/thumb/Ambire_AdEx_Symbol_color.png?1655432540" },
-    { id: 6, name: "Aergo",url:"https://assets.coingecko.com/coins/images/4490/thumb/aergo.png?1647696770" },
-    { id: 7, name: "Alchemix",url:"https://assets.coingecko.com/coins/images/14113/thumb/Alchemix.png?1614409874" },
-    { id: 8, name: "ApeCoin",url:"https://assets.coingecko.com/coins/images/24383/small/apecoin.jpg?1647476455" },
-    { id: 9, name: "AirSwap",url:"https://assets.coingecko.com/coins/images/1019/thumb/Airswap.png?1630903484" }
 ]
   const chooseItemList_ETH = [
-    { id: 1, name: "USDT", url: "https://example.com/usdt.png" }
+    { id: 1, name: "USDT", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
+    chooseSelectedItemId === "Ethereum"?{ id: 2, name: "Ethereum",url:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }:
+    { id: 2, name: "Bitcoin",url:"https://tokens.pancakeswap.finance/images/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" },
+
+
   ];
+
 
   const handleUpdate = (id) => {
     if (idIndex === 1) {
       setChooseSelectedItemId(id);
+    setChooseModalVisible(false);
       setmain_modal(true)
     } else if (idIndex === 3) {
       setChooseSelectedItemIdCho(id);
       setmain_modal(true)
     }
-    setChooseModalVisible(false);
+    setchooseModalVisible_choose(false);
   };
 
   const chooseRenderItem = ({ item }) => (
@@ -85,7 +89,7 @@ const classic = () => {
               <Text>Stellar</Text>
             </TouchableOpacity>
             <Text style={styles.textModal}>Choose asset</Text>
-            <TouchableOpacity style={styles.modalOpen} onPress={() => { setmain_modal(false),setChooseModalVisible(true); setIdIndex(3); }}>
+            <TouchableOpacity style={styles.modalOpen} onPress={() => { setmain_modal(false),setchooseModalVisible_choose(true); setIdIndex(3); }}>
               <Text>{chooseSelectedItemIdCho === null ? "Select" : chooseSelectedItemIdCho}</Text>
             </TouchableOpacity>
             <TouchableOpacity 
@@ -102,21 +106,27 @@ const classic = () => {
         animationType="fade"
         transparent={true}
         visible={confirmModalVisible}
+        // visible={true}
       >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.confirmModalContent} onPress={() => nav.goBack()}>
-            <Text style={styles.confirmText}>Confirm Transaction</Text>
+          <View style={styles.modalContainer}>
+        <View style={styles.confirmModalContent}>
+        <View style={{flexDirection:"row",justifyContent:"space-between",width:"100%"}}>
+        <Text style={[styles.confirmText,{marginStart:60}]}>Confirm Transaction</Text>
+        <Icon name={"close"} size={28} color={"white"} onPress={() => {nav.goBack()}} />
+        </View>
             <View style={styles.inputContainer}>
-              <TextInput placeholder='Anchor id' placeholderTextColor="gray" style={styles.input} />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width:"96%"}}>
+                   <Text>{state.wallet.address}</Text>
+                    </ScrollView>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput placeholder='Amount' placeholderTextColor="gray" keyboardType="number-pad" style={styles.input} />
+              <TextInput placeholder='Amount' placeholderTextColor="gray" keyboardType="number-pad" style={styles.input} onChangeText={(value)=>{setamount(value)}}/>
             </View>  
-            <TouchableOpacity style={styles.confirmButton} onPress={() =>{ setConfirmModalVisible(false),setfianl_modal(true)}}>
+            <TouchableOpacity style={[styles.confirmButton,{backgroundColor:!amount?"gray":"green"}]} disabled={!amount} onPress={() =>{ setConfirmModalVisible(false),setfianl_modal(true)}}>
               <Text style={styles.confirmButtonText}>Confirm</Text>
             </TouchableOpacity>   
-          </TouchableOpacity>
         </View>
+          </View>
       </Modal>
 
       <Modal
@@ -160,7 +170,31 @@ const classic = () => {
               autoCapitalize='none'
             />
             <FlatList
-              data={chooseSelectedItemId === "Ethereum" ? chooseItemList_ETH : chooseFilteredItemList}
+              data={chooseFilteredItemList}
+              renderItem={chooseRenderItem}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={chooseModalVisible_choose}
+      >
+        <TouchableOpacity style={styles.chooseModalContainer} onPress={() => nav.goBack()}>
+          <View style={styles.chooseModalContent}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search..."
+              placeholderTextColor={"gray"}
+              onChangeText={text => setChooseSearchQuery(text)}
+              value={chooseSearchQuery}
+              autoCapitalize='none'
+            />
+            <FlatList
+              data={chooseItemList_ETH}
               renderItem={chooseRenderItem}
               keyExtractor={(item) => item.id.toString()}
             />
