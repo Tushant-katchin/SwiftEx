@@ -1,5 +1,7 @@
 import React ,{ useState, useEffect,useFocusEffect } from "react";
 import darkBlue from "../../../../../../assets/darkBlue.png";
+import Bridge from "../../../../../../assets/Bridge.png";
+
 import { authRequest, GET, POST } from "../api";
 import { NewOfferModal } from "../components/newOffer.modal";
 import { FieldView } from "./profile";
@@ -852,6 +854,19 @@ const close_=()=>{
           // </View>
         )}
 </View>
+        <View style={{ backgroundColor: "#011434" }}>
+          <TouchableOpacity
+            style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1}]}
+            onPress={() => {
+
+            }}
+          >
+            <Text style={{ color: "#fff", fontSize: 19, fontWeight: "bold",marginStart:45 }}>Bridge Tokens</Text>
+            <View style={{width:45,height:27,justifyContent:"center",alignSelf:"center"}}>
+            <Image source={Bridge} style={{width:"130%",height:"130%"}} />
+            </View>
+          </TouchableOpacity>
+        </View>
 
   <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"}}>
 <LineChart
