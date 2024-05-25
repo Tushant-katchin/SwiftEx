@@ -842,7 +842,7 @@ const shiningAnimation = animation.interpolate({
        
        <View style={{flexDirection:"row",justifyContent:"space-between",padding:19}}>
        <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Select Assets</Text>
+                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>{Platform.OS==="android"?"Select Trading Pair":"Trading Pair"}</Text>
                 <Picker
                 mode={"dropdown"}
                   selectedValue={selectedValue}
@@ -851,6 +851,8 @@ const shiningAnimation = animation.interpolate({
                 >
                   <Picker.Item label="XETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
                   <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="USDT" value="USDT" color={Platform.OS === "ios" ? "gray" : "gray"} />
+                  <Picker.Item label="USDC" value="USDC" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="XGBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="XINR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />

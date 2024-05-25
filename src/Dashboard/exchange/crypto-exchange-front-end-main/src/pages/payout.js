@@ -45,6 +45,9 @@ const Payout = () => {
     const [email, setemail] = useState("");
     const [Anchor_modal,setAnchor_modal]=useState(false);
     const [index_Anchor,setindex_Anchor]=useState(false);
+    const [kyc_modal,setkyc_modal]=useState(false);
+    const [modal_load,setmodal_load]=useState(false)
+    const [kyc_modal_text,setkyc_modal_text]=useState("Document submiting for KYC")
     const Anchor = [
       { name: "SwiftEx", status: "Verified", image: require('../../../../../../assets/darkBlue.png'), city: "India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia", Crypto_Assets: "XETH, XUSD", Fiat_Assets: "$ USD, € EUR", Payment_Rails: "Card, Bank Transfer, Local Method" },
       { name: "APS", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden", Fiat_Assets: "$ BRL€ EUR$ CLP", Crypto_Assets: "XETH, XUSD" },
@@ -75,7 +78,25 @@ const Payout = () => {
         fetchProfileData();
         setpayout_amount("");
     },[route,isFocused])
-
+    
+    useEffect(() => {
+      setmodal_load(true);
+      if (kyc_modal) {
+        const timer1 = setTimeout(() => {
+          setkyc_modal_text("Verifying KYC")
+        }, 3000);
+  
+        const timer2 = setTimeout(() => {
+          setkyc_modal_text("You recived "+payout_amount)
+          setmodal_load(false);
+        }, 6000);
+        return () => {
+          clearTimeout(timer1);
+          clearTimeout(timer2);
+        };
+      }
+    }, [kyc_modal]);
+    
     const fetchProfileData = async () => {
         try {
           const { res, err } = await authRequest("/users/getUserDetails", GET);
@@ -141,6 +162,7 @@ const Payout = () => {
             console.log('Transaction Successful:', transactionResult);
             setshow(false);
             alert("success", "Payout Success");
+            setkyc_modal(true);
             setindex_Anchor(false);
             console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/////")
             SavePayout(issuingAccountPublicKey, recipientPublicKey, transactionResult.created_at, "", g_amount, XETHAsset, "Success");
@@ -194,6 +216,7 @@ const Payout = () => {
             if(result.response.status===1)
             {
               alert("Success","Payout Completed");
+              setkyc_modal(true);
             }
           })
           .catch((error) => console.error(error));
@@ -584,6 +607,20 @@ const Payout = () => {
         </View>
       </Modal>
        </View>
+       <Modal
+      animationType="fade"
+      transparent={true}
+      visible={kyc_modal}>
+      <View style={styles.kyc_Container}>
+        <View style={styles.kyc_Content}>
+    <Image source={darkBlue} style={styles.logoImg_kyc} />
+          <Text style={styles.kyc_text}>{kyc_modal_text}</Text>
+          {modal_load===true?<ActivityIndicator size="large" color="green" />:<TouchableOpacity onPress={()=>{setkyc_modal(false)}} style={{width:"50%",height:"25%",backgroundColor:"green",marginTop:19,borderRadius:10,justifyContent:"center",alignItems:"center"}}>
+            <Text style={{color:"#fff",fontSize:19}}>Accept</Text>
+          </TouchableOpacity>}
+        </View>
+      </View>
+    </Modal>
         </SafeAreaView>
         </>
     )
@@ -730,6 +767,29 @@ const styles = StyleSheet.create({
   text_heading:{
     fontSize:15,
     color:"#fff"
-  }
+  },
+  kyc_Container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  kyc_Content: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width:"80%",
+    height:"24%"
+  },
+  kyc_text: {
+    marginBottom: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  logoImg_kyc: {
+    height: hp("9"),
+    width: wp("12"),
+  },
 })
 export default Payout;
