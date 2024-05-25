@@ -675,7 +675,7 @@ useEffect(() => {
 
 const shiningAnimation = animation.interpolate({
   inputRange: [0, 1],
-  outputRange: ['rgba(129, 108, 255, 0.97)', '#FF00FF'],
+  outputRange: ['rgba(129, 108, 255, 0.97)', '#fff'],
 });
 
 

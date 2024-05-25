@@ -124,7 +124,7 @@ export const HomeView = ({ setPressed }) => {
       const value = await AsyncStorage.getItem(key);
     const parsedValue = JSON.parse(value); 
     console.log("++++_+_+_",parsedValue)
-      setkyc_status(parsedValue);
+    parsedValue===null?setkyc_status(false):setkyc_status(parsedValue)
       console.log('Retrieved value:', parsedValue);
     } catch (error) {
       console.error('Error retrieving data', error);
@@ -334,6 +334,11 @@ const kyc=()=>{
 }
   
 const Offer_condition=(data,para)=>{
+  if(kyc_status===false)
+  {
+    alert("error","Please Submit KYC from Home Tab");
+  }
+  else{
   getAccountDetails()
   if(Offer_active===true)
   {
@@ -356,6 +361,7 @@ const Offer_condition=(data,para)=>{
   }
   else{
     Alert.alert("Account","Add Bank Account from Profile Tab.");
+  }
   }
 }
 const copyToClipboard = (data) => {
