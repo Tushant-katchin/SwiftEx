@@ -452,6 +452,7 @@ const getAccountDetails = async () => {
         const result = await server.submitTransaction(transaction);
 
         console.log(`Trustline updated successfully for ${g_asset}`);
+        get_stellar(selectedValue);
 
     } catch (error) {
         console.error(`Error changing trust for ${g_asset}:`, error);
@@ -676,7 +677,7 @@ useEffect(() => {
 
 const shiningAnimation = animation.interpolate({
   inputRange: [0, 1],
-  outputRange: ['rgba(129, 108, 255, 0.97)', '#fff'],
+  outputRange: ['gray', '#fff'],
 });
 
 
