@@ -1,6 +1,7 @@
 import { ImageBackground, Text } from "react-native";
 import React, { useEffect } from "react";
-import splashImg from "../../../assets/splashImg.png";
+// import splashImg from "../../../assets/splashImg.png";
+import splashImg from "../../../assets/splashImg.gif";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

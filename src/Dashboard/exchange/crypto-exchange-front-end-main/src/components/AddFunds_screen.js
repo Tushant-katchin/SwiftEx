@@ -48,6 +48,8 @@ const AddFunds_screen = () => {
   const [eth_modal_load,seteth_modal_load]=useState(false);
   const [u_email,setu_email]=useState("");
   const [route_fiat,setroute_fiat]=useState(null)
+  const [modalContainer_menu,setmodalContainer_menu]=useState(false);
+
 
 
   const Anchor = [
@@ -362,7 +364,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         </TouchableOpacity>
 
         <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               console.log('clicked');
               const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
@@ -376,11 +378,118 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
               size={30}
               color={"#fff"}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <TouchableOpacity
+      onPress={() => {
+       setmodalContainer_menu(true)
+      }}
+    >
+      <Icon
+        name={"menu"}
+        type={"materialCommunity"}
+        size={30}
+        color={"#fff"}
+      />
+    </TouchableOpacity>
         </View>
       </View>
       {/* //// Header End ////*/}
+      <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalContainer_menu}>
+       
+      <TouchableOpacity style={styles.modalContainer_option_top}> 
+      <View style={styles.modalContainer_option_sub}>
+     
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
+      </TouchableOpacity>
 
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>KYC</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>My Subscription</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}   onPress={() => {
+        console.log('clicked');
+        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        AsyncStorage.removeItem(LOCAL_TOKEN);
+        setmodalContainer_menu(false)
+        navigation.navigate('exchangeLogin');
+      }}>
+      <Icon
+        name={"logout"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Logout</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{setmodalContainer_menu(false)}}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Close</Text>
+      </TouchableOpacity>
+      </View>
+      </TouchableOpacity>
+    </Modal>
       <View style={{ backgroundColor: "#011434",height:hp(100) }}>
 
         <View style={{flexDirection:Platform.OS==="ios"?"row":"column",justifyContent:"space-evenly"}}>
@@ -641,7 +750,8 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
   elevation: 5,
   marginTop:hp(40),
   width:wp(95),
-  marginStart:10
+  marginStart:10,
+  height:"19%"
   }}>
         <View>
           <Text style={{fontSize:19,marginBottom:3,color:"#fff"}}>Ether Amount</Text>
@@ -655,13 +765,13 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
           <View style={{flexDirection:"row",width:"100%",justifyContent:"space-evenly",marginTop:10}}>
             {/* <Button title="Cancel"  color="red" onPress={()=>{seteth_modal_visible(false)}}/> */}
             <TouchableOpacity style={{width:"30%",height:"109%",backgroundColor:"red",borderRadius:10}} onPress={()=>{seteth_modal_visible(false)}}>
-              <Text style={{textAlign:"center",marginTop:4,fontSize:16,color:"#fff"}}>Cancel</Text>
+              <Text style={{textAlign:"center",marginTop:7,fontSize:16,color:"#fff"}}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity disabled={!eth_modal_amount} style={{width:"30%",height:"109%",backgroundColor:eth_modal_amount!==''?"green":"gray",borderRadius:5,elevation:5}} onPress={()=>{deposit_Ether(eth_modal_amount)}}>
                   {/* <Text style={{textAlign:'center',marginTop:6,fontSize:15,color:"white"}}>{eth_modal_load===true?<ActivityIndicator color={"white"}/>:"Deposit ETH"}</Text> */}
                   {Platform.OS==="android"? 
                     <Text style={{ textAlign: 'center', marginTop: 4, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} /> : "Deposit ETH"}</Text>:
-                    <Text style={{ marginTop: 10, margin: 3, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} style={{justifyContent:"center"}}/> : "Deposit ETH"}</Text>}
+                    <Text style={{ marginTop: 10, margin: 5, fontSize: 15, color: "white" }}>{eth_modal_load === true ? <ActivityIndicator color={"white"} style={{justifyContent:"center"}}/> : "Deposit ETH"}</Text>}
             </TouchableOpacity>
           </View>
         </View>
@@ -794,5 +904,32 @@ const styles = StyleSheet.create({
   text_heading:{
     fontSize:15,
     color:"#fff"
-  }
+  },
+  modalContainer_option_top: {
+    // flex: 1,
+    alignSelf:"flex-end",
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    width:"100%",
+    height:"100%",
+  },
+  modalContainer_option_sub:{
+    alignSelf:"flex-end",
+    backgroundColor: 'rgba(33, 43, 83, 1)',
+  padding: 10,
+  borderRadius: 10,
+  width:"65%",
+  height:"70%"
+},
+modalContainer_option_view:{
+  flexDirection:"row",
+  marginTop:25,
+  alignItems:"center",
+},
+modalContainer_option_text:{
+fontSize:20,
+fontWeight:"bold",
+color:"#fff",
+marginStart:5
+}
 });

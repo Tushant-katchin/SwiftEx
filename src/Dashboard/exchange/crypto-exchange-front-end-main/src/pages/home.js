@@ -47,6 +47,7 @@ import { useRef } from "react";
 // import StellarSdk from '@stellar/stellar-sdk';
 
 export const HomeView = ({ setPressed }) => {
+  const [modalContainer_menu,setmodalContainer_menu]=useState(false);
   const AnchorViewRef = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
 
@@ -475,7 +476,7 @@ const close_=()=>{
   </TouchableOpacity>
 
   <View style={{ alignItems: "center" }}>
-    <TouchableOpacity
+    {/* <TouchableOpacity
       onPress={() => {
         console.log('clicked');
         const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
@@ -490,9 +491,117 @@ const close_=()=>{
         size={30}
         color={"#fff"}
       />
+    </TouchableOpacity> */}
+     <TouchableOpacity
+      onPress={() => {
+       setmodalContainer_menu(true)
+      }}
+    >
+      <Icon
+        name={"menu"}
+        type={"materialCommunity"}
+        size={30}
+        color={"#fff"}
+      />
     </TouchableOpacity>
   </View>
 </View>
+<Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalContainer_menu}>
+       
+      <TouchableOpacity style={styles.modalContainer_option_top}> 
+      <View style={styles.modalContainer_option_sub}>
+     
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>KYC</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>My Subscription</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}   onPress={() => {
+        console.log('clicked');
+        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        AsyncStorage.removeItem(LOCAL_TOKEN);
+        setmodalContainer_menu(false)
+        navigation.navigate('exchangeLogin');
+      }}>
+      <Icon
+        name={"logout"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Logout</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{setmodalContainer_menu(false)}}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={styles.modalContainer_option_text}>Close</Text>
+      </TouchableOpacity>
+      </View>
+      </TouchableOpacity>
+    </Modal>
 
       
     <ScrollView
@@ -1185,5 +1294,32 @@ const styles = StyleSheet.create({
     height: hp("9"),
     width: wp("12"),
   },
+  modalContainer_option_top: {
+    // flex: 1,
+    alignSelf:"flex-end",
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    width:"100%",
+    height:"100%",
+  },
+  modalContainer_option_sub:{
+    alignSelf:"flex-end",
+    backgroundColor: 'rgba(33, 43, 83, 1)',
+  padding: 10,
+  borderRadius: 10,
+  width:"65%",
+  height:"70%"
+},
+modalContainer_option_view:{
+  flexDirection:"row",
+  marginTop:25,
+  alignItems:"center",
+},
+modalContainer_option_text:{
+fontSize:20,
+fontWeight:"bold",
+color:"#fff",
+marginStart:5
+}
   
 });

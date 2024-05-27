@@ -85,14 +85,15 @@ const classic = () => {
               <Text>{chooseSelectedItemId === null ? "Select" : chooseSelectedItemId}</Text>
             </TouchableOpacity>
             <Text style={styles.textModal}>To</Text>
-            <TouchableOpacity style={styles.modalOpen} onPress={() => { }}>
+            <TouchableOpacity style={[styles.modalOpen,{backgroundColor:"silver"}]} onPress={() => { }}>
               <Text>Stellar</Text>
             </TouchableOpacity>
             <Text style={styles.textModal}>Choose asset</Text>
             <TouchableOpacity style={styles.modalOpen} onPress={() => { setmain_modal(false),setchooseModalVisible_choose(true); setIdIndex(3); }}>
               <Text>{chooseSelectedItemIdCho === null ? "Select" : chooseSelectedItemIdCho}</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
+              disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
               style={[styles.nextButton, { backgroundColor: chooseSelectedItemId && chooseSelectedItemIdCho ? 'green' : 'grey' }]}
               onPress={handleNext}
             >
@@ -135,7 +136,7 @@ const classic = () => {
       visible={fianl_modal}>
        
       <View style={styles.modalContainer}> 
-      <View style={{ backgroundColor: '#fff',
+      <View style={{ backgroundColor: 'rgba(33, 43, 83, 1)',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
@@ -148,7 +149,7 @@ const classic = () => {
         size={60}
         color={"green"}
       />
-      <Text style={{fontSize:20,fontWeight:"bold",marginTop:10}} onPress={()=>{nav.goBack()}}>Transaction Success</Text>
+      <Text style={{fontSize:20,fontWeight:"bold",marginTop:10,color:"#fff"}} onPress={()=>{nav.goBack()}}>Transaction Success</Text>
       </View>
       </View>
     </Modal>
