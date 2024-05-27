@@ -5,6 +5,7 @@ import { GOERLI_ETHERSCAN } from "../utils/constants";
 import { DataTable } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import Bridge from "../../../../../../assets/Bridge.png";
 const StellarSdk = require('stellar-sdk');
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -406,18 +407,13 @@ const fetchData_ = async (key) => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"close"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
+      <Image source={Bridge} style={{width:"11%",height:"190%"}} />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"cog"}
+        name={"anchor"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -437,7 +433,7 @@ const fetchData_ = async (key) => {
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"file-tree"}
+        name={"playlist-check"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -456,7 +452,7 @@ const fetchData_ = async (key) => {
         name={"logout"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
       <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
       </TouchableOpacity>
@@ -466,9 +462,9 @@ const fetchData_ = async (key) => {
         name={"close"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
-      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close Menu</Text>
       </TouchableOpacity>
       </View>
       </TouchableOpacity>

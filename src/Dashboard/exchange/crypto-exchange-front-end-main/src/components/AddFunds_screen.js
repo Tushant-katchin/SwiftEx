@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alert } from "../../../../reusables/Toasts";
+import Bridge from "../../../../../../assets/Bridge.png";
 
 
 import { smart_contract_Address,RPC } from "../../../../constants";
@@ -423,18 +424,13 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"close"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
+      <Image source={Bridge} style={{width:"11%",height:"190%"}} />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"cog"}
+        name={"anchor"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -454,7 +450,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"file-tree"}
+        name={"playlist-check"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -473,7 +469,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         name={"logout"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
       <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
       </TouchableOpacity>
@@ -483,9 +479,9 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         name={"close"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
-      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close Menu</Text>
       </TouchableOpacity>
       </View>
       </TouchableOpacity>
@@ -782,7 +778,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
       </View>
       <View style={[styles.bottom_text,{marginTop:Platform.OS==="android"?"150%":"165%",}]}>
       <Text style={styles.text_heading}>Your Crypto not supported by the Anchor ?</Text>
-      <TouchableOpacity onPress={()=>{navigation.navigate("classic")}}><Text style={styles.text_heading}>Get your wrapped tokens here <Text style={[styles.text_heading,{color:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)"}]}>Bridge Tokens</Text></Text></TouchableOpacity>
+      <TouchableOpacity onPress={()=>{navigation.navigate("classic")}}><Text style={styles.text_heading}>Get your wrapped tokens here <Text style={[styles.text_heading,{color:"#4CA6EA"}]}>Bridge Tokens</Text></Text></TouchableOpacity>
 
       </View>
     </View>

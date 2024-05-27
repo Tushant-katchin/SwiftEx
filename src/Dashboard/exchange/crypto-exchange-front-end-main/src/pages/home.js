@@ -535,18 +535,13 @@ const close_=()=>{
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"close"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
+      <Image source={Bridge} style={{width:"11%",height:"190%"}} />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"cog"}
+        name={"anchor"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -566,7 +561,7 @@ const close_=()=>{
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"file-tree"}
+        name={"playlist-check"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -585,7 +580,7 @@ const close_=()=>{
         name={"logout"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
       <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
       </TouchableOpacity>
@@ -595,9 +590,9 @@ const close_=()=>{
         name={"close"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
-      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close Menu</Text>
       </TouchableOpacity>
       </View>
       </TouchableOpacity>

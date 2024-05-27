@@ -297,7 +297,7 @@ const SendTokens = (props) => {
 <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
 <Image source={darkBlue} style={{height: hp("9"),
     width: wp("12"),
-    marginLeft: wp(11)}}/>
+    marginLeft: Platform.OS==="ios"?wp(11):wp(6)}}/>
 </TouchableOpacity>
     </View>:
 <View style={{backgroundColor:"#4CA6EA",flexDirection:"row"}}>
