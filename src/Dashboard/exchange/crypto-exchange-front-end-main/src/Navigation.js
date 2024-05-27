@@ -43,7 +43,7 @@ export function ExchangeNavigation() {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "person-circle";
           }
-          if (route.name === "offers") {
+          if (route.name === "Offers") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "briefcase";
           }
@@ -97,7 +97,7 @@ export function ExchangeNavigation() {
         }}
       />
       <Tab.Screen
-        name="offers"
+        name="Offers"
         component={OfferView}
         options={{
           headerShown: true,

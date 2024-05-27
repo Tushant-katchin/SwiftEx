@@ -77,6 +77,7 @@ const [info_amount,setinfo_amount]=useState(false);
 const [info_price,setinfo_price]=useState(false);
 const [info_,setinfo_]=useState(false);
 const [isVisible, setIsVisible] = useState(true);
+const [modalContainer_menu,setmodalContainer_menu]=useState(false);
 const getAccountDetails = async () => {
       const storedData = await AsyncStorageLib.getItem('myDataKey');
       const parsedData = JSON.parse(storedData);
@@ -729,21 +730,114 @@ const shiningAnimation = animation.interpolate({
       
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity
-            onPress={() => {
-              console.log('clicked');
-              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-              AsyncStorage.removeItem(LOCAL_TOKEN);
-              navigation.navigate('exchangeLogin');
-            }}
-          >
-            <Icon
-              name={"logout"}
-              type={"materialCommunity"}
-              size={30}
-              color={"#fff"}
-            />
-          </TouchableOpacity>
+           onPress={() => {
+            setmodalContainer_menu(true)
+           }}
+         >
+           <Icon
+             name={"menu"}
+             type={"materialCommunity"}
+             size={30}
+             color={"#fff"}
+           />
+         </TouchableOpacity>
         </View>
+        <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalContainer_menu}>
+       
+      <TouchableOpacity style={styles.modalContainer_option_top}> 
+      <View style={styles.modalContainer_option_sub}>
+     
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"lan-pending"}
+        type={"materialCommunity"}
+        size={30}
+        color={"gray"}
+      />
+      <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"pencil"}
+        type={"materialCommunity"}
+        size={30}
+        color={"gray"}
+      />
+      <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"gray"}
+      />
+      <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"cog"}
+        type={"materialCommunity"}
+        size={30}
+        color={"gray"}
+      />
+      <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"badge-account-outline"}
+        type={"materialCommunity"}
+        size={30}
+        color={"gray"}
+      />
+      <Text style={styles.modalContainer_option_text}>KYC</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}>
+      <Icon
+        name={"file-tree"}
+        type={"materialCommunity"}
+        size={30}
+        color={"gray"}
+      />
+      <Text style={styles.modalContainer_option_text}>My Subscription</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view}   onPress={() => {
+        console.log('clicked');
+        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        AsyncStorage.removeItem(LOCAL_TOKEN);
+        setmodalContainer_menu(false)
+        navigation.navigate('exchangeLogin');
+      }}>
+      <Icon
+        name={"logout"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{setmodalContainer_menu(false)}}>
+      <Icon
+        name={"close"}
+        type={"materialCommunity"}
+        size={30}
+        color={"green"}
+      />
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close</Text>
+      </TouchableOpacity>
+      </View>
+      </TouchableOpacity>
+    </Modal>
       </View>
       <View
         style={{
@@ -842,7 +936,7 @@ const shiningAnimation = animation.interpolate({
        
        <View style={{flexDirection:"row",justifyContent:"space-between",padding:19}}>
        <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>{Platform.OS==="android"?"Select Trading Pair":"Trading Pair"}</Text>
+                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>{Platform.OS==="android"?"Tading Pair":"Trading Pair"}</Text>
                 <Picker
                 mode={"dropdown"}
                   selectedValue={selectedValue}
@@ -1258,5 +1352,32 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-  }
+  },
+  modalContainer_option_top: {
+    // flex: 1,
+    alignSelf:"flex-end",
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    width:"100%",
+    height:"100%",
+  },
+  modalContainer_option_sub:{
+    alignSelf:"flex-end",
+    backgroundColor: 'rgba(33, 43, 83, 1)',
+  padding: 10,
+  borderRadius: 10,
+  width:"65%",
+  height:"70%"
+},
+modalContainer_option_view:{
+  flexDirection:"row",
+  marginTop:25,
+  alignItems:"center",
+},
+modalContainer_option_text:{
+fontSize:20,
+fontWeight:"bold",
+color:"gray",
+marginStart:5
+}
 });

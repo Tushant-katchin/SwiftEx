@@ -367,20 +367,20 @@ export const OfferView = () => {
      
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"lan-pending"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"pencil"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
       </TouchableOpacity>
@@ -390,37 +390,37 @@ export const OfferView = () => {
         name={"close"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"cog"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"badge-account-outline"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>KYC</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"file-tree"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>My Subscription</Text>
       </TouchableOpacity>
@@ -438,7 +438,7 @@ export const OfferView = () => {
         size={30}
         color={"green"}
       />
-      <Text style={styles.modalContainer_option_text}>Logout</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{setmodalContainer_menu(false)}}>
@@ -448,7 +448,7 @@ export const OfferView = () => {
         size={30}
         color={"green"}
       />
-      <Text style={styles.modalContainer_option_text}>Close</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close</Text>
       </TouchableOpacity>
       </View>
       </TouchableOpacity>
@@ -664,7 +664,7 @@ modalContainer_option_view:{
 modalContainer_option_text:{
 fontSize:20,
 fontWeight:"bold",
-color:"#fff",
+color:"gray",
 marginStart:5
 }
 });

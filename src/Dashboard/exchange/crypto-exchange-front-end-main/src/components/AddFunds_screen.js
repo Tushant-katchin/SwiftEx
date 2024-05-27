@@ -404,20 +404,20 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
      
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"lan-pending"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"pencil"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
       </TouchableOpacity>
@@ -427,37 +427,37 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         name={"close"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"cog"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"badge-account-outline"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>KYC</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"close"}
+        name={"file-tree"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"gray"}
       />
       <Text style={styles.modalContainer_option_text}>My Subscription</Text>
       </TouchableOpacity>
@@ -475,7 +475,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         size={30}
         color={"green"}
       />
-      <Text style={styles.modalContainer_option_text}>Logout</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{setmodalContainer_menu(false)}}>
@@ -485,7 +485,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
         size={30}
         color={"green"}
       />
-      <Text style={styles.modalContainer_option_text}>Close</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close</Text>
       </TouchableOpacity>
       </View>
       </TouchableOpacity>
@@ -780,7 +780,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
 
 
       </View>
-      <View style={styles.bottom_text}>
+      <View style={[styles.bottom_text,{marginTop:Platform.OS==="android"?"150%":"165%",}]}>
       <Text style={styles.text_heading}>Your Crypto not supported by the Anchor ?</Text>
       <TouchableOpacity onPress={()=>{navigation.navigate("classic")}}><Text style={styles.text_heading}>Get your wrapped tokens here <Text style={[styles.text_heading,{color:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)"}]}>Bridge Tokens</Text></Text></TouchableOpacity>
 
@@ -929,7 +929,7 @@ modalContainer_option_view:{
 modalContainer_option_text:{
 fontSize:20,
 fontWeight:"bold",
-color:"#fff",
+color:"gray",
 marginStart:5
 }
 });
