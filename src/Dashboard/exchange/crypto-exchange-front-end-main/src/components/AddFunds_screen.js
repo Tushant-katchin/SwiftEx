@@ -16,6 +16,7 @@ import contractABI from './contractABI.json';
 import { useSelector } from "react-redux";
 import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { GET, authRequest, getAuth } from "../api";
+import { FlatList } from "native-base";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 const alchemyUrl = RPC.ETHRPC;
@@ -50,9 +51,24 @@ const AddFunds_screen = () => {
   const [u_email,setu_email]=useState("");
   const [route_fiat,setroute_fiat]=useState(null)
   const [modalContainer_menu,setmodalContainer_menu]=useState(false);
+  const [visiblename,setvisiblename]=useState("Select Crypto")
+  const [visiblename1,setvisiblename1]=useState("Select Fiat")
+  const [m_type,setm_type]=useState("crypto")
+  const chooseItemList = 
+  m_type==="crypto"?[
+    { id: 1, name: "Select Crypto" ,value:null},
+    { id: 2, name: "USDC/ETH" ,value:"XETH"},
+    { id: 3, name: "USDC/BNB" ,value:"BNB"}
+  ]:[
+    { id: 1, name: "Select Fiat" ,value:null},
+    { id: 2, name: "INR" ,value:"INR"},
+    { id: 3, name: "AUD" ,value:"AUD"},
+    { id: 4, name: "USD" ,value:"USD"},
+    { id: 5, name: "AED" ,value:"AED"},
+  ];
 
-
-
+  const [chooseSearchQuery, setChooseSearchQuery] = useState('');
+  const [chooseModalPair,setchooseModalPair]=useState(true)
   const Anchor = [
     { name: "SwiftEx", status: "Verified", image: require('../../../../../../assets/darkBlue.png'), city: "India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia", Crypto_Assets: "XETH, XUSD", Fiat_Assets: "$ USD, € EUR", Payment_Rails: "Card, Bank Transfer, Local Method" },
     { name: "APS", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden", Fiat_Assets: "$ BRL€ EUR$ CLP", Crypto_Assets: "XETH, XUSD" },
@@ -62,6 +78,14 @@ const AddFunds_screen = () => {
     { name: "ARF", status: "Pending", image: require('../../../../../../assets/ARF.png'), city: "China / Colombia / Singapore / Turkey / United States", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD" },
 ];
 
+const chooseFilteredItemList = chooseItemList.filter(
+  item => item.name.toLowerCase().includes(chooseSearchQuery.toLowerCase())
+);
+const chooseRenderItem = ({ item }) => (
+  <TouchableOpacity onPress={() => { m_type==="crypto"?[setvisiblename(item.name),setroute_fiat(null),setRoute(item.value)]:[setvisiblename1(item.name),setroute_fiat(item.value),setRoute(null)],setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+    <Text style={styles.chooseItemText}>{item.name}</Text>
+  </TouchableOpacity>
+);
 const fetchProfileData = async () => {
   try {
     const { res, err } = await authRequest("/users/getUserDetails", GET);
@@ -488,43 +512,19 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
     </Modal>
       <View style={{ backgroundColor: "#011434",height:hp(100) }}>
 
-        <View style={{flexDirection:Platform.OS==="ios"?"row":"column",justifyContent:"space-evenly"}}>
+        <View style={{flexDirection:"row",justifyContent:"space-evenly"}}>
         <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:19,textAlign:"center",marginLeft:Platform.OS==="android"&&25}}>Crypto Deposit</Text>
-                <Picker
-                  selectedValue={route}
-                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "210%", color: "white", marginLeft: 35 }}
-                  onValueChange={(itemValue, itemIndex) => {
-                    setRoute(itemValue)
-                    setroute_fiat(null);
-
-                  }}
-                >
-                  <Picker.Item label="Select Crypto" value={null} color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="BNB" value="BNB" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="Matic" value="Matic" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="XRP" value="XRP" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                </Picker>
+                <Text style={{color:"#fff",fontSize:19,textAlign:"center",marginLeft:Platform.OS==="android"&&10}}>Crypto Deposit</Text>
+               <TouchableOpacity style={{ borderColor: 'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)',borderWidth:1,padding:10,marginTop:15,borderRadius:10}} onPress={()=>{setm_type("crypto"),setchooseModalPair(true)}}>
+                <Text style={{color:"#fff",textAlign:"center",fontSize:19}}>{visiblename}</Text>
+               </TouchableOpacity>
               </View>
 
               <View style={{ width: '40%', marginTop: 19 }}>
                 <Text style={{color:"#fff",fontSize:19,textAlign:"center",marginLeft:Platform.OS==="ios"?19:10}}>Fiat Deposit</Text>
-                <Picker
-                  selectedValue={route_fiat}
-                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -11 } : { marginTop: 3, width: "210%", color: "white", marginLeft: 35 }}
-                  onValueChange={(itemValue, itemIndex) => {
-                    setroute_fiat(itemValue);
-                    setRoute(null);
-                  }}
-                >
-                  <Picker.Item label="Select Fiat" value={null} color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="INR" value="INR" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="AUD" value="AUD" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="USD" value="USD" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="AED" value="AED" color={Platform.OS === "ios" ? "white" : "black"} />
-                  {/* <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} /> */}
-                </Picker>
+                <TouchableOpacity style={{ borderColor: 'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)',borderWidth:1,padding:10,marginTop:15,borderRadius:10}} onPress={()=>{setm_type("fiat"),setchooseModalPair(true)}}>
+                <Text style={{color:"#fff",textAlign:"center",fontSize:19}}>{visiblename1}</Text>
+               </TouchableOpacity>
               </View>
         </View>
 
@@ -781,6 +781,29 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
       <TouchableOpacity onPress={()=>{navigation.navigate("classic")}}><Text style={styles.text_heading}>Get your wrapped tokens here <Text style={[styles.text_heading,{color:"#4CA6EA"}]}>Bridge Tokens</Text></Text></TouchableOpacity>
 
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={chooseModalPair}
+      >
+        <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setchooseModalPair(false)}>
+          <View style={styles.chooseModalContent}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search..."
+              placeholderTextColor={"gray"}
+              onChangeText={text => setChooseSearchQuery(text)}
+              value={chooseSearchQuery}
+              autoCapitalize='none'
+            />
+            <FlatList
+              data={chooseFilteredItemList}
+              renderItem={chooseRenderItem}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   )
 }
@@ -927,5 +950,40 @@ fontSize:20,
 fontWeight:"bold",
 color:"gray",
 marginStart:5
-}
+},
+chooseModalContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+},
+chooseModalContent: {
+  backgroundColor: 'rgba(33, 43, 83, 1)',
+  padding: 20,
+  borderRadius: 10,
+  width: '80%',
+  maxHeight: '80%',
+},
+searchInput: {
+  height: 40,
+  borderColor: 'gray',
+  borderWidth: 1,
+  marginBottom: 10,
+  paddingHorizontal: 10,
+  color:"#fff"
+},
+  chooseItemContainer: {
+    marginVertical: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: 'rgba(28, 41, 77, 1)',
+    borderWidth: 0.9,
+    borderBottomColor: '#fff',
+    marginBottom: 4,
+  },
+  chooseItemText: {
+    marginLeft: 10,
+    fontSize: 19,
+    color: '#fff',
+  },
 });

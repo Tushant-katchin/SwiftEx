@@ -184,8 +184,8 @@ export const HomeView = ({ setPressed }) => {
     }
   };
   useEffect(()=>{
-    getAccountDetails();
     getData()
+    getAccountDetails();
     getData_new_Kyc()
   },[Focused_screen]);
   useEffect(() => {
@@ -197,6 +197,7 @@ export const HomeView = ({ setPressed }) => {
     syncDevice();
   }, []);
   useEffect(() => {
+    getData()
     fetchProfileData();
     getOffersData();
     getBidsData();

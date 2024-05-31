@@ -13,7 +13,8 @@ import {
   Button,
   Image,
   Animated,
-  Easing
+  Easing,
+  FlatList
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -34,12 +35,14 @@ import contractABI from './contractABI.json';
 import { authRequest, GET, getToken, POST } from "../api";
 import { REACT_APP_HOST } from "../ExchangeConstants";
 import darkBlue from "../../../../../../assets/darkBlue.png";
+import Bridge from "../../../../../../assets/Bridge.png";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const alchemyUrl = RPC.ETHRPC;
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 export const NewOfferModal = () => {
+  const [chooseSearchQuery, setChooseSearchQuery] = useState('');
   const back_data=useRoute();
   const { user, open, getOffersData, onCrossPress }=back_data.params;
   const isFocused = useIsFocused();
@@ -47,7 +50,8 @@ export const NewOfferModal = () => {
   const [loading, setloading] = useState(false)
   const [show, setshow] = useState(false)
   const [activ,setactiv]=useState(true);
-  const [selectedValue, setSelectedValue] = useState("XUSD");
+  const [selectedValue, setSelectedValue] = useState("XETH");
+  const [SelectedBaseValue, setSelectedBaseValue] = useState("XUSD");
   const [Balance, setbalance] = useState('');
   const [offer_amount, setoffer_amount] = useState('');
   const [offer_price, setoffer_price] = useState('');
@@ -78,6 +82,7 @@ const [info_price,setinfo_price]=useState(false);
 const [info_,setinfo_]=useState(false);
 const [isVisible, setIsVisible] = useState(true);
 const [modalContainer_menu,setmodalContainer_menu]=useState(false);
+const [chooseModalPair,setchooseModalPair]=useState(false);
 const getAccountDetails = async () => {
       const storedData = await AsyncStorageLib.getItem('myDataKey');
       const parsedData = JSON.parse(storedData);
@@ -99,6 +104,26 @@ const getAccountDetails = async () => {
       setMessage(err.message || "Something went wrong");
     }
 };
+
+const chooseItemList = [
+  { id: 1, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH"},
+  { id: 2, name: "BTC/NATIVE" ,base_value:"XETH",counter_value:"XUSD"},
+  { id: 3, name: "SWIFTEX/NATIVE" ,base_value:"XETH",counter_value:"XUSD"},
+  { id: 4, name: "ETH/NATIVE" ,base_value:"XETH",counter_value:"XUSD"},
+  { id: 5, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD"},
+
+]
+const [visible_value, setvisible_value] = useState(chooseItemList[0].name);
+
+const [top_value,settop_value]=useState(chooseItemList[0].name.split('/'))
+const chooseFilteredItemList = chooseItemList.filter(
+  item => item.name.toLowerCase().includes(chooseSearchQuery.toLowerCase())
+);
+const chooseRenderItem = ({ item }) => (
+  <TouchableOpacity onPress={() => {setvisible_value(item.name),settop_value(item.name.split('/')),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+    <Text style={styles.chooseItemText}>{item.name}</Text>
+  </TouchableOpacity>
+);
   ///////////////////////////////////start offer function
  const Save_offer = async (asset, amount, price, forTransaction, status, date) => {
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + asset + amount + date);
@@ -166,7 +191,7 @@ const getAccountDetails = async () => {
     try {
       const account = await server.loadAccount(sourceKeypair.publicKey());
       const base_asset_sell = new StellarSdk.Asset(selectedValue, AssetIssuerPublicKey);
-      const counter_asset_buy = new StellarSdk.Asset(selectedValue === "XETH" ? "XUSD" : "XETH", AssetIssuerPublicKey);
+      const counter_asset_buy = new StellarSdk.Asset(SelectedBaseValue, AssetIssuerPublicKey);
       const transaction = new StellarSdk.TransactionBuilder(account, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: StellarSdk.Networks.TESTNET
@@ -216,8 +241,8 @@ const getAccountDetails = async () => {
     console.log("Buy Offer Peram =>>>>>>>>>>>>", offer_amount, offer_price, SecretKey, AssetIssuerPublicKey)
     try {
       const account = await server.loadAccount(sourceKeypair.publicKey());
-      const base_asset_sell = new StellarSdk.Asset(selectedValue === "XETH" ? "XUSD" : "XETH", AssetIssuerPublicKey);
-      const counter_asset_buy = new StellarSdk.Asset(selectedValue, AssetIssuerPublicKey);
+      const base_asset_sell = new StellarSdk.Asset(selectedValue, AssetIssuerPublicKey);
+      const counter_asset_buy = new StellarSdk.Asset(SelectedBaseValue, AssetIssuerPublicKey);
       const transaction = new StellarSdk.TransactionBuilder(account, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: StellarSdk.Networks.TESTNET
@@ -772,18 +797,13 @@ const shiningAnimation = animation.interpolate({
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"close"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
+      <Image source={Bridge} style={{width:"14%",height:"190%"}} />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"cog"}
+        name={"anchor"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -803,7 +823,7 @@ const shiningAnimation = animation.interpolate({
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"file-tree"}
+        name={"playlist-check"}
         type={"materialCommunity"}
         size={30}
         color={"gray"}
@@ -822,7 +842,7 @@ const shiningAnimation = animation.interpolate({
         name={"logout"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
       <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
       </TouchableOpacity>
@@ -832,9 +852,9 @@ const shiningAnimation = animation.interpolate({
         name={"close"}
         type={"materialCommunity"}
         size={30}
-        color={"green"}
+        color={"#fff"}
       />
-      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close</Text>
+      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close Menu</Text>
       </TouchableOpacity>
       </View>
       </TouchableOpacity>
@@ -934,24 +954,66 @@ const shiningAnimation = animation.interpolate({
             </Pressable>
           </LinearGradient>
         </View> */} 
+
+        <View style={{width:"100%",justifyContent:"center",alignItems:"center",flexDirection:"row",marginTop:19}}>
+          <Text style={{fontSize:24,color:"#fff"}}>{top_value[0]}</Text>
+          <Icon
+                      name={"swap-horizontal"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={29}
+                      style={{margin:10}}
+                      // onPress={()=>{setSelectedValue(SelectedBaseValue),setSelectedBaseValue(selectedValue)}}
+                      onPress={()=>{settop_value(top_value.reverse())}}
+                    />
+          <Text style={{fontSize:24,color:"#fff"}}>{top_value[1]}</Text>
+        </View>
        
-       <View style={{flexDirection:"row",justifyContent:"space-between",padding:19}}>
+       <View style={{flexDirection:"row",justifyContent:"space-between",padding:Platform.OS==="android"?10:19}}>
        <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>{Platform.OS==="android"?"Tading Pair":"Trading Pair"}</Text>
-                <Picker
+                <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="android"&&30}}>{Platform.OS==="android"?"Trading Pair":"Trading Pair"}</Text>
+                <TouchableOpacity  style={Platform.OS === "ios" ? { marginTop: 40, width: '120%', borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1, marginLeft: 15,paddingVertical:10 } : { marginTop: 13, width: "90%", color: "white", marginLeft:30,borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,height:"19%",justifyContent:"center",alignItems:"center",borderRadius:5 }} onPress={()=>{setchooseModalPair(true)}}>
+                  <Text style={{fontSize:15,color:"#fff"}}>{ visible_value}</Text>
+                </TouchableOpacity>
+                
+                <Modal
+        animationType="slide"
+        transparent={true}
+        visible={chooseModalPair}
+      >
+        <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setchooseModalPair(false)}>
+          <View style={styles.chooseModalContent}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search..."
+              placeholderTextColor={"gray"}
+              onChangeText={text => setChooseSearchQuery(text)}
+              value={chooseSearchQuery}
+              autoCapitalize='none'
+            />
+            <FlatList
+              data={chooseFilteredItemList}
+              renderItem={chooseRenderItem}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+                {/* <Picker
                 mode={"dropdown"}
                   selectedValue={selectedValue}
                   style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "90%", color: "white", marginLeft:14 }}
                   onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                 >
-                  <Picker.Item label="XETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
+                  <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
                   <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
                   <Picker.Item label="USDT" value="USDT" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="USDC" value="USDC" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="XGBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="XINR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                </Picker>
+                </Picker> */}
               </View>
 
               <View style={{ width: '40%', marginTop: 19 }}>
@@ -973,7 +1035,7 @@ const shiningAnimation = animation.interpolate({
           style={{
             display: "flex",
             alignItems: "center",
-            marginTop:Platform.OS==="ios"?-30:40
+            marginTop:Platform.OS==="ios"?-30:-80
           }}
         >
           <View
@@ -1380,5 +1442,40 @@ fontSize:20,
 fontWeight:"bold",
 color:"gray",
 marginStart:5
-}
+},
+chooseModalContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+},
+chooseModalContent: {
+  backgroundColor: 'rgba(33, 43, 83, 1)',
+  padding: 20,
+  borderRadius: 10,
+  width: '80%',
+  maxHeight: '80%',
+},
+searchInput: {
+  height: 40,
+  borderColor: 'gray',
+  borderWidth: 1,
+  marginBottom: 10,
+  paddingHorizontal: 10,
+  color:"#fff"
+},
+  chooseItemContainer: {
+    marginVertical: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: 'rgba(28, 41, 77, 1)',
+    borderWidth: 0.9,
+    borderBottomColor: '#fff',
+    marginBottom: 4,
+  },
+  chooseItemText: {
+    marginLeft: 10,
+    fontSize: 19,
+    color: '#fff',
+  },
 });

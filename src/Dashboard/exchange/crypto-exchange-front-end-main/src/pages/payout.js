@@ -59,7 +59,21 @@ const Payout = () => {
       { name: "ANCLAP", status: "Pending", image: require('../../../../../../assets/ANCLAP.png'), city: "Argentina / Chile / Colombia / Mexico / Peru", Crypto_Assets: "XETH, XUSD, ARS,PEN,USDC,XLM", Fiat_Assets: "$ ARS $ USD", Payment_Rails: "CashCard, Bank Transfer, Local Method" },
       { name: "ARF", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "China / Colombia / Singapore / Turkey / United States", Crypto_Assets: "XETH, XUSD, USDC", Fiat_Assets: "$ USD" },
   ];
-  
+  const [chooseSearchQuery, setChooseSearchQuery] = useState('');
+  const [chooseModalPair,setchooseModalPair]=useState(false);
+  const chooseItemList = [
+    { id: 1, name: "ETH/USDC" ,value:"XETH"},
+    { id: 2, name: "BNB/USDC" ,value:"XUSD"},
+  ]
+  const [chooseModaldata,setchooseModaldata]=useState(chooseItemList[0].name);
+  const chooseFilteredItemList = chooseItemList.filter(
+    item => item.name.toLowerCase().includes(chooseSearchQuery.toLowerCase())
+  );
+  const chooseRenderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => {setRoute(item.value),setchooseModaldata(item.name),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+      <Text style={styles.chooseItemText}>{item.name}</Text>
+    </TouchableOpacity>
+  );
     // const [PublicKey, setPublicKey] = useState("GCUOMNFW7YG55YHY5S5W7FE247PWODUDUZ4SOVZFEON47KZ7AXFG6D6A");//comment for user
     // const [SecretKey, setSecretKey] = useState("SCJSKKPNYIZJSF6ROF7ZMVNXL6U6HVUA4RK4JLFDH6CLTNRCGZCUUU7S");//comment for user
     const[PublicKey,setPublicKey]=useState("");//uncomment for user
@@ -534,7 +548,10 @@ const Payout = () => {
  <View style={{flexDirection:"row",justifyContent:"space-evenly"}}>
         <View style={{ width: '40%', marginTop: 19 }}>
                 <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Crypto Assets</Text>
-                <Picker
+                <TouchableOpacity style={{marginTop: 5, width: "100%", color: "white", justifyContent:"center",padding:13,borderRadius:10,borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1 }} onPress={()=>{setchooseModalPair(true)}}>
+                  <Text style={{textAlign:"center",color:"#fff",fontSize:19}}>{chooseModaldata}</Text>
+                </TouchableOpacity>
+                {/* <Picker
                   selectedValue={route}
                   style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
                   onValueChange={(itemValue, itemIndex) => setRoute(itemValue)}
@@ -544,7 +561,7 @@ const Payout = () => {
                   <Picker.Item label="GBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="INR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
                   <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                </Picker>
+                </Picker> */}
               </View>
 
               {/* <View style={{ width: '40%', marginTop: 19 }}>
@@ -706,7 +723,7 @@ const Payout = () => {
                     )
                 })}
             </ScrollView>
-           {route==="XUSD"&&<Text style={{color:"yellow",textAlign:"center",fontSize:19}}>Your bank details shared with Anchor</Text>}
+           {route==="XUSD"&&<Text style={{color:"yellow",textAlign:"center",fontSize:19,marginBottom:8}}>Your bank details shared with Anchor</Text>}
             {/* <TouchableOpacity style={{backgroundColor:"green",width:wp(22),alignSelf:"center",margin:9,borderRadius:10}}>
               <Text style={{padding:11,color:"#fff",fontSize:15,fontWeight:"bold"}}>Procced</Text>
             </TouchableOpacity> */}
@@ -727,6 +744,29 @@ const Payout = () => {
         </View>
       </View>
     </Modal>
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={chooseModalPair}
+      >
+        <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setchooseModalPair(false)}>
+          <View style={styles.chooseModalContent}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search..."
+              placeholderTextColor={"gray"}
+              onChangeText={text => setChooseSearchQuery(text)}
+              value={chooseSearchQuery}
+              autoCapitalize='none'
+            />
+            <FlatList
+              data={chooseFilteredItemList}
+              renderItem={chooseRenderItem}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
         </SafeAreaView>
         </>
     )
@@ -832,7 +872,7 @@ const styles = StyleSheet.create({
         fontSize:17
       },
       container_a: {
-        height:hp(24.8),
+        height:hp(28.8),
         width:"94%",
         // alignItems: 'center',
         justifyContent: 'center',
@@ -923,6 +963,41 @@ fontSize:20,
 fontWeight:"bold",
 color:"gray",
 marginStart:5
-}
+},
+chooseModalContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+},
+chooseModalContent: {
+  backgroundColor: 'rgba(33, 43, 83, 1)',
+  padding: 20,
+  borderRadius: 10,
+  width: '80%',
+  maxHeight: '80%',
+},
+searchInput: {
+  height: 40,
+  borderColor: 'gray',
+  borderWidth: 1,
+  marginBottom: 10,
+  paddingHorizontal: 10,
+  color:"#fff"
+},
+  chooseItemContainer: {
+    marginVertical: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: 'rgba(28, 41, 77, 1)',
+    borderWidth: 0.9,
+    borderBottomColor: '#fff',
+    marginBottom: 4,
+  },
+  chooseItemText: {
+    marginLeft: 10,
+    fontSize: 19,
+    color: '#fff',
+  },
 })
 export default Payout;
