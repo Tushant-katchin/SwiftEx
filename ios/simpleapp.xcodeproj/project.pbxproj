@@ -385,7 +385,7 @@
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = simpleapp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = SimpleApp;
+				INFOPLIST_KEY_CFBundleDisplayName = SwiftEx;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -420,7 +420,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = AUN8KS29KQ;
 				INFOPLIST_FILE = simpleapp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = SimpleApp;
+				INFOPLIST_KEY_CFBundleDisplayName = SwiftEx;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
