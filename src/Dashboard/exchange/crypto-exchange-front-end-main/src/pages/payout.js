@@ -439,7 +439,7 @@ const Payout = () => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Image source={Bridge} style={{width:"11%",height:"190%"}} />
+      <Image source={Bridge} style={{width:"13%",height:"190%"}} />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 

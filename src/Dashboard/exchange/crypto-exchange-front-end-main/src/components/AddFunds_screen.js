@@ -68,7 +68,7 @@ const AddFunds_screen = () => {
   ];
 
   const [chooseSearchQuery, setChooseSearchQuery] = useState('');
-  const [chooseModalPair,setchooseModalPair]=useState(true)
+  const [chooseModalPair,setchooseModalPair]=useState(false)
   const Anchor = [
     { name: "SwiftEx", status: "Verified", image: require('../../../../../../assets/darkBlue.png'), city: "India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia", Crypto_Assets: "XETH, XUSD", Fiat_Assets: "$ USD, € EUR", Payment_Rails: "Card, Bank Transfer, Local Method" },
     { name: "APS", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden", Fiat_Assets: "$ BRL€ EUR$ CLP", Crypto_Assets: "XETH, XUSD" },
@@ -448,7 +448,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Image source={Bridge} style={{width:"11%",height:"190%"}} />
+      <Image source={Bridge} style={{width:"13%",height:"190%"}} />
       <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
       </TouchableOpacity>
 

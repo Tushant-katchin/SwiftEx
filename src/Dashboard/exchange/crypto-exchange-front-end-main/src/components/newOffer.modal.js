@@ -1420,7 +1420,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignSelf:"flex-end",
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.3)',
     width:"100%",
     height:"100%",
   },
