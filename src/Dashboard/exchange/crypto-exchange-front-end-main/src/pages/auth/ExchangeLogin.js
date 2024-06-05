@@ -401,47 +401,7 @@ const FOCUSED=useIsFocused();
                 >
                   {active_forgot===true?"Recover to your account":"Login to your account"}
                 </Text>
-                {/* <PhoneInput
-                  textContainerStyle={{ paddingVertical: hp(1) }}
-                  textInputStyle={{ paddingVertical: hp(0.1) }}
-                  ref={phoneInput}
-                  defaultValue={value}
-                  defaultCode="IN"
-                  layout="first"
-                  autoFocus={false}
-                  onChangeText={(text) => {
-                    setValue(text);
-                  }}
-                  onChangeFormattedText={(text) => {
-                    setFormattedValue(text);
-                  }}
-                  withDarkTheme
-                  withShadow
-                /> */}
-                {/* <TouchableOpacity
-                    onPress={() => {
-                      setLoading(true);
-                      const checkValid =
-                        phoneInput.current?.isValidNumber(value);
-                      console.log(checkValid);
-                      if (checkValid) {
-                        try {
-                          setMessage("Your number is valid");
-                          submitPhoneNumber();
-                        } catch (e) {
-                          console.log(e);
-                          alert("error", e);
-                        }
-                      } else {
-                        setMessage("Your number is invalid");
-                        setLoading(false);
-                      }
-                      setShowMessage(true);
-                      setValid(checkValid ? checkValid : false);
-                      console.log(checkValid);
-                      Keyboard.dismiss();
-                    }}
-                  > */}
+               
                 <TextInput autoCapitalize="none" textContentType="emailAddress" placeholder={"Email Adderss"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { setEmail(text) }} />
                 {active_forgot===false?<TextInput autoCapitalize="none" placeholder={"Password"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
                 <TouchableOpacity style={styles.PresssableBtn}

@@ -47,61 +47,7 @@ const Welcome = (props) => {
   }, [fadeAnim, Spin]);
 
   return (
-    // <Animated.View // Special animatable View
-    //   style={{ opacity: fadeAnim }}
-    // >
-    //   <View style={style.Body}>
-    //     {/* <Text style={style.welcomeText}> Hi,</Text> */}
-    //     {/* <Text style={style.welcomeText}>  Welcome to Munzi Wallet app</Text> */}
-    //     {/* <Animated.Image
-    //       style={{
-    //         width: wp("5"),
-    //         height: hp("5"),
-    //         padding: 30,
-    //         transform: [{ rotate: SpinValue }],
-    //       }}
-    //       source={title_icon}
-    //     /> */}
-
-    //     {/* <View style={style.Button}>
-    // <Button title='CREATE A NEW WALLET' color={'green'} onPress={()=>{
-    //   const wallet =''
-    //   props.navigation.navigate('GenerateWallet')
-    // }} ></Button>
-    // </View> */}
-
-    //     <View style={style.imageContainer}>
-    //       <SliderBox
-    //         images={Slider.images}
-    //         autoplay={true}
-    //         circleLoop={true}
-    //         ImageComponentStyle={style.imageStyle}
-    //       />
-    //     </View>
-
-    //     <TouchableOpacity
-    //       style={style.createView}
-    //       onPress={() => {
-    //         const wallet = "";
-    //         props.navigation.navigate("GenerateWallet");
-    //       }}
-    //     >
-    //       <Text style={style.btnText}>CREATE A NEW WALLET</Text>
-    //     </TouchableOpacity>
-
-    //     <TouchableOpacity
-    //       onPress={() => {
-    //         props.navigation.navigate("Import");
-    //       }}
-    //     >
-    //       <Text style={style.Text}>I already have a wallet</Text>
-    //     </TouchableOpacity>
-    //   </View>
-    //   <LoginModal
-    //     loginVisible={loginVisible}
-    //     setLoginVisible={setLoginVisible}
-    //   />
-    // </Animated.View>
+    
 
     <View style={style.imageContainer}>
 

@@ -106,21 +106,21 @@ const getAccountDetails = async () => {
 };
 
 const chooseItemList = [
-  { id: 1, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH"},
-  { id: 2, name: "BTC/NATIVE" ,base_value:"XETH",counter_value:"XUSD"},
-  { id: 3, name: "SWIFTEX/NATIVE" ,base_value:"XETH",counter_value:"XUSD"},
-  { id: 4, name: "ETH/NATIVE" ,base_value:"XETH",counter_value:"XUSD"},
-  { id: 5, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD"},
+  { id: 1, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"ETH",visible_1:"USDC"},
+  { id: 2, name: "BTC/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"BTC",visible_1:"XLM"},
+  { id: 3, name: "SWIFTEX/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"SWIFTEX",visible_1:"XLM"},
+  { id: 4, name: "ETH/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"ETH",visible_1:"XLM"},
+  { id: 5, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD",visible_0:"USDC",visible_1:"ETH"},
 
 ]
 const [visible_value, setvisible_value] = useState(chooseItemList[0].name);
-
-const [top_value,settop_value]=useState(chooseItemList[0].name.split('/'))
+const [top_value,settop_value]=useState(chooseItemList[0].visible_0)
+const [top_value_0,settop_value_0]=useState(chooseItemList[0].visible_1)
 const chooseFilteredItemList = chooseItemList.filter(
   item => item.name.toLowerCase().includes(chooseSearchQuery.toLowerCase())
 );
 const chooseRenderItem = ({ item }) => (
-  <TouchableOpacity onPress={() => {setvisible_value(item.name),settop_value(item.name.split('/')),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+  <TouchableOpacity onPress={() => {setvisible_value(item.name),settop_value(item.visible_0),settop_value_0(item.visible_1),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
     <Text style={styles.chooseItemText}>{item.name}</Text>
   </TouchableOpacity>
 );
@@ -319,24 +319,7 @@ const chooseRenderItem = ({ item }) => (
       console.error('Error getting data for key steller keys:', error);
     }
   };
-  // const getData = async () => {
-  //   try {
-  //     const storedData = await AsyncStorageLib.getItem('myDataKey');
-  //     if (storedData !== null) {
-  //       const parsedData = JSON.parse(storedData);
-  //       console.log('Retrieved data:', parsedData);
-  //       const publicKey = parsedData.key1
-  //       const secretKey = parsedData.key2
-  //       setPublicKey(publicKey)
-  //       setSecretKey(secretKey)
-  //     }
-  //     else {
-  //       console.log('No data found in AsyncStorage');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error retrieving data:', error);
-  //   }
-  // };
+  
 
   const get_stellar = async (asset) => {
     try {
@@ -351,18 +334,7 @@ const chooseRenderItem = ({ item }) => (
         const secretKey_Key = matchedData[0].secretKey;
         console.log("===========",secretKey_Key)
         setSecretKey(secretKey_Key)
-        // const parsedData = JSON.parse(storedData);
-        // console.log('Retrieved data:', parsedData);
-        // const publicKey = parsedData.key1
-        // const secretKey = parsedData.key2
-        // setPublicKey(publicKey)
-        // setSecretKey(secretKey)
-        // const publicKey = PublicKey
-
-
-
-        // if(asset==="XUSD")
-        // {
+       
           setbalance("");
           setshow(true)
           console.log("<><", publicKey)
@@ -500,151 +472,13 @@ const chooseRenderItem = ({ item }) => (
     });
   }
  
-  // for get user balance from smart contract.
-  // async function deposited_Ether_in_smart()
-  // {
-  //   setshow(true);
-  //   const web3 = new Web3(alchemyUrl);
-  //   const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
-  //   // const addressToCheck = '0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA';//for test ether account.
-  //   const addressToCheck=PublicKey;
-  //   contract.methods.reservedEth(addressToCheck).call()
-  //       .then(balance => {
-  //         setshow(false);
-  //         const balanceInEth = web3.utils.fromWei(balance, 'ether');
-  //         setbalance(balanceInEth);
-  //       })
-  //       .catch(error => {
-  //         setshow(false);
-  //           console.error('Error:-----', error);
-  //       });        
-  // }
   
-  // const eth_services=()=>{
-  //   selectedValue==="XUSD"?getData():
-  //   setPublicKey(state.wallet.address);
-  //   setactiv(false);
-  //   deposited_Ether_in_smart();
-  // }
-
-//   const add_XETH=async()=>{
-//     console.log("======= called")
-//     const myHeaders = new Headers();
-//     myHeaders.append("Content-Type", "application/json");
-// myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6Imh1bm55QGthdGNoaW50ZWNoLmNvbSIsIl9pZCI6IjY2MGNlMTgwMjFmN2VmMTZiMzYwYjAxOSIsImlhdCI6MTcxMjEyMDIxOSwiZXhwIjoxNzEyMzc5NDE5fQ.1oEqP79IoJBtApQ31JJ5O2MlSOCYX3dLwvkJycdOfdw");
-
-// const raw = JSON.stringify({
-//   "email": u_email,
-//   "amount": eth_modal_amount
-// });
-
-// const requestOptions = {
-//   method: "POST",
-//   headers: myHeaders,
-//   body: raw,
-//   redirect: "follow"
-// };
-
-// fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
-//   .then((response) => response.text())
-//   .then((result) => {
-//     alert("success","XETH Recived");
-//     console.log("===res get xeth===>",result)})
-//   .catch((error) => console.error(error));
-//   }
-
-  // const Deposit_Eth=()=>{
-  //   seteth_modal_visible(true)
-  //   setdeposit_loading(true);
-
-  //   // Platform.OS==='android'?handleOpenModal():  Alert.prompt(
-  //   //   'Deposit Ether',
-  //   //   'Please Enter Amount of Ether',
-  //   //   (pin) => {
-  //   //     if (!pin) {
-  //   //       setdeposit_loading(false);
-  //   //       alert("error","worng pin try agin.")
-  //   //     } else {
-  //   //       deposit_Ether(pin);
-  //   //     }
-  //   //   },
-  //   //   'plain-text', 
-  //   //   '',
-  //   //   'numeric',
-  //   // );
-  // }
-
-  /// service for deposit ether
-  // async function deposit_Ether(offer_amount) {
-  //   seteth_modal_load(true);
-  //   // const PublicKey="0xd4787fFaa142c62280732afF7899B3AB03Ea0eAA";
-  //   if(!offer_amount){
-  //     alert("error","Input correct value.");
-  //   seteth_modal_load(false);
-  //   }
-  //   else
-  //   {
-  //   const web3 = new Web3();
-  //   setshow(true);
-  //   const valueInWei = web3.utils.toWei(offer_amount, 'ether');
-  //   try {
-  //     const web3 = new Web3(new Web3.providers.HttpProvider(alchemyUrl));
-  //         const contract = new web3.eth.Contract(contractABI, smart_contract_Address);
-  //         const txData = contract.methods.depositEth(valueInWei).encodeABI();
-      
-  //         const nonce = await web3.eth.getTransactionCount(PublicKey);
-  //         const txObject = {
-  //           nonce: web3.utils.toHex(nonce),
-  //           gasLimit: web3.utils.toHex(300000), 
-  //           gasPrice: web3.utils.toHex(await web3.eth.getGasPrice()),
-  //           to: smart_contract_Address,
-  //           data: txData,
-  //           value: web3.utils.toHex(valueInWei)
-  //     };
-  
-  //     // const signedTx = await web3.eth.accounts.signTransaction(txObject, "9d9e1e7a8fdb0ed51a40a4c6b3e32c91f64615e37281150932fa1011d1a59daf");
-  //     const signedTx = await web3.eth.accounts.signTransaction(txObject, state.wallet.privateKey);
-
-  
-  //     const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-  //     setshow(false);
-  //     // seteth_modal_amount('');
-  //     alert("success","Ether Deposited.");
-  //     setdeposit_loading(false);
-  //     seteth_modal_load(false);
-  //     console.log('Transaction hash:', txReceipt.transactionHash);
-  //     console.log('Transaction from:', txReceipt.from);
-  //     console.log('Transaction status:', txReceipt.status);
-  //      if(txReceipt.status===true)
-  //      {
-  //        add_XETH();
-  //      }
-  //     // console.log('Transaction hash:', txReceipt.transactionHash);
-  //     // console.log('Transaction receipt:', txReceipt);
-  //   } catch (error) {
-  //   seteth_modal_load(false);
-  //     setshow(false);
-  //     setLoading(false);
-  //     setdeposit_loading(false);
-  //     seteth_modal_amount('');
-  //     alert("error",error);
-  //     console.error('Error:', error);
-  //   }
-  // }
-  // }
   useEffect(()=>{
     getAccountDetails();
     getData();
     get_stellar(selectedValue)
     getAssetIssuerId(selectedValue)
-    // setTimeout(()=>{
-    //   // setemail(user.email);
-      // setPostData({
-      //   email: u_email,
-      //   publicKey: PublicKey,
-      // })
-    //   console.log("MAIL:===",u_email)
-    //  },1000)
+
   },[isFocused])
   useEffect(() => {
     getAccountDetails();
@@ -704,27 +538,14 @@ const shiningAnimation = animation.interpolate({
   inputRange: [0, 1],
   outputRange: ['gray', '#fff'],
 });
-
+const reves_fun=async(fist_data,second_data)=>{
+  settop_value_0(fist_data)
+  settop_value(second_data)
+}
 
 
   return (
-    // <Modal
-    //   animationIn="slideInRight"
-    //   animationOut="slideOutRight"
-    //   animationInTiming={100}
-    //   animationOutTiming={200}
-    //   isVisible={open}
-    //   useNativeDriver={true}
-    //   useNativeDriverForBackdrop={true}
-    //   backdropTransitionOutTiming={0}
-    //   hideModalContentWhileAnimating
-    //   onBackdropPress={() => {
-    //     setOpen(false);
-    //   }}
-    //   onBackButtonPress={() => {
-    //     setOpen(false);
-    //   }}
-    // >
+   
     <>
     <View style={styles.headerContainer1_TOP}>
         <View
@@ -866,114 +687,39 @@ const shiningAnimation = animation.interpolate({
           flex:1
         }}
       >
-       {/* <Text style={{marginStart:20,color:"#fff",fontSize:19,marginTop:19}}>Select Asset Type</Text>
+      
 
-        <View style={[styles.toggleContainer]}>
-          <LinearGradient
-            colors={selectedValue == "XUSD" ? activeColor : inActiveColor}
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-          >
-            <Pressable
-              activeOpacity={0.8}
-              style={[
-                styles.toggleBtn,
-                selectedValue == "XUSD"
-                  ? { borderRadius: hp(4) }
-                  : { borderRadius: null },
-              ]}
-              onPress={() => {
-                setSelectedValue("XUSD")
-                setoffer_amount("");
-                setoffer_price("");
-              }}
-            >
-              <Text style={[selectedValue === "XUSD" ? { color: "#fff" } : { color: "#407EC9" }]}>XUSD</Text>
-            </Pressable>
-          </LinearGradient>
-          <LinearGradient
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-            colors={selectedValue == "XETH" ? activeColor : inActiveColor}
-          >
-            <Pressable
-              activeOpacity={0.8}
-              style={[styles.toggleBtn2]}
-              onPress={() => {
-                setSelectedValue("XETH")
-                setoffer_amount("");
-                setoffer_price("");
-              }}>
-              <Text style={[selectedValue === "XETH" ? { color: "#fff" } : { color: "#407EC9" }]}>XETH</Text>
-            </Pressable>
-          </LinearGradient>
-        </View>
-        {/* <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={styles.crossIcon} onPress={onCrossPress} /> */}
-       {/* <Text style={{marginStart:20,color:"#fff",fontSize:19}}>Select Offer Type</Text>
-        <View style={[styles.toggleContainer]}>
-          <LinearGradient
-            colors={route == "BUY" ? activeColor : inActiveColor}
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-          >
-            <Pressable
-              activeOpacity={0.8}
-              style={[
-                styles.toggleBtn,
-                route == "BUY"
-                  ? { borderRadius: hp(4) }
-                  : { borderRadius: null },
-              ]}
-              onPress={() => {
-                setRoute("BUY");
-                setoffer_amount("");
-                setoffer_price("");
-              }}
-            >
-              <Text style={[route == "BUY" ? { color: "#fff" } : { color: "#407EC9" }]}>BUY</Text>
-            </Pressable>
-          </LinearGradient>
-          <LinearGradient
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-            colors={route == "SELL" ? activeColor : inActiveColor}
-          >
-            <Pressable
-              activeOpacity={0.8}
-              style={[styles.toggleBtn2]}
-              onPress={() => {
-                setRoute("SELL");
-                setoffer_amount("");
-                setoffer_price("");
-              }}>
-              <Text style={[route == "SELL" ? { color: "#fff" } : { color: "#407EC9" }]}>SELL</Text>
-            </Pressable>
-          </LinearGradient>
-        </View> */} 
-
-        <View style={{width:"100%",justifyContent:"center",alignItems:"center",flexDirection:"row",marginTop:19}}>
-          <Text style={{fontSize:24,color:"#fff"}}>{top_value[0]}</Text>
-          <Icon
-                      name={"swap-horizontal"}
-                      type={"materialCommunity"}
-                      color={"rgba(129, 108, 255, 0.97)"}
-                      size={29}
-                      style={{margin:10}}
-                      // onPress={()=>{setSelectedValue(SelectedBaseValue),setSelectedBaseValue(selectedValue)}}
-                      onPress={()=>{settop_value(top_value.reverse())}}
-                    />
-          <Text style={{fontSize:24,color:"#fff"}}>{top_value[1]}</Text>
-        </View>
+      <View
+      style={{
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 19,
+        marginLeft: 6
+      }}
+    >
+      <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
+        <Text style={{ fontSize: 24, color: "#fff" }}>{top_value}</Text>
+      </View>
+      <View style={{ flex: 0 }}>
+        <Icon
+          name="swap-horizontal"
+          type="materialCommunity"
+          color="rgba(129, 108, 255, 0.97)"
+          size={29}
+          onPress={() => { reves_fun(top_value, top_value_0); }}
+        />
+      </View>
+      <View style={{ flex: 1, alignItems: "flex-start", paddingLeft: 10 }}>
+        <Text style={{ fontSize: 24, color: "#fff" }}>{top_value_0}</Text>
+      </View>
+    </View>
        
        <View style={{flexDirection:"row",justifyContent:"space-between",padding:Platform.OS==="android"?10:19}}>
        <View style={{ width: '40%', marginTop: 19 }}>
                 <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="android"&&30}}>{Platform.OS==="android"?"Trading Pair":"Trading Pair"}</Text>
                 <TouchableOpacity  style={Platform.OS === "ios" ? { marginTop: 40, width: '120%', borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1, marginLeft: 15,paddingVertical:10 } : { marginTop: 13, width: "90%", color: "white", marginLeft:30,borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,height:"19%",justifyContent:"center",alignItems:"center",borderRadius:5 }} onPress={()=>{setchooseModalPair(true)}}>
-                  <Text style={{fontSize:15,color:"#fff"}}>{ visible_value}</Text>
+                  <Text style={{fontSize:15,color:"#fff"}}>{top_value+"/"+top_value_0}</Text>
                 </TouchableOpacity>
                 
                 <Modal
@@ -1000,20 +746,6 @@ const shiningAnimation = animation.interpolate({
         </TouchableOpacity>
       </Modal>
 
-                {/* <Picker
-                mode={"dropdown"}
-                  selectedValue={selectedValue}
-                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "90%", color: "white", marginLeft:14 }}
-                  onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                >
-                  <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="XUSD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="USDT" value="USDT" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="USDC" value="USDC" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="XGBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="XINR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                </Picker> */}
               </View>
 
               <View style={{ width: '40%', marginTop: 19 }}>
@@ -1058,23 +790,7 @@ const shiningAnimation = animation.interpolate({
               }}
             >
 
-              {/* <View style={{ flexDirection: "row" }}>
-              {activ===true?<TouchableOpacity style={{ backgroundColor: '#011434', 
-    // paddingHorizontal: 10, 
-    // paddingVertical: 5,
-    borderRadius: 5,
-    shadowColor: isVisible===true?'#D7596C':'#011434',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: Platform.OS==="ios"?4:90, // Adjust shadow radius for glow effect
-    elevation: Platform.OS==="ios"?5:40,
-    // marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <Text style={styles.balance}>Balance: {Balance ? Number(Balance).toFixed(8) : 0.0} </Text>}
-    marginTop:15,marginBottom:5}} onPress={()=>{active_account()}}><View>{<Text style={{margin:10,color:'green',fontSize:19}}>{titel}</Text>}</View></TouchableOpacity>: <View style={{flexDirection:"row"}}><Text style={styles.balance}>Balance:</Text><ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9),marginLeft:1 }}>
-       <Text style={styles.balance}>{Balance ? Number(Balance).toFixed(8) : 0.0} </Text>
-</ScrollView></View>}
-
-                { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
-              </View> */}
+            
 
     <View style={{ flexDirection: "row",alignSelf:"center" }}>
               {activ===true?
@@ -1178,13 +894,7 @@ const shiningAnimation = animation.interpolate({
         </View>
 
         <View style={styles.Buttons}>
-          {/* <View style={styles.confirmButton}> */}
-            {/* <LinearGradient
-              style={styles.confirmButton}
-              start={[1, 0]}
-              end={[0, 1]}
-              colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-            > */}
+        
 
               <TouchableOpacity
                 activeOpacity={true}
@@ -1197,8 +907,7 @@ const shiningAnimation = animation.interpolate({
               >
                 <Text style={styles.textColor}>{Loading === true ? <ActivityIndicator color={"white"} /> :"Create Offer"}</Text>
               </TouchableOpacity>
-            {/* </LinearGradient> */}
-          {/* </View> */}
+            
           {loading ? (
             <ActivityIndicator size="small" color="blue" />
           ) : (
@@ -1206,11 +915,7 @@ const shiningAnimation = animation.interpolate({
           )}
 
         </View>
-          {/* <Text style={styles.noteText}>{account_message}</Text> */}
-        {/* <Text style={styles.noteText}>
-          <Text style={{ fontWeight: "700" }}>Note:</Text> The above totals are
-          just estimations that can vary depending on currency rates.
-        </Text> */}
+         
       </View>
 
 

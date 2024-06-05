@@ -609,68 +609,7 @@ const close_=()=>{
     >
       
       <View style={styles.container}>
-        {/* <LinearGradient
-          start={[1, 0]}
-          end={[0, 1]}
-          colors={["rgba(223, 172, 196, 1)", "rgba(192, 197, 234, 1)"]}
-          style={styles.linearContainer}
-          >
-          
-          {state.wallet ? (
-            <View>
-            <View style={styles.iconwithTextContainer}>
-            <View style={styles.walletContainer}>
-            <Text style={styles.myWallet}>My Wallet </Text>
-            <Image source={walletImg} style={styles.walletImg} />
-            </View>
-            <View style={styles.walletContainer}>
-            <Icon
-            name={"check-outline"}
-            type={"materialCommunity"}
-            color={"#008C62"}
-            />
-            <Text style={styles.connectedText}>Connected!</Text>
-            </View>
-            </View>
-            <Text style={styles.textColor}>{state.wallet.address}</Text>
-            </View>
-            ) : (
-              <Text style={styles.textColor}>
-              Please select a wallet first!
-              </Text>
-              )}
-              
-              
-              
-              {message ? (
-                <>
-                <View style={styles.copyRideContainer}>
-                <Text style={styles.messageStyle}>{message}</Text>
-                <View>
-                <Image
-                source={copyRide}
-                style={styles.walletImg}
-                color={"#1D7FA3"}
-                />
-                
-                <Text style={styles.copyText}>copy</Text>
-                </View>
-                </View>
-                </>
-                ) : (
-                  null
-                  )}
-                  
-                </LinearGradient> */}
-                {/* <View style={{width:"96%",margin:10,padding:10,justifyContent:"center",borderRadius:10,borderColor:"white",borderWidth:1.9,borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)"}}>
-                   <Text style={{fontWeight: "bold",fontSize:20,color:"#fff",marginBottom:2.9}}>Anchor</Text>
-                   <View style={{flexDirection:"row"}}>
-                   <View style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",borderRadius:15,width:"33%"}}>
-                      <Image source={darkBlue} style={styles.Anchor_img}/>
-                      <Text style={{color:"#35CA1D",textAlign:"center"}}>SwiftEx</Text>
-                   </View>
-                   </View>
-                </View> */}
+      
                <View style={styles.container_a}>
                   {/* <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:80}}> */}
                   <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
@@ -869,54 +808,10 @@ const close_=()=>{
 
 
 
-            {/* {message ? (
-              <>
-                <View style={styles.copyRideContainer}>
-                  <Text style={styles.messageStyle}>{message}</Text>
-                  <View>
-                    <Image
-                      source={copyRide}
-                      style={styles.walletImg}
-                      color={"#1D7FA3"}
-                    />
-
-                    <Text style={styles.copyText}>copy</Text>
-                  </View>
-                </View>
-              </>
-            ) : (
-              null
-            )} */}
-
+         
         </View>
        
-{/* {profile && (
-          <View>
-              {profile.isVerified ? (
-                <View >
-                  <TouchableOpacity 
-                    style={styles.PresssableBtn}
-                    onPress={() => {
-                     // setOpen(true)
-                        Offer_condition(Offer_active)
-                    }}
-                  >
-                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Create Offer</Text>
-                  </TouchableOpacity>
-                  <NewOfferModal
-                    user={profile}
-                    open={open}
-                    onCrossPress={()=>{setOpen(false)}}
-                    setOpen={setOpen}
-                    getOffersData={getOffersData}
-                  />
-                </View>
-              ) : (
-                <Text style={styles.kycText}>ACCOUNT UPDATING <ActivityIndicator color={"green"}/>{profile.isVerified===false?kyc():""}</Text>
-              )}
-            </View>
-          // </View>
-        )} */}
+
          {walletType === "Ethereum" || walletType === "Multi-coin" ? (
           // <Text style={{ color: "white" }}>{walletType} Wallet Connected</Text>
           <></>
@@ -1003,60 +898,9 @@ const close_=()=>{
               <Text style={{fontSize: 19,color: "white",textAlign:"center",fontWeight:"500"}}>Trade between XETH vs XUSD</Text>
         </View>
         </View> 
-        {/* <View style={[styles.toggleContainer]}> */}
-          {/* <LinearGradient
-            colors={route == "Bids" ? activeColor : inActiveColor}
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-          >
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={[
-                styles.toggleBtn,
-                route == "Bid"
-                  ? { borderRadius: hp(4) }
-                  : { borderRadius: null },
-              ]}
-              onPress={() => {
-                setRoute("Bids");
-              }}
-            >
-              <Text
-                style={[
-                  route == "Bids" ? { color: "#fff" } : { color: "#407EC9" },
-                ]}
-              >
-                Bid
-              </Text>
-            </TouchableOpacity>
-          </LinearGradient> */}
-          {/* <LinearGradient
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-            colors={route == "Offers" ? activeColor : inActiveColor}
-          >
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={[styles.toggleBtn2]}
-              onPress={() => {
-                setRoute("Offers");
-              }}
-            >
-              <Text
-                style={[
-                  route == "Offers" ? { color: "#fff" } : { color: "#407EC9" },
-                ]}
-              >
-                My Offers
-              </Text>
-            </TouchableOpacity>
-          </LinearGradient> */}
-        {/* </View> */}
-          {/* <View> */}
+        
             <OfferListViewHome/>
-          {/* </View> */}
+
     </ScrollView>
     </>
   );

@@ -72,42 +72,12 @@ export const LoginModal = ({ loginVisible, setLoginVisible }) => {
                     console.log(wallets);
                   } else {
                     setPinViewVisible(true);
-                    /* if(pinMatch){
 
-                  const token = await AsyncStorageLib.getItem(`${username}-token`)
-                  if(token){
-
-                    AsyncStorageLib.setItem('user',username)
-                    AsyncStorageLib.setItem("currentWallet",response.user)
-                    //dispatch(setToken(response.token))
-                    dispatch(setUser(username))
-                    dispatch(setCurrentWallet(wallets[0].address,wallets[0].name,wallets[0].privateKey))
-                    setLoginVisible(false)
-                    navigation.replace("HomeScreen");
-                  }else{
-                    setLoginVisible(false)
-                console.log(wallets)
-                navigation.replace("Import")
-                  }
-                }else{
-                  alert('invalid pin. Please try again')
-                }
-                */
                   }
                 }
               );
 
-              /*if(!userWallets){
 
-              console.log(userWallets)
-            }else{
-
-              dispatch(setToken(response.token))
-              dispatch(setUser(response.user))
-              dispatch(setCurrentWallet(userWallets[0].name,userWallets[0].address,userWallets[0].privateKey))
-              navigation.replace("HomeScreen");
-              return response.token
-            }*/
             }
           }
         })

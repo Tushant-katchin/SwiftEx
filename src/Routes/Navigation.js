@@ -81,61 +81,7 @@ const AuthStack = () => (
         animation: "slide_from_right",
       }}
     >
-      {/* <Stack.Screen
-        name="ExchangeNavigation"
-        component={ExchangeNavigation}
-        options={{ headerShown: false }}
-      />     */}
-
-      {/* <Stack.Screen
-        name="Home2"
-        component={Home2}
-        options={{
-          headerShown: true,
-          header: () => {
-            return <ProfileHeader />;
-          },
-        }}
-      />
-
-      <Stack.Screen
-        name="WalletTopTab"
-        component={WalletTopTab}
-        options={{
-          headerShown: true,
-          header: () => {
-            return <ProfileHeader />;
-          },
-        }}
-      /> */}
-      {/* <Stack.Screen
-        name="RecieveAddress"
-        component={RecieveAddress}
-        options={{ 
-          header:()=>{
-            return(
-              <WalletHeader title='Market-Chart'/>
-            )
-          }
-        }}
-      />    */}
-      {/* <Stack.Screen
-        name="ImportMultiCoinWalletModal"
-        component={ImportMultiCoinWalletModal}
-        options={{ headerShown: false }}
-      /> */}
-
-      {/* <Stack.Screen
-        name="TokenList"
-        component={TokenList}
-        options={{ headerShown: false }}
-      /> */}
-      {/* 
-<Stack.Screen
-        name="SelectWallet"
-        component={SelectWallet}
-        options={{ headerShown: false }}
-      /> */}
+    
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}

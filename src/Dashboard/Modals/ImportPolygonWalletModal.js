@@ -555,9 +555,7 @@ const ImportPolygonWalletModal = ({
                     }
                   );
 
-                  //  dispatch(getBalance(wallet.address))
 
-                  //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
                 } catch (e) {
                   console.log(e);
                   setLoading(false);
@@ -572,22 +570,7 @@ const ImportPolygonWalletModal = ({
                       address: wallet.address,
                       privateKey: wallet.privateKey,
                     };
-                    /* const response = saveUserDetails(wallet.address).then(async (response)=>{
-      if(response===400){
-        return 
-      }
-     else if(response===401){
-        return 
-      }
-    }).catch((e)=>{
-      console.log(e)
-      setLoading(false)
-      setWalletVisible(false)
-      setVisible(false)
-      setModalVisible(false)
-
-
-    })    */
+                  
                     console.log(token);
 
                     const accounts = {

@@ -1,4 +1,4 @@
-import { ImageBackground, Text } from "react-native";
+import { Image, Text } from "react-native";
 import React, { useEffect } from "react";
 // import splashImg from "../../../assets/splashImg.png";
 import splashImg from "../../../assets/splashImg.gif";
@@ -13,14 +13,12 @@ const SplashScreen = ({ navigation }) => {
     // navigation.navigate("Passcode");
     setTimeout(async () => {
       navigation.navigate("Passcode");
-    }, 3000);
+    }, 2300);
   }, []);
   return (
-    <ImageBackground source={splashImg} style={styles.mainContainer}>
-      <Text style={{ marginTop: hp(35), color: "white",fontSize:16.5,fontWeight:"bold" }}>
-        Security, Control, Confidence
-      </Text>
-    </ImageBackground>
+    // <ImageBackground source={splashImg} style={styles.mainContainer}>
+     <Image source={splashImg} style={styles.mainContainer}/>
+    // </ImageBackground>
   );
 };
 

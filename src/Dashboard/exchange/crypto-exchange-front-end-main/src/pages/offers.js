@@ -331,21 +331,7 @@ export const OfferView = () => {
         </TouchableOpacity>
 
         <View style={{ alignItems: "center" }}>
-          {/* <TouchableOpacity
-            onPress={() => {
-              console.log('clicked');
-              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-              AsyncStorage.removeItem(LOCAL_TOKEN);
-              navigation.navigate('exchangeLogin');
-            }}
-          >
-            <Icon
-              name={"logout"}
-              type={"materialCommunity"}
-              size={30}
-              color={"#fff"}
-            />
-          </TouchableOpacity> */}
+         
              <TouchableOpacity
       onPress={() => {
        setmodalContainer_menu(true)

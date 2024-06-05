@@ -90,39 +90,7 @@ const MyHeader = ({ title, changeState, state, extended, setExtended, title1 }) 
 
 
 
-      {/* <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          height: hp("15"),
-          backgroundColor: "#000C66",
-          color: "#FFFFFF",
-          borderBottomLeftRadius: 30,
-          borderBottomRightRadius: 30,
-        }}
-      >
-        <Button
-          color="#fff"
-          labelStyle={{ fontSize: 24 }}
-          icon="sort-reverse-variant"
-          style={{ marginTop: 40 }}
-          onPress={() => openExtended()}
-        ></Button>
-
-        <Text
-          style={{
-            marginTop: 60,
-            fontWeight: "bold",
-            color: "#FFFFFF",
-            marginRight: 170,
-            fontSize: 22,
-            fontFamily: "sans-serif",
-          }}
-        >
-          {title}
-        </Text>
-      </View> */}
+     
     </Animated.View>
   );
 };

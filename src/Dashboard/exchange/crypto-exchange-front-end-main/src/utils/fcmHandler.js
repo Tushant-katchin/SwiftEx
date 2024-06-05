@@ -1,26 +1,9 @@
-//import { initializeApp } from 'react-native-firebase/app'
-//import { getToken } from 'react-native-firebase/app'
-//import firebase from '@react-native-firebase/app'
-//import messaging from '@react-native-firebase/messaging'
+
 import AsyncStorageLib from '@react-native-async-storage/async-storage'
 import { authRequest, GET, getAuth, getToken } from '../api'
 import { REACT_APP_FCM_TOKEN_KEY , REACT_APP_GOOGLE_VPID_KEY} from '../ExchangeConstants'
 const REGISTERATION_TOKEN = REACT_APP_FCM_TOKEN_KEY
-/*const firebaseConfig = {
-  apiKey: 'AIzaSyAexERzPR03F38U5IYCRwWx1MVP9jBOCGw',
-  authDomain: 'crypto-exchange-poc.firebaseapp.com',
-  projectId: 'crypto-exchange-poc',
-  storageBucket: 'crypto-exchange-poc.appspot.com',
-  messagingSenderId: '883312291340',
-  appId: '1:883312291340:web:1cc47b592fd08bf9a74829',
-  measurementId: 'G-1VQJ9XNECH',
-}
-const config = {
-  name: 'munziDapp',
-};*/
-//const app = firebase.initializeApp(firebaseConfig, config)
-//const app = initializeApp(firebaseConfig)
-//export const messaging = getMessaging(app)
+
 
 export const requestFirebaseNotificationPermission = async () => {
   try {

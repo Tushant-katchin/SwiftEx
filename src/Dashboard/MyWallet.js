@@ -144,24 +144,13 @@ const MyWallet = (props) => {
     setUser(user);
   }, []);
 
-  /*useEffect(() => {
-    setLoading(true);
-    //getEthBalance()
-    getEthBnbPrice();
-    getEthBnbBalance();
-    getBalanceInUsd(ethBalance, bnbBalance);
-    setLoading(false);
-  }, [ethBalance, bnbBalance]);*/
+  
 
   return (
     <View style={styles.mainView}>
       <View style={styles.labelInputContainer}>
         <Text style={styles.label}>Name</Text>
-        {/* <TextInput
-          style={{ width: wp("78%") }}
-          placeholder={user ? user : "Main Wallet 1"}
-          placeholderTextColor={"gray"}
-        /> */}
+      
         <Text style={{width:wp("78%"),color:'gray'}}>{user ? user : "Main Wallet 1"}</Text>
       </View>
 
@@ -195,163 +184,7 @@ const MyWallet = (props) => {
         }}
       />
     </View>
-    // <View style={styles.container}>
-    //   <View style={styles.content}>
-    //     <Text style={styles.text}>Hi,{user}</Text>
-    //     <Text style={styles.text3}>
-    //       ${" "}
-    //       {loading ? <ActivityIndicator size="large" color="green" /> : balance}
-    //     </Text>
-    //     <Text style={styles.text3}> Wallet Address</Text>
-
-    //     <Text selectable={true} style={styles.text2}>
-    //       {state.wallet.address
-    //         ? state.wallet.address
-    //         : "You dont have any wallet yet"}
-    //     </Text>
-
-    //     {/* <View style={{ width: wp("50"), marginTop: 10 }}>
-    //       <Button
-    //         title="My Tokens"
-    //         color={"grey"}
-    //         onPress={() => {
-    //           // setModalVisible2(true)
-    //         }}
-    //       ></Button>
-    //     </View> */}
-
-    //     <View style={{flexDirection:"row",justifyContent:"space-around",width:wp(70)}}>
-    //     <LinearGradient
-    //       start={[1, 0]}
-    //       end={[0, 1]}
-    //       colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-    //       style={styles.PresssableBtn}
-    //     >
-    //       <View
-    //       >
-    //         <Text style={{ color: "white" }}>Tokens</Text>
-    //       </View>
-    //     </LinearGradient>
-
-    //     <LinearGradient
-    //       start={[1, 0]}
-    //       end={[0, 1]}
-    //       colors={["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"]}
-    //       style={styles.PresssableBtn}
-    //     >
-    //       <View
-    //       >
-    //         <Text style={{ color: "white" }}>Transfer</Text>
-    //       </View>
-    //     </LinearGradient>
-
-    //     </View>
-
-    //     <View
-    //       style={{ display: "flex", flexDirection: "column", marginTop: 5 }}
-    //     >
-    //       <Card
-    //         style={{
-    //           height: hp(10),
-    //           width: wp(86),
-    //           alignSelf: "center",
-    //           backgroundColor: "white",
-    //           borderRadius: 10,
-    //           marginLeft: 5,
-    //           marginTop: hp(2),
-    //         }}
-    //       >
-    //         <Card.Title
-    //           titleStyle={{ color: "black", fontSize: 15, marginBottom: 23 }}
-    //           title={"BNB Coin"}
-    //           left={LeftContent}
-    //         />
-    //         <Card.Content
-    //           style={{ display: "flex", flexDirection: "row", color: "black" }}
-    //         >
-    //           <Title style={{ color: "black" }}></Title>
-    //           <Paragraph
-    //             style={{
-    //               color: "black",
-    //               marginLeft: wp("50"),
-    //               fontWeight: "bold",
-    //               top: -50,
-    //               left: 50,
-    //             }}
-    //           >
-    //             {bnbBalance ? (
-    //               bnbBalance
-    //             ) : (
-    //               0
-    //             )}{" "}
-    //             BNB
-    //           </Paragraph>
-    //           <Paragraph
-    //             style={{
-    //               color: "red",
-    //               position: "absolute",
-    //               marginLeft: wp("20"),
-    //               fontWeight: "bold",
-    //               top: -39,
-    //             }}
-    //           >
-    //             {bnbPrice ? bnbPrice.toFixed(1) : 0}
-    //           </Paragraph>
-    //         </Card.Content>
-    //       </Card>
-
-    //       <Card
-    //         style={{
-    //           width: wp(86),
-    //           alignSelf: "center",
-    //           height: hp(10),
-    //           backgroundColor: "white",
-    //           borderRadius: 10,
-    //           marginLeft: 5,
-    //           marginTop: hp(2),
-    //         }}
-    //       >
-    //         <Card.Title
-    //           titleStyle={{ color: "black", fontSize: 15, marginBottom: 23 }}
-    //           title={"Ethereum"}
-    //           left={LeftContent2}
-    //         />
-    //         <Card.Content
-    //           style={{ display: "flex", flexDirection: "row", color: "black" }}
-    //         >
-    //           <Title style={{ color: "black" }}></Title>
-    //           <Paragraph
-    //             style={{
-    //               color: "black",
-    //               marginLeft: wp("50"),
-    //               fontWeight: "bold",
-    //               top: -50,
-    //               left: 50,
-    //             }}
-    //           >
-    //             {ethBalance ? (
-    //               ethBalance
-    //             ) : (
-    //               0
-    //             )}{" "}
-    //             ETH
-    //           </Paragraph>
-    //           <Paragraph
-    //             style={{
-    //               color: "red",
-    //               position: "absolute",
-    //               marginLeft: wp("20"),
-    //               fontWeight: "bold",
-    //               top: -39,
-    //             }}
-    //           >
-    //             {ethPrice ? ethPrice : 0}
-    //           </Paragraph>
-    //         </Card.Content>
-    //       </Card>
-    //     </View>
-    //   </View>
-    // </View>
+  
   );
 };
 

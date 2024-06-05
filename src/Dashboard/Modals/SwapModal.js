@@ -1438,24 +1438,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
               <Text style={styles.color}></Text>
             </View>
 
-            {/* <View style={styles.swapiconView}>
-              <Icon
-                name={"swap-vertical"}
-                size={15}
-                color={"#3574B6"}
-                style={{ alignSelf: "center", marginTop: hp(1) }}
-              />
-            </View> */}
-
-            {/* <View style={{flexDirection:"row",width:wp(90)}}>
-        <Text style={style.balance_heading}>Available balance :-{" "}</Text>
-        <View style={{width:wp(13)}}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{width:wp(11)}}>
-        <Text style={style.balance}>
-          {balance ? balance : show===false?<Text style={{ color: "#C1BDBD" }}>0</Text>:<></>}
-        </Text>
-              </ScrollView>
-        </View> */}
+            
 
             <TouchableOpacity style={styles.swapiconView} onPress={() => { setCoin0(coin1), setCoin1(coin0) }}>
               <Icon
@@ -1484,16 +1467,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                     </ScrollView>
                   </View>
                 </View>
-                {/* <TextInput
-                  disabled={true}
-                  keyboardType="numeric"
-                  placeholder={trade ? `${trade.minimumAmountOut}` : `0`}
-                  onChangeText={(text) => {
-                    setAmount2(text);
-                  }}
-                  placeholderTextColor={"black"}
-                  style={styles.txtInput}
-                /> */}
+                
                 <TouchableOpacity
                   onPress={() => {
                     setCoinType("1");

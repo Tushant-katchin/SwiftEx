@@ -51,6 +51,7 @@ const Payout = () => {
     const [kyc_modal,setkyc_modal]=useState(false);
     const [modal_load,setmodal_load]=useState(false)
     const [kyc_modal_text,setkyc_modal_text]=useState("Document submiting for KYC")
+
     const Anchor = [
       { name: "SwiftEx", status: "Verified", image: require('../../../../../../assets/darkBlue.png'), city: "India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia", Crypto_Assets: "XETH, XUSD", Fiat_Assets: "$ USD, € EUR", Payment_Rails: "Card, Bank Transfer, Local Method" },
       { name: "APS", status: "Pending", image: require('../../../../../../assets/APS.png'), city: "Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden", Fiat_Assets: "$ BRL€ EUR$ CLP", Crypto_Assets: "XETH, XUSD" },
@@ -62,15 +63,21 @@ const Payout = () => {
   const [chooseSearchQuery, setChooseSearchQuery] = useState('');
   const [chooseModalPair,setchooseModalPair]=useState(false);
   const chooseItemList = [
-    { id: 1, name: "ETH/USDC" ,value:"XETH"},
-    { id: 2, name: "BNB/USDC" ,value:"XUSD"},
+    { id: 1, name: "ETH/USDC" ,value:"XETH",visible_0:"ETH",visible_1:"USDC"},
+    { id: 2, name: "BNB/USDC" ,value:"XUSD",visible_0:"BNB",visible_1:"USDC"},
+    { id: 3, name: "USDC/ETH" ,value:"XETH",visible_0:"USDC",visible_1:"ETH"},
+    { id: 4, name: "USDC/BNB" ,value:"XETH",visible_0:"USDC",visible_1:"BNB"},
+    { id: 4, name: "FIAT/USD" ,value:"USD",visible_0:"FIAT",visible_1:"USD"},
   ]
+  const [top_value,settop_value]=useState(chooseItemList[0].visible_0)
+  const [top_value_0,settop_value_0]=useState(chooseItemList[0].visible_1)
   const [chooseModaldata,setchooseModaldata]=useState(chooseItemList[0].name);
   const chooseFilteredItemList = chooseItemList.filter(
     item => item.name.toLowerCase().includes(chooseSearchQuery.toLowerCase())
   );
   const chooseRenderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => {setRoute(item.value),setchooseModaldata(item.name),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+    // <TouchableOpacity onPress={() => {setRoute(item.value),setchooseModaldata(item.name),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+    <TouchableOpacity onPress={() => {setRoute(item.value),settop_value(item.visible_0),settop_value_0(item.visible_1),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
       <Text style={styles.chooseItemText}>{item.name}</Text>
     </TouchableOpacity>
   );
@@ -94,7 +101,7 @@ const Payout = () => {
         }
         fetchProfileData();
         setpayout_amount("");
-    },[route,isFocused])
+    },[top_value,route,isFocused])
     
     useEffect(() => {
       setmodal_load(true);
@@ -112,7 +119,7 @@ const Payout = () => {
           clearTimeout(timer2);
         };
       }
-    }, [kyc_modal]);
+    }, [kyc_modal,top_value]);
     
     const fetchProfileData = async () => {
         try {
@@ -352,6 +359,11 @@ const Payout = () => {
       // }
     }
 
+    const reves_fun=async(fist_data,second_data)=>{
+      settop_value_0(fist_data)
+      settop_value(second_data)
+    }
+
     return (
         <>
         <View style={styles.headerContainer1_TOP}>
@@ -504,77 +516,33 @@ const Payout = () => {
         </View>
       </View>
         <SafeAreaView style={styles.contener}>
-            {/* <View style={[styles.toggleContainer]}>
-                <LinearGradient
-                    colors={route == "XETH" ? activeColor : inActiveColor}
-                    style={{ borderRadius: 8 }}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1, y: 0 }}
-                >
-                    <Pressable
-                        activeOpacity={0.8}
-                        style={[
-                            styles.toggleBtn,
-                            route == "XETH"
-                                ? { borderRadius: hp(4) }
-                                : { borderRadius: null },
-                        ]}
-                        onPress={() => {
-                            setRoute("XETH");
-                            setpayout_amount("");
-                        }}
-                    >
-                        <Text style={[route == "XETH" ? { color: "#fff" } : { color: "#407EC9" }]}>XETH</Text>
-                    </Pressable>
-                </LinearGradient>
-                <LinearGradient
-                    style={{ borderRadius: 8 }}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1, y: 0 }}
-                    colors={route == "XUSD" ? activeColor : inActiveColor}
-                >
-                    <Pressable
-                        activeOpacity={0.8}
-                        style={[styles.toggleBtn2]}
-                        onPress={() => {
-                            setRoute("XUSD");
-                            setpayout_amount("");
-                        }}>
-                        <Text style={[route == "XUSD" ? { color: "#fff" } : { color: "#407EC9" }]}>XUSD</Text>
-                    </Pressable>
-                </LinearGradient>{
-                }
-            </View> */}
+          
+        <View style={{width:"100%",justifyContent:"center",alignItems:"center",flexDirection:"row",marginTop:19,marginLeft:6}}>
+         <View style={{width:"15%",}}>
+         <Text style={{fontSize:24,color:"#fff"}}>{top_value}</Text>
+         </View>
+          <Icon
+                      name={"swap-horizontal"}
+                      type={"materialCommunity"}
+                      color={"rgba(129, 108, 255, 0.97)"}
+                      size={29}
+                      style={{margin:10,paddingHorizontal:1}}
+                      onPress={()=>{reves_fun(top_value,top_value_0)}}
+                    />
+<View style={{width:"15%"}}>
+         <Text style={{fontSize:24,color:"#fff"}}>{top_value_0}</Text>
+         </View>
+        </View>
  <View style={{flexDirection:"row",justifyContent:"space-evenly"}}>
         <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Crypto Assets</Text>
+                {/* <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Crypto Assets</Text> */}
                 <TouchableOpacity style={{marginTop: 5, width: "100%", color: "white", justifyContent:"center",padding:13,borderRadius:10,borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1 }} onPress={()=>{setchooseModalPair(true)}}>
-                  <Text style={{textAlign:"center",color:"#fff",fontSize:19}}>{chooseModaldata}</Text>
+                  <Text style={{textAlign:"center",color:"#fff",fontSize:19}}>{top_value+"/"+top_value_0}</Text>
                 </TouchableOpacity>
-                {/* <Picker
-                  selectedValue={route}
-                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
-                  onValueChange={(itemValue, itemIndex) => setRoute(itemValue)}
-                >
-                  <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="USD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="GBP" value="XGBP" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="INR" value="XINR" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                  <Picker.Item label="SWIFTEX" value="SWIFTEX" color={Platform.OS === "ios" ? "gray" : "gray"} />
-                </Picker> */}
+               
               </View>
 
-              {/* <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Fiat/Crypto</Text>
-                <Picker
-                  selectedValue={route}
-                  style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -11 } : { marginTop: 3, width: "140%", color: "white", marginLeft: -25 }}
-                  onValueChange={(itemValue, itemIndex) => setRoute(itemValue)}
-                >
-                  <Picker.Item label="USD" value="XUSD" color={Platform.OS === "ios" ? "white" : "black"} />
-                  <Picker.Item label="ETH" value="XETH" color={Platform.OS === "ios" ? "white" : "black"} />
-                </Picker>
-              </View> */}
+              
         </View>
 
 
@@ -594,9 +562,9 @@ const Payout = () => {
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
                 </View>
-            {route==="XETH"||route==="XUSD"? Available>0.0000000?<></>:<Text style={{color:"red",padding:1.3,paddingHorizontal:2.9}}>Insufficient Balance</Text>:<Text style={{textAlign:"center",color:"orange",paddingHorizontal:2.9}}>Available Soon</Text>}
+            {route==="XETH"||route==="XUSD"? Available>0.0000000?<></>:<Text style={{color:"red",padding:1.3,paddingHorizontal:2.9}}>Insufficient Balance</Text>:<Text style={{textAlign:"center",color:"orange",paddingHorizontal:2.9}}>{route==="USD"?"Card Payment":"Available Soon"}</Text>}
 
-                {/* {Available>0.0000000?<></>:<Text style={{color:"red",borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1.9,padding:1.3,borderRadius:10,paddingHorizontal:2.9}}>Insufficient Balance</Text>} */}
+
             </View>
             <View style={[styles.Id_text,styles.white]}>
             <TextInput  editable={Available>0.0000000} style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" returnKeyType="done" value={payout_amount} onChangeText={(amount) => {
@@ -611,51 +579,25 @@ const Payout = () => {
             <TextInput editable={route==="XETH"} style={[styles.Id_text, styles.white,{marginTop:5}]} value={recipient_key} onChangeText={(value)=>{
               setrecipient_key(value)
             }}/>
-            
-            <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"?"#407EC9":"gray"}]} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), manage_button(route) }}>
+            {route==="USD"?
+            <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"||route==="USD"?"#407EC9":"gray"}]} onPress={() => { navigation.navigate("Payment")}}>
+                <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"||route==="USD"?"Pay":"Available Soon"}</Text>
+            </Pressable>
+              :
+            <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"||route==="USD"?"#407EC9":"gray"}]} disabled={payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), manage_button(route) }}>
 
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> */}
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
-                <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"?"Payout":"Available Soon"}</Text>
+                <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"||route==="USD"?"Pay":"Available Soon"}</Text>
             </Pressable>
-            <View style={[styles.bottom_text,{marginTop:Platform.OS==="android"?"137%":"145%",}]}>
+            }
+            <View style={[styles.bottom_text,{marginTop:Platform.OS==="android"?"130%":"145%",}]}>
       <Text style={styles.text_heading}>Your Crypto not supported by the Anchor ?</Text>
       <TouchableOpacity onPress={()=>{navigation.navigate("classic")}}><Text style={styles.text_heading}>Get your wrapped tokens here <Text style={[styles.text_heading,{color:"#4CA6EA"}]}>Bridge Tokens</Text></Text></TouchableOpacity>
       <View>
       </View>
      </View>
-            {/* <Text style={{color:'white',fontSize:20,marginLeft:25,marginTop:"10%",fontWeight:"bold"}}>History</Text>
-            <View style={{height:"30%",marginTop:10,justifyContent:'center'}}>
-      {transactions.length > 0 ? (
-        <FlatList
-          data={transactions}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={{padding:10,marginBottom:10,backgroundColor:'white',margin:15,borderRadius:10}}>
-              <Text style={styles.text_color}>Status: <Text style={item.status==="Faild"?{color:'red',fontWeight:'bold'}:{color:"green",fontWeight:'bold'}}>{item.status}</Text></Text>
-              <View style={{flexDirection:'row' }}>
-              <Text style={styles.text_color}>Sender: </Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(1) }}>
-                   <Text style={[styles.text_color,styles.width_scrroll]}>{item.senderId}</Text>
-                    </ScrollView>
-                </View>
-                <View style={{flexDirection:'row' }}>
-              <Text style={styles.text_color}>Receiver: </Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(1) }}>
-                   <Text style={[styles.text_color,styles.width_scrroll]}>{item.receiverId}</Text>
-                    </ScrollView>
-                </View>
-              <Text style={styles.text_color}>Amount: {item.g_amount}</Text>
-              <Text style={styles.text_color}>Asset: {item.g_ASSET}</Text>
-              <Text style={styles.text_color}>Created: {item.date}</Text>
-              {/* <Text style={styles.text_color}>Time: {item.time}</Text> */}
-            {/* </View> */}
-          {/* )} */}
-        {/* /> */}
-      {/* ) : ( */}
-        {/* <Text style={{textAlign:'center',color:'white',fontSize:19}}>No Payout found.</Text> */}
-      {/* )} */}
-    {/* </View> */}
+           
     <View style={{backgroundColor:"black",}}>
        <Modal
         animationType="slide"
@@ -663,22 +605,7 @@ const Payout = () => {
         visible={Anchor_modal}
       >
         <View style={styles.container_a}>
-        {/* <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:90}}>
-                  <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
-          if (AnchorViewRef.current && contentWidth !== 0) {
-            const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;
-            handleScroll(backOffset);
-
-          }}}><Icon name={"left"} type={"antDesign"} size={25} color={"white"}/>
-               </TouchableOpacity>
-               <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
-          if (AnchorViewRef.current && contentWidth !== 0) {
-            const nextOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Anchor.length;
-            handleScroll(nextOffset);
-          }
-        }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
-                  </View> */}
-
+       
 <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
           if (AnchorViewRef.current && contentWidth !== 0) {
             const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;

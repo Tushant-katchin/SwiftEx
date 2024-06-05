@@ -11,8 +11,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-//import title_icon from "../../assets/title_icon.png";
-import title_icon from "../../assets/Pink.png"
+// import title_icon from "../../assets/title_icon.png";
+// import title_icon from "../../assets/Pink.png"
 import darkBlue from "../../assets/darkBlue.png";
 
 import { Animated } from "react-native";
@@ -189,99 +189,19 @@ const Passcode = (props) => {
             buttonTextStyle={{
               color: "#fff",
             }}
-            // onButtonPress={async (key) => {
-            //   if (key === "custom_left") {
-            //     pinView.current.clear();
-            //   }
-            //   if (key === "custom_right") {
-            //     if (status === "verify") {
-            //       if (pin === enteredPin) {
-            //         pinView.current.clearAll();
-            //         props.navigation.navigate("Welcome");
-
-            //         AsyncStorage.setItem("pin", JSON.stringify(pin));
-            //       } else {
-            //         alert("password did not match. please try again");
-            //         pinView.current.clearAll();
-            //         setStatus("");
-            //       }
-            //     } else if (status === "pinset") {
-            //       const Pin = await AsyncStorage.getItem("pin");
-            //       const user = await AsyncStorage.getItem("user");
-            //       const wallets = await AsyncStorage.getItem(`${user}-wallets`);
-
-            //       if (JSON.parse(Pin) === enteredPin) {
-            //         console.log(Pin);
-            //         console.log(user);
-            //         console.log(wallets);
-            //         if (user) {
-            //           props.navigation.navigate("HomeScreen");
-            //         } else {
-            //           props.navigation.navigate("Welcome");
-            //         }
-            //       } else {
-            //         alert("invalid pin");
-            //       }
-            //     } else {
-            //       setPin(enteredPin);
-            //       setStatus("verify");
-
-            //       pinView.current.clearAll();
-            //     }
-            //   }
-            //   if (key === "three") {
-            //     //alert("You can't use 3")
-            //   }
-            // }}
+            
             onButtonPress={async (key) => {
               if (key ===  "custom_right") {
                 pinView.current.clear();
               }
               if (key === "custom_left") {
-               /* if (status === "verify") {
-                  if (pin === enteredPin) {
-                    pinView.current.clearAll();
-                    props.navigation.navigate("Welcome");
-
-                    AsyncStorage.setItem("pin", JSON.stringify(pin));
-                  } else {
-                    alert("password did not match. please try again");
-                    pinView.current.clearAll();
-                    setStatus("");
-                  }
-                } else if (status === "pinset") {
-                  const Pin = await AsyncStorage.getItem("pin");
-                  const user = await AsyncStorage.getItem("user");
-                  const wallets = await AsyncStorage.getItem(`${user}-wallets`);
-
-                  if (JSON.parse(Pin) === enteredPin) {
-                    console.log(Pin);
-                    console.log(user);
-                    console.log(wallets);
-                    if (user) {
-                      props.navigation.navigate("HomeScreen");
-                    } else {
-                      props.navigation.navigate("Welcome");
-                    }
-                  } else {
-                    alert("invalid pin");
-                  }
-                } else {
-                  setPin(enteredPin);
-                  setStatus("verify");
-
-                  pinView.current.clearAll();
-                }*/
+               
               }
               if (key === "three") {
                 //alert("You can't use 3")
               }
             }}
-            // customLeftButton={
-            //   showRemoveButton ? (
-            //     <Icon name={"ios-backspace"} size={36} color={"gray"} />
-            //   ) : undefined
-            // }
+
             customLeftButton={
               
                 <Icon
@@ -305,16 +225,7 @@ const Passcode = (props) => {
                 <Icon name={"ios-backspace"} size={36} color={"gray"} />
               ) : undefined
             }
-            // customRightButton={
-            //   showCompletedButton ? (
 
-            //     <Icon
-            //       name={"ios-chevron-forward-circle"}
-            //       size={36}
-            //       color={"white"}
-            //     />
-            //   ) : undefined
-            // }
           />
           <View style={style.textView}>
           <Text style={style.simpleText}>Passcode adds an extra layer of security</Text>

@@ -224,73 +224,14 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
               } catch (error) {
                 console.error('Error getting data for key steller keys:', error);
               }
-              // try {
-              //   const storedData = await AsyncStorageLib.getItem('myDataKey');
-              //   if (storedData !== null) {
-              //     const parsedData = JSON.parse(storedData);
-              //     console.log('Retrieved data:', parsedData);
-              //     const publicKey = parsedData.key1
-              //     setsteller_key(publicKey)
-              //     const secretKey_Key = parsedData.key2
-              //     setsteller_key_private(secretKey_Key)
-              //   }
-              //   else {
-              //     console.log('No data found in AsyncStorage');
-              //   }
-              // } catch (error) {
-              //   console.error('Error retrieving data:', error);
-              // }
+             
             };
 
-            // const getData = async () => {
-            //   try {
-            //     const storedData = await AsyncStorageLib.getItem('myDataKey');
-            //     if (storedData !== null) {
-            //       const parsedData = JSON.parse(storedData);
-            //       console.log('Retrieved data:', parsedData);
-            //       const publicKey = parsedData.key1
-            //       const secretKey = parsedData.key2
-            //       setPublicKey(publicKey);
-            //       setSecretKey(secretKey);
-            //     }
-            //     else {
-            //       console.log('No data found in AsyncStorage');
-            //     }
-            //   } catch (error) {
-            //     console.error('Error retrieving data:', error);
-            //   }
-            // };
             const get_stellar = async (asset,asset1) => {
               try {
                 console.log("=====",state)
                 getData()
-                  // if(asset1==="USD")
-                  // {
-                  //   setbalance("");
-                  //   setshow(true)
-                  //   // console.log("<><", PublicKey)
-                  //   const PublicKey="GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI"
-                  //   StellarSdk.Network.useTestNetwork();
-                  //   const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-                  //   server.loadAccount(PublicKey)
-                  //     .then(account => {
-                  //       console.log('Balances for account:', PublicKey);
-                  //       account.balances.forEach(balance => {
-                  //         if (balance.asset_code === asset) {
-                  //           console.log(`${balance.asset_code}: ${balance.balance}`);
-                  //           setbalance(balance.balance)
-                  //           setactiv(false);
-                  //         }
-                  //       });
-                  //       setshow(false)
-                  //     })
-                  //     .catch(error => {
-                  //       console.log('Error loading account:', error);
-                  //       // alert("error", "Account Balance not found.");
-                  //       setshow(false)
-                  //       setactiv(true)
-                  //     });
-                  // }
+                 
                    if(asset==="BNB")
                   {
                     setbalance(state.walletBalance)
@@ -528,48 +469,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
               </View>
         </View>
 
-        {/* <View style={[styles.toggleContainer]}>
-          <LinearGradient
-            colors={route == "XETH" ? activeColor : inActiveColor}
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-          >
-            <Pressable
-              activeOpacity={0.8}
-              style={[
-                styles.toggleBtn,
-                route == "XETH"
-                  ? { borderRadius: hp(4) }
-                  : { borderRadius: null },
-              ]}
-              onPress={() => {
-                setRoute("XETH");
-                setoffer_amount("");
-                setoffer_price("");
-              }}
-            >
-              <Text style={[route == "XETH" ? { color: "#fff" } : { color: "#407EC9" }]}>XETH</Text>
-            </Pressable>
-          </LinearGradient>
-          <LinearGradient
-            style={{ borderRadius: 8 }}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
-            colors={route == "XUSD" ? activeColor : inActiveColor}
-          >
-            <Pressable
-              activeOpacity={0.8}
-              style={[styles.toggleBtn2]}
-              onPress={() => {
-                setRoute("XUSD");
-                setoffer_amount("");
-                setoffer_price("");
-              }}>
-              <Text style={[route == "XUSD" ? { color: "#fff" } : { color: "#407EC9" }]}>XUSD</Text>
-            </Pressable>
-          </LinearGradient>
-        </View> */}
+      
 
         <View style={{ flexDirection: "row", alignSelf: "center",marginTop:Platform.OS==="ios"?-0:49 }}>
           <Text style={styles.balance}>{route==="XETH"?"Ether":route} Balance:</Text>
@@ -582,30 +482,9 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
           { show === true ? <ActivityIndicator color={"green"} /> : <></>}
         </View>
 
-        {/* <View style={{ marginStart: wp(10),marginTop:10 }}>
-          <View>
-            <Text style={Platform.OS === "ios" ? [styles.currencyText, styles.down_] : styles.currencyText}> Curency</Text>
-          </View>
-          <Text style={Platform.OS === "ios" ? { marginTop: 35, width: '90%', color: "white", fontSize: 22, marginLeft: 21 } : { marginTop: 16, width: '90%', color: "white", fontSize: 16, marginLeft: 21 }}>{route === "XUSD" ? "USD" : "ETH"}</Text>
-        </View> */}
-
+      
               <View style={{flexDirection:"row",justifyContent:"center"}}>
-                {/* <TouchableOpacity
-                  style={{
-                    alignItems: "center",
-                    borderWidth: StyleSheet.hairlineWidth * 1,
-                    borderColor: "green",
-                    width: wp(66),
-                    paddingVertical: hp(1.3),
-                    borderRadius: 6,
-                    marginTop: 40,
-                    marginStart:19,
-                    backgroundColor: 'green',
-                  }}
-                  onPress={() => { route==="XETH"&&Deposit_Eth(),route_fiat==="XUSD"&&activ===true?alert("error","Stellar Account Activation Require for Add Funds."):[navigation.navigate("Payment")]}}
-                  >
-                  <Text style={styles.cancelText}>{route==="XETH"?"Deposit":"Add Funds"}</Text>
-                </TouchableOpacity> */}
+                
                {route && (
           <TouchableOpacity
           style={{
@@ -684,21 +563,7 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
           }
         }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
 
-        {/* <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:90}}>
-                  <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
-          if (AnchorViewRef.current && contentWidth !== 0) {
-            const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;
-            handleScroll(backOffset);
-
-          }}}><Icon name={"left"} type={"antDesign"} size={25} color={"white"}/>
-               </TouchableOpacity>
-               <TouchableOpacity style={{backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
-          if (AnchorViewRef.current && contentWidth !== 0) {
-            const nextOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Anchor.length;
-            handleScroll(nextOffset);
-          }
-        }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
-                  </View> */}
+       
           <View style={{flexDirection:"row",justifyContent:"space-between"}}>
           <Text style={{ textAlign: "left", marginHorizontal: 10, marginTop: 10, fontWeight: "bold", fontSize: 20, color: "#fff" }}>Anchors</Text>
            <TouchableOpacity onPress={()=>{setAnchor_modal(false)}} style={{padding:10}}>

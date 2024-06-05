@@ -35,10 +35,10 @@ export function ExchangeNavigation() {
             iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
             iconName = "ios-home-sharp";
           }
-          if (route.name === "Deposits") {
-            iconName = focused ? "ios-home-sharp" : "ios-home-outline";
-            iconName = "card-outline";
-          }
+          // if (route.name === "Deposits") {
+          //   iconName = focused ? "ios-home-sharp" : "ios-home-outline";
+          //   iconName = "card-outline";
+          // }
           if (route.name === "profile") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "person-circle";
@@ -86,7 +86,7 @@ export function ExchangeNavigation() {
           },
         }}
       />
-       <Tab.Screen
+       {/* <Tab.Screen
         name="Deposits"
         component={AddFunds_screen}
         options={{
@@ -95,7 +95,7 @@ export function ExchangeNavigation() {
             // return <ExchangeHeaderIcon />;
           },
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Offers"
         component={OfferView}

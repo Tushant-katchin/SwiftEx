@@ -427,26 +427,7 @@ const ImportEthereumModal = ({
                   address: walletPrivateKey.address,
                   privateKey: privatekey,
                 };
-                /* const response = saveUserDetails(wallet.address).then(async (response)=>{
-                  if(response===400){
-                    return 
-                  }
-                 else if(response===401){
-                    return 
-                  }
-                })
-                .catch((e)=>{
-                 
-               
-                  console.log(e)
-                  setLoading(false)
-                  setModalVisible(false)
-                  setWalletVisible(false)
-                  setVisible(false)
-
-
-                })*/
-
+              
                 let wallets = [];
                 const data = await AsyncStorageLib.getItem(`${user}-wallets`)
                   .then((response) => {
@@ -462,7 +443,7 @@ const ImportEthereumModal = ({
                     console.log(e);
                   });
 
-                //wallets.push(accounts)
+
                 const allWallets = [
                   {
                     address: wallet.address,
@@ -472,7 +453,7 @@ const ImportEthereumModal = ({
                     wallets: wallets,
                   },
                 ];
-                // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
+
 
                 dispatch(AddToAllWallets(allWallets, user)).then((response) => {
                   if (response) {
@@ -508,22 +489,7 @@ const ImportEthereumModal = ({
                       };
                       setWallet(wallet);
 
-                      /*const response = saveUserDetails(wallet.address).then(async(response)=>{
-                      if(response===400){
-                        return 
-                      }
-                     else if(response===401){
-                        return 
-                      }
-                    }).catch((e)=>{
-                      console.log(e)
-                      setLoading(false)
-                      setWalletVisible(false)
-                      setVisible(false)
-                      setModalVisible(false)
 
-
-                    })*/
                       let wallets = [];
                       const data = await AsyncStorageLib.getItem(
                         `${user}-wallets`
