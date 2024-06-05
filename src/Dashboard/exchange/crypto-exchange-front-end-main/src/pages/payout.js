@@ -97,7 +97,7 @@ const Payout = () => {
           setrecipient_key(state.wallet.address);
         }
         else{
-          setrecipient_key("This Assest Coming Soon.");
+          setrecipient_key(route==="USD"?"Card Payment Available":"This Assest Coming Soon.");
         }
         fetchProfileData();
         setpayout_amount("");

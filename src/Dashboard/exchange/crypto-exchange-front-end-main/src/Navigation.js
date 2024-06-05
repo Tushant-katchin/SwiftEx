@@ -51,13 +51,13 @@ export function ExchangeNavigation() {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
             iconName = "card-sharp";
           }
-          if (route.name === "Withdrawal") {
+          if (route.name === "Deposit") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
-            iconName = "receipt";
+            iconName = "cash-outline";
           }
           if (route.name === "Profile") {
             iconName = focused ? "ios-home-sharp" : "ios-home-outline";
-            iconName = "wallet";
+            iconName = "person-circle-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -119,7 +119,7 @@ export function ExchangeNavigation() {
       />
 
       <Tab.Screen
-        name="Withdrawal"
+        name="Deposit"
         component={Payout}
         options={{
           headerShown: true,
