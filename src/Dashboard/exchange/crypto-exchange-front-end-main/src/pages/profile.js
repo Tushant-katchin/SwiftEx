@@ -401,7 +401,7 @@ export const ProfileView = (props) => {
   const fetchProfileData = async () => {
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
-      if (err) return setMessage(`${err.status}: ${err.message}`);
+      if (err) return [navigation.navigate("exchangeLogin"),setMessage(`${err.status}: ${err.message}`)];
       setProfile(res);
     } catch (err) {
       console.log(err);

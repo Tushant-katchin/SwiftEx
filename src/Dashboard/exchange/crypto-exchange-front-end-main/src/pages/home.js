@@ -241,7 +241,7 @@ export const HomeView = ({ setPressed }) => {
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
       // console.log("_+++++++",res)
-      if (err) return setMessage(` ${err.message} please log in again!`);
+      if (err)return [navigation.navigate("exchangeLogin"),setMessage(` ${err.message} please log in again!`)];
       setProfile(res);
     } catch (err) {
       //console.log(err)
