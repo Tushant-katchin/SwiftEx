@@ -67,7 +67,7 @@ const Payout = () => {
     { id: 2, name: "BNB/USDC" ,value:"XUSD",visible_0:"BNB",visible_1:"USDC"},
     { id: 3, name: "USDC/ETH" ,value:"XETH",visible_0:"USDC",visible_1:"ETH"},
     { id: 4, name: "USDC/BNB" ,value:"XETH",visible_0:"USDC",visible_1:"BNB"},
-    { id: 4, name: "FIAT/USD" ,value:"USD",visible_0:"FIAT",visible_1:"USD"},
+    { id: 5, name: "FIAT/USD" ,value:"USD",visible_0:"FIAT",visible_1:"USD"},
   ]
   const [top_value,settop_value]=useState(chooseItemList[0].visible_0)
   const [top_value_0,settop_value_0]=useState(chooseItemList[0].visible_1)
