@@ -321,9 +321,9 @@ export const OfferView = () => {
         </View>
 
         {Platform.OS === "android" ? (
-          <Text style={styles.text_TOP}>Exchange</Text>
+          <Text style={styles.text_TOP}>Offers</Text>
         ) : (
-          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Offers</Text>
         )}
 
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -605,14 +605,14 @@ const styles = StyleSheet.create({
   logoImg_TOP: {
     height: hp("8"),
     width: wp("12"),
-    marginLeft: wp(14),
+    marginLeft: wp(22),
   },
   text_TOP: {
     color: "white",
     fontSize: 19,
     fontWeight: "bold",
     alignSelf: "center",
-    marginStart: wp(30)
+    marginStart: wp(34)
   },
   text1_ios_TOP: {
     color: "white",

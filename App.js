@@ -1,7 +1,7 @@
 import "./global";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState, useRef } from "react";
-import { StyleSheet, Text, View, AppState } from "react-native";
+import { StyleSheet, Text, View, AppState, BackHandler, Platform } from "react-native";
 import { Provider as StoreProvider } from "react-redux";
 import store from "./src/components/Redux/Store";
 import NavigationProvider from "./src/Routes/Navigation";
@@ -49,6 +49,17 @@ export default function App() {
         apiKey: MORALIS_API_KEY.apiKey//API_KEYS.MORALIS
       })
     }, 1500);
+  }, []);
+  useEffect(() => {
+    const disableBackButton = () => {
+      return true;
+    };
+    if(Platform.OS==="android")
+    { BackHandler.addEventListener('hardwareBackPress', disableBackButton);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', disableBackButton);
+    };}
+
   }, []);
 
  

@@ -566,9 +566,9 @@ const reves_fun=async(fist_data,second_data)=>{
         </View>
       
         {Platform.OS === "android" ? (
-          <Text style={styles.text_TOP}>Exchange</Text>
+          <Text style={styles.text_TOP}>Create Offer</Text>
         ) : (
-          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Create Offer</Text>
         )}
       
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -1090,7 +1090,7 @@ const styles = StyleSheet.create({
     fontSize:19,
     fontWeight:"bold",
     alignSelf: "center",
-    marginStart:wp(30)
+    marginStart:wp(27)
   },
   text1_ios_TOP: {
     color: "white",

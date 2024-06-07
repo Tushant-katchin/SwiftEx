@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     justifyContent: "space-evenly",
-    // marginTop: hp("10"),
+    marginTop: hp("1"),
     color: "white",
   },
 

@@ -85,28 +85,28 @@ const AuthStack = () => (
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,gestureEnabled:false }}
       />
       <Stack.Screen
         name="LoginScreen"
         component={LoginPage}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,gestureEnabled:false }}
       />
       <Stack.Screen
         name="RegisterScreen"
         component={Register}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,gestureEnabled:false }}
       />
       <Stack.Screen
         name="confirmOtp"
         component={ConfirmOtp}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,gestureEnabled:false }}
       />
       <Stack.Screen
         name="HomeScreen"
         component={Dashboard}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           //header: ({route}) => state.extended===false?Header1( getHeaderTitle(route), state):Header1(getHeaderTitle(route), state)
         }}
       />
@@ -141,18 +141,18 @@ const AuthStack = () => (
       <Stack.Screen
         name="OfferListView"
         component={OfferListView}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,gestureEnabled:false }}
       />
       <Stack.Screen
         name="OfferListViewHome"
         component={OfferListViewHome}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,gestureEnabled:false }}
       />
 
       <Stack.Screen
         name="Wallet"
         component={Wallet}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,gestureEnabled:false }}
       />
       <Stack.Screen
         name="ImportWallet"
@@ -197,14 +197,14 @@ const AuthStack = () => (
         name="Settings"
         component={Settings}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
         }}
       />
        <Stack.Screen
         name="classic"
         component={classic}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
         }}
       />
 
@@ -222,14 +222,14 @@ const AuthStack = () => (
         name="Token"
         component={Token}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
         }}
       />
       <Stack.Screen
         name="Nfts"
         component={Nfts}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           //header: ({route}) => state.extended===false?Header1( getHeaderTitle(route), state):Header1(getHeaderTitle(route), state)
         }}
       />
@@ -247,7 +247,7 @@ const AuthStack = () => (
         name="Welcome"
         component={Welcome}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerStyle: { backgroundColor: "#000C66" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -259,7 +259,7 @@ const AuthStack = () => (
         name="GenerateWallet"
         component={GenerateWallet}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerStyle: { backgroundColor: "#000C66" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -282,7 +282,7 @@ const AuthStack = () => (
         name="Passcode"
         component={Passcode}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerStyle: { backgroundColor: "#000C66" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -386,7 +386,7 @@ const AuthStack = () => (
         name="Send"
         component={SendTokens}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
         }}
       />
 
@@ -422,7 +422,7 @@ const AuthStack = () => (
         name="Biometric"
         component={BiometricPage}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerTitleAlign:"center",
           headerTitle:"Authentication",
           // headerStyle: { backgroundColor: "#000C66" },
@@ -437,7 +437,7 @@ const AuthStack = () => (
         name="exchangeLogin"
         component={ExchangeLogin}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
         }}
       />
       <Stack.Screen
@@ -455,7 +455,7 @@ const AuthStack = () => (
         name="exchange"
         component={ExchangeNavigation}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerTintColor: "white",
           headerTitleStyle: {
             fontWeight: "bold",
@@ -467,7 +467,7 @@ const AuthStack = () => (
         name="appLock"
         component={LockApp}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerStyle: { backgroundColor: "#000C66" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -480,7 +480,7 @@ const AuthStack = () => (
         name="payout"
         component={Payout}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -493,7 +493,7 @@ const AuthStack = () => (
         name="newOffer_modal"
         component={NewOfferModal}
         options={{
-          headerShown: false,
+          headerShown: false,gestureEnabled:false,
           headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {

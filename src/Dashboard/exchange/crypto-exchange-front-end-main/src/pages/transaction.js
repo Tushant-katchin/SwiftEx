@@ -340,9 +340,9 @@ const fetchData_ = async (key) => {
   </View>
 
   {Platform.OS === "android" ? (
-    <Text style={styles.text_TOP}>Exchange</Text>
+    <Text style={styles.text_TOP}>Transactions</Text>
   ) : (
-    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Transactions</Text>
   )}
 
   <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -756,13 +756,13 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     alignSelf: "center",
     // textAlign: "center",
-    marginStart:wp(30)
+    marginStart:wp(27)
   },
   text1_ios_TOP: {
     color: "white",
     fontWeight: "700",
     alignSelf: "center",
-    marginStart: wp(27),
+    marginStart: wp(25),
     top:19,
     fontSize:17
   },

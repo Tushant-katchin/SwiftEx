@@ -10,7 +10,7 @@ import { alert } from "../../../../reusables/Toasts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { Keyboard } from "react-native";
-import { SavePayout, getAllDataAndShow} from "../../../../../utilities/utilities";
+import { SavePayout, getAllDataAndShow, getEthPrice} from "../../../../../utilities/utilities";
 import { authRequest, GET, getToken, POST } from "../api";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Icon from "../../../../../icon";
@@ -18,6 +18,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { useSelector } from "react-redux";
 import Bridge from "../../../../../../assets/Bridge.png";
+import { Switch } from "react-native-paper";
 
 const StellarSdk = require('stellar-sdk');
 
@@ -50,7 +51,8 @@ const Payout = () => {
     const [index_Anchor,setindex_Anchor]=useState(false);
     const [kyc_modal,setkyc_modal]=useState(false);
     const [modal_load,setmodal_load]=useState(false)
-    const [kyc_modal_text,setkyc_modal_text]=useState("Document submiting for KYC")
+    const [kyc_modal_text,setkyc_modal_text]=useState("Getting Well-knows")
+    const [EthPriceil, setEthPrice] = useState("");
 
     const Anchor = [
       { name: "SwiftEx", status: "Verified", image: require('../../../../../../assets/darkBlue.png'), city: "India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia", Crypto_Assets: "XETH, XUSD", Fiat_Assets: "$ USD, € EUR", Payment_Rails: "Card, Bank Transfer, Local Method" },
@@ -102,21 +104,34 @@ const Payout = () => {
         fetchProfileData();
         setpayout_amount("");
     },[top_value,route,isFocused])
-    
+    const get_data=async()=>{
+      await getEthPrice().then((response) => {
+        setEthPrice(response.USD);
+      });
+    }
     useEffect(() => {
+      get_data()
       setmodal_load(true);
       if (kyc_modal) {
         const timer1 = setTimeout(() => {
-          setkyc_modal_text("Verifying KYC")
+          setkyc_modal_text("Getting pairs and rates for asset")
         }, 3000);
-  
         const timer2 = setTimeout(() => {
+          setkyc_modal_text("Document submiting for KYC")
+        }, 4000);
+        const timer3 = setTimeout(() => {
+          // setkyc_modal_text("Verifying KYC")
+        }, 5000);
+  
+        const timer4 = setTimeout(() => {
           setkyc_modal_text("You recived "+payout_amount)
           setmodal_load(false);
         }, 6000);
         return () => {
           clearTimeout(timer1);
           clearTimeout(timer2);
+          clearTimeout(timer3);
+          clearTimeout(timer4);
         };
       }
     }, [kyc_modal,top_value]);
@@ -207,6 +222,7 @@ const Payout = () => {
                       + currentdate.getSeconds();
             SavePayout(issuingAccountPublicKey, recipientPublicKey, datetime, "", g_amount, local_asset, "Faild");
             console.error('Error making payment:', error);
+            setkyc_modal(true);
             alert("error", "Payout failed.");
         }
     };
@@ -317,7 +333,8 @@ const Payout = () => {
            setindex_Anchor(false);
         }
         else {
-            sendPayment(senderSecretKey, recipientPublicKey, g_amount, g_ASSET);
+            // sendPayment(senderSecretKey, recipientPublicKey, g_amount, g_ASSET);
+            setkyc_modal(true);
         }
       }
       else{
@@ -385,9 +402,9 @@ const Payout = () => {
         </View>
       
         {Platform.OS === "android" ? (
-          <Text style={styles.text_TOP}>Exchange</Text>
+          <Text style={styles.text_TOP}>Deposit/withdrawal</Text>
         ) : (
-          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Exchange</Text>
+          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Deposit/withdrawal</Text>
         )}
       
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -518,7 +535,7 @@ const Payout = () => {
         <SafeAreaView style={styles.contener}>
           
         <View style={{width:"100%",justifyContent:"center",alignItems:"center",flexDirection:"row",marginTop:19,marginLeft:6}}>
-         <View style={{width:"15%",}}>
+         <View style={{width:"16%",}}>
          <Text style={{fontSize:24,color:"#fff"}}>{top_value}</Text>
          </View>
           <Icon
@@ -529,7 +546,7 @@ const Payout = () => {
                       style={{margin:10,paddingHorizontal:1}}
                       onPress={()=>{reves_fun(top_value,top_value_0)}}
                     />
-<View style={{width:"15%"}}>
+<View style={{width:"17%"}}>
          <Text style={{fontSize:24,color:"#fff"}}>{top_value_0}</Text>
          </View>
         </View>
@@ -562,12 +579,14 @@ const Payout = () => {
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
                 </View>
-            {route==="XETH"||route==="XUSD"? Available>0.0000000?<></>:<Text style={{color:"red",padding:1.3,paddingHorizontal:2.9}}>Insufficient Balance</Text>:<Text style={{textAlign:"center",color:"orange",paddingHorizontal:2.9}}>{route==="USD"?"Card Payment":"Available Soon"}</Text>}
+            {/* {route==="XETH"||route==="XUSD"? Available>0.0000000?<></>:<Text style={{color:"red",padding:1.3,paddingHorizontal:2.9}}>Insufficient Balance</Text>:<Text style={{textAlign:"center",color:"orange",paddingHorizontal:2.9}}>{route==="USD"?"Card Payment":"Available Soon"}</Text>} */}
 
 
             </View>
             <View style={[styles.Id_text,styles.white]}>
-            <TextInput  editable={Available>0.0000000} style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" returnKeyType="done" value={payout_amount} onChangeText={(amount) => {
+            <TextInput   style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" returnKeyType="done" value={payout_amount} onChangeText={(amount) => {
+
+            {/* <TextInput  editable={Available>0.0000000} style={{width:"90%",color:"white",padding:1}} placeholder="Payout Amount" placeholderTextColor={"gray"} keyboardType="numeric" returnKeyType="done" value={payout_amount} onChangeText={(amount) => { */}
                 onChangeamount(amount)
                 // setpayout_amount(amount)
             }} />
@@ -584,9 +603,9 @@ const Payout = () => {
                 <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"||route==="USD"?"Pay":"Available Soon"}</Text>
             </Pressable>
               :
-            <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"||route==="USD"?"#407EC9":"gray"}]} disabled={payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), manage_button(route) }}>
+            // <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"||route==="USD"?"#407EC9":"gray"}]} disabled={payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), manage_button(route) }}>
 
-            {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> */}
+             <Pressable style={[styles.button,{backgroundColor:!payout_amount?"gray":"#407EC9"}]} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> 
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
                 <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"||route==="USD"?"Pay":"Available Soon"}</Text>
             </Pressable>
@@ -662,12 +681,24 @@ const Payout = () => {
       transparent={true}
       visible={kyc_modal}>
       <View style={styles.kyc_Container}>
-        <View style={styles.kyc_Content}>
+        <View style={[styles.kyc_Content,{height:modal_load===false?"30%":"24%"}]}>
     <Image source={darkBlue} style={styles.logoImg_kyc} />
           <Text style={styles.kyc_text}>{kyc_modal_text}</Text>
-          {modal_load===true?<ActivityIndicator size="large" color="green" />:<TouchableOpacity onPress={()=>{setkyc_modal(false)}} style={{width:"50%",height:"25%",backgroundColor:"green",marginTop:19,borderRadius:10,justifyContent:"center",alignItems:"center"}}>
-            <Text style={{color:"#fff",fontSize:19}}>Accept</Text>
-          </TouchableOpacity>}
+          {modal_load===true?<ActivityIndicator size="large" color="green" />:
+            
+            <>
+
+<Text style={{color:"black",fontSize:19}}>$ {EthPriceil}</Text>
+<Switch
+                // value={}
+                // onValueChange={() => setCheckBox(!Checked)}
+              />
+
+<TouchableOpacity onPress={()=>{setkyc_modal(false)}} style={{width:"50%",height:"25%",backgroundColor:"green",marginTop:19,borderRadius:10,justifyContent:"center",alignItems:"center"}}>
+  <Text style={{color:"#fff",fontSize:19}}>Accept</Text>
+</TouchableOpacity>
+            </>
+            }
         </View>
       </View>
     </Modal>
@@ -699,6 +730,18 @@ const Payout = () => {
     )
 }
 const styles = StyleSheet.create({
+  button_: {
+    backgroundColor: '#1E90FF',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    margin: 10
+  },
+  buttonText_: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
     white: {
         color: 'white'
     },
@@ -781,14 +824,14 @@ const styles = StyleSheet.create({
       logoImg_TOP: {
         height: hp("8"),
         width: wp("12"),
-        marginLeft: wp(14),
+        marginLeft: wp(6),
       },
       text_TOP: {
         color: "white",
         fontSize:19,
         fontWeight:"bold",
         alignSelf: "center",
-        marginStart:wp(30)
+        marginStart:wp(21)
       },
       text1_ios_TOP: {
         color: "white",
