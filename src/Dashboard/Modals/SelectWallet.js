@@ -121,7 +121,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
     >
       <View style={style.Body}>
         {/* <ModalHeader Function={closeModal}  name={'Import'}/> */}
-        <WalletHeader title="SelectWallet" />
+        <WalletHeader title="Select Wallet" />
         <TouchableOpacity
           style={style.Box2}
           onPress={() => {
@@ -147,7 +147,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={Etherimage} style={style.img} />
-          <Text style={style.text}>ethereum</Text>
+          <Text style={style.text}>Ethereum</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}

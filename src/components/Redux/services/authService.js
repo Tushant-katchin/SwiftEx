@@ -667,6 +667,7 @@ async function AddToAllWallets(wallets, user) {
         // }
         
     } else if (wallets[0].classicAddress) {
+      console.log("--------------------------classicAddress-----------------------------------")
       allWallets.push({
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
@@ -676,6 +677,7 @@ async function AddToAllWallets(wallets, user) {
         walletType: wallets[0].walletType,
       });
     } else {
+      console.log("--------------------------allWallets-----------------------------------")
       allWallets.push({
         name: wallets[0].name,
         privateKey: wallets[0].privateKey,
@@ -687,6 +689,34 @@ async function AddToAllWallets(wallets, user) {
     //console.log(walletWithProvider)
     
     AsyncStorage.setItem(`${user}-wallets`, JSON.stringify(allWallets));
+    try {
+    const Ether_address= wallets[0].address;
+    const pair = StellarSdk.Keypair.random();
+    const publicKey = pair.publicKey();
+    const secretKey = pair.secret();
+    console.log('G-Public Key:-', publicKey);
+    console.log('G-Secret Key:-', secretKey);
+      let userTransactions = [];
+      const transactions = await AsyncStorageLib.getItem('myDataKey');
+      if (transactions) {
+        userTransactions = JSON.parse(transactions);
+        if (!Array.isArray(userTransactions)) {
+          userTransactions = [];
+        }
+      }
+      const newTransaction = {
+        Ether_address,
+        publicKey,
+        secretKey
+      };
+      userTransactions.push(newTransaction);
+      await AsyncStorageLib.setItem('myDataKey', JSON.stringify(userTransactions));
+      console.log('Updated userTransactions:', userTransactions);
+      // return userTransactions;
+    } catch (error) {
+      console.error('Error saving payout:', error);
+      throw error;
+    }
     return {
       status: "success",
       message: "Wallet import successful",

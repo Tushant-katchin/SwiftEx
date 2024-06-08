@@ -137,7 +137,9 @@ const ImportEthereumModal = ({
       >
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={"Ethereum"} /> */}
+          <TouchableOpacity onPress={()=>{setWalletVisible(false);}}>
           <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} />
+          </TouchableOpacity>
           <Text style={style.text}>Ethereum</Text>
 
           <View style={style.Button}>

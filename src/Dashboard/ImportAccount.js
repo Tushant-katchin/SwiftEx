@@ -119,7 +119,7 @@ const ImportAccount = (props) => {
           }}
         >
           <Image source={Etherimage} style={style.img} />
-          <Text style={style.text}>ethereum</Text>
+          <Text style={style.text}>Ethereum</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
