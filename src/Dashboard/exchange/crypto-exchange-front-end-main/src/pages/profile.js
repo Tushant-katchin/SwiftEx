@@ -1109,7 +1109,7 @@ const styles = StyleSheet.create({
   logoImg_TOP: {
     height: hp("8"),
     width: wp("12"),
-    marginLeft: wp(21),
+    marginLeft: wp(21.4),
   },
   text_TOP: {
     color: "white",

@@ -765,7 +765,7 @@ const styles = StyleSheet.create({
       fontSize: 19
      },
   radio_btn_selectio:{
-    width:"8.3%",
+    width:"8.9%",
     height:"100%",
     backgroundColor:"green",
     borderColor:"gray",
@@ -866,7 +866,7 @@ const styles = StyleSheet.create({
       logoImg_TOP: {
         height: hp("8"),
         width: wp("12"),
-        marginLeft: wp(6),
+        marginLeft: wp(7.6),
       },
       text_TOP: {
         color: "white",
