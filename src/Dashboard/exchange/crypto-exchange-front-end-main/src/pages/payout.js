@@ -27,7 +27,8 @@ const Payout = () => {
   const AnchorViewRef = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
   const [modalContainer_menu,setmodalContainer_menu]=useState(false);
-
+  const [radio_btn_selectio_,setradio_btn_selectio_]=useState(true);
+  const [radio_btn_selectio_0,setradio_btn_selectio_0]=useState(false);
 
   const handleScroll = (xOffset) => {
     if (AnchorViewRef.current) {
@@ -114,27 +115,38 @@ const Payout = () => {
       setmodal_load(true);
       if (kyc_modal) {
         const timer1 = setTimeout(() => {
-          setkyc_modal_text("Getting pairs and rates for asset")
+          setkyc_modal_text("Getting Well-knows")
         }, 3000);
         const timer2 = setTimeout(() => {
-          setkyc_modal_text("Document submiting for KYC")
-        }, 4000);
-        const timer3 = setTimeout(() => {
-          // setkyc_modal_text("Verifying KYC")
+          setkyc_modal_text("Getting pairs and rates for asset")
         }, 5000);
-  
-        const timer4 = setTimeout(() => {
-          setkyc_modal_text("You recived "+payout_amount)
+        const timer3 = setTimeout(() => {
           setmodal_load(false);
-        }, 6000);
+        }, 9000);
         return () => {
           clearTimeout(timer1);
           clearTimeout(timer2);
           clearTimeout(timer3);
-          clearTimeout(timer4);
         };
       }
     }, [kyc_modal,top_value]);
+    
+    const after_accept_asset = async () => {
+      setmodal_load(true);
+      setkyc_modal_text("Document submiting for KYC");
+      setTimeout(() => {
+        setkyc_modal_text("Verifying KYC");
+        setTimeout(() => {
+          setkyc_modal_text("Transaction Succeeded");
+          setTimeout(() => {
+          setmodal_load(false);
+          setkyc_modal(false);
+            setkyc_modal_text("Getting Well-knows")
+          }, 2500);
+        }, 3000);
+      }, 3000);
+    }
+    
     
     const fetchProfileData = async () => {
         try {
@@ -680,23 +692,41 @@ const Payout = () => {
       animationType="fade"
       transparent={true}
       visible={kyc_modal}>
+      {/* // visible={true}> */}
+
       <View style={styles.kyc_Container}>
-        <View style={[styles.kyc_Content,{height:modal_load===false?"30%":"24%"}]}>
-    <Image source={darkBlue} style={styles.logoImg_kyc} />
-          <Text style={styles.kyc_text}>{kyc_modal_text}</Text>
-          {modal_load===true?<ActivityIndicator size="large" color="green" />:
-            
-            <>
-
-<Text style={{color:"black",fontSize:19}}>$ {EthPriceil}</Text>
-<Switch
-                // value={}
-                // onValueChange={() => setCheckBox(!Checked)}
-              />
-
-<TouchableOpacity onPress={()=>{setkyc_modal(false)}} style={{width:"50%",height:"25%",backgroundColor:"green",marginTop:19,borderRadius:10,justifyContent:"center",alignItems:"center"}}>
-  <Text style={{color:"#fff",fontSize:19}}>Accept</Text>
-</TouchableOpacity>
+        <View style={[styles.kyc_Content,{height:modal_load===false?"40%":"24%"}]}>
+        {kyc_modal_text!=="Transaction Succeeded"&&<Image source={darkBlue} style={styles.logoImg_kyc} />}
+                {kyc_modal_text==="Transaction Succeeded"?
+                <View style={{justifyContent:"center",alignItems:"center",marginTop:28}}>
+                <Icon
+        name={"check-circle-outline"}
+        type={"materialCommunity"}
+        size={63}
+        color={"green"}
+      />
+      <Text style={styles.kyc_text}>{kyc_modal_text}</Text>
+      </View>
+                :modal_load===false?<></>:<Text style={styles.kyc_text}>{kyc_modal_text}</Text>}
+                {/* {modal_load === false ? <ActivityIndicator size="large" color="green" /> : */}
+                {modal_load===true?kyc_modal_text==="Transaction Succeeded"?<></>:<ActivityIndicator size="large" color="green" />:
+                  <>
+                   <Text style={[styles.radio_text_selectio,{marginStart:-71.9,marginBottom:19,marginTop:10}]}>Chooses asset pair</Text>
+                   <View style={{flexDirection:"row"}}>
+                    <TouchableOpacity style={[styles.radio_btn_selectio,{marginRight:15,backgroundColor:radio_btn_selectio_===true?"green":"gray"}]} onPress={()=>{setradio_btn_selectio_0(false),setradio_btn_selectio_(true)}}>
+                    </TouchableOpacity>
+                   <Text style={styles.radio_text_selectio}>{top_value}/{top_value_0}</Text>
+                   <Text style={[styles.radio_text_selectio,{marginStart:10,marginRight:15}]}> ${EthPriceil}</Text>
+                   </View>
+                   <View style={{flexDirection:"row",marginTop:19}}>
+                    <TouchableOpacity style={[styles.radio_btn_selectio,{marginRight:15,backgroundColor:radio_btn_selectio_0===true?"green":"gray"}]} onPress={()=>{setradio_btn_selectio_(false),setradio_btn_selectio_0(true)}}>
+                    </TouchableOpacity>
+                   <Text style={styles.radio_text_selectio}>{top_value_0}/{top_value}</Text>
+                   <Text style={[styles.radio_text_selectio,{marginStart:10,marginRight:15}]}> ${EthPriceil}</Text>
+                   </View>
+                    <TouchableOpacity onPress={() => {after_accept_asset()}} style={{width: "50%", height: "15%", backgroundColor: "green", marginTop: 35, borderRadius: 10, justifyContent: "center", alignItems: "center" }}>
+                      <Text style={{ color: "#fff", fontSize: 19 }}>Accept</Text>
+                    </TouchableOpacity>
             </>
             }
         </View>
@@ -730,6 +760,18 @@ const Payout = () => {
     )
 }
 const styles = StyleSheet.create({
+  radio_text_selectio:{
+     color: "black",
+      fontSize: 19
+     },
+  radio_btn_selectio:{
+    width:"8.3%",
+    height:"100%",
+    backgroundColor:"green",
+    borderColor:"gray",
+    borderWidth:3,
+    borderRadius:15
+  },
   button_: {
     backgroundColor: '#1E90FF',
     padding: 10,
