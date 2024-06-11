@@ -756,7 +756,7 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     alignSelf: "center",
     // textAlign: "center",
-    marginStart:wp(27)
+    marginStart:wp(26.5)
   },
   text1_ios_TOP: {
     color: "white",

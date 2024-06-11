@@ -481,6 +481,7 @@ const AuthStack = () => (
         component={Payout}
         options={{
           headerShown: false,gestureEnabled:false,
+    statusBarHidden:true,
           headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {

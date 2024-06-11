@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,Picker,Image,ScrollView, ActivityIndicator,TouchableOpacity, TextInput, Pressable, FlatList,Modal, Platform, Alert } from "react-native"
+import { View, Text, StyleSheet,Picker,Image,ScrollView, ActivityIndicator,TouchableOpacity, TextInput, Pressable, FlatList,Modal, Platform, Alert, StatusBar } from "react-native"
 import { SafeAreaView } from "react-navigation"
 import {
     widthPercentageToDP as wp,
@@ -395,6 +395,7 @@ const Payout = () => {
 
     return (
         <>
+<StatusBar hidden={true} />
         <View style={styles.headerContainer1_TOP}>
         <View
           style={{
@@ -563,7 +564,7 @@ const Payout = () => {
          </View>
         </View>
  <View style={{flexDirection:"row",justifyContent:"space-evenly"}}>
-        <View style={{ width: '40%', marginTop: 19 }}>
+        <View style={{ width: '40%', marginTop: 19 ,marginBottom:34}}>
                 {/* <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Crypto Assets</Text> */}
                 <TouchableOpacity style={{marginTop: 5, width: "100%", color: "white", justifyContent:"center",padding:13,borderRadius:10,borderColor:"rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1 }} onPress={()=>{setchooseModalPair(true)}}>
                   <Text style={{textAlign:"center",color:"#fff",fontSize:19}}>{top_value+"/"+top_value_0}</Text>
@@ -578,7 +579,7 @@ const Payout = () => {
 <View style={[styles.Id_text,{marginTop:Platform.OS==="ios"?-19:10,alignItems:"center"}]}>
             <Text style={[ styles.gray,]}>{route === "XUSD" ? index_Anchor===true?XUSD:"SwiftEx" : index_Anchor===true?XETH:"SwiftEx"}</Text>
             <View style={{width:19,height:19}}>
-            <Image source={darkBlue} style={{width:40,height:23}}/>
+            {index_Anchor===true?<></>:<Image source={darkBlue} style={{width:40,height:23}}/>}
             </View>
 </View>
             <View style={{ flexDirection: "row", width: wp(90) }}>
@@ -586,7 +587,7 @@ const Payout = () => {
                 <View style={{ width: wp(13) }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9) }}>
                         <Text style={{ marginLeft: 1.9, color: 'white' }}>
-                            {balance ? balance : show === false ? <Text style={{ color: "white" }}>{Available===""?"0.00":Available}</Text> : <></>}
+                            {balance ? balance : show === false ? <Text style={{ color: "white" }}>{Available===""?"1245":Available}</Text> : <></>}
                         </Text>
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
@@ -617,7 +618,8 @@ const Payout = () => {
               :
             // <Pressable style={[styles.button,{backgroundColor:route==="XETH"||route==="XUSD"||route==="USD"?"#407EC9":"gray"}]} disabled={payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), manage_button(route) }}>
 
-             <Pressable style={[styles.button,{backgroundColor:!payout_amount?"gray":"#407EC9"}]} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> 
+            //  <Pressable style={[styles.button,{backgroundColor:!payout_amount?"gray":"#407EC9"}]} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route), sub_function(SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route) }}> 
+            <Pressable style={[styles.button,{backgroundColor:!payout_amount?"gray":"#407EC9"}]} onPress={()=>setAnchor_modal(true)}>
             {/* <Pressable style={styles.button} disabled={!payout_amount} onPress={() => { console.log("PAYOUT_DATA:-:", SecretKey, route === "XETH" ? XETH : XUSD, payout_amount, route),payout_amount !== 0 && payout_amount !== null?setAnchor_modal(true):alert("error","Invalid Value")}}> */}
                 <Text style={styles.btn_text}>{show === true ? <ActivityIndicator color={"white"} /> : route==="XETH"||route==="XUSD"||route==="USD"?"Pay":"Available Soon"}</Text>
             </Pressable>
@@ -636,6 +638,7 @@ const Payout = () => {
         visible={Anchor_modal}
       >
         <View style={styles.container_a}>
+          <StatusBar hidden={true}/>
        
 <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
           if (AnchorViewRef.current && contentWidth !== 0) {
@@ -873,14 +876,14 @@ const styles = StyleSheet.create({
         fontSize:19,
         fontWeight:"bold",
         alignSelf: "center",
-        marginStart:wp(21)
+        marginStart:wp(20)
       },
       text1_ios_TOP: {
         color: "white",
         fontWeight: "700",
         alignSelf: "center",
-        marginStart: wp(31),
-        top:19,
+        marginStart: wp(20),
+        // top:19,
         fontSize:17
       },
       container_a: {
