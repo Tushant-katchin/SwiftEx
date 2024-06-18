@@ -52,7 +52,7 @@ const Payout = () => {
     const [index_Anchor,setindex_Anchor]=useState(false);
     const [kyc_modal,setkyc_modal]=useState(false);
     const [modal_load,setmodal_load]=useState(false)
-    const [kyc_modal_text,setkyc_modal_text]=useState("Getting Well-knows")
+    const [kyc_modal_text,setkyc_modal_text]=useState("Fetching stellar.toml")
     const [EthPriceil, setEthPrice] = useState("");
 
     const Anchor = [
@@ -115,10 +115,10 @@ const Payout = () => {
       setmodal_load(true);
       if (kyc_modal) {
         const timer1 = setTimeout(() => {
-          setkyc_modal_text("Getting Well-knows")
+          setkyc_modal_text("Fetching stellar.toml")
         }, 3000);
         const timer2 = setTimeout(() => {
-          setkyc_modal_text("Getting pairs and rates for asset")
+          setkyc_modal_text("Fetching Pairs and Asset Rates")
         }, 5000);
         const timer3 = setTimeout(() => {
           setmodal_load(false);
@@ -141,7 +141,8 @@ const Payout = () => {
           setTimeout(() => {
           setmodal_load(false);
           setkyc_modal(false);
-            setkyc_modal_text("Getting Well-knows")
+            setkyc_modal_text("Fetching stellar.toml")
+            navigation.navigate("/")
           }, 2500);
         }, 3000);
       }, 3000);
@@ -548,7 +549,7 @@ const Payout = () => {
         <SafeAreaView style={styles.contener}>
           
         <View style={{width:"100%",justifyContent:"center",alignItems:"center",flexDirection:"row",marginTop:19,marginLeft:6}}>
-         <View style={{width:"16%",}}>
+         <View style={{width:"17%",}}>
          <Text style={{fontSize:24,color:"#fff"}}>{top_value}</Text>
          </View>
           <Icon
@@ -575,7 +576,7 @@ const Payout = () => {
               
         </View>
 
-
+<Text style={{color:"#fff",marginBottom:1,marginStart:19}}>Anchor Id</Text>
 <View style={[styles.Id_text,{marginTop:Platform.OS==="ios"?-19:10,alignItems:"center"}]}>
             <Text style={[ styles.gray,]}>{route === "XUSD" ? index_Anchor===true?XUSD:"SwiftEx" : index_Anchor===true?XETH:"SwiftEx"}</Text>
             <View style={{width:19,height:19}}>
@@ -587,7 +588,7 @@ const Payout = () => {
                 <View style={{ width: wp(13) }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9) }}>
                         <Text style={{ marginLeft: 1.9, color: 'white' }}>
-                            {balance ? balance : show === false ? <Text style={{ color: "white" }}>{Available===""?"1245":Available}</Text> : <></>}
+                            {balance ? balance : show === false ? <Text style={{ color: "white" }}>{Available===""?"0.0":Available}</Text> : <></>}
                         </Text>
                         {balance ? balance : show === true ? <ActivityIndicator color={"green"} /> : <></>}
                     </ScrollView>
@@ -714,18 +715,18 @@ const Payout = () => {
                 {/* {modal_load === false ? <ActivityIndicator size="large" color="green" /> : */}
                 {modal_load===true?kyc_modal_text==="Transaction Succeeded"?<></>:<ActivityIndicator size="large" color="green" />:
                   <>
-                   <Text style={[styles.radio_text_selectio,{marginStart:-71.9,marginBottom:19,marginTop:10}]}>Chooses asset pair</Text>
+                   <Text style={[styles.radio_text_selectio,{marginStart:-20.9,marginBottom:19,marginTop:10}]}>Select your preferred option:</Text>
                    <View style={{flexDirection:"row"}}>
                     <TouchableOpacity style={[styles.radio_btn_selectio,{marginRight:15,backgroundColor:radio_btn_selectio_===true?"green":"gray"}]} onPress={()=>{setradio_btn_selectio_0(false),setradio_btn_selectio_(true)}}>
                     </TouchableOpacity>
                    <Text style={styles.radio_text_selectio}>{top_value}/{top_value_0}</Text>
-                   <Text style={[styles.radio_text_selectio,{marginStart:10,marginRight:15}]}> ${EthPriceil}</Text>
+                   <Text style={[styles.radio_text_selectio,{marginStart:18,marginRight:15}]}> ${EthPriceil}</Text>
                    </View>
                    <View style={{flexDirection:"row",marginTop:19}}>
                     <TouchableOpacity style={[styles.radio_btn_selectio,{marginRight:15,backgroundColor:radio_btn_selectio_0===true?"green":"gray"}]} onPress={()=>{setradio_btn_selectio_(false),setradio_btn_selectio_0(true)}}>
                     </TouchableOpacity>
                    <Text style={styles.radio_text_selectio}>{top_value_0}/{top_value}</Text>
-                   <Text style={[styles.radio_text_selectio,{marginStart:10,marginRight:15}]}> ${EthPriceil}</Text>
+                   <Text style={[styles.radio_text_selectio,{marginStart:10,marginRight:15}]}> $0.000287</Text>
                    </View>
                     <TouchableOpacity onPress={() => {after_accept_asset()}} style={{width: "50%", height: "15%", backgroundColor: "green", marginTop: 35, borderRadius: 10, justifyContent: "center", alignItems: "center" }}>
                       <Text style={{ color: "#fff", fontSize: 19 }}>Accept</Text>
@@ -768,7 +769,7 @@ const styles = StyleSheet.create({
       fontSize: 19
      },
   radio_btn_selectio:{
-    width:"8.9%",
+    width:"9.4%",
     height:"100%",
     backgroundColor:"green",
     borderColor:"gray",

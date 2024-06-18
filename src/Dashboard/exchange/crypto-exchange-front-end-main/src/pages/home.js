@@ -871,7 +871,7 @@ const close_=()=>{
   <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"}}>
 <LineChart
         data={chartData}
-        width={388}
+        width={368}
         height={310}
         withDots={true}
         withVerticalLines={false}
