@@ -243,7 +243,7 @@ const ImportOtherWallets = (props) => {
           />
         </View>
 
-        <TextInput
+        {/* <TextInput
           style={style.jsonInput}
           value={jsonKey}
           onChangeText={(text) => {
@@ -252,7 +252,7 @@ const ImportOtherWallets = (props) => {
           placeholderTextColor="gray"
           autoCapitalize={"none"}
           placeholder="JSON password"
-        />
+        /> */}
 
         {loading ? (
           <ActivityIndicator size="large" color="green" />

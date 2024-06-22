@@ -81,7 +81,18 @@ const AuthStack = () => (
         animation: "slide_from_right",
       }}
     >
-    
+     <Stack.Screen
+        name="Passcode"
+        component={Passcode}
+        options={{
+          headerShown: false,gestureEnabled:false,
+          headerStyle: { backgroundColor: "#000C66" },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -278,18 +289,7 @@ const AuthStack = () => (
         }}
       />
 
-      <Stack.Screen
-        name="Passcode"
-        component={Passcode}
-        options={{
-          headerShown: false,gestureEnabled:false,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
-      />
+     
 
       <Stack.Screen
         name="Import"

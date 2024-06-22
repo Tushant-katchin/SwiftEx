@@ -677,32 +677,33 @@ const SwapPinModal = ({
             {loader ? <SwapLoadingComponent /> : <View></View>}
 
             <ReactNativePinView
-              inputSize={25}
-              ref={pinView}
-              pinLength={6}
-              buttonSize={45}
-              onValueChange={(value) => setEnteredPin(value)}
-              buttonAreaStyle={{
-                marginTop: 24,
-              }}
-              inputAreaStyle={{
-                marginBottom: 24,
-              }}
-              inputViewEmptyStyle={{
-                backgroundColor: "transparent",
-                borderWidth: 1,
-                borderColor: "#FFF",
-              }}
-              inputViewFilledStyle={{
-                backgroundColor: "#FFF",
-              }}
-              buttonViewStyle={{
-                borderWidth: 1,
-                borderColor: "#FFF",
-              }}
-              buttonTextStyle={{
-                color: "#FFF",
-              }}
+                inputSize={23}
+                ref={pinView}
+                pinLength={6}
+                buttonSize={60}
+                // customLeftButtonViewStyle={{backgroundColor:'gray'}}
+                onValueChange={(value) => setEnteredPin(value)}
+                buttonAreaStyle={{
+                  marginTop: 24,
+                }}
+                inputAreaStyle={{
+                  marginBottom: 24,
+                }}
+                inputViewEmptyStyle={{
+                  backgroundColor: "transparent",
+                  borderWidth: 1,
+                  borderColor: "#fff",
+                }}
+                inputViewFilledStyle={{
+                  backgroundColor: "#fff",
+                }}
+                // buttonViewStyle={{
+                //   borderWidth: 1,
+                //   borderColor: "#FFF",
+                // }}
+                buttonTextStyle={{
+                  color: "#fff",
+                }}
               onButtonPress={async (key) => {
                 if (key === "custom_left") {
                   pinView.current.clear();

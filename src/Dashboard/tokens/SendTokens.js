@@ -302,7 +302,7 @@ const SendTokens = (props) => {
     </View>:
 <View style={{backgroundColor:"#4CA6EA",flexDirection:"row"}}>
 <Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
-<Text style={{color:"white",alignSelf:"center",marginLeft:"21.9%",fontWeight:'bold',fontSize:17}}>Transaction Details</Text>
+<Text style={{color:"white",alignSelf:"center",marginLeft:"20%",fontWeight:'bold',fontSize:17}}>Transaction Details</Text>
 <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
 <Image source={darkBlue} style={{height: hp("9"),
     width: wp("12"),

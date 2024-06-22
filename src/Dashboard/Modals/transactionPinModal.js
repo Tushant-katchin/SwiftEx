@@ -112,6 +112,183 @@ const TransactionPinModal = ({
     }
   }, [fadeAnim, enteredPin]);
 
+  useEffect(async()=>{
+    if (enteredPin.length===6) {
+      const Pin = await AsyncStorage.getItem("pin");
+      setPinViewVisible(false);
+      setLoader(true);
+      if (JSON.parse(Pin) === enteredPin) {
+        const emailid = await state.user;
+        const token = await state.token;
+
+        if (type === "Eth") {
+          let txx = await provider.core
+            .sendTransaction(rawTransaction)
+            .catch((e) => {
+              console.log(e);
+              setLoading(false);
+              alert("error","insufficient funds...");
+            });
+          const tx = txx.wait();
+          console.log("Sent transaction", await tx);
+
+          if (txx.hash) {
+            try {
+              const type = "Send";
+              const chainType = "Eth";
+              const saveTransaction = await SaveTransaction(
+                type,
+                txx.hash,
+                emailid,
+                token,
+                walletType,
+                chainType
+              );
+
+              console.log(saveTransaction);
+              ShowToast(toast, "Transaction Successful");
+
+              setLoading(false);
+              setLoader(false);
+              setDisable(false);
+              setPinViewVisible(false);
+              getAllBalances(state,dispatch)
+              Navigate();
+              navigation.navigate("Transactions");
+            } catch (e) {
+              setLoading(false);
+              setDisable(false);
+              setLoader(false);
+              setPinViewVisible(false);
+              console.log(e);
+
+              alert("error", e);
+            }
+          }
+        } else if (type === "Matic") {
+          let alchemy = provider;
+          let txx = await alchemy.core.sendTransaction(
+            rawTransaction
+          );
+          console.log("Sent transaction", txx.hash);
+          if (txx.hash) {
+            try {
+              const type = "Send";
+              const chainType = "Matic";
+
+              const saveTransaction = await SaveTransaction(
+                type,
+                txx.hash,
+                emailid,
+                token,
+                walletType
+              );
+
+              console.log(saveTransaction);
+              ShowToast(toast, "Transaction Successful");
+
+              setLoading(false);
+              setLoader(false);
+              setDisable(false);
+              setPinViewVisible(false);
+              getAllBalances(state,dispatch)
+              Navigate();
+              navigation.navigate("Transactions");
+            } catch (e) {
+              setDisable(false);
+              setLoader(false);
+              setPinViewVisible(false);
+              setLoading(false);
+              console.log(e);
+              alert("error", e);
+            }
+          }
+        } else if (type === "BSC") {
+          const txx = await provider
+            .sendTransaction(rawTransaction)
+            .catch((e) => {
+              return alert(e);
+            }); //SendTransaction(signer, token)
+          if (txx.hash) {
+            try {
+              const type = "Send";
+              const chainType = "BSC";
+
+              const saveTransaction = await SaveTransaction(
+                type,
+                txx.hash,
+                emailid,
+                token,
+                walletType,
+                chainType
+              );
+
+              console.log(saveTransaction);
+              ShowToast(toast, "Transaction Successful");
+
+              setLoading(false);
+              setLoader(false);
+              setDisable(false);
+              setPinViewVisible(false);
+              getAllBalances(state,dispatch)
+              Navigate();
+              navigation.navigate("Transactions");
+            } catch (e) {
+              setDisable(false);
+              setPinViewVisible(false);
+              setLoader(false);
+              setLoading(false);
+              console.log(e);
+              alert("error", e);
+            }
+          }
+        } else {
+          try {
+            const client = provider;
+            const signed = rawTransaction;
+            const tx = await client.submitAndWait(signed.tx_blob);
+            const type = "Send";
+            const chainType = "Xrp";
+
+            const saveTransaction = await SaveTransaction(
+              type,
+              signed.hash,
+              emailid,
+              token,
+              walletType,
+              chainType
+            );
+
+            console.log(saveTransaction);
+            ShowToast(toast, "Transaction Successful");
+
+            setLoading(false);
+            setDisable(false);
+            console.log(tx);
+            setLoader(false);
+            setPinViewVisible(false);
+            getAllBalances(state,dispatch)
+            Navigate();
+            navigation.navigate("Transactions");
+          } catch (e) {
+            setLoader(false);
+            setLoading(false);
+            setDisable(false);
+            setPinViewVisible(false);
+            console.log(e);
+            alert("error", "please try again");
+          }
+        }
+      } else {
+        setPinViewVisible(false);
+        setLoading(false);
+        setLoader(false);
+        setDisable(false);
+        pinView.current.clearAll();
+        alert("error", "Incorrect pin try again.");
+      }
+    }
+  },[enteredPin])
   return (
     <Modal
       animationIn="fadeInUpBig"
@@ -158,209 +335,212 @@ const TransactionPinModal = ({
           <View style={{ marginTop: hp(5) }}>
             {loader ? <SendLoadingComponent /> : <View></View>}
             <ReactNativePinView
-              inputSize={25}
-              ref={pinView}
-              pinLength={6}
-              buttonSize={45}
-              onValueChange={(value) => setEnteredPin(value)}
-              buttonAreaStyle={{}}
-              inputAreaStyle={{
-                marginBottom: 24,
-              }}
-              inputViewEmptyStyle={{
-                backgroundColor: "transparent",
-                borderWidth: 1,
-                borderColor: "#FFF",
-              }}
-              inputViewFilledStyle={{
-                backgroundColor: "#FFF",
-              }}
-              buttonViewStyle={{
-                borderWidth: 1,
-                borderColor: "#FFF",
-              }}
-              buttonTextStyle={{
-                color: "#FFF",
-              }}
+             inputSize={23}
+             ref={pinView}
+             pinLength={6}
+             buttonSize={60}
+             // customLeftButtonViewStyle={{backgroundColor:'gray'}}
+             onValueChange={(value) => setEnteredPin(value)}
+             buttonAreaStyle={{
+               marginTop: 24,
+             }}
+             inputAreaStyle={{
+               marginBottom: 24,
+             }}
+             inputViewEmptyStyle={{
+               backgroundColor: "transparent",
+               borderWidth: 1,
+               borderColor: "#fff",
+             }}
+             inputViewFilledStyle={{
+               backgroundColor: "#fff",
+             }}
+             // buttonViewStyle={{
+             //   borderWidth: 1,
+             //   borderColor: "#FFF",
+             // }}
+             buttonTextStyle={{
+               color: "#fff",
+             }}
               onButtonPress={async (key) => {
                 if (key === "custom_left") {
                   pinView.current.clear();
                 }
-                if (key === "custom_right") {
-                  const Pin = await AsyncStorage.getItem("pin");
-                  setPinViewVisible(false);
-                  setLoader(true);
-                  if (JSON.parse(Pin) === enteredPin) {
-                    const emailid = await state.user;
-                    const token = await state.token;
+                // if (key === "custom_right") {
+                //   const Pin = await AsyncStorage.getItem("pin");
+                //   setPinViewVisible(false);
+                //   setLoader(true);
+                //   if (JSON.parse(Pin) === enteredPin) {
+                //     const emailid = await state.user;
+                //     const token = await state.token;
 
-                    if (type === "Eth") {
-                      let txx = await provider.core
-                        .sendTransaction(rawTransaction)
-                        .catch((e) => {
-                          console.log(e);
-                          setLoading(false);
-                          alert("error","insufficient funds...");
-                        });
-                      const tx = txx.wait();
-                      console.log("Sent transaction", await tx);
+                //     if (type === "Eth") {
+                //       let txx = await provider.core
+                //         .sendTransaction(rawTransaction)
+                //         .catch((e) => {
+                //           console.log(e);
+                //           setLoading(false);
+                //           alert("error","insufficient funds...");
+                //         });
+                //       const tx = txx.wait();
+                //       console.log("Sent transaction", await tx);
 
-                      if (txx.hash) {
-                        try {
-                          const type = "Send";
-                          const chainType = "Eth";
-                          const saveTransaction = await SaveTransaction(
-                            type,
-                            txx.hash,
-                            emailid,
-                            token,
-                            walletType,
-                            chainType
-                          );
+                //       if (txx.hash) {
+                //         try {
+                //           const type = "Send";
+                //           const chainType = "Eth";
+                //           const saveTransaction = await SaveTransaction(
+                //             type,
+                //             txx.hash,
+                //             emailid,
+                //             token,
+                //             walletType,
+                //             chainType
+                //           );
 
-                          console.log(saveTransaction);
-                          ShowToast(toast, "Transaction Successful");
+                //           console.log(saveTransaction);
+                //           ShowToast(toast, "Transaction Successful");
 
-                          setLoading(false);
-                          setLoader(false);
-                          setDisable(false);
-                          setPinViewVisible(false);
-                          getAllBalances(state,dispatch)
-                          Navigate();
-                          navigation.navigate("Transactions");
-                        } catch (e) {
-                          setLoading(false);
-                          setDisable(false);
-                          setLoader(false);
-                          setPinViewVisible(false);
-                          console.log(e);
+                //           setLoading(false);
+                //           setLoader(false);
+                //           setDisable(false);
+                //           setPinViewVisible(false);
+                //           getAllBalances(state,dispatch)
+                //           Navigate();
+                //           navigation.navigate("Transactions");
+                //         } catch (e) {
+                //           setLoading(false);
+                //           setDisable(false);
+                //           setLoader(false);
+                //           setPinViewVisible(false);
+                //           console.log(e);
 
-                          alert("error", e);
-                        }
-                      }
-                    } else if (type === "Matic") {
-                      let alchemy = provider;
-                      let txx = await alchemy.core.sendTransaction(
-                        rawTransaction
-                      );
-                      console.log("Sent transaction", txx.hash);
-                      if (txx.hash) {
-                        try {
-                          const type = "Send";
-                          const chainType = "Matic";
+                //           alert("error", e);
+                //         }
+                //       }
+                //     } else if (type === "Matic") {
+                //       let alchemy = provider;
+                //       let txx = await alchemy.core.sendTransaction(
+                //         rawTransaction
+                //       );
+                //       console.log("Sent transaction", txx.hash);
+                //       if (txx.hash) {
+                //         try {
+                //           const type = "Send";
+                //           const chainType = "Matic";
 
-                          const saveTransaction = await SaveTransaction(
-                            type,
-                            txx.hash,
-                            emailid,
-                            token,
-                            walletType
-                          );
+                //           const saveTransaction = await SaveTransaction(
+                //             type,
+                //             txx.hash,
+                //             emailid,
+                //             token,
+                //             walletType
+                //           );
 
-                          console.log(saveTransaction);
-                          ShowToast(toast, "Transaction Successful");
+                //           console.log(saveTransaction);
+                //           ShowToast(toast, "Transaction Successful");
 
-                          setLoading(false);
-                          setLoader(false);
-                          setDisable(false);
-                          setPinViewVisible(false);
-                          getAllBalances(state,dispatch)
-                          Navigate();
-                          navigation.navigate("Transactions");
-                        } catch (e) {
-                          setDisable(false);
-                          setLoader(false);
-                          setPinViewVisible(false);
-                          setLoading(false);
-                          console.log(e);
-                          alert("error", e);
-                        }
-                      }
-                    } else if (type === "BSC") {
-                      const txx = await provider
-                        .sendTransaction(rawTransaction)
-                        .catch((e) => {
-                          return alert(e);
-                        }); //SendTransaction(signer, token)
-                      if (txx.hash) {
-                        try {
-                          const type = "Send";
-                          const chainType = "BSC";
+                //           setLoading(false);
+                //           setLoader(false);
+                //           setDisable(false);
+                //           setPinViewVisible(false);
+                //           getAllBalances(state,dispatch)
+                //           Navigate();
+                //           navigation.navigate("Transactions");
+                //         } catch (e) {
+                //           setDisable(false);
+                //           setLoader(false);
+                //           setPinViewVisible(false);
+                //           setLoading(false);
+                //           console.log(e);
+                //           alert("error", e);
+                //         }
+                //       }
+                //     } else if (type === "BSC") {
+                //       const txx = await provider
+                //         .sendTransaction(rawTransaction)
+                //         .catch((e) => {
+                //           return alert(e);
+                //         }); //SendTransaction(signer, token)
+                //       if (txx.hash) {
+                //         try {
+                //           const type = "Send";
+                //           const chainType = "BSC";
 
-                          const saveTransaction = await SaveTransaction(
-                            type,
-                            txx.hash,
-                            emailid,
-                            token,
-                            walletType,
-                            chainType
-                          );
+                //           const saveTransaction = await SaveTransaction(
+                //             type,
+                //             txx.hash,
+                //             emailid,
+                //             token,
+                //             walletType,
+                //             chainType
+                //           );
 
-                          console.log(saveTransaction);
-                          ShowToast(toast, "Transaction Successful");
+                //           console.log(saveTransaction);
+                //           ShowToast(toast, "Transaction Successful");
 
-                          setLoading(false);
-                          setLoader(false);
-                          setDisable(false);
-                          setPinViewVisible(false);
-                          getAllBalances(state,dispatch)
-                          Navigate();
-                          navigation.navigate("Transactions");
-                        } catch (e) {
-                          setDisable(false);
-                          setPinViewVisible(false);
-                          setLoader(false);
-                          setLoading(false);
-                          console.log(e);
-                          alert("error", e);
-                        }
-                      }
-                    } else {
-                      try {
-                        const client = provider;
-                        const signed = rawTransaction;
-                        const tx = await client.submitAndWait(signed.tx_blob);
-                        const type = "Send";
-                        const chainType = "Xrp";
+                //           setLoading(false);
+                //           setLoader(false);
+                //           setDisable(false);
+                //           setPinViewVisible(false);
+                //           getAllBalances(state,dispatch)
+                //           Navigate();
+                //           navigation.navigate("Transactions");
+                //         } catch (e) {
+                //           setDisable(false);
+                //           setPinViewVisible(false);
+                //           setLoader(false);
+                //           setLoading(false);
+                //           console.log(e);
+                //           alert("error", e);
+                //         }
+                //       }
+                //     } else {
+                //       try {
+                //         const client = provider;
+                //         const signed = rawTransaction;
+                //         const tx = await client.submitAndWait(signed.tx_blob);
+                //         const type = "Send";
+                //         const chainType = "Xrp";
 
-                        const saveTransaction = await SaveTransaction(
-                          type,
-                          signed.hash,
-                          emailid,
-                          token,
-                          walletType,
-                          chainType
-                        );
+                //         const saveTransaction = await SaveTransaction(
+                //           type,
+                //           signed.hash,
+                //           emailid,
+                //           token,
+                //           walletType,
+                //           chainType
+                //         );
 
-                        console.log(saveTransaction);
-                        ShowToast(toast, "Transaction Successful");
+                //         console.log(saveTransaction);
+                //         ShowToast(toast, "Transaction Successful");
 
-                        setLoading(false);
-                        setDisable(false);
-                        console.log(tx);
-                        setLoader(false);
-                        setPinViewVisible(false);
-                        getAllBalances(state,dispatch)
-                        Navigate();
-                        navigation.navigate("Transactions");
-                      } catch (e) {
-                        setLoader(false);
-                        setLoading(false);
-                        setDisable(false);
-                        setPinViewVisible(false);
-                        console.log(e);
-                        alert("error", "please try again");
-                      }
-                    }
-                  } else {
-                    setPinViewVisible(false);
-                    setLoading(false);
-                    setLoader(false);
-                    setDisable(false);
-                    pinView.current.clearAll();
-                    alert("error", "Incorrect pin try again.");
-                  }
-                }
+                //         setLoading(false);
+                //         setDisable(false);
+                //         console.log(tx);
+                //         setLoader(false);
+                //         setPinViewVisible(false);
+                //         getAllBalances(state,dispatch)
+                //         Navigate();
+                //         navigation.navigate("Transactions");
+                //       } catch (e) {
+                //         setLoader(false);
+                //         setLoading(false);
+                //         setDisable(false);
+                //         setPinViewVisible(false);
+                //         console.log(e);
+                //         alert("error", "please try again");
+                //       }
+                //     }
+                //   } else {
+                //     setPinViewVisible(false);
+                //     setLoading(false);
+                //     setLoader(false);
+                //     setDisable(false);
+                //     pinView.current.clearAll();
+                //     alert("error", "Incorrect pin try again.");
+                //   }
+                // }
               }}
               customLeftButton={
                 showRemoveButton ? (

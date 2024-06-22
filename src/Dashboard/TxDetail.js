@@ -11,7 +11,7 @@ export const TxDetail = (props) => {
   const type = useSelector((state) => state.walletType);
   const [walletType, setWalletType] = useState();
   const url = `https://testnet.bscscan.com/tx/${props?.route?.params?.data?.hash}`;
-  const etherUrl = `https://goerli.etherscan.io/tx/${props?.route?.params?.data?.hash}`;
+  const etherUrl = `https://sepolia.etherscan.io/tx/${props?.route?.params?.data?.hash}`;
   const MaticUrl = `https://mumbai.polygonscan.com/tx/${props?.route?.params?.data?.hash}`;
   const XrpUrl = `https://test.bithomp.com/explorer/${props?.route?.params?.data?.hash}`;
   console.log(props?.route?.params?.data?.hash);
