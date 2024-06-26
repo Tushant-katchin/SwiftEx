@@ -1,9 +1,9 @@
-import { Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Modal, TextInput, ActivityIndicator } from "react-native"
+import { Platform, StyleSheet, Text, TouchableOpacity, View, Image, Modal, TextInput, ActivityIndicator } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Icon from "../../../../../icon";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
+import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { useSelector } from "react-redux";
 import Bridge from "../../../../../../assets/Bridge.png";
 import { useState } from "react";
@@ -14,6 +14,7 @@ import {
 import { useRef } from "react";
 import { ScrollView } from "native-base";
 import { useEffect } from "react";
+import { WebView } from 'react-native-webview';
 const StellarSdk = require('stellar-sdk');
 
 const Payout = () => {
@@ -27,14 +28,26 @@ const Payout = () => {
     { name: "BNB", address: "1234567890987654" }
   ];
   const Anchors = [
-    { name: "SwiftEx", address: "1234567890987654" },
-    { name: "APS", address: "1234567890987654" },
-    { name: "BILIRA", address: "1234567890987654" },
-    { name: "ALFRED", address: "1234567890987654" },
-    { name: "ANCLAP", address: "1234567890987654" },
-    { name: "ARF", address: "1234567890987654" },
-    { name: "BNB", address: "1234567890987654" }
+    { name: "SwiftEx", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30"] },
+    { name: "APS", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
+    { name: "BILIRA", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
+    { name: "ALFRED", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
+    { name: "ANCLAP", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
+    { name: "ARF", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
+    { name: "BNB", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] }
   ];
+  const price_data=[
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+  ]
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const state = useSelector((state) => state);
@@ -43,12 +56,21 @@ const Payout = () => {
   const [search_text, setsearch_text] = useState("");
   const AssetViewRef = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
-  const [show_anchors,setshow_anchors]=useState(false);
-  const [kyc_modal_text,setkyc_modal_text]=useState("Fetching stellar.toml");
-  const [kyc_modal,setkyc_modal]=useState(false);
-  const [modal_load,setmodal_load]=useState(false);
-  const [radio_btn_selectio_,setradio_btn_selectio_]=useState(true);
-  const [radio_btn_selectio_0,setradio_btn_selectio_0]=useState(false);
+  const [show_anchors, setshow_anchors] = useState(false);
+  const [kyc_modal_text, setkyc_modal_text] = useState("Fetching stellar.toml");
+  const [kyc_modal, setkyc_modal] = useState(false);
+  const [modal_load, setmodal_load] = useState(false);
+  const [image_hide, setimage_hide] = useState(false);
+  const [radio_btn_selectio_, setradio_btn_selectio_] = useState(true);
+  const [radio_btn_selectio_0, setradio_btn_selectio_0] = useState(false);
+  const [KYC_INFO, setKYC_INFO] = useState(false);
+  const [deposit_modal, setdeposit_modal] = useState(false);
+  const [price_modal, setprice_modal] = useState(false);
+  const [send_price, setsend_price] = useState(false);
+  const [Deposit_modal_new, setDeposit_modal_new] = useState(false);
+  const [open_web_view, setopen_web_view] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [higlight,sethiglight]=useState(0);
 
   const handleScroll = (xOffset) => {
     if (AssetViewRef.current) {
@@ -56,10 +78,19 @@ const Payout = () => {
     }
   };
   useEffect(() => {
+    sethiglight(0);
+    setLoading(false)
+    setsend_price(false)
+    setdeposit_modal(false);
+    setprice_modal(false)
+    setimage_hide(false);
+    setKYC_INFO(false);
     setsearch_text('');
     setselect_asset_modal(true);
     setshow_anchors(false);
     setkyc_modal(false);
+    setDeposit_modal_new(false)
+    setopen_web_view(false)
   }, [isFocused])
 
   useEffect(() => {
@@ -69,7 +100,7 @@ const Payout = () => {
         setkyc_modal_text("Fetching stellar.toml")
       }, 3000);
       const timer2 = setTimeout(() => {
-        setkyc_modal_text("Fetching Pairs and Asset Rates")
+        setkyc_modal_text("Fetching Tx Challange")
       }, 5000);
       const timer3 = setTimeout(() => {
         setmodal_load(false);
@@ -85,17 +116,25 @@ const Payout = () => {
     setmodal_load(true);
     setkyc_modal_text("Document submiting for KYC");
     setTimeout(() => {
-      setkyc_modal_text("Verifying KYC");
-      setTimeout(() => {
-        setkyc_modal_text("Transaction Succeeded");
-        setTimeout(() => {
-        setmodal_load(false);
-        setkyc_modal(false);
-          setkyc_modal_text("Fetching stellar.toml")
-          navigation.navigate("/")
-        }, 2500);
-      }, 3000);
+      setkyc_modal_text("Verifying KYC Details");
+      setmodal_load(false);
+      setimage_hide(true);
+      setKYC_INFO(true);
+      // setTimeout(() => {
+      //   setkyc_modal_text("Transaction Succeeded");
+      //   setTimeout(() => {
+      //   setmodal_load(false);
+      //   setkyc_modal(false);
+      //     setkyc_modal_text("Fetching stellar.toml")
+      //     navigation.navigate("/")
+      //   }, 2500);
+      // }, 3000);
     }, 3000);
+  }
+
+  const handle_close_KYC = async () => {
+    setkyc_modal(false);
+    setdeposit_modal(true);
   }
   return (
     <View style={styles.main}>
@@ -239,7 +278,7 @@ const Payout = () => {
         <Text style={styles.select_asset_heading}>Select Asset</Text>
         <TextInput placeholder="Search" placeholderTextColor={"gray"} value={search_text} onChangeText={(value) => { setsearch_text(value.toUpperCase()) }} style={styles.search_bar} />
         {search_text.length === 0 && <View style={styles.ScrollView_contain}>
-          <TouchableOpacity style={[styles.left_icon,{marginTop:Platform.OS==="ios"&&29}]} onPress={() => {
+          <TouchableOpacity style={[styles.left_icon,]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const backOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Assets.length;
               handleScroll(backOffset);
@@ -247,7 +286,7 @@ const Payout = () => {
             }
           }}><Icon name={"left"} type={"antDesign"} size={25} color={"white"} />
           </TouchableOpacity>
-          <TouchableOpacity style={[[styles.left_icon,{marginTop:Platform.OS==="ios"&&29}], { alignSelf: "flex-end" }]} onPress={() => {
+          <TouchableOpacity style={[[styles.left_icon,], { alignSelf: "flex-end" }]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Assets.length;
               handleScroll(nextOffset);
@@ -256,10 +295,10 @@ const Payout = () => {
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Assets.map((list, index) => {
               return (
-                <View style={[styles.card,{justifyContent:Platform.OS==="ios"&&"center"}]} key={index}>
+                <TouchableOpacity style={[styles.card, { justifyContent: "center",backgroundColor:higlight===index?"green":"#011434" }]} key={index} onPress={()=>{sethiglight(index)}}>
                   <Text style={styles.card_text}>{list.name}</Text>
                   <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
-                </View>
+                </TouchableOpacity>
               )
             })}
           </ScrollView>
@@ -282,31 +321,30 @@ const Payout = () => {
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Assets.map((list, index) => {
-              if (list.name.includes(search_text))
-                {
-                  return (
-                    <View style={[styles.card,{justifyContent:Platform.OS==="ios"&&"center"}]} key={index}>
-                      <Text style={styles.card_text}>{list.name}</Text>
-                      <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
-                    </View>
-                  )
-                }
+              if (list.name.includes(search_text)) {
+                return (
+                  <TouchableOpacity style={[styles.card, { justifyContent: "center",backgroundColor:higlight===index?"green":"#011434" }]} key={index} onPress={()=>{sethiglight(index)}}>
+                  <Text style={styles.card_text}>{list.name}</Text>
+                  <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
+                </TouchableOpacity>
+                )
+              }
             })}
           </ScrollView>
         </View>}
 
-        <TouchableOpacity style={styles.next_btn} onPress={()=>{setselect_asset_modal(false),setshow_anchors(true)}}>
+        <TouchableOpacity style={styles.next_btn} onPress={() => { setsearch_text(''),setselect_asset_modal(false), setshow_anchors(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
         </TouchableOpacity>
       </View>}
 
       {/* Anchors View */}
-      
-      {show_anchors && <View style={styles.select_asset_modal}>
+
+      {show_anchors && <View style={[styles.select_asset_modal, { height: "55%" }]}>
         <Text style={styles.select_asset_heading}>Select Anchor</Text>
         <TextInput placeholder="Search" placeholderTextColor={"gray"} value={search_text} onChangeText={(value) => { setsearch_text(value.toUpperCase()) }} style={styles.search_bar} />
-        {search_text.length === 0 && <View style={styles.ScrollView_contain}>
-          <TouchableOpacity style={[styles.left_icon,{marginTop:Platform.OS==="ios"&&29}]} onPress={() => {
+        {search_text.length === 0 && <View style={[styles.ScrollView_contain, { height: "63%" }]}>
+          <TouchableOpacity style={[styles.left_icon, { marginTop: 120.5, }]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const backOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Assets.length;
               handleScroll(backOffset);
@@ -314,7 +352,7 @@ const Payout = () => {
             }
           }}><Icon name={"left"} type={"antDesign"} size={25} color={"white"} />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.left_icon, { alignSelf: "flex-end" },{marginTop:Platform.OS==="ios"&&29}]} onPress={() => {
+          <TouchableOpacity style={[styles.left_icon, { alignSelf: "flex-end", marginTop: 120.5 },]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Assets.length;
               handleScroll(nextOffset);
@@ -323,17 +361,26 @@ const Payout = () => {
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Anchors.map((list, index) => {
               return (
-                <View style={[styles.card,{justifyContent:Platform.OS==="ios"&&"center"}]} key={index}>
-                  <Text style={styles.card_text}>{list.name}</Text>
-                  <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
+                <View style={styles.card} key={index}>
+                  <View>
+                    <Text style={styles.card_text}>{list.name}</Text>
+                    <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
+                  </View>
+                  {list.seps.map((sep, sepIndex) => (
+                    <TouchableOpacity disabled={sepIndex===1||sepIndex===3} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
+                      <Text style={styles.next_btn_txt} key={sepIndex}>
+                        {sep}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               )
             })}
           </ScrollView>
         </View>}
         {/* for search result */}
-        {search_text.length !== 0 && <View style={styles.ScrollView_contain}>
-          <TouchableOpacity style={[styles.left_icon,{marginTop:Platform.OS==="ios"&&29}]} onPress={() => {
+        {search_text.length !== 0 && <View style={[styles.ScrollView_contain, { height: "63%" }]}>
+          <TouchableOpacity style={[styles.left_icon, { marginTop: 120.5 }]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const backOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Assets.length;
               handleScroll(backOffset);
@@ -341,7 +388,7 @@ const Payout = () => {
             }
           }}><Icon name={"left"} type={"antDesign"} size={25} color={"white"} />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.left_icon, { alignSelf: "flex-end" },{marginTop:Platform.OS==="ios"&&29}]} onPress={() => {
+          <TouchableOpacity style={[styles.left_icon, { alignSelf: "flex-end", marginTop: 120.5 },]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Assets.length;
               handleScroll(nextOffset);
@@ -349,73 +396,236 @@ const Payout = () => {
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Anchors.map((list, index) => {
-              if (list.name.includes(search_text))
-                {
-                  return (
-                    <View style={[styles.card,{justifyContent:Platform.OS==="ios"&&"center"}]} key={index}>
+              if (list.name.includes(search_text)) {
+                return (
+                  <View style={styles.card} key={index}>
+                    <View>
                       <Text style={styles.card_text}>{list.name}</Text>
                       <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
                     </View>
-                  )
-                }
+                    {list.seps.map((sep, sepIndex) => (
+                      <TouchableOpacity disabled={sepIndex===1||sepIndex===3} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
+                        <Text style={styles.next_btn_txt} key={sepIndex}>
+                          {sep}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )
+              }
             })}
           </ScrollView>
         </View>}
 
-        <TouchableOpacity style={styles.next_btn} onPress={()=>{setkyc_modal(true)}}>
+        <TouchableOpacity style={[styles.next_btn,]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
         </TouchableOpacity>
       </View>}
 
       <Modal
-      animationType="fade"
-      transparent={true}
-      visible={kyc_modal}>
-      {/* // visible={true}> */}
-
-      <View style={styles.kyc_Container}>
-        <View style={[styles.kyc_Content,{height:modal_load===false?"40%":"24%"}]}>
-        {kyc_modal_text!=="Transaction Succeeded"&&<Image source={darkBlue} style={styles.logoImg_kyc} />}
-                {kyc_modal_text==="Transaction Succeeded"?
-                <View style={{justifyContent:"center",alignItems:"center",marginTop:28}}>
+        animationType="fade"
+        transparent={true}
+        visible={kyc_modal}>
+        {/* // visible={true}> */}
+        <View style={[styles.kyc_Container]}>
+          <View style={[styles.kyc_Content, { height: modal_load === false ? image_hide === true ? 510 : "40%" : KYC_INFO === false ? 190 : "160%" }]}>
+            {kyc_modal_text !== "Transaction Succeeded" && image_hide === false && <Image source={darkBlue} style={styles.logoImg_kyc} />}
+            {kyc_modal_text === "Transaction Succeeded" ?
+              <View style={{ justifyContent: "center", alignItems: "center", marginTop: 28 }}>
                 <Icon
-        name={"check-circle-outline"}
-        type={"materialCommunity"}
-        size={63}
-        color={"green"}
-      />
-      <Text style={styles.kyc_text}>{kyc_modal_text}</Text>
-      </View>
-                :modal_load===false?<></>:<Text style={styles.kyc_text}>{kyc_modal_text}</Text>}
-                {/* {modal_load === false ? <ActivityIndicator size="large" color="green" /> : */}
-                {modal_load===true?kyc_modal_text==="Transaction Succeeded"?<></>:<ActivityIndicator size="large" color="green" />:
-                  <>
-                   <Text style={[styles.radio_text_selectio,{marginStart:-20.9,marginBottom:19,marginTop:10}]}>Select your preferred option:</Text>
-                   <View style={{flexDirection:"row"}}>
-                    <TouchableOpacity style={[styles.radio_btn_selectio,{marginRight:15,backgroundColor:radio_btn_selectio_===true?"green":"gray"}]} onPress={()=>{setradio_btn_selectio_0(false),setradio_btn_selectio_(true)}}>
-                    </TouchableOpacity>
-                   <Text style={styles.radio_text_selectio}>test/test</Text>
-                   <Text style={[styles.radio_text_selectio,{marginStart:18,marginRight:15}]}> $ 000011</Text>
-                   </View>
-                   <View style={{flexDirection:"row",marginTop:19}}>
-                    <TouchableOpacity style={[styles.radio_btn_selectio,{marginRight:15,backgroundColor:radio_btn_selectio_0===true?"green":"gray"}]} onPress={()=>{setradio_btn_selectio_(false),setradio_btn_selectio_0(true)}}>
-                    </TouchableOpacity>
-                   <Text style={styles.radio_text_selectio}>test/test</Text>
-                   <Text style={[styles.radio_text_selectio,{marginStart:10,marginRight:15}]}> $0.000287</Text>
-                   </View>
-                    <TouchableOpacity onPress={() => {after_accept_asset()}} style={{width: "50%", height: "15%", backgroundColor: "green", marginTop: 35, borderRadius: 10, justifyContent: "center", alignItems: "center" }}>
-                      <Text style={{ color: "#fff", fontSize: 19 }}>Accept</Text>
-                    </TouchableOpacity>
-            </>
+                  name={"check-circle-outline"}
+                  type={"materialCommunity"}
+                  size={63}
+                  color={"green"}
+                />
+                <Text style={styles.kyc_text}>{kyc_modal_text}</Text>
+              </View>
+              : modal_load === false ? <></> : <Text style={styles.kyc_text}>{kyc_modal_text}</Text>}
+            {/* {modal_load === false ? <ActivityIndicator size="large" color="green" /> : */}
+            {modal_load === true ? kyc_modal_text === "Transaction Succeeded" ? <></> : <ActivityIndicator size="large" color="green" /> :
+              KYC_INFO === false ?
+                <>
+                  <Text style={[styles.radio_text_selectio, { marginStart: -20.9, marginBottom: 19, marginTop: 10 }]}>Singing Challange</Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text style={styles.radio_text_selectio}>Address</Text>
+                    <Text style={[styles.radio_text_selectio, { marginStart: 18, marginRight: 15 }]}> QW1qA1223</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginTop: 19 }}>
+                    {/* <ScrollView style={{height:"2%",width:"90%",borderColor: "#485DCA",borderWidth: 1.3,borderRadius: 10}}> */}
+                    {/* <Text style={{color:"#fff",fontSize:19}}>AAAAAgAAAACpn2Fr7GAZ4XOcFvEz+xduBFDK1NDLQP875GtWWlJ0XQAAAMgAAAAAAAAAAAAAAAEAAAAAZnPuLAAAAABmc/GwAAAAAAAAAAIAAAABAAAAAKHKP5NPyx+n79o/pXcd0AP/K9pcLCjMJWf+2EWj1fa8AAAACgAAABt0ZXN0YW5jaG9yLnN0ZWxsYXIub3JnIGF1dGgAAAAAAQAAAEBBK1VRV0M4SlV0NTB3aXFvOFNYWHMraVFWUFBXL0p0bFJpMGNkS1kvR3JJOWQ3cDM1RGx5bkFRZHZkUWtKQXR3AAAAAQAAAACpn2Fr7GAZ4XOcFvEz+xduBFDK1NDLQP875GtWWlJ0XQAAAAoAAAAPd2ViX2F1dGhfZG9tYWluAAAAAAEAAAAWdGVzdGFuY2hvci5zdGVsbGFyLm9yZwAAAAAAAAAAAAJaUnRdAAAAQMe3RoZ/bcehjBPK9svjQKKorQkk8YO+DdQtCIXvmHgwMECwx54jK106O8KTzODvEFS940wJv/nxRz3lsroF+Qaj1fa8AAAAQMDSlRbR0AfAJ+Qig/w9N39GJdWeBIZ9tCkon6pmzuU2ukupLqKkclNc10CwRLMyU7bNF5YWJbwntmgPBFZAcwo=</Text> */}
+                    {/* </ScrollView> */}
+                    <Text style={[styles.radio_text_selectio, { marginStart: 10, marginRight: 15 }]}> QW1qA1223</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => { after_accept_asset() }} style={{ width: "50%", height: "15%", backgroundColor: "green", marginTop: 35, borderRadius: 10, justifyContent: "center", alignItems: "center" }}>
+                    <Text style={{ color: "#fff", fontSize: 19 }}>Confirm</Text>
+                  </TouchableOpacity>
+                </> :
+                <>
+                  <Text style={styles.detailsHeading}>KYC Details</Text>
+                  <View style={styles.formContainer}>
+                    <Text style={styles.detailsSubHeading}>Fields Required *</Text>
+                    <View style={styles.inputRow}>
+                      <Text style={styles.detailsLabel}>First Name :</Text>
+                      <TextInput placeholderTextColor={"gray"} placeholder="First Name" style={styles.detailsInput} />
+                    </View>
+                    <View style={styles.inputRow}>
+                      <Text style={styles.detailsLabel}>Last Name :</Text>
+                      <TextInput placeholderTextColor={"gray"} placeholder="Last Name" style={styles.detailsInput} />
+                    </View>
+                    <View style={styles.inputRow}>
+                      <Text style={styles.detailsLabel}>Bank Acc No :</Text>
+                      <TextInput placeholderTextColor={"gray"} placeholder="Bank Account Number" style={styles.detailsInput} />
+                    </View>
+                    <View style={styles.inputRow}>
+                      <Text style={styles.detailsLabel}>Swift Code :</Text>
+                      <TextInput placeholderTextColor={"gray"} placeholder="Swift Code" style={styles.detailsInput} />
+                    </View>
+                    <View style={styles.inputRow}>
+                      <Text style={styles.detailsLabel}>Passport Front :</Text>
+                      <TextInput placeholderTextColor={"gray"} placeholder="Passport Front" style={styles.detailsInput} />
+                    </View>
+                    <View style={styles.inputRow}>
+                      <Text style={styles.detailsLabel}>Passport Back :</Text>
+                      <TextInput placeholderTextColor={"gray"} placeholder="Passport Back" style={styles.detailsInput} />
+                    </View>
+                  </View>
+                  <TouchableOpacity onPress={() => { handle_close_KYC() }} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green" }]}>
+                    <Text style={styles.submitButtonText}>Submit KYC</Text>
+                  </TouchableOpacity>
+                </>
+
             }
+          </View>
         </View>
-      </View>
-    </Modal>
-   
+      </Modal>
+
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={deposit_modal}>
+        <View style={[styles.kyc_Container]}>
+          <View style={[styles.kyc_Content, { height: "20%",width:"90%" }]}>
+          <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10,alignSelf:"flex-start",fontSize:24 }]}>Select Method :</Text>
+          <View style={{flexDirection:"row",marginTop:-15}}>
+          <TouchableOpacity onPress={() => {setdeposit_modal(false),setDeposit_modal_new(true)}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green" }]}>
+                    <Text style={styles.submitButtonText}>Deposit</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => {setdeposit_modal(false),setprice_modal(true)}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green",marginStart:9 }]}>
+                    <Text style={styles.submitButtonText}>Withdrawal</Text>
+                  </TouchableOpacity>
+          </View>
+          </View>
+        </View>
+
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={price_modal}>
+        {/* visible={true}> */}
+        <View style={[styles.kyc_Container]}>
+          <View style={[styles.kyc_Content, { height: "50%", width: "90%" }]}>
+            <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10, alignSelf: "flex-start", fontSize: 24 }]}>Fetching price info :</Text>
+            <ScrollView>
+            <View style={{ marginTop: -20, alignSelf: "flex-start" }}>
+            {price_data.map((list,index)=>{
+              return(
+                <TouchableOpacity onPress={() => {setprice_modal(false),setsend_price(true)}} style={[styles.Price_card]} key={index}>
+                <Text style={[styles.submitButtonText,{textAlign:"left"}]}>Asset      {list.name}</Text>
+                <Text style={[styles.submitButtonText,{textAlign:"left"}]}>Price      {list.price}</Text>
+                <Text style={[styles.submitButtonText,{textAlign:"left"}]}>Fee        {list.fee}</Text>
+                <Text style={[styles.submitButtonText,{textAlign:"left"}]}>Asset Code {list.asset_code}</Text>
+              </TouchableOpacity>
+              )
+            })}
+            </View>
+            </ScrollView>
+          </View>
+        </View>
+
+      </Modal>
+
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={send_price}>
+        {/* // visible={true}> */}
+        <View style={[styles.kyc_Container]}>
+          <View style={[styles.kyc_Content, { height: "29%",width:"90%" }]}>
+          <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10,alignSelf:"flex-start",fontSize:20,fontWeight:"bold" }]}>Fetching deposit/withdrawal details:</Text>
+         <View style={{alignSelf:"flex-start"}}>
+         <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20}]}>Address: 1234o7654388</Text>
+          <Text style={[styles.submitButtonText,{fontSize:20}]}>Transaction ID: 3456789876543</Text>
+         </View>
+          <View style={{marginTop:20}}>
+          <TouchableOpacity onPress={() => {setsend_price(false),navigation.navigate("/")}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green",paddingHorizontal:40 }]}>
+                    <Text style={styles.submitButtonText}>Send</Text>
+                  </TouchableOpacity>
+          </View>
+          </View>
+        </View>
+
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={Deposit_modal_new}>
+        {/* // visible={true}> */}
+        <View style={[styles.kyc_Container]}>
+          <View style={[styles.kyc_Content, { height: "29%",width:"90%" }]}>
+          <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10,alignSelf:"flex-start",fontSize:20,fontWeight:"bold" }]}>Deposit:</Text>
+         <View style={{alignSelf:"flex-start"}}>
+         <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20}]}>Bank Acc No: 1234o7654388</Text>
+          <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20}]}>IFSC code: 3456789876543</Text>
+         </View>
+          <View style={{marginTop:20}}>
+          <TouchableOpacity onPress={() => {setDeposit_modal_new(false),navigation.navigate("/")}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green",paddingHorizontal:40 }]}>
+                    <Text style={styles.submitButtonText}>Deposit</Text>
+                  </TouchableOpacity>
+          </View>
+          </View>
+        </View>
+
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={open_web_view}
+      >
+        <View style={{ height: hp(70.8), width: "94%", backgroundColor: "white", margin: 10, borderRadius: 10, marginTop: hp(15) }}>
+          <TouchableOpacity style={{ alignSelf: "flex-end", marginRight: 10, marginTop: 10 }} onPress={() => { setopen_web_view(false); }}>
+            <Icon name={"close"} type={"antDesign"} size={28} color={"black"} />
+          </TouchableOpacity>
+
+          {loading && (
+            <ActivityIndicator
+              size="large"
+              color="green"
+              style={{justifyContent:"center",alignItems:"center"}}
+            />
+          )}
+
+          <WebView
+            source={{ uri: `https://anchors.stellar.org/` }}
+            onLoad={() => setLoading(false)}
+            onLoadEnd={() => setLoading(false)}
+          />
+        </View>
+      </Modal>
+
     </View>
   )
 }
 const styles = StyleSheet.create({
+  webview: {
+    height:"6%",
+    width:"99%"
+  },
   headerContainer1_TOP: {
     backgroundColor: "#4CA6EA",
     justifyContent: "space-between",
@@ -442,7 +652,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     alignSelf: "center",
     marginStart: wp(20),
-    top:19,
+    top: 19,
     fontSize: 17
   },
   modalContainer_option_top: {
@@ -512,6 +722,18 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginTop: 19
   },
+  Price_card: {
+    width: wp("68%"),
+    height: hp("14%"),
+    borderColor: "#485DCA",
+    borderWidth: 1.3,
+    justifyContent: "flex-start",
+    alignContent:"flex-start",
+    borderRadius: 10,
+    marginTop: 19,
+    backgroundColor: "#011434",
+    padding:10
+  },
   next_btn_txt: {
     fontSize: 19,
     color: "#fff",
@@ -559,40 +781,72 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   kyc_Content: {
-    backgroundColor: '#fff',
+    backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    width:"80%",
-    height:"24%"
+    width: "80%",
+    height: "24%"
   },
   kyc_text: {
     marginBottom: 10,
     fontSize: 16,
     fontWeight: 'bold',
+    color: "#fff"
   },
   logoImg_kyc: {
     height: hp("9"),
     width: wp("12"),
   },
-  radio_text_selectio:{
-    color: "black",
-     fontSize: 19
-    },
- radio_btn_selectio:{
-   width:"9.4%",
-   height:"100%",
-   backgroundColor:"green",
-   borderColor:"gray",
-   borderWidth:3,
-   borderRadius:15
- },
- button_: {
-   backgroundColor: '#1E90FF',
-   padding: 10,
-   borderRadius: 5,
-   alignItems: 'center',
-   margin: 10
- },
+  radio_text_selectio: {
+    color: "#fff",
+    fontSize: 19
+  },
+  radio_btn_selectio: {
+    width: "9.4%",
+    height: "100%",
+    backgroundColor: "green",
+    borderColor: "gray",
+    borderWidth: 3,
+    borderRadius: 15
+  },
+  detailsHeading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: "#fff"
+  },
+  detailsSubHeading: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: "#fff"
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  detailsLabel: {
+    width: '40%',
+    fontSize: 16,
+    color: "#fff"
+  },
+  detailsInput: {
+    width: '60%',
+    borderWidth: 1,
+    borderColor: "#485DCA",
+    borderRadius: 5,
+    padding: 5,
+    color: "#fff",
+  },
+  formContainer: {
+    width: '100%',
+    marginTop: 15
+  },
+  submitButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold"
+  }
 })
 export default Payout;
