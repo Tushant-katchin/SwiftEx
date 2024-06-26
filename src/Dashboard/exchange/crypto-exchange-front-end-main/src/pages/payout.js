@@ -16,6 +16,7 @@ import { ScrollView } from "native-base";
 import { useEffect } from "react";
 import { WebView } from 'react-native-webview';
 const StellarSdk = require('stellar-sdk');
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const Payout = () => {
   const Assets = [
@@ -71,12 +72,34 @@ const Payout = () => {
   const [open_web_view, setopen_web_view] = useState(false);
   const [loading, setLoading] = useState(true);
   const [higlight,sethiglight]=useState(0);
+  const [imageUri, setImageUri] = useState(null);
 
   const handleScroll = (xOffset) => {
     if (AssetViewRef.current) {
       AssetViewRef.current.scrollTo({ x: xOffset, animated: true });
     }
   };
+
+  const selectImage = () => {
+    const options = {
+      mediaType: 'photo',
+      quality: 1,
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else {
+        const source = { uri: response.assets[0].uri };
+        console.log("--------",source)
+        setImageUri(source.uri);
+        console.log("----source.uri----",imageUri)
+      }
+    });
+  };
+
   useEffect(() => {
     sethiglight(0);
     setLoading(false)
@@ -482,11 +505,15 @@ const Payout = () => {
                     </View>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>Passport Front :</Text>
-                      <TextInput placeholderTextColor={"gray"} placeholder="Passport Front" style={styles.detailsInput} />
+                      <TouchableOpacity  style={styles.detailsInput} onPress={()=>{selectImage()}}>
+                        <Text style={{textAlign:"center",color:"#fff"}}>Upload</Text>
+                      </TouchableOpacity>
                     </View>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>Passport Back :</Text>
-                      <TextInput placeholderTextColor={"gray"} placeholder="Passport Back" style={styles.detailsInput} />
+                      <TouchableOpacity  style={styles.detailsInput} onPress={()=>{selectImage()}}>
+                        <Text style={{textAlign:"center",color:"#fff"}}>Upload</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                   <TouchableOpacity onPress={() => { handle_close_KYC() }} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green" }]}>
