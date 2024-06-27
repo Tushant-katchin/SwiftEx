@@ -440,7 +440,7 @@ const Payout = () => {
           </ScrollView>
         </View>}
 
-        <TouchableOpacity style={[styles.next_btn,]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
+        <TouchableOpacity style={[styles.next_btn,{marginTop:5}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
         </TouchableOpacity>
       </View>}
@@ -581,7 +581,7 @@ const Payout = () => {
         visible={send_price}>
         {/* // visible={true}> */}
         <View style={[styles.kyc_Container]}>
-          <View style={[styles.kyc_Content, { height: "29%",width:"90%" }]}>
+          <View style={[styles.kyc_Content, { height: "34%",width:"90%" }]}>
           <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10,alignSelf:"flex-start",fontSize:20,fontWeight:"bold" }]}>Fetching deposit/withdrawal details:</Text>
          <View style={{alignSelf:"flex-start"}}>
          <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20}]}>Address: 1234o7654388</Text>
@@ -812,7 +812,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    width: "80%",
+    width: "90%",
     height: "24%"
   },
   kyc_text: {
