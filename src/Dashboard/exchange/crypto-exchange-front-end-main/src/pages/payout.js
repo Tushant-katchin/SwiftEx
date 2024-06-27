@@ -29,13 +29,13 @@ const Payout = () => {
     { name: "BNB", address: "1234567890987654" }
   ];
   const Anchors = [
-    { name: "SwiftEx", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30"] },
-    { name: "APS", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
-    { name: "BILIRA", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
-    { name: "ALFRED", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
-    { name: "ANCLAP", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
-    { name: "ARF", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] },
-    { name: "BNB", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24", "SEP 30",] }
+    { name: "SwiftEx", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
+    { name: "APS", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
+    { name: "BILIRA", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
+    { name: "ALFRED", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
+    { name: "ANCLAP", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
+    { name: "ARF", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
+    { name: "BNB", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] }
   ];
   const price_data=[
     { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
@@ -73,6 +73,8 @@ const Payout = () => {
   const [loading, setLoading] = useState(true);
   const [higlight,sethiglight]=useState(0);
   const [imageUri, setImageUri] = useState(null);
+  const [Anchor_selection,setAnchor_selection]=useState(0);
+
 
   const handleScroll = (xOffset) => {
     if (AssetViewRef.current) {
@@ -381,22 +383,32 @@ const Payout = () => {
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
-          <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
+          <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Anchors.map((list, index) => {
               return (
-                <View style={styles.card} key={index}>
+                <TouchableOpacity style={[styles.card,{width: wp("26%")}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
                   <View>
                     <Text style={styles.card_text}>{list.name}</Text>
                     <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
                   </View>
                   {list.seps.map((sep, sepIndex) => (
-                    <TouchableOpacity disabled={sepIndex===1||sepIndex===3} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
+                    <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
                       <Text style={styles.next_btn_txt} key={sepIndex}>
                         {sep}
                       </Text>
+                      
                     </TouchableOpacity>
                   ))}
-                </View>
+                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:19}}>
+                  <Icon
+                    name={"check-circle-outline"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"green"}
+                  />
+                  </View>
+                  }
+                </TouchableOpacity>
               )
             })}
           </ScrollView>
@@ -417,23 +429,32 @@ const Payout = () => {
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
-          <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
+          <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Anchors.map((list, index) => {
               if (list.name.includes(search_text)) {
                 return (
-                  <View style={styles.card} key={index}>
+                  <TouchableOpacity style={[styles.card,{width: wp("25%")}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
                     <View>
                       <Text style={styles.card_text}>{list.name}</Text>
                       <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
                     </View>
                     {list.seps.map((sep, sepIndex) => (
-                      <TouchableOpacity disabled={sepIndex===1||sepIndex===3} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
+                      <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
                         <Text style={styles.next_btn_txt} key={sepIndex}>
                           {sep}
                         </Text>
                       </TouchableOpacity>
                     ))}
+                    {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:19}}>
+                  <Icon
+                    name={"check-circle-outline"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"green"}
+                  />
                   </View>
+                  }
+                  </TouchableOpacity>
                 )
               }
             })}
