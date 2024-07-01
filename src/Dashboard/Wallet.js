@@ -28,15 +28,20 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import NewWalletModal from "./Modals/newWallet";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useIsFocused } from "@react-navigation/native";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 
 const Wallet = ({ navigation }) => {
+  const foucuse=useIsFocused();
   const [visible, setVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [newWalletModal, setNewWalletModal] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  useEffect(()=>{
+      setNewWalletModal(false);
+  },[foucuse])
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
