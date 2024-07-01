@@ -6,6 +6,8 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { useSelector } from "react-redux";
 import Bridge from "../../../../../../assets/Bridge.png";
+import xrp from "../../../../../../assets/xrp.png";
+import bnb from "../../../../../../assets/bnb-icon2_2x.png";
 import { useState } from "react";
 import {
   widthPercentageToDP as wp,
@@ -19,14 +21,15 @@ const StellarSdk = require('stellar-sdk');
 import { launchImageLibrary } from 'react-native-image-picker';
 
 const Payout = () => {
+  const state = useSelector((state) => state);
   const Assets = [
-    { name: "USDC", address: "1234567890987654" },
-    { name: "EURC", address: "1234567890987654" },
-    { name: "ETH", address: "1234567890987654" },
-    { name: "BTC", address: "1234567890987654" },
-    { name: "MATIC", address: "1234567890987654" },
-    { name: "XRP", address: "1234567890987654" },
-    { name: "BNB", address: "1234567890987654" }
+    { name: "USDC", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
+    { name: "EURC", address: state.wallet.address, img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420"},
+    { name: "ETH", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" },
+    { name: "BTC", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png" },
+    { name: "MATIC", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
+    { name: "XRP", address: state.wallet.xrp.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
+    { name: "BNB", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }
   ];
   const Anchors = [
     { name: "SwiftEx", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
@@ -51,7 +54,6 @@ const Payout = () => {
   ]
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const state = useSelector((state) => state);
   const [modalContainer_menu, setmodalContainer_menu] = useState(false);
   const [select_asset_modal, setselect_asset_modal] = useState(true);
   const [search_text, setsearch_text] = useState("");
@@ -82,7 +84,6 @@ const Payout = () => {
       AssetViewRef.current.scrollTo({ x: xOffset, animated: true });
     }
   };
-
   const selectImage = () => {
     const options = {
       mediaType: 'photo',
@@ -314,16 +315,25 @@ const Payout = () => {
           </TouchableOpacity>
           <TouchableOpacity style={[[styles.left_icon,], { alignSelf: "flex-end" }]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
-              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Assets.length;
+              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 8 * contentWidth / Assets.length;
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Assets.map((list, index) => {
               return (
-                <TouchableOpacity style={[styles.card, { justifyContent: "center",backgroundColor:higlight===index?"green":"#011434" }]} key={index} onPress={()=>{sethiglight(index)}}>
-                  <Text style={styles.card_text}>{list.name}</Text>
-                  <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
+                <TouchableOpacity style={[styles.card, { justifyContent: "center", borderColor: higlight === index ? "green" : "#011434", flexDirection: "row", alignItems: "center", }]} key={index} onPress={() => { sethiglight(index) }}>
+                  <Image
+                    source={list.name === "XRP" ? xrp : list.name === "BNB" ? bnb : { uri: list.img }}
+                    style={styles.image_asset}
+                    resizeMode="cover"
+                  />
+                  <View style={{ flexDirection: "column", marginLeft: 5,marginTop:8 }}>
+                    <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(15),borderColor:"#485DCA",paddingVertical:2.2}}>
+                    <Text style={[styles.card_text,{textAlign:"left"}]}>{list.address}</Text>
+                    </ScrollView>
+                  </View>
                 </TouchableOpacity>
               )
             })}
@@ -341,21 +351,26 @@ const Payout = () => {
           </TouchableOpacity>
           <TouchableOpacity style={[styles.left_icon, { alignSelf: "flex-end" }]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
-              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Assets.length;
+              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 8 * contentWidth / Assets.length;
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
           {filteredAssets.length > 0 ? (
         filteredAssets.map((list, index) => (
-          <TouchableOpacity 
-            style={[styles.card, { justifyContent: "center", backgroundColor: higlight === index ? "green" : "#011434" }]} 
-            key={index} 
-            onPress={() => sethiglight(index)}
-          >
-            <Text style={styles.card_text}>{list.name}</Text>
-            <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
-          </TouchableOpacity>
+          <TouchableOpacity style={[styles.card, { justifyContent: "center",borderColor:higlight===index?"green":"#011434",flexDirection:"row",alignItems:"center" }]} key={index} onPress={()=>{sethiglight(index)}}>
+          <Image
+                  source={{ uri: list.img }}
+                  style={styles.image_asset}
+                  resizeMode="cover"
+                />
+                           <View style={{flexDirection:"column",marginLeft:5,marginTop:8}}>
+                           <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
+                           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(15),borderColor:"#485DCA",paddingVertical:2.2}}>
+                    <Text style={[styles.card_text,{textAlign:"left"}]}>{list.address}</Text>
+                    </ScrollView>
+                           </View>
+                          </TouchableOpacity>
         ))
       ) : (
         <Text style={[styles.notFoundText,{marginTop:20,marginLeft:110,}]}>Not Found</Text>
@@ -384,7 +399,7 @@ const Payout = () => {
           </TouchableOpacity>
           <TouchableOpacity style={[styles.left_icon, { alignSelf: "flex-end", marginTop: 120.5 },]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
-              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Assets.length;
+              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 8 * contentWidth / Assets.length;
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
@@ -430,7 +445,7 @@ const Payout = () => {
           </TouchableOpacity>
           <TouchableOpacity style={[styles.left_icon, { alignSelf: "flex-end", marginTop: 120.5 },]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
-              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Assets.length;
+              const nextOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) + 8 * contentWidth / Assets.length;
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
@@ -683,6 +698,10 @@ const styles = StyleSheet.create({
     height:"6%",
     width:"99%"
   },
+  image_asset: {
+    width: 30,
+    height: 30,
+  },
   headerContainer1_TOP: {
     backgroundColor: "#4CA6EA",
     justifyContent: "space-between",
@@ -816,7 +835,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 19
   },
   card: {
-    width: wp("24%"),
+    width: wp("29%"),
     marginRight: 10,
     borderWidth: 1.9,
     borderColor: 'gray',
