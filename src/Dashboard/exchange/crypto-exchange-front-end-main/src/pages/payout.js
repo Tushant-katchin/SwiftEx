@@ -30,12 +30,12 @@ const Payout = () => {
   ];
   const Anchors = [
     { name: "SwiftEx", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
-    { name: "APS", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
-    { name: "BILIRA", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
-    { name: "ALFRED", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
-    { name: "ANCLAP", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
-    { name: "ARF", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
-    { name: "BNB", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] }
+    { name: "ANCLAP", address: "1234567890987654", seps: ["SEP-6", "SEP-24", "SEP-31"] },
+    { name: "APS", address: "1234567890987654", seps: ["SEP-6"] },
+    { name: "BILIRA", address: "1234567890987654", seps: [] },
+    { name: "ALFRED", address: "1234567890987654", seps: [] },
+    { name: "ARF", address: "1234567890987654", seps: [] },
+    { name: "BNB", address: "1234567890987654", seps: [] }
   ];
   const price_data=[
     { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
@@ -74,8 +74,9 @@ const Payout = () => {
   const [higlight,sethiglight]=useState(0);
   const [imageUri, setImageUri] = useState(null);
   const [Anchor_selection,setAnchor_selection]=useState(0);
-
-
+  const [matchesFound, setMatchesFound] = useState(false);
+  const filteredAssets = Assets.filter(list => list.name.includes(search_text));
+  const filteredAnchors = Anchors.filter(list => list.name.includes(search_text));
   const handleScroll = (xOffset) => {
     if (AssetViewRef.current) {
       AssetViewRef.current.scrollTo({ x: xOffset, animated: true });
@@ -345,20 +346,24 @@ const Payout = () => {
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
-            {Assets.map((list, index) => {
-              if (list.name.includes(search_text)) {
-                return (
-                  <TouchableOpacity style={[styles.card, { justifyContent: "center",backgroundColor:higlight===index?"green":"#011434" }]} key={index} onPress={()=>{sethiglight(index)}}>
-                  <Text style={styles.card_text}>{list.name}</Text>
-                  <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
-                </TouchableOpacity>
-                )
-              }
-            })}
+          {filteredAssets.length > 0 ? (
+        filteredAssets.map((list, index) => (
+          <TouchableOpacity 
+            style={[styles.card, { justifyContent: "center", backgroundColor: higlight === index ? "green" : "#011434" }]} 
+            key={index} 
+            onPress={() => sethiglight(index)}
+          >
+            <Text style={styles.card_text}>{list.name}</Text>
+            <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Text style={[styles.notFoundText,{marginTop:20,marginLeft:110,}]}>Not Found</Text>
+      )}
           </ScrollView>
         </View>}
 
-        <TouchableOpacity style={styles.next_btn} onPress={() => { setsearch_text(''),setselect_asset_modal(false), setshow_anchors(true) }}>
+        <TouchableOpacity disabled={filteredAssets.length <= 0} style={styles.next_btn} onPress={() => { setsearch_text(''),setselect_asset_modal(false), setshow_anchors(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
         </TouchableOpacity>
       </View>}
@@ -391,7 +396,7 @@ const Payout = () => {
                     <Text style={styles.card_text}>{list.name}</Text>
                     <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
                   </View>
-                  {list.seps.map((sep, sepIndex) => (
+                  {list?.seps.map((sep, sepIndex) => (
                     <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
                       <Text style={styles.next_btn_txt} key={sepIndex}>
                         {sep}
@@ -430,8 +435,9 @@ const Payout = () => {
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
           <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
-            {Anchors.map((list, index) => {
-              if (list.name.includes(search_text)) {
+          {filteredAnchors.length > 0 ? (
+            filteredAnchors.map((list, index) => {
+             
                 return (
                   <TouchableOpacity style={[styles.card,{width: wp("25%")}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
                     <View>
@@ -456,12 +462,15 @@ const Payout = () => {
                   }
                   </TouchableOpacity>
                 )
-              }
-            })}
+
+            })
+            ) : (
+              <Text style={styles.notFoundText}>Not Found</Text>
+            )}
           </ScrollView>
         </View>}
 
-        <TouchableOpacity style={[styles.next_btn,{marginTop:5}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
+        <TouchableOpacity disabled={filteredAnchors.length <= 0} style={[styles.next_btn,{marginTop:5}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
         </TouchableOpacity>
       </View>}
@@ -895,6 +904,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     fontWeight: "bold"
+  },
+  notFoundText: {
+    color: '#fff',
+    marginTop:120,
+    marginLeft:120,
+    fontSize:20
+
   }
 })
 export default Payout;
