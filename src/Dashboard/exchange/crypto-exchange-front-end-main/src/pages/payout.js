@@ -32,12 +32,12 @@ const Payout = () => {
     { name: "BNB", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }
   ];
   const Anchors=[
-    {name:"SwiftEx", address: "1234567890987654",image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
-    {name:"Banxa", address: "1234567890987654",image: require('../../../../../../assets/BANXA.png'), seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
-    {name:"Clpx", address: "1234567890987654",image: require('../../../../../../assets/CLPX.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
-    {name:"Clickpesa", address: "1234567890987654",image: require('../../../../../../assets/CLICKPESA.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
-    {name:"Finclusive", address: "1234567890987654",image: require('../../../../../../assets/FINCLUSIVE.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
-    {name:"Mykobo", address: "1234567890987654",image: require('../../../../../../assets/MYKOBO.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
+    {name:"SwiftEx", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
+    {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'), seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
+    {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
+    {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
+    {name:"Finclusive", address: state.wallet.address,image: require('../../../../../../assets/FINCLUSIVE.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
+    {name:"Mykobo", address: state.wallet.address,image: require('../../../../../../assets/MYKOBO.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
   ];
   const price_data=[
     { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
@@ -405,24 +405,27 @@ const Payout = () => {
           <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Anchors.map((list, index) => {
               return (
-                <TouchableOpacity style={[styles.card,{width: wp("36%")}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
+                <TouchableOpacity style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
                   <View>
                   <Image
                   source={list.image}
-                  style={styles.image_asset}
+                  style={{width:list.name==="SwiftEx"?70:45,height:list.name==="SwiftEx"?70:45,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
                   resizeMode="cover"
                 />
-                    <Text style={styles.card_text}>{list.name}</Text>
-                    <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
+                    <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:15}]}>{list.name}</Text>
+                    <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
+                    <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                      <Text style={styles.next_btn_txt}>SEP-24</Text>
+                    </TouchableOpacity>
                   </View>
-                  {list?.seps.map((sep, sepIndex) => (
+                  {/* {list?.seps.map((sep, sepIndex) => (
                     <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
                       <Text style={styles.next_btn_txt} key={sepIndex}>
                         {sep}
                       </Text>
                       
                     </TouchableOpacity>
-                  ))}
+                  ))} */}
                  {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:19}}>
                   <Icon
                     name={"check-circle-outline"}
@@ -458,19 +461,28 @@ const Payout = () => {
             filteredAnchors.map((list, index) => {
              
                 return (
-                  <TouchableOpacity style={[styles.card,{width: wp("25%")}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
-                    <View>
-                      <Text style={styles.card_text}>{list.name}</Text>
-                      <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
-                    </View>
-                    {list.seps.map((sep, sepIndex) => (
-                      <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
-                        <Text style={styles.next_btn_txt} key={sepIndex}>
-                          {sep}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                    {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:19}}>
+                  <TouchableOpacity  disabled={Anchor_selection!==index} style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
+                  <View>
+                  <Image
+                  source={list.image}
+                  style={{width:list.name==="SwiftEx"?60:45,height:list.name==="SwiftEx"?60:45,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
+                  resizeMode="cover"
+                />
+                    <Text style={styles.card_text}>{list.name}</Text>
+                    <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
+                    <TouchableOpacity style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                      <Text style={styles.next_btn_txt}>SEP-24</Text>
+                    </TouchableOpacity>
+                  </View>
+                  {/* {list?.seps.map((sep, sepIndex) => (
+                    <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
+                      <Text style={styles.next_btn_txt} key={sepIndex}>
+                        {sep}
+                      </Text>
+                      
+                    </TouchableOpacity>
+                  ))} */}
+                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:19}}>
                   <Icon
                     name={"check-circle-outline"}
                     type={"materialCommunity"}
@@ -479,7 +491,7 @@ const Payout = () => {
                   />
                   </View>
                   }
-                  </TouchableOpacity>
+                </TouchableOpacity>
                 )
 
             })
