@@ -40,20 +40,23 @@ const Payout = () => {
     {name:"Mykobo", address: state.wallet.address,image: require('../../../../../../assets/MYKOBO.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
   ];
   const price_data=[
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
-    { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    { name: "USDC", price: "100", fee:"0.5", asset_code:"USDC" },
+    { name: "USDC", price: "100", fee:"0.5", asset_code:"USDC" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"USDC" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
+    // { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
   ]
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [modalContainer_menu, setmodalContainer_menu] = useState(false);
+  const [done_modal, setdone_modal] = useState(false);
+  const [UPLAOD_1, setUPLAOD_1] = useState(false);
+  const [UPLAOD, setUPLAOD] = useState(false);
   const [select_asset_modal, setselect_asset_modal] = useState(true);
   const [search_text, setsearch_text] = useState("");
   const AssetViewRef = useRef(null);
@@ -98,12 +101,51 @@ const Payout = () => {
         const source = { uri: response.assets[0].uri };
         console.log("--------",source)
         setImageUri(source.uri);
+        setUPLAOD_1(true)
         console.log("----source.uri----",imageUri)
       }
     });
   };
+  const selectImage_1 = () => {
+    const options = {
+      mediaType: 'photo',
+      quality: 1,
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else {
+        const source = { uri: response.assets[0].uri };
+        console.log("--------",source)
+        setImageUri(source.uri);
+        setUPLAOD(true)
+        console.log("----source.uri----",imageUri)
+      }
+    });
+  };
+  const off_modal=()=>{
+    setDeposit_modal_new(false),
+    setTimeout(()=>{
+      setdone_modal(false),
+      navigation.navigate("/")
+    },3000)
+  }
+  
+  const off_modal_1=()=>{
+    setsend_price(false),
+    setTimeout(()=>{
+      setdone_modal(false)
+      navigation.navigate("/")
+    },3000)
+  }
 
   useEffect(() => {
+    setkyc_modal_text("Fetching stellar.toml");
+    setUPLAOD(false)
+    setUPLAOD_1(false)
     sethiglight(0);
     setLoading(false)
     setsend_price(false)
@@ -532,13 +574,13 @@ const Payout = () => {
                   <Text style={[styles.radio_text_selectio, { marginStart: -20.9, marginBottom: 19, marginTop: 10 }]}>Singing Challange</Text>
                   <View style={{ flexDirection: "row" }}>
                     <Text style={styles.radio_text_selectio}>Address</Text>
-                    <Text style={[styles.radio_text_selectio, { marginStart: 18, marginRight: 15 }]}> QW1qA1223</Text>
+                    <Text style={[styles.radio_text_selectio, { marginStart: 18, marginRight: 15 }]}>GDMJXL4V6R...</Text>
                   </View>
                   <View style={{ flexDirection: "row", marginTop: 19 }}>
                     {/* <ScrollView style={{height:"2%",width:"90%",borderColor: "#485DCA",borderWidth: 1.3,borderRadius: 10}}> */}
                     {/* <Text style={{color:"#fff",fontSize:19}}>AAAAAgAAAACpn2Fr7GAZ4XOcFvEz+xduBFDK1NDLQP875GtWWlJ0XQAAAMgAAAAAAAAAAAAAAAEAAAAAZnPuLAAAAABmc/GwAAAAAAAAAAIAAAABAAAAAKHKP5NPyx+n79o/pXcd0AP/K9pcLCjMJWf+2EWj1fa8AAAACgAAABt0ZXN0YW5jaG9yLnN0ZWxsYXIub3JnIGF1dGgAAAAAAQAAAEBBK1VRV0M4SlV0NTB3aXFvOFNYWHMraVFWUFBXL0p0bFJpMGNkS1kvR3JJOWQ3cDM1RGx5bkFRZHZkUWtKQXR3AAAAAQAAAACpn2Fr7GAZ4XOcFvEz+xduBFDK1NDLQP875GtWWlJ0XQAAAAoAAAAPd2ViX2F1dGhfZG9tYWluAAAAAAEAAAAWdGVzdGFuY2hvci5zdGVsbGFyLm9yZwAAAAAAAAAAAAJaUnRdAAAAQMe3RoZ/bcehjBPK9svjQKKorQkk8YO+DdQtCIXvmHgwMECwx54jK106O8KTzODvEFS940wJv/nxRz3lsroF+Qaj1fa8AAAAQMDSlRbR0AfAJ+Qig/w9N39GJdWeBIZ9tCkon6pmzuU2ukupLqKkclNc10CwRLMyU7bNF5YWJbwntmgPBFZAcwo=</Text> */}
                     {/* </ScrollView> */}
-                    <Text style={[styles.radio_text_selectio, { marginStart: 10, marginRight: 15 }]}> QW1qA1223</Text>
+                    <Text style={[styles.radio_text_selectio, { marginStart: 10, marginRight: 15 }]}> AAAAAgAAAACpn2Fr7G...</Text>
                   </View>
                   <TouchableOpacity onPress={() => { after_accept_asset() }} style={{ width: "50%", height: "15%", backgroundColor: "green", marginTop: 35, borderRadius: 10, justifyContent: "center", alignItems: "center" }}>
                     <Text style={{ color: "#fff", fontSize: 19 }}>Confirm</Text>
@@ -550,30 +592,30 @@ const Payout = () => {
                     <Text style={styles.detailsSubHeading}>Fields Required *</Text>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>First Name :</Text>
-                      <TextInput placeholderTextColor={"gray"} placeholder="First Name" style={styles.detailsInput} />
+                      <TextInput placeholderTextColor={"gray"} placeholder="Jon" style={styles.detailsInput} />
                     </View>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>Last Name :</Text>
-                      <TextInput placeholderTextColor={"gray"} placeholder="Last Name" style={styles.detailsInput} />
+                      <TextInput placeholderTextColor={"gray"} placeholder="Alis" style={styles.detailsInput} />
                     </View>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>Bank Acc No :</Text>
-                      <TextInput placeholderTextColor={"gray"} placeholder="Bank Account Number" style={styles.detailsInput} />
+                      <TextInput placeholderTextColor={"gray"} placeholder="019283291" style={styles.detailsInput} />
                     </View>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>Swift Code :</Text>
-                      <TextInput placeholderTextColor={"gray"} placeholder="Swift Code" style={styles.detailsInput} />
+                      <TextInput placeholderTextColor={"gray"} placeholder="TELOPGB1" style={styles.detailsInput} />
                     </View>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>Passport Front :</Text>
-                      <TouchableOpacity  style={styles.detailsInput} onPress={()=>{selectImage()}}>
-                        <Text style={{textAlign:"center",color:"#fff"}}>Upload</Text>
+                      <TouchableOpacity  style={styles.detailsInput} onPress={()=>{selectImage_1()}}>
+                        <Text style={{textAlign:"center",color:"#fff"}}>{UPLAOD===true?"Uploaded":"Upload"}</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.inputRow}>
                       <Text style={styles.detailsLabel}>Passport Back :</Text>
                       <TouchableOpacity  style={styles.detailsInput} onPress={()=>{selectImage()}}>
-                        <Text style={{textAlign:"center",color:"#fff"}}>Upload</Text>
+                        <Text style={{textAlign:"center",color:"#fff"}}>{UPLAOD_1===true?"Uploaded":"Upload"}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -616,8 +658,8 @@ const Payout = () => {
         <View style={[styles.kyc_Container]}>
           <View style={[styles.kyc_Content, { height: "50%", width: "90%" }]}>
             <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10, alignSelf: "flex-start", fontSize: 24 }]}>Fetching price info :</Text>
-            <ScrollView>
-            <View style={{ marginTop: -20, alignSelf: "flex-start" }}>
+            <ScrollView style={{paddingTop:40,paddingBottom:40}}>
+            <View style={{ marginTop: -40, alignSelf: "flex-start" }}>
             {price_data.map((list,index)=>{
               return(
                 <TouchableOpacity onPress={() => {setprice_modal(false),setsend_price(true)}} style={[styles.Price_card]} key={index}>
@@ -646,10 +688,10 @@ const Payout = () => {
           <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10,alignSelf:"flex-start",fontSize:20,fontWeight:"bold" }]}>Fetching deposit/withdrawal details:</Text>
          <View style={{alignSelf:"flex-start"}}>
          <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20}]}>Address: 1234o7654388</Text>
-          <Text style={[styles.submitButtonText,{fontSize:20}]}>Transaction ID: 3456789876543</Text>
+          <Text style={[styles.submitButtonText,{fontSize:20}]}>Transaction ID: 34567898..</Text>
          </View>
           <View style={{marginTop:20}}>
-          <TouchableOpacity onPress={() => {setsend_price(false),navigation.navigate("/")}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green",paddingHorizontal:40 }]}>
+          <TouchableOpacity onPress={() => {setdone_modal(true),off_modal_1()}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green",paddingHorizontal:40 }]}>
                     <Text style={styles.submitButtonText}>Send</Text>
                   </TouchableOpacity>
           </View>
@@ -671,10 +713,33 @@ const Payout = () => {
           <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20}]}>IFSC code: 3456789876543</Text>
          </View>
           <View style={{marginTop:20}}>
-          <TouchableOpacity onPress={() => {setDeposit_modal_new(false),navigation.navigate("/")}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green",paddingHorizontal:40 }]}>
+          <TouchableOpacity onPress={() => {setdone_modal(true),off_modal()}} style={[styles.next_btn, { alignSelf: "center", width: "50%", backgroundColor: "green",paddingHorizontal:40 }]}>
                     <Text style={styles.submitButtonText}>Deposit</Text>
                   </TouchableOpacity>
           </View>
+          </View>
+        </View>
+
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={done_modal}>
+        {/* // visible={true}> */}
+
+       
+
+
+        <View style={[styles.kyc_Container]}>
+          <View style={[styles.kyc_Content, { height: "20%",width:"90%" }]}>
+          <Icon
+        name={"check-circle-outline"}
+        type={"materialCommunity"}
+        size={60}
+        color={"green"}
+      />
+         <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20,marginTop:19}]}>Transaction Successful</Text>
           </View>
         </View>
 
