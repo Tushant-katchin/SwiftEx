@@ -28,16 +28,16 @@ const Payout = () => {
     { name: "ETH", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" },
     { name: "BTC", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png" },
     { name: "MATIC", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
-    { name: "XRP", address: state.wallet.xrp.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
+    { name: "XRP", address: state.wallet.xrp?.address?state.wallet.xrp.address:"rTb0TA",img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
     { name: "BNB", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }
   ];
   const Anchors=[
     {name:"SwiftEx", address: "1234567890987654",image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
-    {name:"BANXA", address: "1234567890987654",image: require('../../../../../../assets/BANXA.png'), seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
-    {name:"CLPX", address: "1234567890987654",image: require('../../../../../../assets/CLPX.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
-    {name:"CLICKPESA", address: "1234567890987654",image: require('../../../../../../assets/CLICKPESA.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
-    {name:"FINCLUSIVE", address: "1234567890987654",image: require('../../../../../../assets/FINCLUSIVE.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
-    {name:"MYKOBO", address: "1234567890987654",image: require('../../../../../../assets/MYKOBO.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
+    {name:"Banxa", address: "1234567890987654",image: require('../../../../../../assets/BANXA.png'), seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
+    {name:"Clpx", address: "1234567890987654",image: require('../../../../../../assets/CLPX.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
+    {name:"Clickpesa", address: "1234567890987654",image: require('../../../../../../assets/CLICKPESA.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
+    {name:"Finclusive", address: "1234567890987654",image: require('../../../../../../assets/FINCLUSIVE.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
+    {name:"Mykobo", address: "1234567890987654",image: require('../../../../../../assets/MYKOBO.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
   ];
   const price_data=[
     { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
