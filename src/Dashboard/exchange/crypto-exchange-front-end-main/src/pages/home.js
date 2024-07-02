@@ -89,7 +89,7 @@ export const HomeView = ({ setPressed }) => {
   const [Offer_active,setOffer_active]=useState(false);
   const Anchor=[
     {name:"SwiftEx",status:"Verified",image: require('../../../../../../assets/darkBlue.png'),city:"India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia",Crypto_Assets:"XETH, XUSD",Fiat_Assets:"$ USD, € EUR",Payment_Rails:"Card, Bank Transfer, Local Method" },
-    {name:"APS",status:"Pending",image: require('../../../../../../assets/APS.png'),city:"Austria / Belgium / Brazil / Bulgaria / Chile / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Latvia / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden",Fiat_Assets:"$ BRL€ EUR$ CLP",Crypto_Assets:"XETH, XUSD" },
+    {name:"MYKOBO",status:"Pending",image: require('../../../../../../assets/MYKOBO.png'),city:"Austria / Belgium / Bulgaria / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden",Fiat_Assets:"€ EUR",Crypto_Assets:"EURC",Payment_Rails:"Bank Transfer, SEPA" },
     {name:"BANXA",status:"Pending",image: require('../../../../../../assets/BANXA.png'),city:"Australia / Austria / Brazil / Canada / Hong Kong / India / Indonesia / Mexico / Netherlands / Philippines / South Africa / Switzerland / Turkey / United States",Fiat_Assets:"$ USD",Crypto_Assets:"USDC ,XLM",Payment_Rails:"Card, Apple Pay, Google Pay, ACH, SEPA, Bank Transfer, Local Method"},
     {name:"CLPX",status:"Pending",image: require('../../../../../../assets/CLPX.png'),city:"Chile",Crypto_Assets:"CLPX" },
     {name:"CLICKPESA",status:"Pending",image: require('../../../../../../assets/CLICKPESA.png'),city:"Kenya / Rwanda / Tanzania",Crypto_Assets:"USDC, XLM, RWF, TZS, KES",Fiat_Assets:"$ USD"},
@@ -641,7 +641,7 @@ const close_=()=>{
                         source={list.image}
                         style={{width: 70,
                           height: 65,
-                          borderRadius: 10,}}
+                          borderRadius:list.name==="MYKOBO"? 100:10}}
                       />
                      </View>
                       <Text style={styles.name}>{list.name}</Text>
@@ -691,7 +691,8 @@ const close_=()=>{
                         source={list.image}
                         style={{width: 75,
                           height: 65,
-                          borderRadius: 10,marginLeft:10}}
+                          borderRadius:list.name==="MYKOBO"? 100:10,
+                          marginLeft:10}}
                       />
                      </View>
                      <Text style={{fontSize:19,textAlign:"center",marginTop:19,fontWeight:"bold"}}>{list.name}</Text>

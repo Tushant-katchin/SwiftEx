@@ -31,14 +31,13 @@ const Payout = () => {
     { name: "XRP", address: state.wallet.xrp.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
     { name: "BNB", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }
   ];
-  const Anchors = [
-    { name: "SwiftEx", address: "1234567890987654", seps: ["SEP 6", "SEP 12", "SEP 24"] },
-    { name: "ANCLAP", address: "1234567890987654", seps: ["SEP-6", "SEP-24", "SEP-31"] },
-    { name: "APS", address: "1234567890987654", seps: ["SEP-6"] },
-    { name: "BILIRA", address: "1234567890987654", seps: [] },
-    { name: "ALFRED", address: "1234567890987654", seps: [] },
-    { name: "ARF", address: "1234567890987654", seps: [] },
-    { name: "BNB", address: "1234567890987654", seps: [] }
+  const Anchors=[
+    {name:"SwiftEx", address: "1234567890987654",image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
+    {name:"BANXA", address: "1234567890987654",image: require('../../../../../../assets/BANXA.png'), seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
+    {name:"CLPX", address: "1234567890987654",image: require('../../../../../../assets/CLPX.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
+    {name:"CLICKPESA", address: "1234567890987654",image: require('../../../../../../assets/CLICKPESA.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
+    {name:"FINCLUSIVE", address: "1234567890987654",image: require('../../../../../../assets/FINCLUSIVE.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
+    {name:"MYKOBO", address: "1234567890987654",image: require('../../../../../../assets/MYKOBO.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
   ];
   const price_data=[
     { name: "USDC", price: "4", fee:"10", asset_code:"XUSD" },
@@ -406,8 +405,13 @@ const Payout = () => {
           <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Anchors.map((list, index) => {
               return (
-                <TouchableOpacity style={[styles.card,{width: wp("26%")}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
+                <TouchableOpacity style={[styles.card,{width: wp("36%")}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
                   <View>
+                  <Image
+                  source={list.image}
+                  style={styles.image_asset}
+                  resizeMode="cover"
+                />
                     <Text style={styles.card_text}>{list.name}</Text>
                     <Text style={styles.card_text}>{list.address.slice(0, 4)}</Text>
                   </View>
