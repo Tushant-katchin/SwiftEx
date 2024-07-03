@@ -32,7 +32,7 @@ const Payout = () => {
     { name: "BNB", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }
   ];
   const Anchors=[
-    {name:"SwiftEx", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
+    // {name:"SwiftEx", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
     {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'), seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
     {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
     {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
@@ -451,12 +451,12 @@ const Payout = () => {
                   <View>
                   <Image
                   source={list.image}
-                  style={{width:list.name==="SwiftEx"?70:45,height:list.name==="SwiftEx"?70:45,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
+                  style={{width:list.name==="SwiftEx"?60:40,height:list.name==="SwiftEx"?60:40,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
                   resizeMode="cover"
                 />
-                    <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:15}]}>{list.name}</Text>
+                    <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
                     <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
-                  <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:8,fontWeight:"500"}]}>Vist stellar website</Text>
+                  <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text>
                     <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
@@ -508,11 +508,12 @@ const Payout = () => {
                   <View>
                   <Image
                   source={list.image}
-                  style={{width:list.name==="SwiftEx"?60:45,height:list.name==="SwiftEx"?60:45,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
+                  style={{width:list.name==="SwiftEx"?60:40,height:list.name==="SwiftEx"?60:40,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
                   resizeMode="cover"
                 />
-                    <Text style={styles.card_text}>{list.name}</Text>
-                    <Text style={[styles.next_btn_txt,{fontSize:15,marginTop:8,fontWeight:"500"}]}>Vist stellar website</Text>
+                    <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
+                    <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
+                    <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text>
                     <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
@@ -659,8 +660,8 @@ const Payout = () => {
         <View style={[styles.kyc_Container]}>
           <View style={[styles.kyc_Content, { height: "50%", width: "90%" }]}>
             <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10, alignSelf: "flex-start", fontSize: 24 }]}>Fetching price info :</Text>
-            <ScrollView style={{paddingTop:40,paddingBottom:40}}>
-            <View style={{ marginTop: -40, alignSelf: "flex-start" }}>
+            <ScrollView style={{paddingTop:10,paddingBottom:10}}>
+            <View style={{ marginTop: -10, alignSelf: "flex-start" }}>
             {price_data.map((list,index)=>{
               return(
                 <TouchableOpacity onPress={() => {setprice_modal(false),setsend_price(true)}} style={[styles.Price_card]} key={index}>
@@ -686,7 +687,7 @@ const Payout = () => {
         {/* // visible={true}> */}
         <View style={[styles.kyc_Container]}>
           <View style={[styles.kyc_Content, { height: "34%",width:"90%" }]}>
-          <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10,alignSelf:"flex-start",fontSize:20,fontWeight:"bold" }]}>Fetching deposit/withdrawal details:</Text>
+          <Text style={[styles.radio_text_selectio, { marginBottom: 19, marginTop: 10,alignSelf:"flex-start",fontSize:20,fontWeight:"bold" }]}>Deposit/Withdrawal details:</Text>
          <View style={{alignSelf:"flex-start"}}>
          <Text style={[styles.submitButtonText,{textAlign:"left",fontSize:20}]}>Address: 1234o7654388</Text>
           <Text style={[styles.submitButtonText,{fontSize:20}]}>Transaction ID: 34567898..</Text>

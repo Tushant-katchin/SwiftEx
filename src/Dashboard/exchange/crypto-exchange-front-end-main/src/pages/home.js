@@ -88,7 +88,7 @@ export const HomeView = ({ setPressed }) => {
   const inActiveColor = ["#131E3A", "#131E3A"];
   const [Offer_active,setOffer_active]=useState(false);
   const Anchor=[
-    {name:"SwiftEx",status:"Verified",image: require('../../../../../../assets/darkBlue.png'),city:"India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia",Crypto_Assets:"XETH, XUSD",Fiat_Assets:"$ USD, € EUR",Payment_Rails:"Card, Bank Transfer, Local Method" },
+    // {name:"SwiftEx",status:"Verified",image: require('../../../../../../assets/darkBlue.png'),city:"India / Indonesia / Ireland / Israel / Italy / Jamaica / Japan / Jordan / Kazakhstan / Kenya / Kosovo / Kuwait / Kyrgyzstan / Laos / Latvia / Lebanon / Liberia / Libya / Slovakia / Slovenia / Solomon Islands / South Africa / South Korea / South Sudan / Spain / Sri Lanka / Suriname / Sweden / Switzerland / Taiwan / Tanzania / Thailand / Timor-Leste / Togo / Tonga / Trinidad And Tobago / Turkey / Turks And Caicos Islands / Tuvalu / Uganda / Ukraine / United Arab Emirates / United Kingdom / United States / Uruguay / Uzbekistan / Vanuatu / Venezuela / Vietnam / Virgin Islands, British / Virgin Islands, U.S. / Yemen / Zambia",Crypto_Assets:"XETH, XUSD",Fiat_Assets:"$ USD, € EUR",Payment_Rails:"Card, Bank Transfer, Local Method" },
     {name:"Mykobo",status:"Pending",image: require('../../../../../../assets/MYKOBO.png'),city:"Austria / Belgium / Bulgaria / Croatia / Cyprus / Czech Republic / Denmark / Estonia / Finland / France / Germany / Greece / Hungary / Ireland / Italy / Lithuania / Luxembourg / Malta / Netherlands / Poland / Portugal / Romania / Slovakia / Slovenia / Spain / Sweden",Fiat_Assets:"€ EUR",Crypto_Assets:"EURC",Payment_Rails:"Bank Transfer, SEPA" },
     {name:"Banxa",status:"Pending",image: require('../../../../../../assets/BANXA.png'),city:"Australia / Austria / Brazil / Canada / Hong Kong / India / Indonesia / Mexico / Netherlands / Philippines / South Africa / Switzerland / Turkey / United States",Fiat_Assets:"$ USD",Crypto_Assets:"USDC ,XLM",Payment_Rails:"Card, Apple Pay, Google Pay, ACH, SEPA, Bank Transfer, Local Method"},
     {name:"Clpx",status:"Pending",image: require('../../../../../../assets/CLPX.png'),city:"Chile",Crypto_Assets:"CLPX" },
@@ -100,7 +100,7 @@ export const HomeView = ({ setPressed }) => {
   const [Anchor_modal,setAnchor_modal]=useState(false);
   const [index_Anchor,setindex_Anchor]=useState(0);
   const [kyc_modal,setkyc_modal]=useState(false);
-  const [kyc_status,setkyc_status]=useState(false);
+  const [kyc_status,setkyc_status]=useState(true);
   const [con_modal,setcon_modal]=useState(false)
 
 
@@ -127,11 +127,11 @@ export const HomeView = ({ setPressed }) => {
       const value = await AsyncStorage.getItem(key);
     const parsedValue = JSON.parse(value); 
     console.log("++++_+_+_",parsedValue)
-    parsedValue===null?setkyc_status(false):setkyc_status(parsedValue)
+    parsedValue===null?setkyc_status(true):setkyc_status(true)
       console.log('Retrieved value:', parsedValue);
     } catch (error) {
       console.error('Error retrieving data', error);
-      setkyc_status(false);
+      setkyc_status(true);
     }
   };
 
@@ -641,7 +641,7 @@ const close_=()=>{
                         source={list.image}
                         style={{width: 70,
                           height: 65,
-                          borderRadius:list.name==="MYKOBO"? 100:10}}
+                          borderRadius:list.name==="Mykobo"? 100:10}}
                       />
                      </View>
                       <Text style={styles.name}>{list.name}</Text>
@@ -691,7 +691,7 @@ const close_=()=>{
                         source={list.image}
                         style={{width: 75,
                           height: 65,
-                          borderRadius:list.name==="MYKOBO"? 100:10,
+                          borderRadius:list.name==="Mykobo"? 30:10,
                           marginLeft:10}}
                       />
                      </View>
