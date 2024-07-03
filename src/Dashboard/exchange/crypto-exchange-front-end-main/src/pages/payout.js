@@ -456,8 +456,9 @@ const Payout = () => {
                 />
                     <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:15}]}>{list.name}</Text>
                     <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
+                  <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:8,fontWeight:"500"}]}>Vist stellar website</Text>
                     <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
-                      <Text style={styles.next_btn_txt}>SEP-24</Text>
+                      <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
                   </View>
                   {/* {list?.seps.map((sep, sepIndex) => (
@@ -468,7 +469,7 @@ const Payout = () => {
                       
                     </TouchableOpacity>
                   ))} */}
-                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:19}}>
+                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:10}}>
                   <Icon
                     name={"check-circle-outline"}
                     type={"materialCommunity"}
@@ -511,9 +512,9 @@ const Payout = () => {
                   resizeMode="cover"
                 />
                     <Text style={styles.card_text}>{list.name}</Text>
-                    <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
-                    <TouchableOpacity style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
-                      <Text style={styles.next_btn_txt}>SEP-24</Text>
+                    <Text style={[styles.next_btn_txt,{fontSize:15,marginTop:8,fontWeight:"500"}]}>Vist stellar website</Text>
+                    <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                      <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
                   </View>
                   {/* {list?.seps.map((sep, sepIndex) => (
@@ -524,7 +525,7 @@ const Payout = () => {
                       
                     </TouchableOpacity>
                   ))} */}
-                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:19}}>
+                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:10}}>
                   <Icon
                     name={"check-circle-outline"}
                     type={"materialCommunity"}

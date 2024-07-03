@@ -135,7 +135,7 @@ const Wallet = ({ navigation }) => {
               setVisible(true);
             }}
           >
-            <Text style={styles.Text}>I already have a wallet</Text>
+            <Text style={styles.Text}>Import Wallet</Text>
           </TouchableOpacity>
         </View>
       </View>

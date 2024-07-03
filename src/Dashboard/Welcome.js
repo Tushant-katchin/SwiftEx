@@ -84,7 +84,7 @@ const Welcome = (props) => {
             props.navigation.navigate("Import");
           }}
         >
-          <Text style={style.Text}>I already have a wallet</Text>
+          <Text style={style.Text}>Import Wallet</Text>
         </TouchableOpacity>
       </View>
     </View>

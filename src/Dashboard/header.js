@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
-    paddingTop:19,
+    paddingTop:30,
     paddingLeft:53
   },
   headerImage: {
