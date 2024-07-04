@@ -73,6 +73,7 @@ export const NewOfferModal = () => {
     email: "",
     publicKey: "",
   });
+  const slipage=[{data:"25%"},{data:"50%"},{data:"75%"},{data:"100%"}]
 const [eth_modal_visible,seteth_modal_visible]=useState(false);
 const [eth_modal_amount,seteth_modal_amount]=useState("");
 const [eth_modal_load,seteth_modal_load]=useState(false);
@@ -83,6 +84,9 @@ const [info_,setinfo_]=useState(false);
 const [isVisible, setIsVisible] = useState(true);
 const [modalContainer_menu,setmodalContainer_menu]=useState(false);
 const [chooseModalPair,setchooseModalPair]=useState(false);
+const [total_price,settotal_price]=useState(0);
+const [total_price_info,settotal_price_info]=useState(false);
+
 const getAccountDetails = async () => {
       const storedData = await AsyncStorageLib.getItem('myDataKey');
       const parsedData = JSON.parse(storedData);
@@ -597,15 +601,6 @@ const reves_fun=async(fist_data,second_data)=>{
       <TouchableOpacity style={styles.modalContainer_option_top}  onPress={()=>{setmodalContainer_menu(false)}}> 
       <View style={styles.modalContainer_option_sub}>
      
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"lan-pending"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
@@ -614,7 +609,7 @@ const reves_fun=async(fist_data,second_data)=>{
         size={30}
         color={"gray"}
       />
-      <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
+      <Text style={styles.modalContainer_option_text}>Asset</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
@@ -861,20 +856,29 @@ const reves_fun=async(fist_data,second_data)=>{
                 disabled={Balance==="0.0000000"||Balance==="0"}
                 autoCapitalize={"none"}
               />
+              <View style={{flexDirection:"row",paddingTop:10,marginTop:-10,width:"10%"}}>
+                {slipage.map((list,index)=>{
+                  return(
+                    <TouchableOpacity style={styles.slipage_1} key={index}>
+                      <Text style={{color:"#fff"}}>{list.data}</Text>
+                    </TouchableOpacity>
+                  )
+                })}
+              </View>
               <View style={{flexDirection:"row"}}> 
               <Text style={styles.unitText}>Price</Text>
-              <TouchableOpacity onPress={()=>{info_price===false?setinfo_price(true):setinfo_price(false)}}>
-               <Icon
-                      name={"information-outline"}
-                      type={"materialCommunity"}
-                      color={"rgba(129, 108, 255, 0.97)"}
-                      size={21}
-                      style={{marginLeft:10}}
-                    />
-               </TouchableOpacity>
-{info_price===true?<View style={{backgroundColor:"gray",backgroundColor:"#212B53",padding:3.6,borderRadius:10,zIndex:20,position:"absolute",marginStart:70}}>
-                      <Text style={{color:"white"}}>Offered Price for {selectedValue}</Text>
-                    </View>:<></>}
+                <TouchableOpacity onPress={() => { info_price === false ? setinfo_price(true) : setinfo_price(false) }}>
+                  <Icon
+                    name={"information-outline"}
+                    type={"materialCommunity"}
+                    color={"rgba(129, 108, 255, 0.97)"}
+                    size={21}
+                    style={{ marginLeft: 10 }}
+                  />
+                </TouchableOpacity>
+                {info_price === true ? <View style={{ backgroundColor: "gray", backgroundColor: "#212B53", padding: 3.6, borderRadius: 10, zIndex: 20, position: "absolute", marginStart: 70 }}>
+                  <Text style={{ color: "white" }}>Offered Price for {selectedValue}</Text>
+                </View> : <></>}
               </View>
               <TextInput
                 style={styles.input}
@@ -886,8 +890,27 @@ const reves_fun=async(fist_data,second_data)=>{
                   onChangename(text)
                 }}
                 autoCapitalize={"none"}
-                disabled={Balance==="0.0000000"||Balance==="0"}
+                disabled={Balance === "0.0000000" || Balance === "0"}
               />
+
+<View style={{flexDirection:"row"}}> 
+              <Text style={styles.unitText}>Total</Text>
+                <TouchableOpacity onPress={() => { total_price_info === false ? settotal_price_info(true) : settotal_price_info(false) }}>
+                  <Icon
+                    name={"information-outline"}
+                    type={"materialCommunity"}
+                    color={"rgba(129, 108, 255, 0.97)"}
+                    size={21}
+                    style={{ marginLeft: 10 }}
+                  />
+                </TouchableOpacity>
+                {total_price_info === true ? <View style={{ backgroundColor: "gray", backgroundColor: "#212B53", padding: 3.6, borderRadius: 10, zIndex: 20, position: "absolute", marginStart: 70 }}>
+                  <Text style={{ color: "white" }}>Total for {selectedValue}</Text>
+                </View> : <></>}
+              </View>
+              <Text style={[styles.input,{backgroundColor:"#fff",borderTopLeftRadius:4,borderTopRightRadius:4,color:"black",paddingTop:5,paddingLeft:10,fontSize:19}]}>{total_price}</Text>
+
+
             </View>
 
           </View>
@@ -1183,4 +1206,14 @@ searchInput: {
     fontSize: 19,
     color: '#fff',
   },
+  slipage_1: {
+    margin: 5,
+    alignItems: "center",
+    width: wp(15),
+    borderColor: "'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 3,
+    marginBottom:15
+  }
 });

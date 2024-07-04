@@ -6,8 +6,8 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { useSelector } from "react-redux";
 import Bridge from "../../../../../../assets/Bridge.png";
-import xrp from "../../../../../../assets/xrp.png";
-import bnb from "../../../../../../assets/bnb-icon2_2x.png";
+import xrp from "../../../../../../assets/CLICKPESA.png";
+import bnb from "../../../../../../assets/CLPX.png";
 import { useState } from "react";
 import {
   widthPercentageToDP as wp,
@@ -23,21 +23,19 @@ import { launchImageLibrary } from 'react-native-image-picker';
 const Payout = () => {
   const state = useSelector((state) => state);
   const Assets = [
-    { name: "USDC", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
-    { name: "EURC", address: state.wallet.address, img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420"},
-    { name: "ETH", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" },
-    { name: "BTC", address: state.wallet.address,img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png" },
-    { name: "MATIC", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
-    { name: "XRP", address: state.wallet.xrp?.address?state.wallet.xrp.address:"rTb0TA",img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
-    { name: "BNB", address: state.wallet.address,img:"https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }
+    { name: "USDC",by:"centre.io", address: "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",dis_ass:"GA5...KZVN",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
+    { name: "EURC",by:" circle.com", address: "GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2", dis_ass:"GDH...NPP2",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420"},
+    { name: "CLPX",by:"clpx", address: "GDYSPBVZHPQTYMGSYNOHRZQNLB3ZWFVQ2F7EP7YBOLRGD42XIC3QUX5G",dis_ass:"GDY...UX5G",img:"../../../../../../assets/CLPX.png" },
+    { name: "RWF",by:"clickpesa", address: "GA2MSSZKJOU6RNL3EJKH3S5TB5CDYTFQFWRYFGUJVIN5I6AOIRTLUHTO",dis_ass:"GA2...UHTO",img:"../../../../../../assets/CLICKPESA.png" },
+    { name: "KES",by:"clickpesa", address: "GA2MSSZKJOU6RNL3EJKH3S5TB5CDYTFQFWRYFGUJVIN5I6AOIRTLUHTO",dis_ass:"GA2...UHTO",img:"../../../../../../assets/CLICKPESA.png" },
   ];
   const Anchors=[
-    // {name:"SwiftEx", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
-    {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'), seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
-    {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
-    {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
-    {name:"Finclusive", address: state.wallet.address,image: require('../../../../../../assets/FINCLUSIVE.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
-    {name:"Mykobo", address: state.wallet.address,image: require('../../../../../../assets/MYKOBO.png'), seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
+    // {name:"SwiftEx",by:"centre.io", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
+    {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'),dis_ass:"GA5...KZVN", seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
+    {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'),dis_ass:"GDH...NPP2", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
+    {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'),dis_ass:"GDY...UX5G", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
+    {name:"Finclusive", address: state.wallet.address,image: require('../../../../../../assets/FINCLUSIVE.png'),dis_ass:"GA2...UHTO", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
+    {name:"Mykobo", address: state.wallet.address,image: require('../../../../../../assets/MYKOBO.png'),dis_ass:"GA2...UHTO", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
   ];
   const price_data=[
     { name: "USDC", price: "100", fee:"0.5", asset_code:"USDC" },
@@ -255,15 +253,6 @@ const Payout = () => {
             <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
               <View style={styles.modalContainer_option_sub}>
 
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"lan-pending"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
-                </TouchableOpacity>
 
                 <TouchableOpacity style={styles.modalContainer_option_view}>
                   <Icon
@@ -272,7 +261,7 @@ const Payout = () => {
                     size={30}
                     color={"gray"}
                   />
-                  <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
+                  <Text style={styles.modalContainer_option_text}>Asset</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.modalContainer_option_view}>
@@ -363,16 +352,17 @@ const Payout = () => {
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Assets.map((list, index) => {
               return (
-                <TouchableOpacity style={[styles.card, { justifyContent: "center", borderColor: higlight === index ? "green" : "#011434", flexDirection: "row", alignItems: "center", }]} key={index} onPress={() => { sethiglight(index) }}>
+                <TouchableOpacity style={[styles.card, {width: wp("39%"), justifyContent: "flex-start", borderColor: higlight === index ? "green" : "#011434", flexDirection: "row", alignItems: "center", }]} key={index} onPress={() => { sethiglight(index) }}>
                   <Image
-                    source={list.name === "XRP" ? xrp : list.name === "BNB" ? bnb : { uri: list.img }}
+                    source={list.by === "clpx" ? bnb : list.by === "clickpesa" ? xrp : { uri: list.img }}
                     style={styles.image_asset}
                     resizeMode="cover"
                   />
-                  <View style={{ flexDirection: "column", marginLeft: 5,marginTop:8 }}>
+                  <View style={{ flexDirection: "column", marginLeft: 5,marginTop:-3 }}>
                     <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(15),borderColor:"#485DCA",paddingVertical:2.2}}>
-                    <Text style={[styles.card_text,{textAlign:"left"}]}>{list.address}</Text>
+                    <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(24),borderColor:"#485DCA",paddingVertical:0}}>
+                    <Text style={[styles.card_text,{textAlign:"left",fontSize:16}]}>{list.dis_ass}</Text>
                     </ScrollView>
                   </View>
                 </TouchableOpacity>
@@ -399,18 +389,19 @@ const Payout = () => {
           <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
           {filteredAssets.length > 0 ? (
         filteredAssets.map((list, index) => (
-          <TouchableOpacity style={[styles.card, { justifyContent: "center",borderColor:higlight===index?"green":"#011434",flexDirection:"row",alignItems:"center" }]} key={index} onPress={()=>{sethiglight(index)}}>
+          <TouchableOpacity style={[styles.card, { width: wp("39%"),justifyContent: "flex-start",borderColor:higlight===index?"green":"#011434",flexDirection:"row",alignItems:"center" }]} key={index} onPress={()=>{sethiglight(index)}}>
           <Image
-                  source={{ uri: list.img }}
+                    source={list.by === "clpx" ? bnb : list.by === "clickpesa" ? xrp : { uri: list.img }}
                   style={styles.image_asset}
                   resizeMode="cover"
                 />
-                           <View style={{flexDirection:"column",marginLeft:5,marginTop:8}}>
-                           <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
-                           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(15),borderColor:"#485DCA",paddingVertical:2.2}}>
-                    <Text style={[styles.card_text,{textAlign:"left"}]}>{list.address}</Text>
+                             <View style={{ flexDirection: "column", marginLeft: 5,marginTop:-3 }}>
+                    <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
+                    <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(24),borderColor:"#485DCA",paddingVertical:0}}>
+                    <Text style={[styles.card_text,{textAlign:"left",fontSize:16}]}>{list.dis_ass}</Text>
                     </ScrollView>
-                           </View>
+                  </View>
                           </TouchableOpacity>
         ))
       ) : (
@@ -455,7 +446,7 @@ const Payout = () => {
                   resizeMode="cover"
                 />
                     <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
-                    <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
+                    <Text style={styles.card_text}>{list.dis_ass}</Text>
                   <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text>
                     <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
@@ -512,7 +503,7 @@ const Payout = () => {
                   resizeMode="cover"
                 />
                     <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
-                    <Text style={styles.card_text}>{list.address.slice(0, 10)}</Text>
+                    <Text style={styles.card_text}>{list.dis_ass}</Text>
                     <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text>
                     <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
@@ -545,7 +536,7 @@ const Payout = () => {
           </ScrollView>
         </View>}
 
-        <TouchableOpacity disabled={filteredAnchors.length <= 0} style={[styles.next_btn,{marginTop:5}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
+        <TouchableOpacity disabled={true} style={[styles.next_btn,{marginTop:5,backgroundColor:"gray"}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
         </TouchableOpacity>
       </View>}
@@ -752,7 +743,7 @@ const Payout = () => {
         transparent={true}
         visible={open_web_view}
       >
-        <View style={{ height: hp(70.8), width: "94%", backgroundColor: "white", margin: 10, borderRadius: 10, marginTop: hp(15) }}>
+        <View style={{ height: hp(100), width: wp(100), backgroundColor: "white", borderRadius: 10}}>
           <TouchableOpacity style={{ alignSelf: "flex-end", marginRight: 10, marginTop: 10 }} onPress={() => { setopen_web_view(false); }}>
             <Icon name={"close"} type={"antDesign"} size={28} color={"black"} />
           </TouchableOpacity>

@@ -352,15 +352,6 @@ export const OfferView = () => {
       <TouchableOpacity style={styles.modalContainer_option_top}  onPress={()=>{setmodalContainer_menu(false)}}> 
       <View style={styles.modalContainer_option_sub}>
      
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"lan-pending"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>Establish TrustLine</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
@@ -369,7 +360,7 @@ export const OfferView = () => {
         size={30}
         color={"gray"}
       />
-      <Text style={styles.modalContainer_option_text}>Create Trading Pair</Text>
+      <Text style={styles.modalContainer_option_text}>Asset</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
