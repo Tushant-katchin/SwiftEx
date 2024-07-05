@@ -80,6 +80,10 @@ export function ExchangeNavigation() {
         component={HomeView}
         options={{
           tabBarLabel: "Home",
+          tabBarLabelStyle:{
+            fontSize: hp(2),
+            marginBottom:6.9
+          },
           headerShown: true,
           header: () => {
             // return <ExchangeHeaderIcon />;
@@ -100,6 +104,10 @@ export function ExchangeNavigation() {
         name="Offers"
         component={OfferView}
         options={{
+          tabBarLabelStyle:{
+            fontSize: hp(2),
+            marginBottom:6.9
+          },
           headerShown: true,
           header: () => {
             // return <ExchangeHeaderIcon />;
@@ -110,6 +118,10 @@ export function ExchangeNavigation() {
         name="Transactions"
         component={TransactionView}
         options={{
+          tabBarLabelStyle:{
+            fontSize: hp(2),
+            marginBottom:6.9
+          },
           headerShown: true,
           header: () => {
             // return <ExchangeHeaderIcon />;
@@ -122,6 +134,10 @@ export function ExchangeNavigation() {
         name="On/Off Ramp"
         component={Payout}
         options={{
+          tabBarLabelStyle:{
+            fontSize: hp(2),
+            marginBottom:6.9
+          },
           headerShown: true,
           header: () => {
             // return <ExchangeHeaderIcon />;
@@ -133,6 +149,10 @@ export function ExchangeNavigation() {
         name="Profile"
         component={ProfileView}
         options={{
+          tabBarLabelStyle:{
+            fontSize: hp(2),
+            marginBottom:6.9
+          },
           headerShown: true,
           header: () => {
             // return <ExchangeHeaderIcon />;

@@ -165,9 +165,9 @@ const Dashboard = ({ navigation }) => {
               <Text
                 style={{
                   color: iconColor,
-                  // fontSize: hp("1"),
+                  fontSize: hp(2),
                   textAlign: "center",
-                  marginBottom: 10,
+                  marginBottom: Platform.OS==="android"?10:10,
                 }}
               >
                 {route.name}
@@ -179,7 +179,7 @@ const Dashboard = ({ navigation }) => {
           tabBarStyle: {
             position: "absolute",
             backgroundColor: "#4CA6EA",
-            height: Platform.OS == 'android' ?  hp("9") : hp("11")
+            height: Platform.OS == 'android' ?  hp("10") : hp("11")
             // borderTopColor: "black",
             // borderTopWidth: 1,
           },

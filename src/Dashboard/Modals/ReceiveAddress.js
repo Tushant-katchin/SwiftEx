@@ -22,6 +22,7 @@ import Bnbimage from "../../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../../assets/ethereum.png";
 import maticImage from "../../../assets/matic.png";
 import xrpImage from "../../../assets/xrp.png";
+import stellar from "../../../assets/Stellar_(XLM).png";
 import Modal from "react-native-modal";
 import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
@@ -52,9 +53,18 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [copiedText, setCopiedText] = useState("");
   const [transactions, setTransactions] = useState("");
+  const [Stellar_add, setStellar_add] = useState("");
   const [newTx, setNewTx] = useState();
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  const get_stellar = async () => {
+        const storedData = await AsyncStorageLib.getItem('myDataKey');
+            const parsedData = JSON.parse(storedData);
+            const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+            const publicKey = matchedData[0].publicKey;
+            setStellar_add(publicKey)
+    }
 
   let EtherLeftContent = (props) => (
     <Avatar.Image {...props} source={Etherimage} size={50} />
@@ -74,7 +84,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `${state.wallet.address}`,//TO-DO
+        message: `${iconType==="XLM"?Stellar_add:state.wallet.address}`,//TO-DO
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -92,7 +102,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
 
   const copyToClipboard = () => {
     Clipboard.setString(
-      iconType === "Xrp" && state.wallet.xrp
+      iconType==="XLM"?Stellar_add:iconType === "Xrp" && state.wallet.xrp
         ? state.wallet.xrp.address
         : state.wallet.address
     );
@@ -367,6 +377,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
 
   useEffect(async () => {
     // await checkPendingTransactions(WalletAddress)
+    get_stellar()
   }, []);
   useFocusEffect(
     React.useCallback(() => {
@@ -450,13 +461,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             <Image
               style={{ width: wp(10), height: hp(5) }}
               source={
-                iconType === "BNB"
-                  ? Bnbimage
-                  : iconType === "ETH"
-                  ? Etherimage
-                  : iconType === "Xrp"
-                  ? xrpImage
-                  : maticImage
+                iconType === "BNB"? Bnbimage: iconType === "ETH"? Etherimage: iconType === "Xrp"? xrpImage: iconType==="XLM"?stellar:maticImage
               }
             />
 
@@ -468,7 +473,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
           <View style={{ alignSelf: "center", marginTop: hp(1) }}>
             <QRCode
               //QR code value
-              value={qrvalue ? qrvalue : "NA"}
+              value={iconType==="XLM"?Stellar_add:qrvalue ? qrvalue : "NA"}
               //size of QR Code
               size={250}
               //Color of the QR Code (Optional)
@@ -490,7 +495,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             />
           </View>
           <Text style={style.addressTxt}>
-            {WalletAddress ? WalletAddress : ""}
+            {iconType==="XLM"?Stellar_add:WalletAddress ? WalletAddress :""}
           </Text>
         </View>
 

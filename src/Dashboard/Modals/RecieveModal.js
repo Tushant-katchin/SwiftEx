@@ -23,6 +23,7 @@ import {
   WebView,
 } from "react-native-paper";
 import Bnbimage from "../../../assets/bnb-icon2_2x.png";
+import stellar from "../../../assets/Stellar_(XLM).png";
 import Etherimage from "../../../assets/ethereum.png";
 import maticImage from "../../../assets/matic.png";
 import xrpImage from "../../../assets/xrp.png";
@@ -97,6 +98,25 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           />
 
           <Text style={{ fontSize: 19, color: "#ffffff" }}>Receive</Text>
+          <TouchableOpacity
+            style={style.Box3}
+            onPress={async () => {
+
+                setTimeout(() => {
+                  setVisible(true);
+                }, 0);
+                setIconType("XLM");
+            }}
+          >
+            <View style={style.flatView}>
+              <Image source={stellar} style={style.img} />
+              <Text style={{ marginHorizontal: wp(4) }}>XLM</Text>
+              <View>
+                <Title style={{ color: "#fff" }}></Title>
+              </View>
+            </View>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={style.Box3}
             onPress={async () => {

@@ -28,6 +28,7 @@ import {
 } from "react-native-paper";
 import Bnbimage from "../../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../../assets/ethereum.png";
+import stellar from "../../../assets/Stellar_(XLM).png";
 import Xrpimage from "../../../assets/xrp.png";
 import Maticimage from "../../../assets/matic.png";
 import { useNavigation } from "@react-navigation/native";
@@ -114,6 +115,20 @@ const ChooseTokens = ({ setModalVisible }) => {
 
       <ScrollView>
         <View style={style.Body}>
+        <TouchableOpacity
+            style={walletType==='BSC'||walletType==='Multi-coin'?style.Box3:style.disableBox}
+            onPress={async () => {
+              let token = "STELLAR";
+              navigation.navigate("Send", {
+                token: token,
+              });
+            }}
+          >
+            <View style={style.flatView}>
+              <Image source={stellar} style={style.img} />
+              <Text style={{ marginHorizontal: wp(4) }}>XLM</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity
             style={walletType==='BSC'||walletType==='Multi-coin'?style.Box3:style.disableBox}
             onPress={async () => {
@@ -244,7 +259,7 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     bottom: 0,
-    height: hp(50),
+    height: hp(52),
     alignSelf:"center",
     width: wp(100),
     alignItems: "center",

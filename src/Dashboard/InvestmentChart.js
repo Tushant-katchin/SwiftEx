@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity, Modal, ActivityIndicator } from "react-native";
 import {
   Avatar,
   Card,
   Title,
   Paragraph,
   CardItem,
-  WebView,
+
 } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
@@ -24,10 +24,15 @@ import bnbimage from "../../assets/bnb-icon2_2x.png";
 import { GetBalance, getAllBalances } from "../utilities/web3utilities";
 import { getXrpBalance } from "../components/Redux/actions/auth";
 import alert from "./reusables/Toasts";
+import Icon from "../icon";
+import WebView from "react-native-webview";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
   const state = useSelector((state) => state);
+  const [URL_OPEN, setURL_OPEN] = useState("");
+  const [open_web_view, setopen_web_view] = useState(false);
+  const [loading_1, setLoading_1] = useState(true);
   const [pull, setPull] = useState(false)
   const wallet = useSelector((state) => state.wallet);
   const [bnbBalance, getBnbBalance] = useState(0.00);
@@ -256,16 +261,16 @@ function InvestmentChart(setCurrentWallet) {
       <TouchableOpacity style={styles.refresh} onPress={() => {
         getAllBalances(state, dispatch)
       }}>
-        <Text style={{ color: "white", fontSize: 14 }}>Refresh</Text>
+          <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
       </TouchableOpacity>
       <View style={styles.flatlistContainer}>
 
 
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={bnbimage} style={styles.img} />
+          <Image source={bnbimage} style={[styles.img,{marginTop:-12}]} />
           <View style={styles.ethrumView}>
-            <Text>BNB Coin</Text>
+            <Text>BNB</Text>
             <Text
               style={{
                 color: "grey",
@@ -274,22 +279,45 @@ function InvestmentChart(setCurrentWallet) {
             >
               ${bnbPrice >= 0 ? bnbPrice : 300}
             </Text>
-          </View>
-        </View>
-        <Text
+            <Text
           style={{
             color: "black",
-
             fontWeight: "bold",
+            marginLeft:-26
           }}
         >
-          {bnbBalance ? bnbBalance : 0} BNB
+          Avl: {bnbBalance ? bnbBalance : 0} BNB
         </Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{alignItems:"center"}}>
+          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} />
+          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row" }]} onPress={()=>{setopen_web_view(true),setURL_OPEN("https://stellarterm.com/swap/XLM-native/USDC-www.centre.io")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Swap</Text>
+          </TouchableOpacity>
+            </View>
+          <View style={{alignItems:"center",justifyContent:"center"}}>
+          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(4)} color="black" style={{ marginLeft: 4 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Trade</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{alignItems:"center"}}>
+        <Icon type={"materialCommunity"} name="cash" size={hp(4)} color="black" style={{ marginLeft: 10 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}  onPress={()=>{setopen_web_view(true),setURL_OPEN("https://anchors.stellar.org/")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Cashout</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
       </View>
 
       <View style={styles.flatlistContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={Etherimage} style={styles.img} />
+          <Image source={Etherimage} style={[styles.img,{marginTop:-12}]} />
           <View style={styles.ethrumView}>
             <Text>Ethereum</Text>
             <Text
@@ -298,23 +326,48 @@ function InvestmentChart(setCurrentWallet) {
                 fontWeight: "bold",
               }}
             >
-              $ {ethPrice >= 0 ? ethPrice : 1300}
+              ${ethPrice >= 0 ? ethPrice : 1300}
             </Text>
-          </View>
-        </View>
-
-        <Text
+            <Text
           style={{
             color: "black",
             fontWeight: "bold",
+            marginLeft:-26
           }}
         >
-          {ethBalance ? ethBalance : 0} ETH
+          Avl: {ethBalance ? ethBalance : 0} ETH
         </Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+          <View style={{alignItems:"center"}}>
+          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} />
+          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row" }]} onPress={()=>{setopen_web_view(true),setURL_OPEN("https://stellarterm.com/swap/XLM-native/USDC-www.centre.io")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Swap</Text>
+          </TouchableOpacity>
+            </View>
+          <View style={{alignItems:"center",justifyContent:"center"}}>
+          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(4)} color="black" style={{ marginLeft: 4 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Trade</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{alignItems:"center"}}>
+        <Icon type={"materialCommunity"} name="cash" size={hp(4)} color="black" style={{ marginLeft: 10 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}  onPress={()=>{setopen_web_view(true),setURL_OPEN("https://anchors.stellar.org/")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Cashout</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
+        </View>
+
+       
       </View>
       <View style={styles.flatlistContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={Maticimage} style={styles.img} />
+          <Image source={Maticimage} style={[styles.img,{marginTop:-12}]} />
           <View style={styles.ethrumView}>
             <Text>Matic</Text>
             <Text
@@ -323,23 +376,49 @@ function InvestmentChart(setCurrentWallet) {
                 fontWeight: "bold",
               }}
             >
-              $ {4}
+              ${4}
             </Text>
-          </View>
-        </View>
-
-        <Text
+            <Text
           style={{
             color: "black",
             fontWeight: "bold",
+            marginLeft:-26
           }}
         >
-          {maticBalance ? maticBalance : 0} MAT
+          Avl: {maticBalance ? maticBalance : 0} MAT
         </Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+          <View style={{alignItems:"center"}}>
+          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} />
+          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row" }]} onPress={()=>{setopen_web_view(true),setURL_OPEN("https://stellarterm.com/swap/XLM-native/USDC-www.centre.io")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Swap</Text>
+          </TouchableOpacity>
+            </View>
+          <View style={{alignItems:"center",justifyContent:"center"}}>
+          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(4)} color="black" style={{ marginLeft: 4 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Trade</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{alignItems:"center"}}>
+        <Icon type={"materialCommunity"} name="cash" size={hp(4)} color="black" style={{ marginLeft: 10 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}  onPress={()=>{setopen_web_view(true),setURL_OPEN("https://anchors.stellar.org/")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Cashout</Text>
+          </TouchableOpacity>
+        </View>
+        </View>      
+
+        </View>
+
+        
       </View>
       <View style={styles.flatlistContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={Xrpimage} style={styles.img} />
+          <Image source={Xrpimage} style={[styles.img,{marginTop:-12}]} />
           <View style={styles.ethrumView}>
             <Text>XRP</Text>
             <Text
@@ -348,24 +427,47 @@ function InvestmentChart(setCurrentWallet) {
                 fontWeight: "bold",
               }}
             >
-              $ {0.78}
+              ${0.78}
             </Text>
-          </View>
-        </View>
-
         <Text
           style={{
             color: "black",
             fontWeight: "bold",
+            marginLeft:-26
           }}
         >
-          {xrpBalance ? xrpBalance : 0} XRP
+          Avl: {xrpBalance ? xrpBalance : 0} XRP
         </Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{alignItems:"center"}}>
+          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} />
+          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row" }]} onPress={()=>{setopen_web_view(true),setURL_OPEN("https://stellarterm.com/swap/XLM-native/USDC-www.centre.io")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Swap</Text>
+          </TouchableOpacity>
+            </View>
+          <View style={{alignItems:"center",justifyContent:"center"}}>
+          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(4)} color="black" style={{ marginLeft: 4 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Trade</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{alignItems:"center"}}>
+        <Icon type={"materialCommunity"} name="cash" size={hp(4)} color="black" style={{ marginLeft: 10 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}  onPress={()=>{setopen_web_view(true),setURL_OPEN("https://anchors.stellar.org/")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Cashout</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
       </View>
 
       <View style={styles.flatlistContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={stellar} style={styles.img} />
+          <Image source={stellar} style={[styles.img,{marginTop:-12}]} />
           <View style={styles.ethrumView}>
             <Text>XLM</Text>
             <Text
@@ -376,7 +478,41 @@ function InvestmentChart(setCurrentWallet) {
             >
               $ {current_xlm}
             </Text>
+            <View style={{flexDirection:"row"}}>
+            <Text style={{ alignSelf: 'flex-end', color: "black", fontWeight: "bold", marginLeft:-26 }}>
+                  Avl:
+                </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "1%", }}>
+                <Text style={{ alignSelf: 'flex-end', color: "black", fontWeight: "bold", marginLeft:-26 }}>
+                  Avl: {xmlBalance ? xmlBalance : "0.00"}
+                </Text>
+              </ScrollView>
+              <Text style={{ color: "black", fontWeight: "bold" }}> XLM</Text>
+            </View>
           </View>
+          <View style={{ flexDirection: "row" }}>
+          <View style={{alignItems:"center"}}>
+          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} />
+          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row" }]} onPress={()=>{setopen_web_view(true),setURL_OPEN("https://stellarterm.com/swap/XLM-native/USDC-www.centre.io")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Swap</Text>
+          </TouchableOpacity>
+            </View>
+          <View style={{alignItems:"center",justifyContent:"center"}}>
+          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(4)} color="black" style={{ marginLeft: 4 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Trade</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{alignItems:"center"}}>
+        <Icon type={"materialCommunity"} name="cash" size={hp(4)} color="black" style={{ marginLeft: 10 }}/>
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}  onPress={()=>{setopen_web_view(true),setURL_OPEN("https://anchors.stellar.org/")}}>
+          <Image source={stellar} style={styles.img_new} />
+            <Text style={styles.asset_op_text}>Cashout</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
         </View>
 
         {/* <Text
@@ -387,14 +523,32 @@ function InvestmentChart(setCurrentWallet) {
           >
             {xmlBalance ? xmlBalance : "0.00"} XLM 
           </Text> */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "6.9%", marginLeft: '46%' }}>
-          <Text style={{ alignSelf: 'flex-end', color: "black", fontWeight: "bold" }}>
-            {xmlBalance ? xmlBalance : "0.00"}
-          </Text>
-        </ScrollView>
-        <Text style={{ color: "black", fontWeight: "bold" }}> XLM</Text>
-      </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={open_web_view}
+      >
+        <View style={{ height: hp(100), width: wp(100), backgroundColor: "white", borderRadius: 10}}>
+          <TouchableOpacity style={{ alignSelf: "flex-end", marginRight: 10, marginTop: 10 }} onPress={() => { setopen_web_view(false); }}>
+            <Icon name={"close"} type={"antDesign"} size={28} color={"black"} />
+          </TouchableOpacity>
 
+          {loading_1 && (
+            <ActivityIndicator
+              size="large"
+              color="green"
+              style={{justifyContent:"center",alignItems:"center"}}
+            />
+          )}
+
+          <WebView
+            source={{ uri: URL_OPEN }}
+            onLoad={() => setLoading_1(false)}
+            onLoadEnd={() => setLoading_1(false)}
+          />
+        </View>
+      </Modal>
+      </View>
     </ScrollView>
   );
 }
@@ -413,8 +567,9 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   img: { height: hp(5), width: wp(10), borderWidth: 1, borderRadius: hp(3) },
+  img_new: { height: hp(3), width: wp(5), borderWidth: 1, borderRadius: hp(3) },
   ethrumView: {
-    marginHorizontal: wp(4),
+    marginHorizontal: wp(2),
   },
   view: {
     flex: 1,
@@ -429,5 +584,20 @@ const styles = StyleSheet.create({
   priceDown: {
     color: "rgb(204,51,51)",
   },
-  refresh: { backgroundColor: "#4CA6EA", width: wp(20), paddingVertical: hp(1), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) }
+  refresh: { backgroundColor: "#4CA6EA", width: wp(20), paddingVertical: hp(1), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) },
+  asset_options:{
+    backgroundColor: "#145DA0",
+    width:wp(19.5),
+    height:hp(4),
+    marginLeft:10,
+    borderRadius:10,
+    justifyContent:"center",
+    alignItems:"center"
+  },
+  asset_op_text:{
+    fontSize:14,
+    color:"#fff",
+    fontWeight:"bold"
+  }
+
 });

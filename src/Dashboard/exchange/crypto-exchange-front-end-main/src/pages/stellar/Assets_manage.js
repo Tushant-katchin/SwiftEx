@@ -1,5 +1,5 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { Image, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Button, FlatList, Image, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -17,6 +17,7 @@ const Assets_manage = () => {
     const FOCUSED = useIsFocused();
     const navigation = useNavigation();
     const [modalContainer_menu, setmodalContainer_menu] = useState(false);
+    const [TRUST_ASSET, setTRUST_ASSET] = useState(false);
     const [assets, setassets] = useState([
          {
           "asset_code": "XETH",
@@ -62,7 +63,7 @@ const Assets_manage = () => {
                 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
                 server.loadAccount(publicKey)
                     .then(account => {
-                        console.log("-----",account.balances)
+                        setassets([])
                         setassets(account.balances)
                     })
                     .catch(error => {
@@ -76,8 +77,19 @@ const Assets_manage = () => {
             console.log("Error in get_stellar")
         }
     }
+
+    const DATA = [
+        { id: '1', name: 'John Doe' },
+        { id: '2', name: 'Jane Smith' },
+        { id: '3', name: 'Sam Johnson' },
+      ];
+      
+
+
+
+
     useEffect(() => {
-        // get_stellar()
+        get_stellar()
     }, [FOCUSED])
     return (
         <>
@@ -192,7 +204,7 @@ const Assets_manage = () => {
                 </View>
             </View>
 
-            <View style={styles.main_con}>
+            <View style={[styles.main_con]}>
                 <Text style={styles.mode_text}>My Assets</Text>
                 <View style={styles.assets_con}>
                     {assets.map((list, index) => {
@@ -210,7 +222,22 @@ const Assets_manage = () => {
                         )
                     })}
                 </View>
+                <TouchableOpacity style={[styles.assets_con,{alignItems:"center",marginTop:60}]} onPress={()=>{setTRUST_ASSET(true)}}>
+                <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>Add Asset</Text>
+                </TouchableOpacity>
             </View>
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={false}
+        onRequestClose={() => {
+          setTRUST_ASSET(!TRUST_ASSET);
+        }}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modal_heading}>Add Asset</Text>
+        </View>
+      </Modal>
 
         </>
     )
@@ -295,6 +322,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "gray",
         marginStart: 5
+    },
+    modalView: {
+        margin: 2,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 10,
+        alignItems:'flex-start',
+    },
+    modal_heading:{
+        fontSize:23,
+        color:"#fff",
+        fontWeight:"600"
     }
 })
 export default Assets_manage;
