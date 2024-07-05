@@ -31,11 +31,11 @@ const Payout = () => {
   ];
   const Anchors=[
     // {name:"SwiftEx",by:"centre.io", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
-    {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'),dis_ass:"GA5...KZVN", seps: ["SEP 24"],tom_url:"https://stellar-sep-24.banxa.com/.well-known/stellar.toml"},
-    {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'),dis_ass:"GDH...NPP2", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/.well-known/stellar.toml"},
-    {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'),dis_ass:"GDY...UX5G", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://connect.clickpesa.com/.well-known/stellar.toml"},
-    {name:"Finclusive", address: state.wallet.address,image: require('../../../../../../assets/FINCLUSIVE.png'),dis_ass:"GA2...UHTO", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/.well-known/stellar.toml"},
-    {name:"Mykobo", address: state.wallet.address,image: require('../../../../../../assets/MYKOBO.png'),dis_ass:"GA2...UHTO", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/.well-known/stellar.toml"},
+    {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'),dis_ass:"banxa.com", seps: ["SEP 24"],tom_url:"https://banxa.com/"},
+    {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'),dis_ass:"clpx.finance", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/"},
+    {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'),dis_ass:"clickpesa.com", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clickpesa.com/"},
+    {name:"Finclusive", address: state.wallet.address,image: require('../../../../../../assets/FINCLUSIVE.png'),dis_ass:"finclusive.com", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/"},
+    {name:"Mykobo", address: state.wallet.address,image: require('../../../../../../assets/MYKOBO.png'),dis_ass:"mykobo.co", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/"},
   ];
   const price_data=[
     { name: "USDC", price: "100", fee:"0.5", asset_code:"USDC" },
@@ -77,6 +77,7 @@ const Payout = () => {
   const [imageUri, setImageUri] = useState(null);
   const [Anchor_selection,setAnchor_selection]=useState(0);
   const [matchesFound, setMatchesFound] = useState(false);
+  const [URL_OPEN, setURL_OPEN] = useState("");
   const filteredAssets = Assets.filter(list => list.name.includes(search_text));
   const filteredAnchors = Anchors.filter(list => list.name.includes(search_text));
   const handleScroll = (xOffset) => {
@@ -254,20 +255,6 @@ const Payout = () => {
               <View style={styles.modalContainer_option_sub}>
 
 
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"pencil"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>Asset</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Image source={Bridge} style={{ width: "13%", height: "190%" }} />
-                  <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
-                </TouchableOpacity>
 
                 <TouchableOpacity style={styles.modalContainer_option_view}>
                   <Icon
@@ -332,7 +319,7 @@ const Payout = () => {
 
       {/* header end */}
       {select_asset_modal && <View style={styles.select_asset_modal}>
-        <Text style={styles.select_asset_heading}>Select Asset</Text>
+        <Text style={styles.select_asset_heading}>Select Assets</Text>
         <TextInput placeholder="Search" placeholderTextColor={"gray"} value={search_text} onChangeText={(value) => { setsearch_text(value.toUpperCase()) }} style={styles.search_bar} />
         {search_text.length === 0 && <View style={styles.ScrollView_contain}>
           <TouchableOpacity style={[styles.left_icon,]} onPress={() => {
@@ -358,9 +345,9 @@ const Payout = () => {
                     style={styles.image_asset}
                     resizeMode="cover"
                   />
-                  <View style={{ flexDirection: "column", marginLeft: 5,marginTop:-3 }}>
+                  <View style={{ flexDirection: "column", marginLeft: 5,marginTop:3 }}>
                     <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
-                    <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text>
+                    {/* <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text> */}
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(24),borderColor:"#485DCA",paddingVertical:0}}>
                     <Text style={[styles.card_text,{textAlign:"left",fontSize:16}]}>{list.dis_ass}</Text>
                     </ScrollView>
@@ -395,9 +382,9 @@ const Payout = () => {
                   style={styles.image_asset}
                   resizeMode="cover"
                 />
-                             <View style={{ flexDirection: "column", marginLeft: 5,marginTop:-3 }}>
+                             <View style={{ flexDirection: "column", marginLeft: 5,marginTop:3 }}>
                     <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
-                    <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text>
+                    {/* <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text> */}
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(24),borderColor:"#485DCA",paddingVertical:0}}>
                     <Text style={[styles.card_text,{textAlign:"left",fontSize:16}]}>{list.dis_ass}</Text>
                     </ScrollView>
@@ -438,7 +425,7 @@ const Payout = () => {
           <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
             {Anchors.map((list, index) => {
               return (
-                <TouchableOpacity style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
+                <TouchableOpacity style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index),setURL_OPEN(list.tom_url),setLoading(true),setopen_web_view(true)}}>
                   <View>
                   <Image
                   source={list.image}
@@ -447,10 +434,13 @@ const Payout = () => {
                 />
                     <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
                     <Text style={styles.card_text}>{list.dis_ass}</Text>
-                  <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text>
+                  {/* <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text> */}
                     <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
+                    {list.name==="Clpx"&&<TouchableOpacity disabled={true} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"gray",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                      <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-6</Text>
+                    </TouchableOpacity>}
                   </View>
                   {/* {list?.seps.map((sep, sepIndex) => (
                     <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
@@ -495,7 +485,7 @@ const Payout = () => {
             filteredAnchors.map((list, index) => {
              
                 return (
-                  <TouchableOpacity  disabled={Anchor_selection!==index} style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index)}}>
+                  <TouchableOpacity  style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index),setURL_OPEN(list.tom_url),setLoading(true),setopen_web_view(true)}}>
                   <View>
                   <Image
                   source={list.image}
@@ -504,7 +494,7 @@ const Payout = () => {
                 />
                     <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
                     <Text style={styles.card_text}>{list.dis_ass}</Text>
-                    <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text>
+                    {/* <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text> */}
                     <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
@@ -757,7 +747,7 @@ const Payout = () => {
           )}
 
           <WebView
-            source={{ uri: `https://anchors.stellar.org/` }}
+            source={{ uri: URL_OPEN }}
             onLoad={() => setLoading(false)}
             onLoadEnd={() => setLoading(false)}
           />
@@ -809,9 +799,9 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignSelf: "flex-end",
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    width: "100%",
-    height: "100%",
+   // backgroundColor: 'rgba(0, 0, 0, 0.3)',
+   width:"100%",
+   height:"60%",
   },
   modalContainer_option_sub: {
     alignSelf: "flex-end",

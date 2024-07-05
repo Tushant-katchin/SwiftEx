@@ -66,6 +66,8 @@ import Payment from "../Dashboard/exchange/crypto-exchange-front-end-main/src/co
 import importStellar from "../Dashboard/importStellar";
 import { NewOfferModal } from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/newOffer.modal";
 import classic from "../Dashboard/exchange/crypto-exchange-front-end-main/src/components/classic";
+import Assets_manage from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/stellar/Assets_manage";
+import send_recive from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/stellar/send_recive";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -501,7 +503,32 @@ const AuthStack = () => (
             fontWeight: "bold",
           },
         }}
+      />   
+
+      <Stack.Screen
+        name="Assets_manage"
+        component={Assets_manage}
+        options={{
+          headerShown: false,gestureEnabled:false,
+          headerStyle: { backgroundColor: "#4CA6EA" },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
       />    
+      <Stack.Screen
+        name="send_recive"
+        component={send_recive}
+        options={{
+          headerShown: false,gestureEnabled:false,
+          headerStyle: { backgroundColor: "#4CA6EA" },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      /> 
 
 <Stack.Screen
         name="Payment"

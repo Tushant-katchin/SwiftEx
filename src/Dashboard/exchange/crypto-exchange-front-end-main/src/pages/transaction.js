@@ -383,23 +383,9 @@ const fetchData_ = async (key) => {
       transparent={true}
       visible={modalContainer_menu}>
        
-      <TouchableOpacity style={styles.modalContainer_option_top}  onPress={()=>{setmodalContainer_menu(false)}}> 
+      <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-190,marginRight:-20}]}  onPress={()=>{setmodalContainer_menu(false)}}> 
       <View style={styles.modalContainer_option_sub}>
 
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"pencil"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>Asset</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Image source={Bridge} style={{width:"13%",height:"190%"}} />
-      <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
@@ -769,9 +755,9 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignSelf:"flex-end",
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    width:"100%",
-    height:"100%",
+   // backgroundColor: 'rgba(0, 0, 0, 0.3)',
+   width:"100%",
+   height:"60%",
   },
   modalContainer_option_sub:{
     alignSelf:"flex-end",

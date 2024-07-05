@@ -518,21 +518,6 @@ const close_=()=>{
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
-        name={"pencil"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>Asset</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Image source={Bridge} style={{width:"11%",height:"190%"}} />
-      <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
         name={"anchor"}
         type={"materialCommunity"}
         size={30}
@@ -818,16 +803,17 @@ const close_=()=>{
 {profile && (
           <View>
               {profile.isVerified===true ? (
-                <View >
+                <View style={{flexDirection:"row",justifyContent:"center"}}>
                   <TouchableOpacity 
-                    style={styles.PresssableBtn}
+                    style={[styles.PresssableBtn,{width: wp(93),marginLeft:3}]}
                     onPress={() => {
                      // setOpen(true)
                         Offer_condition(Offer_active)
                     }}
                   >
-                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Create Offer</Text>
+                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Trading</Text>
                   </TouchableOpacity>
+                  
                   {/* <NewOfferModal
                     user={profile}
                     open={open}
@@ -846,22 +832,38 @@ const close_=()=>{
           // </View>
         )}
 </View>
-        <View style={{ backgroundColor: "#011434" }}>
+        <View style={{ backgroundColor: "#011434",flexDirection:"row",justifyContent:"center" }}>
           <TouchableOpacity
-            style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1}]}
+            style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1,width: wp(45),marginLeft:3,paddingHorizontal:wp(0)}]}
             onPress={() => {
               navigation.navigate("classic")
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 19, fontWeight: "bold",marginStart:45 }}>Bridge Tokens</Text>
+            <Text style={{ color: "#fff", fontSize: 19, fontWeight: "bold",marginStart:47}}>Bridge Tokens</Text>
             <View style={{width:45,height:27,justifyContent:"center",alignSelf:"center"}}>
-            <Image source={Bridge} style={{width:"130%",height:"130%"}} />
+            {/* <Image source={Bridge} style={{width:"130%",height:"130%"}} /> */}
             </View>
           </TouchableOpacity>
+          <TouchableOpacity 
+                    style={[styles.PresssableBtn,{width: wp(45),marginLeft:10,marginTop:1,}]}
+                    onPress={() => {
+                      navigation.navigate("Assets_manage");
+                    }}
+                  >
+                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Assets</Text>
+                  </TouchableOpacity>
         </View>
 
   <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"}}>
-<LineChart
+    <View style={{position:"relative",zIndex:20,marginBottom:-30,marginTop:10,alignSelf:"flex-end",marginRight:13}}>
+    <Icon
+        name={"chevron-down"}
+        type={"materialCommunity"}
+        size={28}
+        color={"white"}
+      />
+    </View>
+    <LineChart
         data={chartData}
         width={374}
         height={310}
@@ -1130,9 +1132,9 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignSelf:"flex-end",
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    width:"100%",
-    height:"100%",
+   // backgroundColor: 'rgba(0, 0, 0, 0.3)',
+   width:"100%",
+   height:"60%",
   },
   modalContainer_option_sub:{
     alignSelf:"flex-end",

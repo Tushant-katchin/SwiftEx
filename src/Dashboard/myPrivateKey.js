@@ -20,6 +20,7 @@ import { alert } from "./reusables/Toasts";
 import * as Clipboard from "expo-clipboard";
 import Icon from "../icon";
 import { Button } from "native-base";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
 const MyPrivateKey = (props) => {
     const state = useSelector((state)=>state)
   const [accountName, setAccountName] = useState("");
@@ -29,6 +30,7 @@ const MyPrivateKey = (props) => {
   const[disable,setDisable]=useState(true)
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
+  const [STTELLAR_KEY,setSTTELLR]=useState("");
 
   const Spin = new Animated.Value(0);
   const SpinValue = Spin.interpolate({
@@ -42,6 +44,7 @@ const MyPrivateKey = (props) => {
   };
 
   useEffect(async () => {
+    get_stellar()
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -72,7 +75,22 @@ const MyPrivateKey = (props) => {
       </Pressable>
     );
   };
-
+  const get_stellar = async () => {
+    try {
+        const storedData = await AsyncStorageLib.getItem('myDataKey');
+        if (storedData !== null) {
+            const parsedData = JSON.parse(storedData);
+            const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+            const secret_Key = matchedData[0].secretKey;
+            setSTTELLR(secret_Key);
+        }
+        else {
+            console.log('No data found in AsyncStorage');
+        }
+    } catch (error) {
+        console.log("Error in get_stellar")
+    }
+}
   return (
     <View style={{ backgroundColor: "white", height: hp(100) }}>
       <Animated.View // Special animatable View
@@ -123,6 +141,23 @@ const MyPrivateKey = (props) => {
           }}
           >Copy</Button>
         </View>
+
+        <Text style={{ color: "black", marginLeft: wp(4.7), }}>
+            Stellar Private Key
+          </Text>
+        <View style={{ marginLeft: wp(1),flexDirection:"row",justifyContent:"space-around",alignItems:'center',marginTop:10}}>
+        <Text style={{ color: "black",width:wp(70) }}>
+            {STTELLAR_KEY}
+          </Text>
+          <Button 
+          onPress={async()=>{
+              copyToClipboard(STTELLAR_KEY)
+          }}
+          >Copy</Button>
+        </View>
+
+
+        
         <View style={style.dotView}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={{ color: "black" }}>

@@ -598,24 +598,10 @@ const reves_fun=async(fist_data,second_data)=>{
       transparent={true}
       visible={modalContainer_menu}>
        
-      <TouchableOpacity style={styles.modalContainer_option_top}  onPress={()=>{setmodalContainer_menu(false)}}> 
+      <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-190,marginRight:-20}]}  onPress={()=>{setmodalContainer_menu(false)}}> 
       <View style={styles.modalContainer_option_sub}>
      
 
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"pencil"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>Asset</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Image source={Bridge} style={{width:"14%",height:"190%"}} />
-      <Text style={styles.modalContainer_option_text}>Bridge Tokens</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity style={styles.modalContainer_option_view}>
       <Icon
@@ -908,7 +894,7 @@ const reves_fun=async(fist_data,second_data)=>{
                   <Text style={{ color: "white" }}>Total for {selectedValue}</Text>
                 </View> : <></>}
               </View>
-              <Text style={[styles.input,{backgroundColor:"#fff",borderTopLeftRadius:4,borderTopRightRadius:4,color:"black",paddingTop:5,paddingLeft:10,fontSize:19}]}>{total_price}</Text>
+              <Text style={[styles.input,{backgroundColor:"#fff",borderTopLeftRadius:4,borderTopRightRadius:4,color:"black",paddingTop:5,paddingLeft:10,fontSize:19}]}>{offer_price*offer_amount}</Text>
 
 
             </View>
@@ -1150,7 +1136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // backgroundColor: 'rgba(0, 0, 0, 0.3)',
     width:"100%",
-    height:"100%",
+    height:"60%",
   },
   modalContainer_option_sub:{
     alignSelf:"flex-end",
