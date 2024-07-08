@@ -865,7 +865,7 @@ const close_=()=>{
     </View>
     <LineChart
         data={chartData}
-        width={378}
+        width={370}
         height={310}
         withDots={true}
         withVerticalLines={false}
