@@ -155,7 +155,7 @@ const send_recive = () => {
                         <Text style={styles.mode_text}>Send</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.mode_sele, { backgroundColor: mode_selected === "RVC" ? "green" : "#011434" }]} onPress={() => { setmode_selected("RVC") }}>
-                        <Text style={styles.mode_text}>Recive</Text>
+                        <Text style={styles.mode_text}>Receive</Text>
                     </TouchableOpacity>
                 </View>
                 {
