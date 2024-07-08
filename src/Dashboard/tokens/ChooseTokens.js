@@ -118,6 +118,7 @@ const ChooseTokens = ({ setModalVisible }) => {
         <TouchableOpacity
             style={walletType==='BSC'||walletType==='Multi-coin'?style.Box3:style.disableBox}
             onPress={async () => {
+              setModalVisible(false);
               let token = "STELLAR";
               navigation.navigate("Send", {
                 token: token,

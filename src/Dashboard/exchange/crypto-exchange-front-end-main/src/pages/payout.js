@@ -322,7 +322,7 @@ const Payout = () => {
         <Text style={styles.select_asset_heading}>Select Assets</Text>
         <TextInput placeholder="Search" placeholderTextColor={"gray"} value={search_text} onChangeText={(value) => { setsearch_text(value.toUpperCase()) }} style={styles.search_bar} />
         {search_text.length === 0 && <View style={styles.ScrollView_contain}>
-          <TouchableOpacity style={[styles.left_icon,]} onPress={() => {
+          {/* <TouchableOpacity style={[styles.left_icon,]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const backOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Assets.length;
               handleScroll(backOffset);
@@ -336,16 +336,17 @@ const Payout = () => {
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
-          <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
+          <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}> */}
+          <ScrollView>
             {Assets.map((list, index) => {
               return (
-                <TouchableOpacity style={[styles.card, {width: wp("39%"), justifyContent: "flex-start", borderColor: higlight === index ? "green" : "#011434", flexDirection: "row", alignItems: "center", }]} key={index} onPress={() => { sethiglight(index) }}>
+                <TouchableOpacity style={[styles.card, {marginTop:5,width: wp("90%"), justifyContent: "flex-start", borderColor: higlight === index ? "green" : "#011434", flexDirection: "row", alignItems: "center", }]} key={index} onPress={() => { sethiglight(index) }}>
                   <Image
                     source={list.by === "clpx" ? bnb : list.by === "clickpesa" ? xrp : { uri: list.img }}
                     style={styles.image_asset}
                     resizeMode="cover"
                   />
-                  <View style={{ flexDirection: "column", marginLeft: 5,marginTop:3 }}>
+                  <View style={{ flexDirection: "column", marginLeft: 9,marginTop:3 }}>
                     <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
                     {/* <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text> */}
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(24),borderColor:"#485DCA",paddingVertical:0}}>
@@ -359,7 +360,7 @@ const Payout = () => {
         </View>}
         {/* for search result */}
         {search_text.length !== 0 && <View style={styles.ScrollView_contain}>
-          <TouchableOpacity style={styles.left_icon} onPress={() => {
+          {/* <TouchableOpacity style={styles.left_icon} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const backOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Assets.length;
               handleScroll(backOffset);
@@ -373,16 +374,17 @@ const Payout = () => {
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
-          <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
+          <ScrollView ref={AssetViewRef} horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}> */}
+          <ScrollView>
           {filteredAssets.length > 0 ? (
         filteredAssets.map((list, index) => (
-          <TouchableOpacity style={[styles.card, { width: wp("39%"),justifyContent: "flex-start",borderColor:higlight===index?"green":"#011434",flexDirection:"row",alignItems:"center" }]} key={index} onPress={()=>{sethiglight(index)}}>
+          <TouchableOpacity style={[styles.card, { marginTop:5,width: wp("90%"),justifyContent: "flex-start",borderColor:higlight===index?"green":"#011434",flexDirection:"row",alignItems:"center" }]} key={index} onPress={()=>{sethiglight(index)}}>
           <Image
                     source={list.by === "clpx" ? bnb : list.by === "clickpesa" ? xrp : { uri: list.img }}
                   style={styles.image_asset}
                   resizeMode="cover"
                 />
-                             <View style={{ flexDirection: "column", marginLeft: 5,marginTop:3 }}>
+                             <View style={{ flexDirection: "column", marginLeft: 9,marginTop:3 }}>
                     <Text style={[styles.card_text,{textAlign:"left"}]}>{list.name}</Text>
                     {/* <Text style={[{textAlign:"left",fontSize:10,color:"#fff"}]}>Issued by</Text> */}
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(24),borderColor:"#485DCA",paddingVertical:0}}>
@@ -404,11 +406,11 @@ const Payout = () => {
 
       {/* Anchors View */}
 
-      {show_anchors && <View style={[styles.select_asset_modal, { height: "55%" }]}>
+      {show_anchors && <View style={[styles.select_asset_modal]}>
         <Text style={styles.select_asset_heading}>Select Anchor</Text>
         <TextInput placeholder="Search" placeholderTextColor={"gray"} value={search_text} onChangeText={(value) => { setsearch_text(value.toUpperCase()) }} style={styles.search_bar} />
-        {search_text.length === 0 && <View style={[styles.ScrollView_contain, { height: "63%" }]}>
-          <TouchableOpacity style={[styles.left_icon, { marginTop: 120.5, }]} onPress={() => {
+        {search_text.length === 0 && <View style={[styles.ScrollView_contain,]}>
+          {/* <TouchableOpacity style={[styles.left_icon, { marginTop: 120.5, }]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const backOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Assets.length;
               handleScroll(backOffset);
@@ -422,23 +424,26 @@ const Payout = () => {
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
-          <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
+          <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}> */}
+          <ScrollView>
             {Anchors.map((list, index) => {
               return (
-                <TouchableOpacity style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index),setURL_OPEN(list.tom_url),setLoading(true),setopen_web_view(true)}}>
-                  <View>
+                <TouchableOpacity style={[styles.card,{width: wp("90%"),height:hp("10%"),marginTop:10,alignItems:"flex-start",borderColor:Anchor_selection===index?"green":"gray"}]} key={index} onPress={()=>{setAnchor_selection(index),setURL_OPEN(list.tom_url),setLoading(true),setopen_web_view(true)}}>
+                  <View style={{flexDirection:"row",alignItems:"center"}}>
                   <Image
                   source={list.image}
-                  style={{width:list.name==="SwiftEx"?60:40,height:list.name==="SwiftEx"?60:40,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
+                  style={{width:list.name==="SwiftEx"?60:50,height:list.name==="SwiftEx"?60:50,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
                   resizeMode="cover"
                 />
+                    <View style={{alignItems:"flex-start",marginLeft:10}}>
                     <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
-                    <Text style={styles.card_text}>{list.dis_ass}</Text>
+                    <Text style={[styles.card_text,{color:"gray"}]}>{list.dis_ass}</Text>
+                    </View>
                   {/* <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text> */}
-                    <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                    <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginLeft:10,marginTop: 10, height: "39%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
-                    {list.name==="Clpx"&&<TouchableOpacity disabled={true} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"gray",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                    {list.name==="Clpx"&&<TouchableOpacity disabled={true} style={[styles.next_btn, { marginLeft:10,marginTop: 10, height: "39%",backgroundColor:"gray",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-6</Text>
                     </TouchableOpacity>}
                   </View>
@@ -450,7 +455,7 @@ const Payout = () => {
                       
                     </TouchableOpacity>
                   ))} */}
-                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:10}}>
+                 {/* {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:10}}>
                   <Icon
                     name={"check-circle-outline"}
                     type={"materialCommunity"}
@@ -458,15 +463,15 @@ const Payout = () => {
                     color={"green"}
                   />
                   </View>
-                  }
+                  } */}
                 </TouchableOpacity>
               )
             })}
           </ScrollView>
         </View>}
         {/* for search result */}
-        {search_text.length !== 0 && <View style={[styles.ScrollView_contain, { height: "63%" }]}>
-          <TouchableOpacity style={[styles.left_icon, { marginTop: 120.5 }]} onPress={() => {
+        {search_text.length !== 0 && <View style={[styles.ScrollView_contain]}>
+          {/* <TouchableOpacity style={[styles.left_icon, { marginTop: 120.5 }]} onPress={() => {
             if (AssetViewRef.current && contentWidth !== 0) {
               const backOffset = (AssetViewRef.current.contentOffset ? AssetViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Assets.length;
               handleScroll(backOffset);
@@ -480,24 +485,30 @@ const Payout = () => {
               handleScroll(nextOffset);
             }
           }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"} /></TouchableOpacity>
-          <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
+          <ScrollView ref={AssetViewRef} horizontal style={[styles.ScrollView,{marginHorizontal: 9}]} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}> */}
+          <ScrollView>
           {filteredAnchors.length > 0 ? (
             filteredAnchors.map((list, index) => {
              
                 return (
-                  <TouchableOpacity  style={[styles.card,{width: wp("36%"),alignItems:"center"}]} key={index} onPress={()=>{setAnchor_selection(index),setURL_OPEN(list.tom_url),setLoading(true),setopen_web_view(true)}}>
-                  <View>
+                  <TouchableOpacity style={[styles.card,{width: wp("90%"),height:hp("10%"),marginTop:10,alignItems:"flex-start",borderColor:Anchor_selection===index?"green":"gray"}]} key={index} onPress={()=>{setAnchor_selection(index),setURL_OPEN(list.tom_url),setLoading(true),setopen_web_view(true)}}>
+                  <View style={{flexDirection:"row",alignItems:"center"}}>
                   <Image
                   source={list.image}
-                  style={{width:list.name==="SwiftEx"?60:40,height:list.name==="SwiftEx"?60:40,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
+                  style={{width:list.name==="SwiftEx"?60:50,height:list.name==="SwiftEx"?60:50,alignSelf:"center",borderRadius:15,marginTop:list.name==="SwiftEx"?1:15}}
                   resizeMode="cover"
                 />
+                    <View style={{alignItems:"flex-start",marginLeft:10}}>
                     <Text style={[styles.card_text,{marginTop:list.name==="SwiftEx"?4:9}]}>{list.name}</Text>
-                    <Text style={styles.card_text}>{list.dis_ass}</Text>
-                    {/* <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text> */}
-                    <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "19%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                    <Text style={[styles.card_text,{color:"gray"}]}>{list.dis_ass}</Text>
+                    </View>
+                  {/* <Text style={[styles.next_btn_txt,{fontSize:13,marginTop:5,fontWeight:"500"}]}>Vist stellar website</Text> */}
+                    <TouchableOpacity disabled={Anchor_selection!==index} style={[styles.next_btn, { marginLeft:10,marginTop: 10, height: "39%",backgroundColor:"#011434",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
                       <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-24</Text>
                     </TouchableOpacity>
+                    {list.name==="Clpx"&&<TouchableOpacity disabled={true} style={[styles.next_btn, { marginLeft:10,marginTop: 10, height: "39%",backgroundColor:"gray",alignSelf:"center" }]} onPress={()=>{[setLoading(true),setopen_web_view(true)]}}>
+                      <Text style={[styles.next_btn_txt,{fontSize:16}]}>SEP-6</Text>
+                    </TouchableOpacity>}
                   </View>
                   {/* {list?.seps.map((sep, sepIndex) => (
                     <TouchableOpacity disabled={sepIndex===1||sepIndex===3||Anchor_selection!==index} style={[styles.next_btn, { marginTop: 10, height: "13%",backgroundColor:sepIndex===1||sepIndex===3?"gray":"#011434" }]} onPress={()=>{sepIndex===2?[setLoading(true),setopen_web_view(true)]:setkyc_modal(true)}}>
@@ -507,7 +518,7 @@ const Payout = () => {
                       
                     </TouchableOpacity>
                   ))} */}
-                 {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:10}}>
+                 {/* {Anchor_selection===index&&<View style={{justifyContent:"center",alignSelf:"center",marginTop:10}}>
                   <Icon
                     name={"check-circle-outline"}
                     type={"materialCommunity"}
@@ -515,7 +526,7 @@ const Payout = () => {
                     color={"green"}
                   />
                   </View>
-                  }
+                  } */}
                 </TouchableOpacity>
                 )
 
@@ -526,9 +537,14 @@ const Payout = () => {
           </ScrollView>
         </View>}
 
-        <TouchableOpacity disabled={true} style={[styles.next_btn,{marginTop:5,backgroundColor:"gray"}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
+      <View style={{flexDirection:"row",justifyContent:"space-between"}}>
+      <TouchableOpacity style={[styles.next_btn,{marginTop:5}]} onPress={() => { setsearch_text(''),setshow_anchors(false),setselect_asset_modal(true) }}>
+          <Text style={styles.next_btn_txt}>Back</Text>
+        </TouchableOpacity>
+      <TouchableOpacity disabled={true} style={[styles.next_btn,{marginTop:5,backgroundColor:"gray"}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
         </TouchableOpacity>
+        </View>
       </View>}
 
       <Modal
@@ -880,7 +896,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   ScrollView_contain: {
-    height: hp("11%"),
+    height: hp("50%"),
     marginTop: 15
   },
   left_icon: {

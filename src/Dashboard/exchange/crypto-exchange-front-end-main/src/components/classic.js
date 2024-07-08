@@ -82,7 +82,7 @@ const classic = () => {
             </View>
             <Text style={styles.textModal}>From</Text>
             <TouchableOpacity style={styles.modalOpen} onPress={() => { setmain_modal(false),setChooseModalVisible(true); setIdIndex(1); }}>
-              <Text>{chooseSelectedItemId === null ? "Select" : chooseSelectedItemId}</Text>
+              <Text>{chooseSelectedItemId === null ? chooseItemList[1].name : chooseSelectedItemId}</Text>
             </TouchableOpacity>
             <Text style={styles.textModal}>To</Text>
             <TouchableOpacity style={[styles.modalOpen,{backgroundColor:"silver"}]} onPress={() => { }}>
@@ -90,11 +90,11 @@ const classic = () => {
             </TouchableOpacity>
             <Text style={styles.textModal}>Choose asset</Text>
             <TouchableOpacity style={styles.modalOpen} onPress={() => { setmain_modal(false),setchooseModalVisible_choose(true); setIdIndex(3); }}>
-              <Text>{chooseSelectedItemIdCho === null ? "Select" : chooseSelectedItemIdCho}</Text>
+              <Text>{chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
-              style={[styles.nextButton, { backgroundColor: chooseSelectedItemId && chooseSelectedItemIdCho ? 'green' : 'grey' }]}
+              // disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
+              style={[styles.nextButton, { backgroundColor: 'green' }]}
               onPress={handleNext}
             >
               <Text style={styles.nextButtonText}>Next</Text>

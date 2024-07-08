@@ -11,15 +11,29 @@ import Icon from "../../../../../../icon";
 import darkBlue from "../../../../../../../assets/darkBlue.png";
 import Bridge from "../../../../../../../assets/Bridge.png";
 import QRCode from "react-native-qrcode-svg";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
 
 const send_recive = () => {
+    const state = useSelector((state) => state);
     const FOCUSED = useIsFocused();
     const navigation = useNavigation();
     const [modalContainer_menu, setmodalContainer_menu] = useState(false);
     const [mode_selected, setmode_selected] = useState("SED");
     const [recepi_address, setrecepi_address] = useState("");
-    const [qrvalue, setqrvalue] = useState("GCSRZG3N62P76V7AK4NFROS7RXTSIGFANOGIFZ75TFATPL6F6MLMY6IC");
+    const [recepi_memo, setrecepi_memo] = useState("");
+    const [recepi_amount, setrecepi_amount] = useState("");
+
+    const [qrvalue, setqrvalue] = useState("");
+    const get_data=async()=>{
+        const storedData = await AsyncStorageLib.getItem('myDataKey');
+            const parsedData = JSON.parse(storedData);
+            const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+            const publicKey = matchedData[0].publicKey;
+            setqrvalue(publicKey)
+    }
     useEffect(() => {
+        get_data()
         setmode_selected("SED");
     }, [FOCUSED])
     return (
@@ -147,8 +161,21 @@ const send_recive = () => {
                 {
                     mode_selected === "SED" ?
                         <>
-                            <TextInput placeholder="Enter stellar address" placeholderTextColor={"gray"} value={recepi_address} style={styles.text_input} onChangeText={(value) => { setrecepi_address(value) }} />
+                            <View style={[styles.text_input,{flexDirection:"row",alignItems:"center"}]}>
+                            <TextInput placeholder="Enter stellar address" placeholderTextColor={"gray"} value={recepi_address} style={{height:"100%",width:"80%",fontSize:19,color:"#fff"}}  onChangeText={(value) => { setrecepi_address(value) }} />
+                            <Icon
+                            name={"qrcode-scan"}
+                            type={"materialCommunity"}
+                            size={28}
+                            color={"white"}
+                        />
+                            </View>
                             <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 16, marginTop: 10 }]}>Available: 10</Text>
+                            <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 18, marginTop: 15 }]}>Amount</Text>
+                            <TextInput placeholder="Enter amount" placeholderTextColor={"gray"} value={recepi_amount} style={[styles.text_input,{marginTop: 2}]} onChangeText={(value) => { setrecepi_amount(value) }} />
+                            <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 18, marginTop: 15 }]}>Transaction memo</Text>
+                            <TextInput placeholder="Enter transaction memo" placeholderTextColor={"gray"} value={recepi_memo} style={[styles.text_input,{marginTop: 2}]} onChangeText={(value) => { setrecepi_memo(value) }} />
+
                             <TouchableOpacity disabled={recepi_address.length <= 0} style={[styles.mode_sele, { height: 60, backgroundColor: recepi_address.length <= 0 ? "#011434" : "green", marginTop: 40, alignSelf: "center" }]} onPress={() => { }}>
                                 <Text style={styles.mode_text}>Send</Text>
                             </TouchableOpacity>

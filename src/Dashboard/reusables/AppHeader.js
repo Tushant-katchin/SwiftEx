@@ -178,7 +178,7 @@ headerText_android:{
   fontWeight: 'bold',
   color: 'white',
   paddingTop:3,
-  paddingLeft:45
+  paddingLeft:32
 },
 headerText: {
   fontSize: 20,

@@ -1,5 +1,5 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { Button, FlatList, Image, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Button, FlatList, Image, Modal, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -9,7 +9,11 @@ import { REACT_APP_LOCAL_TOKEN } from "../../ExchangeConstants";
 import { useEffect, useState } from "react";
 import Icon from "../../../../../../icon";
 import darkBlue from "../../../../../../../assets/darkBlue.png";
-import Bridge from "../../../../../../../assets/Bridge.png";
+import CLICKPESA from "../../../../../../../assets/CLICKPESA.png";
+import ethereum from "../../../../../../../assets/ethereum.png";
+import stellar from "../../../../../../../assets/Stellar_(XLM).png";
+
+
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
 const StellarSdk = require('stellar-sdk');
@@ -19,37 +23,37 @@ const Assets_manage = () => {
     const [modalContainer_menu, setmodalContainer_menu] = useState(false);
     const [TRUST_ASSET, setTRUST_ASSET] = useState(false);
     const [assets, setassets] = useState([
-         {
-          "asset_code": "XETH",
-          "asset_issuer": "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI",
-          "asset_type": "credit_alphanum4",
-          "balance": "0.0000000",
-          "buying_liabilities": "0.0000000",
-          "is_authorized": true,
-          "is_authorized_to_maintain_liabilities": true,
-          "last_modified_ledger": 367795,
-          "limit": "922337203685.4775807",
-          "selling_liabilities": "0.0000000",
+        {
+            "asset_code": "XETH",
+            "asset_issuer": "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI",
+            "asset_type": "credit_alphanum4",
+            "balance": "0.0000000",
+            "buying_liabilities": "0.0000000",
+            "is_authorized": true,
+            "is_authorized_to_maintain_liabilities": true,
+            "last_modified_ledger": 367795,
+            "limit": "922337203685.4775807",
+            "selling_liabilities": "0.0000000",
         },
-         {
-          "asset_code": "XUSD",
-          "asset_issuer": "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI",
-          "asset_type": "credit_alphanum4",
-          "balance": "0.0000000",
-          "buying_liabilities": "0.0000000",
-          "is_authorized": true,
-          "is_authorized_to_maintain_liabilities": true,
-          "last_modified_ledger": 367796,
-          "limit": "922337203685.4775807",
-          "selling_liabilities": "0.0000000",
+        {
+            "asset_code": "XUSD",
+            "asset_issuer": "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI",
+            "asset_type": "credit_alphanum4",
+            "balance": "0.0000000",
+            "buying_liabilities": "0.0000000",
+            "is_authorized": true,
+            "is_authorized_to_maintain_liabilities": true,
+            "last_modified_ledger": 367796,
+            "limit": "922337203685.4775807",
+            "selling_liabilities": "0.0000000",
         },
-         {
-          "asset_type": "native",
-          "balance": "9999.9999800",
-          "buying_liabilities": "0.0000000",
-          "selling_liabilities": "0.0000000",
+        {
+            "asset_type": "native",
+            "balance": "9999.9999800",
+            "buying_liabilities": "0.0000000",
+            "selling_liabilities": "0.0000000",
         },
-      ]);
+    ]);
     const state = useSelector((state) => state);
 
     const get_stellar = async () => {
@@ -78,12 +82,16 @@ const Assets_manage = () => {
         }
     }
 
-    const DATA = [
-        { id: '1', name: 'John Doe' },
-        { id: '2', name: 'Jane Smith' },
-        { id: '3', name: 'Sam Johnson' },
-      ];
-      
+    const AVL_ASSETS = [
+        { name: 'Tanzania Shiling', domain: "TZS (connect.clickpesa.com)",img:CLICKPESA },
+        { name: 'BTC', domain: "BTC (ultracapital.xyz)",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png" },
+        { name: 'ETH', domain: "ETH (ultracapital.xyz)",img:ethereum },
+        { name: 'EURC', domain: "EURC (circle.com)",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420" },
+        { name: 'USD Coin', domain: "USDC (center.io)",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
+        { name: 'yUSDC', domain: "yUSDC (ultracapital.xyz)",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
+        { name: 'yXLM', domain: "yXLM (ultracapital.xyz)",img:stellar },
+    ];
+
 
 
 
@@ -209,49 +217,93 @@ const Assets_manage = () => {
                 <View style={styles.assets_con}>
                     {assets.map((list, index) => {
                         return (
-                            <TouchableOpacity style={styles.assets_card} onPress={()=>{navigation.navigate("send_recive")}}>
-                                <View style={{flexDirection:"column"}}>
-                                    <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.asset_type==="native"?"Lumens":list.asset_code}</Text>
-                                    <Text style={[styles.mode_text, { fontSize: 16, fontWeight: "300",color:"silver" }]}>{list.asset_type==="native"?"XLM"+" (stellar.org)":list.asset_code+" (stellar.org)"}</Text>
+                            <TouchableOpacity style={styles.assets_card} onPress={() => { navigation.navigate("send_recive") }}>
+                                <View style={{ flexDirection: "column" }}>
+                                    <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.asset_type === "native" ? "Lumens" : list.asset_code}</Text>
+                                    <Text style={[styles.mode_text, { fontSize: 16, fontWeight: "300", color: "silver" }]}>{list.asset_type === "native" ? "XLM" + " (stellar.org)" : list.asset_code + " (stellar.org)"}</Text>
                                 </View>
-                       {/* <ScrollView style={{height:hp52)}}> */}
+                                {/* <ScrollView style={{height:hp52)}}> */}
 
-                                <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.balance}</Text>
-                            {/* </ScrollView> */}
+                                <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.balance.slice(0, 6)}</Text>
+                                {/* </ScrollView> */}
                             </TouchableOpacity>
                         )
                     })}
                 </View>
-                <TouchableOpacity style={[styles.assets_con,{alignItems:"center",marginTop:60}]} onPress={()=>{setTRUST_ASSET(true)}}>
-                <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>Add Asset</Text>
+                <TouchableOpacity style={[styles.assets_con, { alignItems: "center", marginTop: 60 }]} onPress={() => { setTRUST_ASSET(true) }}>
+                    <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>Add Asset</Text>
                 </TouchableOpacity>
             </View>
             <Modal
-        animationType="slide"
-        transparent={true}
-        visible={false}
-        onRequestClose={() => {
-          setTRUST_ASSET(!TRUST_ASSET);
-        }}
-      >
-        <View style={styles.modalView}>
-          <Text style={styles.modal_heading}>Add Asset</Text>
-        </View>
-      </Modal>
+                animationType="slide"
+                transparent={true}
+                visible={TRUST_ASSET}
+                onRequestClose={() => {
+                    setTRUST_ASSET(!TRUST_ASSET);
+                }}
+            >
+                <View style={styles.modalView}>
+                   <View style={{flexDirection:"row",justifyContent:"space-between",width:"100%"}}>
+                     <Text style={styles.modal_heading}>Add Asset</Text>
+                     <TouchableOpacity onPress={()=>{setTRUST_ASSET(false)}}>
+                     <Icon
+                            name={"close"}
+                            type={"antDesign"}
+                            size={28}
+                            color={"white"}
+                        />
+                     </TouchableOpacity>
+                   </View>
+                    <TextInput placeholder="Search assests by code home domain" placeholderTextColor={"gray"} style={styles.search_bar} />
+                    {AVL_ASSETS.map((list, index) => {
+                        return (
+                            <View style={[styles.search_bar, { flexDirection: "row", justifyContent: "space-between", alignItems: "center" }]}>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                {index==3||index==1||index==4||index==5?<Image source={{uri:list.img}} style={styles.modal_IMG} />:<Image source={list.img} style={styles.modal_IMG} />}
+                                    <View>
+                                        <Text style={styles.modal_sub_heading}>{list.name}</Text>
+                                        <Text style={[styles.modal_sub_heading, { fontSize: 12, color: "gray" }]}>{list.domain}</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity style={styles.btn}>
+                                    <Text style={[styles.modal_sub_heading]}>Add Asset</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    })}
+                </View>
+            </Modal>
 
         </>
     )
 }
 const styles = StyleSheet.create({
+    btn: {
+        borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+        borderWidth: 1.3,
+        padding: 5,
+        borderRadius: 10,
+        marginRight: 10
+    },
     main_con: {
         backgroundColor: "#011434",
         height: "100%",
         padding: 19
     },
+    search_bar: {
+        marginTop: 19,
+        borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+        borderWidth: 1.3,
+        width: wp(85),
+        padding: 5,
+        paddingStart: 10,
+        borderRadius: 10,
+        color: "#fff"
+    },
     assets_card: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginTop:10
+        marginTop: 10
     },
     assets_con: {
         width: wp(90),
@@ -324,16 +376,29 @@ const styles = StyleSheet.create({
         marginStart: 5
     },
     modalView: {
-        margin: 2,
-        backgroundColor: 'white',
+        // margin: 2,
+        backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
         borderRadius: 20,
-        padding: 10,
-        alignItems:'flex-start',
+        padding: 19,
+        alignItems: 'flex-start',
+        justifyContent:"center",
+        marginTop:60,
+        paddingLeft:32
     },
-    modal_heading:{
-        fontSize:23,
-        color:"#fff",
-        fontWeight:"600"
-    }
+    modal_heading: {
+        fontSize: 23,
+        color: "#fff",
+        fontWeight: "600"
+    },
+    modal_sub_heading: {
+        fontSize: 18,
+        color: "#fff",
+        fontWeight: "600"
+    },
+    modal_IMG: {
+        height: hp(6),
+        width: wp(12),
+        marginRight:5
+    },
 })
 export default Assets_manage;

@@ -598,7 +598,7 @@ const reves_fun=async(fist_data,second_data)=>{
       transparent={true}
       visible={modalContainer_menu}>
        
-      <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-190,marginRight:-20}]}  onPress={()=>{setmodalContainer_menu(false)}}> 
+      <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-350,marginRight:-20}]}  onPress={()=>{setmodalContainer_menu(false)}}> 
       <View style={styles.modalContainer_option_sub}>
      
 

@@ -81,7 +81,7 @@ export function ExchangeNavigation() {
         options={{
           tabBarLabel: "Home",
           tabBarLabelStyle:{
-            fontSize: hp(2),
+            fontSize: hp(1.6),
             marginBottom:6.9
           },
           headerShown: true,
@@ -105,7 +105,7 @@ export function ExchangeNavigation() {
         component={OfferView}
         options={{
           tabBarLabelStyle:{
-            fontSize: hp(2),
+            fontSize: hp(1.6),
             marginBottom:6.9
           },
           headerShown: true,
@@ -119,7 +119,7 @@ export function ExchangeNavigation() {
         component={TransactionView}
         options={{
           tabBarLabelStyle:{
-            fontSize: hp(2),
+            fontSize: hp(1.6),
             marginBottom:6.9
           },
           headerShown: true,
@@ -135,7 +135,7 @@ export function ExchangeNavigation() {
         component={Payout}
         options={{
           tabBarLabelStyle:{
-            fontSize: hp(2),
+            fontSize: hp(1.6),
             marginBottom:6.9
           },
           headerShown: true,
@@ -150,7 +150,7 @@ export function ExchangeNavigation() {
         component={ProfileView}
         options={{
           tabBarLabelStyle:{
-            fontSize: hp(2),
+            fontSize: hp(1.6),
             marginBottom:6.9
           },
           headerShown: true,

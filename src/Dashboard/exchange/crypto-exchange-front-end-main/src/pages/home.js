@@ -855,7 +855,7 @@ const close_=()=>{
         </View>
 
   <View style={Platform.OS === "ios" ?{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"} :{justifyContent:'center',alignItems:'center',backgroundColor:"#011434"}}>
-    <View style={{position:"relative",zIndex:20,marginBottom:-30,marginTop:10,alignSelf:"flex-end",marginRight:13}}>
+    <View style={{position:"relative",zIndex:20,marginBottom:-30,marginTop:10,alignSelf:"flex-end",marginRight:25}}>
     <Icon
         name={"chevron-down"}
         type={"materialCommunity"}
@@ -865,7 +865,7 @@ const close_=()=>{
     </View>
     <LineChart
         data={chartData}
-        width={374}
+        width={378}
         height={310}
         withDots={true}
         withVerticalLines={false}
