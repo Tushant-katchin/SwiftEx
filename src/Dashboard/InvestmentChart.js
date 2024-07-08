@@ -287,7 +287,7 @@ function InvestmentChart(setCurrentWallet) {
         {assets.map((list,index)=>{
           return(
             <View style={{flexDirection:"row"}}>
-             <View style={{ flexDirection: "row", alignItems: "center" }} key={index}>
+             <View style={{ flexDirection: "row", alignItems: "center",width:wp(30) }} key={index}>
           <Image source={list.asset_image} style={[styles.img,{marginTop:-12}]} />
           <View style={styles.ethrumView}>
             <Text>{list.asset_name}</Text>
@@ -310,8 +310,8 @@ function InvestmentChart(setCurrentWallet) {
         </Text>
           </View>
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{alignItems:"center"}}>
+        <View style={{ flexDirection: "row",width:wp(70) }}>
+        <View style={{alignItems:"center",alignSelf:"center"}}>
           <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} />
           <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row" }]} onPress={()=>{setopen_web_view(true),setURL_OPEN("https://app.allbridge.io/bridge?from=SOL&to=POL&asset=ABR")}}>
           <Image source={Bridge} style={styles.img_new} />
@@ -326,16 +326,17 @@ function InvestmentChart(setCurrentWallet) {
              token ? navigation.navigate("Exchange") :navigation.navigate("exchangeLogin")
             }}>
           <Image source={stellar} style={styles.img_new} />
-            <Text style={styles.asset_op_text}>Trade</Text>
+            <Text style={styles.asset_op_text}> Trade</Text>
           </TouchableOpacity>
         </View>
         <View style={{alignItems:"center"}}>
         <Icon type={"materialCommunity"} name="cash" size={hp(4)} color="black" style={{ marginLeft: 10 }}/>
           <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}  onPress={()=>{setopen_web_view(true),setURL_OPEN("https://anchors.stellar.org/")}}>
           <Image source={stellar} style={styles.img_new} />
-            <Text style={styles.asset_op_text}>Cashout</Text>
+            <Text style={styles.asset_op_text}> Cashout</Text>
           </TouchableOpacity>
         </View>
+       
         </View>
             </View>
           )
@@ -380,12 +381,13 @@ const styles = StyleSheet.create({
   flatlistContainer: {
     flexDirection: "row",
     marginVertical: hp(3),
-    width: "80%",
+    // width: "80%",
     justifyContent: "space-between",
     alignItems: "center",
-    width: wp(90),
+    width: wp(100),
     alignSelf: "center",
     marginBottom: 0,
+    marginLeft:wp(5)
   },
   img: { height: hp(4.3), width: wp(9), borderWidth: 1, borderRadius: hp(3) },
   img_new: { height: hp(3), width: wp(5), borderWidth: 1, borderRadius: hp(3) },
@@ -416,7 +418,7 @@ const styles = StyleSheet.create({
     alignItems:"center"
   },
   asset_op_text:{
-    fontSize:14,
+    fontSize:12,
     color:"#fff",
     fontWeight:"bold"
   }
