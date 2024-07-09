@@ -839,7 +839,7 @@ const close_=()=>{
               navigation.navigate("classic")
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 19, fontWeight: "bold",marginStart:47}}>Bridge Tokens</Text>
+            <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold",marginStart:47}}>Bridge Tokens</Text>
             <View style={{width:45,height:27,justifyContent:"center",alignSelf:"center"}}>
             {/* <Image source={Bridge} style={{width:"130%",height:"130%"}} /> */}
             </View>
@@ -850,7 +850,7 @@ const close_=()=>{
                       navigation.navigate("Assets_manage");
                     }}
                   >
-                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Assets</Text>
+                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold",paddingVertical:2 }}>Assets</Text>
                   </TouchableOpacity>
         </View>
 

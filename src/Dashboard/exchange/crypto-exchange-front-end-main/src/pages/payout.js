@@ -32,7 +32,7 @@ const Payout = () => {
   const Anchors=[
     // {name:"SwiftEx",by:"centre.io", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
     {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'),dis_ass:"banxa.com", seps: ["SEP 24"],tom_url:"https://banxa.com/"},
-    {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'),dis_ass:"clpx.finance", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/"},
+    {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'),dis_ass:"clpx.finance", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/transactions"},
     {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'),dis_ass:"clickpesa.com", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clickpesa.com/"},
     {name:"Finclusive", address: state.wallet.address,image: require('../../../../../../assets/FINCLUSIVE.png'),dis_ass:"finclusive.com", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://finclusive.com/"},
     {name:"Mykobo", address: state.wallet.address,image: require('../../../../../../assets/MYKOBO.png'),dis_ass:"mykobo.co", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://mykobo.co/"},

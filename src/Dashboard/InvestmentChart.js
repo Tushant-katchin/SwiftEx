@@ -29,6 +29,7 @@ import Icon from "../icon";
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
+import { GET, authRequest } from "./exchange/crypto-exchange-front-end-main/src/api";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
@@ -52,6 +53,16 @@ function InvestmentChart(setCurrentWallet) {
   const type = useSelector((state) => state.walletType);
   const [publicKey, setPublicKey] = useState('');
   const [secretKey, setSecretKey] = useState('');
+  const [Profile, setProfile] = useState({
+    isVerified: false,
+    firstName: "jane",
+    lastName: "doe",
+    email: "xyz@gmail.com",
+    phoneNumber: "93400xxxx",
+    isEmailVerified: false,
+  });
+  const [open, setOpen] = useState(false);
+  const [offers, setOffers] = useState();
   const [ethPrice, setEthPrice] = useState();
   const [bnbPrice, setBnbPrice] = useState();
   const [loading, setLoading] = useState(false);
@@ -260,6 +271,36 @@ function InvestmentChart(setCurrentWallet) {
   {asset_image:stellar,asset_name:"XLM",asset_price:current_xlm,asset_balance:xmlBalance ? xmlBalance : "0.00"},
  ]
 
+
+ const for_trading=async()=>{
+   try {
+     const { res, err } = await authRequest("/users/getUserDetails", GET);
+     if (err)return [navigation.navigate("exchangeLogin")];
+     console.log("-------vsdasdasd--",res)
+      setProfile(res);
+      await getOffersData()
+    } catch (err) {
+      console.log(err)
+    }
+};
+const getOffersData = async () => {
+  try {
+    const { res, err } = await authRequest("/offers", GET);
+    if (err) return console.log(`${err.message}`);
+    setOffers(res);
+  } catch (err) {
+    console.log(err)
+    // setMessage(err.message || "Something went wrong");
+  }
+
+  navigation.navigate("newOffer_modal",{
+    user:{Profile},
+                open:{open},
+                getOffersData:{getOffersData}
+  });
+
+ }
+
   return (
     <ScrollView
       refreshControl={
@@ -275,7 +316,7 @@ function InvestmentChart(setCurrentWallet) {
       }
 
       nestedScrollEnabled={true} contentContainerStyle={{ paddingBottom: hp(60) }} sp>
-      <TouchableOpacity style={styles.refresh} onPress={() => {
+      <TouchableOpacity style={[styles.refresh,{backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1}]} onPress={() => {
         getAllBalances(state, dispatch)
       }}>
           <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
@@ -288,7 +329,7 @@ function InvestmentChart(setCurrentWallet) {
           return(
             <View style={{flexDirection:"row"}}>
              <View style={{ flexDirection: "row", alignItems: "center",width:wp(30) }} key={index}>
-          <Image source={list.asset_image} style={[styles.img,{marginTop:-12}]} />
+          <Image source={list.asset_image} style={[styles.img,{marginTop:-12,borderColor:"#fff"}]} />
           <View style={styles.ethrumView}>
             <Text>{list.asset_name}</Text>
             <Text
@@ -303,7 +344,7 @@ function InvestmentChart(setCurrentWallet) {
           style={{
             color: "black",
             fontWeight: "bold",
-            marginLeft:-26
+            marginLeft:-26,
           }}
         >
           Avl: {list.asset_balance} {list.asset_name==="Ethereum"?"ETH":list.asset_name==="Matic"?"MAT":list.asset_name } 
@@ -312,28 +353,35 @@ function InvestmentChart(setCurrentWallet) {
         </View>
         <View style={{ flexDirection: "row",width:wp(70) }}>
         <View style={{alignItems:"center",alignSelf:"center"}}>
-          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} />
-          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row" }]} onPress={()=>{setopen_web_view(true),setURL_OPEN("https://app.allbridge.io/bridge?from=SOL&to=POL&asset=ABR")}}>
-          <Image source={Bridge} style={styles.img_new} />
-            <Text style={styles.asset_op_text}>Swap</Text>
+          {/* <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} /> */}
+          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row",backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1}]} onPress={()=>{navigation.navigate("classic")}}>
+          {/* <Image source={Bridge} style={[styles.img_new,{borderColor:"#fff"}]} /> */}
+          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(3)} color="black" style={{ marginLeft: -10 }} />
+            <Text style={[styles.asset_op_text,{color:"black"}]}> Swap</Text>
           </TouchableOpacity>
             </View>
           <View style={{alignItems:"center",justifyContent:"center"}}>
-          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(4)} color="black" style={{ marginLeft: 4 }}/>
-          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]} onPress={async()=>{
+          {/* <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(3)} color="black" style={{ marginLeft: 4 }}/> */}
+          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row",backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1 }]} onPress={async()=>{
              const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
              const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
-             token ? navigation.navigate("Exchange") :navigation.navigate("exchangeLogin")
+             token ? await for_trading() :navigation.navigate("exchangeLogin")
             }}>
-          <Image source={stellar} style={styles.img_new} />
-            <Text style={styles.asset_op_text}> Trade</Text>
+          {/* <Image source={stellar} style={[styles.img_new,{borderColor:"#fff"}]} /> */}
+          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(3)} color="black" style={{ marginLeft: 1 }}/>
+            <Text style={[styles.asset_op_text,{color:"black"}]}> Trade</Text>
           </TouchableOpacity>
         </View>
-        <View style={{alignItems:"center"}}>
-        <Icon type={"materialCommunity"} name="cash" size={hp(4)} color="black" style={{ marginLeft: 10 }}/>
-          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row" }]}  onPress={()=>{setopen_web_view(true),setURL_OPEN("https://anchors.stellar.org/")}}>
-          <Image source={stellar} style={styles.img_new} />
-            <Text style={styles.asset_op_text}> Cashout</Text>
+        <View style={{alignItems:"center",justifyContent:"center"}}>
+        {/* <Icon type={"materialCommunity"} name="cash" size={hp(3)} color="black" style={{ marginLeft: 10 }}/> */}
+          <TouchableOpacity style={[styles.asset_options,{width:wp(19.9),flexDirection:"row",backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1 }]}  onPress={async()=>{
+             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+             const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+             token ? navigation.navigate("payout") :navigation.navigate("exchangeLogin")
+            }}>
+          {/* <Image source={stellar} style={[styles.img_new,{borderColor:"#fff"}]} /> */}
+        <Icon type={"materialCommunity"} name="swap-vertical" size={hp(3)} color="black" style={{ marginLeft: 7 }}/>
+            <Text style={[styles.asset_op_text,{color:"black",width:50,textAlign:"center",marginLeft:-5}]}>On/Off Ramp</Text>
           </TouchableOpacity>
         </View>
        
@@ -380,7 +428,7 @@ export default InvestmentChart;
 const styles = StyleSheet.create({
   flatlistContainer: {
     flexDirection: "row",
-    marginVertical: hp(3),
+    marginVertical: hp(1),
     // width: "80%",
     justifyContent: "space-between",
     alignItems: "center",
@@ -407,11 +455,11 @@ const styles = StyleSheet.create({
   priceDown: {
     color: "rgb(204,51,51)",
   },
-  refresh: { backgroundColor: "#145DA0", width: wp(20), paddingVertical: hp(1), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) },
+  refresh: { backgroundColor: "#145DA0", width: wp(10), paddingVertical: hp(0.3), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) },
   asset_options:{
     backgroundColor: "#145DA0",
     width:wp(19.5),
-    height:hp(4),
+    height:hp(4.5),
     marginLeft:10,
     borderRadius:10,
     justifyContent:"center",

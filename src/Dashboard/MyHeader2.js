@@ -420,7 +420,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Pressable onPress={() => alert("Notifications will be added soon")}>
           <Icon name="bell" type={"fontisto"} size={24} />
         </Pressable>
-        <FaucetModal showModal={showModal} setShowModal={setShowModal} />
+        {/* <FaucetModal showModal={showModal} setShowModal={setShowModal} /> */}
 
         {/* <TouchableOpacity
           style={styles.faucetBtn}
@@ -438,7 +438,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           <Icon name="sliders" type={"FAIcon"} size={24} />
         </TouchableOpacity>
       </View>
-      <View style={{ marginVertical: hp(2) }}>
+      <View style={{ marginVertical: hp(2),marginBottom:hp(4) }}>
         <Text style={styles.dollartxt}>
           $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>

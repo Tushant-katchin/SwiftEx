@@ -179,7 +179,7 @@ const Dashboard = ({ navigation }) => {
           tabBarStyle: {
             position: "absolute",
             backgroundColor: "#4CA6EA",
-            height: Platform.OS == 'android' ?  hp("10") : hp("11")
+            height: Platform.OS == 'android' ?  hp("9") : hp("11")
             // borderTopColor: "black",
             // borderTopWidth: 1,
           },

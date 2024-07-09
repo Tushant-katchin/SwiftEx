@@ -193,78 +193,110 @@ function toHex(Amount) {
   return `0x${Amount.raw.toString(16)}`;
 }
 
-const getETHtoTokenPrice = async (tokenaddress, amount) => {
-  try {
-    //console.log(coin1,coin2)
-    const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC);
-    const chainId = ChainId.GÖRLI;
-    const UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
-    const UNISWAP_ROUTER_ABI = [
-      "function getAmountsOut(uint amountIn, address[] memory path) public view returns (uint[] memory amounts)",
-      "function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)",
-      "function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)",
-    ];
+// const getETHtoTokenPrice = async (tokenaddress, amount) => {
+//   try {
+//     //console.log(coin1,coin2)
+//     const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC);
+//     const chainId = ChainId.GÖRLI;
+//     const UNISWAP_ROUTER_ADDRESS = "";
+//     const UNISWAP_ROUTER_ABI = [
+//       "function getAmountsOut(uint amountIn, address[] memory path) public view returns (uint[] memory amounts)",
+//       "function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)",
+//       "function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)",
+//     ];
 
-    const UNISWAP_ROUTER_CONTRACT = new ethers.Contract(
-      UNISWAP_ROUTER_ADDRESS,
-      UNISWAP_ROUTER_ABI,
-      provider
-    );
-    // let pair
-    // let route
-    // let trade
+//     const UNISWAP_ROUTER_CONTRACT = new ethers.Contract(
+//       UNISWAP_ROUTER_ADDRESS,
+//       UNISWAP_ROUTER_ABI,
+//       provider
+//     );
+//     // let pair
+//     // let route
+//     // let trade
 
-    let tokenAddress = tokenaddress.toString(); //'0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'
-    const token = await Fetcher.fetchTokenData(chainId, tokenAddress, provider);
+//     let tokenAddress = tokenaddress.toString(); //
+//     const token = await Fetcher.fetchTokenData(chainId, tokenAddress, provider);
 
-    const weth = WETH[token.chainId];
-    const pair = await Fetcher.fetchPairData(token, weth, provider);
-    const pair2 = await Fetcher.fetchPairData(weth, token, provider);
+//     const weth = WETH[token.chainId];
+//     const pair = await Fetcher.fetchPairData(token, weth, provider);
+//     const pair2 = await Fetcher.fetchPairData(weth, token, provider);
 
-    const amountIn = ethers.utils.parseEther(amount);
-    const route = new Route([pair], weth);
-    const route2 = new Route([pair2], token);
+//     const amountIn = ethers.utils.parseEther(amount);
+//     const route = new Route([pair], weth);
+//     const route2 = new Route([pair2], token);
 
-    const trade = new Trade(
-      route,
-      new TokenAmount(weth, amountIn),
-      TradeType.EXACT_INPUT
-    );
-    const trade2 = new Trade(
-      route2,
-      new TokenAmount(token, amountIn),
-      TradeType.EXACT_INPUT
-    );
+//     const trade = new Trade(
+//       route,
+//       new TokenAmount(weth, amountIn),
+//       TradeType.EXACT_INPUT
+//     );
+//     const trade2 = new Trade(
+//       route2,
+//       new TokenAmount(token, amountIn),
+//       TradeType.EXACT_INPUT
+//     );
 
-    console.log(
-      `Mid Price WETH --> ${token.address}:`,
-      route.midPrice.toSignificant(6)
-    );
-    console.log(
-      `Mid Price ${token.address}: --> WETH`,
-      route2.midPrice.toSignificant(6)
-    );
-    const slippageTolerance = new Percent("1", "100");
-    console.log(trade.minimumAmountOut(slippageTolerance).toSignificant(6));
-    console.log(trade2.minimumAmountOut(slippageTolerance).toSignificant(6));
+//     console.log(
+//       `Mid Price WETH --> ${token.address}:`,
+//       route.midPrice.toSignificant(6)
+//     );
+//     console.log(
+//       `Mid Price ${token.address}: --> WETH`,
+//       route2.midPrice.toSignificant(6)
+//     );
+//     const slippageTolerance = new Percent("1", "100");
+//     console.log(trade.minimumAmountOut(slippageTolerance).toSignificant(6));
+//     console.log(trade2.minimumAmountOut(slippageTolerance).toSignificant(6));
 
-    const tradeDetails = {
-      slippageTolerance: slippageTolerance.toSignificant(1),
-      minimumAmountOut: trade
-        .minimumAmountOut(slippageTolerance)
-        .toSignificant(6),
-    };
+//     const tradeDetails = {
+//       slippageTolerance: slippageTolerance.toSignificant(1),
+//       minimumAmountOut: trade
+//         .minimumAmountOut(slippageTolerance)
+//         .toSignificant(6),
+//     };
 
-    return {
-      token1totoken2: trade.minimumAmountOut(slippageTolerance).toSignificant(6),
-      token2totoken1: trade2.minimumAmountOut(slippageTolerance).toSignificant(6),
-      trade: tradeDetails,
-    };
-  } catch (err) {
-    console.log(err);
-  }
-};
+//     return {
+//       token1totoken2: trade.minimumAmountOut(slippageTolerance).toSignificant(6),
+//       token2totoken1: trade2.minimumAmountOut(slippageTolerance).toSignificant(6),
+//       trade: tradeDetails,
+//     };
+//   } catch (err) {
+//     console.log("ERROR_SWAP_FUNCTION====",err);
+//   }
+// };
 
+async function getETHtoTokenPrice(tokenAddress, ethAmount) {
+  const provider = new ethers.providers.AlchemyProvider("homestead", "k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo");
+  
+  const chainId = ChainId.MAINNET;
+  const token = await Fetcher.fetchTokenData(chainId, tokenAddress, provider);
+  const weth = WETH[chainId];
+  
+  const pair = await Fetcher.fetchPairData(token, weth, provider);
+  const route = new Route([pair], weth);
+
+  const amountIn = ethers.utils.parseEther(ethAmount);
+  const trade = new Trade(route, new TokenAmount(weth, amountIn), TradeType.EXACT_INPUT);
+
+  const slippageTolerance = new Percent("1", "100");
+  const token1totoken2 = trade.minimumAmountOut(slippageTolerance).toSignificant(6);
+
+  const pair2 = await Fetcher.fetchPairData(weth, token, provider);
+  const route2 = new Route([pair2], token);
+  const trade2 = new Trade(route2, new TokenAmount(token, amountIn), TradeType.EXACT_INPUT);
+  const token2totoken1 = trade2.minimumAmountOut(slippageTolerance).toSignificant(6);
+
+  const tradeDetails = {
+    slippageTolerance: slippageTolerance.toSignificant(1),
+    minimumAmountOut: trade.minimumAmountOut(slippageTolerance).toSignificant(6),
+  };
+
+  return {
+    token1totoken2,
+    token2totoken1,
+    trade: tradeDetails,
+  };
+}
 const getTokentoEthPrice = async (tokenaddress, amount) => {
   try {
     //console.log(coin1,coin2)

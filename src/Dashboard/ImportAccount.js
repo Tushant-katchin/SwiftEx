@@ -143,7 +143,7 @@ const ImportAccount = (props) => {
           <Text style={style.text}>Xrp</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={style.Box}
           onPress={() => {
             props.navigation.navigate("ImportStellar");
@@ -152,7 +152,7 @@ const ImportAccount = (props) => {
           <Image source={stellar} style={style.img} />
 
           <Text style={style.text}>Stellar</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </Animated.View>
   );

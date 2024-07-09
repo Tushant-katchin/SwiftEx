@@ -17,12 +17,14 @@ import Modal from "react-native-modal";
 import { alert } from "../reusables/Toasts";
 import { Paste } from "../../utilities/utilities";
 import Icon from "../../icon";
+import { useSelector } from "react-redux";
 const StellarSdk = require('stellar-sdk');
 const ImportStellarModal = ({
   setWalletVisible,
   Visible,
   onCrossPress
 }) => {
+  const state = useSelector((state) => state);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [secretkey, setsecretkey] = useState("");
   const navigation = useNavigation();
@@ -40,22 +42,17 @@ const add_wallet=()=>{
 const storeData = async (secretKey) => {
         
     try {
-      await AsyncStorageLib.removeItem('myDataKey');
-      console.log('Data cleared successfully');
+      const data_1=await AsyncStorageLib.getItem('myDataKey');
+      console.log('Data ',data_1);
       try {
         const keypair = StellarSdk.Keypair.fromSecret(secretKey);
         const publicKey = keypair.publicKey();
           const data = {
+            Ether_address:state.wallet.address,
             key1: publicKey,
             key2: secretKey,
           };
-        const jsonData = JSON.stringify(data);
-        await AsyncStorageLib.setItem('myDataKey', jsonData);
-        alert('success',"Account Imported.");
-        setWalletVisible(false)
-        setTimeout(()=>{
-        navigation.navigate("Home")
-        },2000)
+          await storeData_marge(data.key1,data.key2,data.Ether_address)
       } catch (error) {
         console.error('Error storing data:', error);
         alert('error', "Account Not import yet.");
@@ -65,6 +62,78 @@ const storeData = async (secretKey) => {
     }
    
 };
+
+const storeData_marge = async (publicKey, secretKey, Ether_address) => {
+  try {
+    let userTransactions = [];
+    const transactions = await AsyncStorageLib.getItem('myDataKey');
+    if (transactions) {
+      userTransactions = JSON.parse(transactions);
+      if (!Array.isArray(userTransactions)) {
+        userTransactions = [];
+      }
+    }
+
+    const existingIndex = userTransactions.findIndex(
+      (transaction) => transaction.Ether_address === Ether_address
+    );
+
+    if (existingIndex !== -1) {
+      // Update existing transaction
+      userTransactions[existingIndex].publicKey = publicKey;
+      userTransactions[existingIndex].secretKey = secretKey;
+    } else {
+      // Add new transaction
+      const newTransaction = {
+        Ether_address,
+        publicKey,
+        secretKey,
+      };
+      userTransactions.push(newTransaction);
+    }
+
+    await AsyncStorageLib.setItem('myDataKey', JSON.stringify(userTransactions));
+    console.log('Updated userTransactions:', userTransactions);
+    alert('success', "Account Imported.");
+    setWalletVisible(false);
+    setTimeout(() => {
+      navigation.navigate("Home");
+    }, 2000);
+  } catch (error) {
+    console.error('Error saving payout:', error);
+    throw error;
+  }
+};
+
+
+// const storeData_marge = async (publicKey,secretKey,Ether_address) => {
+//   try {
+//     let userTransactions = [];
+//     const transactions = await AsyncStorageLib.getItem('myDataKey');
+//     if (transactions) {
+//       userTransactions = JSON.parse(transactions);
+//       if (!Array.isArray(userTransactions)) {
+//         userTransactions = [];
+//       }
+//     }
+//     const newTransaction = {
+//       Ether_address,
+//       publicKey,
+//       secretKey
+//     };
+//     userTransactions.push(newTransaction);
+//     await AsyncStorageLib.setItem('myDataKey', JSON.stringify(userTransactions));
+//     console.log('Updated userTransactions:', userTransactions);
+//     alert('success',"Account Imported.");
+//     setWalletVisible(false)
+//     setTimeout(()=>{
+//     navigation.navigate("Home")
+//     },2000)
+//   } catch (error) {
+//     console.error('Error saving payout:', error);
+//     throw error;
+//   }
+// };
 
   return (
     <Animated.View
