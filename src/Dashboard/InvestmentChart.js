@@ -46,7 +46,7 @@ function InvestmentChart(setCurrentWallet) {
   const [xrpBalance, GetXrpBalance] = useState(0.00);
   const [maticBalance, getMaticBalance] = useState(0.00);
   const [ethBalance, getEthBalance] = useState(0.00);
-  const [xmlBalance, setxmlBalance] = useState(0.00);
+  const [xmlBalance, setxmlBalance] = useState("0.00");
   const [current_xlm, setcurrent_xlm] = useState(0.00)
   const EthBalance = useSelector((state) => state.EthBalance);
   const XrpBalance = useSelector((state) => state.XrpBalance);
@@ -82,16 +82,27 @@ function InvestmentChart(setCurrentWallet) {
   const getData = async () => {
     try {
       const storedData = await AsyncStorageLib.getItem('myDataKey');
-      if (storedData !== null) {
+      if (storedData) {
         const parsedData = JSON.parse(storedData);
-        console.log('Retrieved data:', parsedData);
-        const publicKey = parsedData.key1;
-        const secretKey = parsedData.key2;
-        setPublicKey(publicKey);
-        setSecretKey(secretKey);
-      } else {
-        console.log('No data found in AsyncStorage');
-      }
+        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        const publicKey = matchedData[0].publicKey;
+        setPublicKey(publicKey)
+        get_stellar(publicKey);
+        const secretKey_Key = matchedData[0].secretKey;
+        setSecretKey(secretKey_Key)
+    } else {
+        console.log('No data found for key steller keys');
+    }
+      // if (storedData !== null) {
+      //   const parsedData = JSON.parse(storedData);
+      //   console.log('Retrieved data:', parsedData);
+      //   const publicKey = parsedData.key1;
+      //   const secretKey = parsedData.key2;
+      //   setPublicKey(publicKey);
+      //   setSecretKey(secretKey);
+      // } else {
+      //   console.log('No data found in AsyncStorage');
+      // }
     } catch (error) {
       console.error('Error retrieving data:', error);
     }
@@ -232,7 +243,7 @@ function InvestmentChart(setCurrentWallet) {
   );
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
 
-  const get_stellar = async () => {
+  const get_stellar = async (publicKey) => {
     // const publicKey="GCW6DBA7KLB5HZEJEQ2F5F552SLQ66KZFKEPPIPI3OF7XNLIAGCP6JER";
     try {
       console.log("<><", publicKey)
@@ -243,12 +254,14 @@ function InvestmentChart(setCurrentWallet) {
         .then(account => {
           console.log('Balances for account:', publicKey);
           account.balances.forEach(balance => {
-            console.log(`${balance.asset_type}: ${balance.balance}`);
-            setxmlBalance(balance.balance)
+            if (balance.asset_type === "native") {
+              setxmlBalance(balance.balance)
+          }
           });
         })
         .catch(error => {
           console.log('Error loading account:', error);
+          setxmlBalance("0.00")
           alert("error", "Need to fund amount.")
         });
     } catch (error) {
@@ -273,7 +286,7 @@ function InvestmentChart(setCurrentWallet) {
   {asset_image:Etherimage,asset_name:"Ethereum",asset_price:ethPrice >= 0 ? ethPrice : 1300,asset_balance:ethBalance ? ethBalance : 0},
   {asset_image:Maticimage,asset_name:"Matic",asset_price: 4,asset_balance:maticBalance ? maticBalance : 0},
   {asset_image:Xrpimage,asset_name:"XRP",asset_price:0.78,asset_balance:xrpBalance ? xrpBalance : 0},
-  {asset_image:stellar,asset_name:"XLM",asset_price:current_xlm,asset_balance:xmlBalance ? xmlBalance : "0.00"},
+  {asset_image:stellar,asset_name:"XLM",asset_price:current_xlm,asset_balance:xmlBalance ? xmlBalance.substring(0,3) : "0.00"},
  ]
 
 
