@@ -42,7 +42,7 @@ if (network === "BSC") {
   return (
     <Center>
       <TouchableOpacity
-      style={{backgroundColor:"#145DA0",borderRadius:16,marginLeft:0,padding:'6%'}}
+      style={{backgroundColor:"#fff",borderRadius:16,marginLeft:0,padding:'6%'}}
         onPress={ () => {
           setShowModal(true)
          // console.log('pressed')

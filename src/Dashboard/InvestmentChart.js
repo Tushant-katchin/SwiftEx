@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity, Modal, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity } from "react-native";
 import {
   Avatar,
   Card,
   Title,
   Paragraph,
   CardItem,
-
+  WebView,
 } from "react-native-paper";
 import {
   widthPercentageToDP as wp,
@@ -20,33 +20,22 @@ import { getBnbPrice, getEthPrice, getXLMPrice } from "../utilities/utilities";
 import Maticimage from "../../assets/matic.png";
 import Xrpimage from "../../assets/xrp.png";
 import stellar from "../../assets/Stellar_(XLM).png"
-import Bridge from "../../assets/Bridge.png"
 import bnbimage from "../../assets/bnb-icon2_2x.png";
 import { GetBalance, getAllBalances } from "../utilities/web3utilities";
 import { getXrpBalance } from "../components/Redux/actions/auth";
 import alert from "./reusables/Toasts";
 import Icon from "../icon";
-import WebView from "react-native-webview";
-import { useNavigation } from "@react-navigation/native";
-import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
-import { GET, authRequest } from "./exchange/crypto-exchange-front-end-main/src/api";
-import { delay } from "lodash";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
-  const navigation=useNavigation();
   const state = useSelector((state) => state);
-  const [URL_OPEN, setURL_OPEN] = useState("");
-  const [open_web_view, setopen_web_view] = useState(false);
-  const [Bottom_loading, setBottom_loading] = useState(true);
-  const [loading_1, setLoading_1] = useState(true);
   const [pull, setPull] = useState(false)
   const wallet = useSelector((state) => state.wallet);
   const [bnbBalance, getBnbBalance] = useState(0.00);
   const [xrpBalance, GetXrpBalance] = useState(0.00);
   const [maticBalance, getMaticBalance] = useState(0.00);
   const [ethBalance, getEthBalance] = useState(0.00);
-  const [xmlBalance, setxmlBalance] = useState("0.00");
+  const [xmlBalance, setxmlBalance] = useState(0.00);
   const [current_xlm, setcurrent_xlm] = useState(0.00)
   const EthBalance = useSelector((state) => state.EthBalance);
   const XrpBalance = useSelector((state) => state.XrpBalance);
@@ -54,16 +43,6 @@ function InvestmentChart(setCurrentWallet) {
   const type = useSelector((state) => state.walletType);
   const [publicKey, setPublicKey] = useState('');
   const [secretKey, setSecretKey] = useState('');
-  const [Profile, setProfile] = useState({
-    isVerified: false,
-    firstName: "jane",
-    lastName: "doe",
-    email: "xyz@gmail.com",
-    phoneNumber: "93400xxxx",
-    isEmailVerified: false,
-  });
-  const [open, setOpen] = useState(false);
-  const [offers, setOffers] = useState();
   const [ethPrice, setEthPrice] = useState();
   const [bnbPrice, setBnbPrice] = useState();
   const [loading, setLoading] = useState(false);
@@ -82,7 +61,7 @@ function InvestmentChart(setCurrentWallet) {
   const getData = async () => {
     try {
       const storedData = await AsyncStorageLib.getItem('myDataKey');
-      if (storedData) {
+      if (storedData !== null) {
         const parsedData = JSON.parse(storedData);
         const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
         const publicKey = matchedData[0].publicKey;
@@ -93,16 +72,6 @@ function InvestmentChart(setCurrentWallet) {
     } else {
         console.log('No data found for key steller keys');
     }
-      // if (storedData !== null) {
-      //   const parsedData = JSON.parse(storedData);
-      //   console.log('Retrieved data:', parsedData);
-      //   const publicKey = parsedData.key1;
-      //   const secretKey = parsedData.key2;
-      //   setPublicKey(publicKey);
-      //   setSecretKey(secretKey);
-      // } else {
-      //   console.log('No data found in AsyncStorage');
-      // }
     } catch (error) {
       console.error('Error retrieving data:', error);
     }
@@ -243,7 +212,7 @@ function InvestmentChart(setCurrentWallet) {
   );
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
 
-  const get_stellar = async (publicKey) => {
+  const get_stellar = async () => {
     // const publicKey="GCW6DBA7KLB5HZEJEQ2F5F552SLQ66KZFKEPPIPI3OF7XNLIAGCP6JER";
     try {
       console.log("<><", publicKey)
@@ -255,13 +224,13 @@ function InvestmentChart(setCurrentWallet) {
           console.log('Balances for account:', publicKey);
           account.balances.forEach(balance => {
             if (balance.asset_type === "native") {
+              console.log(`${balance.asset_type}: ${balance.balance}`);
               setxmlBalance(balance.balance)
           }
           });
         })
         .catch(error => {
           console.log('Error loading account:', error);
-          setxmlBalance("0.00")
           alert("error", "Need to fund amount.")
         });
     } catch (error) {
@@ -269,55 +238,9 @@ function InvestmentChart(setCurrentWallet) {
     }
   }
  useEffect(()=>{
-  setBottom_loading(true)
     getData();
   get_stellar();
-  // setTimeout(() => {
-  //   setBottom_loading(false);
-  // }, 1000);
-
-  delay(()=>{
-    setBottom_loading(false);
-  },2000)
  },[])
-
- const assets=[
-  {asset_image:bnbimage,asset_name:"BNB",asset_price:bnbPrice >= 0 ? bnbPrice : 300,asset_balance:bnbBalance ? bnbBalance : 0},
-  {asset_image:Etherimage,asset_name:"Ethereum",asset_price:ethPrice >= 0 ? ethPrice : 1300,asset_balance:ethBalance ? ethBalance : 0},
-  {asset_image:Maticimage,asset_name:"Matic",asset_price: 4,asset_balance:maticBalance ? maticBalance : 0},
-  {asset_image:Xrpimage,asset_name:"XRP",asset_price:0.78,asset_balance:xrpBalance ? xrpBalance : 0},
-  {asset_image:stellar,asset_name:"XLM",asset_price:current_xlm,asset_balance:xmlBalance ? xmlBalance.substring(0,3) : "0.00"},
- ]
-
-
- const for_trading=async()=>{
-   try {
-     const { res, err } = await authRequest("/users/getUserDetails", GET);
-     if (err)return [navigation.navigate("exchangeLogin")];
-     console.log("-------vsdasdasd--",res)
-      setProfile(res);
-      await getOffersData()
-    } catch (err) {
-      console.log(err)
-    }
-};
-const getOffersData = async () => {
-  try {
-    const { res, err } = await authRequest("/offers", GET);
-    if (err) return console.log(`${err.message}`);
-    setOffers(res);
-  } catch (err) {
-    console.log(err)
-    // setMessage(err.message || "Something went wrong");
-  }
-
-  navigation.navigate("newOffer_modal",{
-    user:{Profile},
-                open:{open},
-                getOffersData:{getOffersData}
-  });
-
- }
 
   return (
     <ScrollView
@@ -334,109 +257,148 @@ const getOffersData = async () => {
       }
 
       nestedScrollEnabled={true} contentContainerStyle={{ paddingBottom: hp(60) }} sp>
-      <TouchableOpacity style={[styles.refresh,{backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1}]} onPress={() => {
+      <TouchableOpacity style={styles.refresh} onPress={() => {
         getAllBalances(state, dispatch)
       }}>
-          <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
+ <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
       </TouchableOpacity>
-      {Bottom_loading?
-      <ActivityIndicator color={"green"} style={{marginTop:hp(10)}} size={"large"}/>:
-      <View style={styles.flatlistContainer}>
-        <View>
-        {assets.map((list,index)=>{
-          return(
-            <View style={{flexDirection:"row"}}>
-             <View style={{ flexDirection: "row", alignItems: "center",width:wp(30) }} key={index}>
-          <Image source={list.asset_image} style={[styles.img,{marginTop:-12,borderColor:"#fff"}]} />
+      <TouchableOpacity style={styles.flatlistContainer}>
+
+
+
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={bnbimage} style={styles.img} />
           <View style={styles.ethrumView}>
-            <Text>{list.asset_name}</Text>
+            <Text>BNB</Text>
             <Text
               style={{
                 color: "grey",
                 fontWeight: "bold",
               }}
             >
-              ${list.asset_price}
+              ${bnbPrice >= 0 ? bnbPrice : 300}
             </Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            color: "black",
+
+            fontWeight: "bold",
+          }}
+        >
+          {bnbBalance ? bnbBalance : 0} BNB
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={Etherimage} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>Ethereum</Text>
             <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $ {ethPrice >= 0 ? ethPrice : 1300}
+            </Text>
+          </View>
+        </View>
+
+        <Text
           style={{
             color: "black",
             fontWeight: "bold",
-            marginLeft:-26,
           }}
         >
-          Avl: {list.asset_balance} {list.asset_name==="Ethereum"?"ETH":list.asset_name==="Matic"?"MAT":list.asset_name } 
+          {ethBalance ? ethBalance : 0} ETH
         </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={Maticimage} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>Matic</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $ {4}
+            </Text>
           </View>
         </View>
-        <View style={{ flexDirection: "row",width:wp(70) }}>
-        <View style={{alignItems:"center",alignSelf:"center"}}>
-          {/* <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(4)} color="black" style={{ marginLeft: 1 }} /> */}
-          <TouchableOpacity style={[styles.asset_options, { marginLeft: 1,flexDirection:"row",backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1}]} onPress={()=>{navigation.navigate("classic")}}>
-          {/* <Image source={Bridge} style={[styles.img_new,{borderColor:"#fff"}]} /> */}
-          <Icon type={"materialCommunity"} name="swap-horizontal" size={hp(3)} color="black" style={{ marginLeft: -10 }} />
-            <Text style={[styles.asset_op_text,{color:"black"}]}> Swap</Text>
-          </TouchableOpacity>
-            </View>
-          <View style={{alignItems:"center",justifyContent:"center"}}>
-          {/* <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(3)} color="black" style={{ marginLeft: 4 }}/> */}
-          <TouchableOpacity style={[styles.asset_options,{flexDirection:"row",backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1 }]} onPress={async()=>{
-             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-             const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
-             token ? await for_trading() :navigation.navigate("exchangeLogin")
-            }}>
-          {/* <Image source={stellar} style={[styles.img_new,{borderColor:"#fff"}]} /> */}
-          <Icon type={"materialCommunity"} name="chart-line-variant" size={hp(3)} color="black" style={{ marginLeft: 1 }}/>
-            <Text style={[styles.asset_op_text,{color:"black"}]}> Trade</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{alignItems:"center",justifyContent:"center"}}>
-        {/* <Icon type={"materialCommunity"} name="cash" size={hp(3)} color="black" style={{ marginLeft: 10 }}/> */}
-          <TouchableOpacity style={[styles.asset_options,{width:wp(19.9),flexDirection:"row",backgroundColor:"#fff",borderColor:"#145DA0",borderWidth:1 }]}  onPress={async()=>{
-             const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-             const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
-             token ? navigation.navigate("payout") :navigation.navigate("exchangeLogin")
-            }}>
-          {/* <Image source={stellar} style={[styles.img_new,{borderColor:"#fff"}]} /> */}
-        <Icon type={"materialCommunity"} name="swap-vertical" size={hp(3)} color="black" style={{ marginLeft: 7 }}/>
-            <Text style={[styles.asset_op_text,{color:"black",width:50,textAlign:"center",marginLeft:-5}]}>On/Off Ramp</Text>
-          </TouchableOpacity>
-        </View>
-       
-        </View>
-            </View>
-          )
-        })}
-        </View>
-        <Modal
-        animationType="slide"
-        transparent={true}
-        visible={open_web_view}
-      >
-        <View style={{ height: hp(100), width: wp(100), backgroundColor: "white", borderRadius: 10}}>
-          <TouchableOpacity style={{ alignSelf: "flex-end", marginRight: 10, marginTop: 10 }} onPress={() => { setopen_web_view(false); }}>
-            <Icon name={"close"} type={"antDesign"} size={28} color={"black"} />
-          </TouchableOpacity>
 
-          {loading_1 && (
-            <ActivityIndicator
-              size="large"
-              color="green"
-              style={{justifyContent:"center",alignItems:"center"}}
-            />
-          )}
-
-          <WebView
-            source={{ uri: URL_OPEN }}
-            onLoad={() => setLoading_1(false)}
-            onLoadEnd={() => setLoading_1(false)}
-          />
+        <Text
+          style={{
+            color: "black",
+            fontWeight: "bold",
+          }}
+        >
+          {maticBalance ? maticBalance : 0} MAT
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={Xrpimage} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>XRP</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $ {0.78}
+            </Text>
+          </View>
         </View>
-      </Modal>
-      </View>
-    }
 
-      
+        <Text
+          style={{
+            color: "black",
+            fontWeight: "bold",
+          }}
+        >
+          {xrpBalance ? xrpBalance : 0} XRP
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.flatlistContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={stellar} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>XLM</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $ {current_xlm}
+            </Text>
+          </View>
+        </View>
+
+        {/* <Text
+            style={{
+              color: "black",
+              fontWeight: "bold",
+            }}
+          >
+            {xmlBalance ? xmlBalance : "0.00"} XLM 
+          </Text> */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "6.9%", marginLeft: '46%' }}>
+          <Text style={{ alignSelf: 'flex-end', color: "black", fontWeight: "bold" }}>
+            {xmlBalance ? xmlBalance : "0.00"}
+          </Text>
+        </ScrollView>
+        <Text style={{ color: "black", fontWeight: "bold" }}> XLM</Text>
+      </TouchableOpacity>
+
     </ScrollView>
   );
 }
@@ -446,19 +408,17 @@ export default InvestmentChart;
 const styles = StyleSheet.create({
   flatlistContainer: {
     flexDirection: "row",
-    marginVertical: hp(1),
-    // width: "80%",
+    marginVertical: hp(3),
+    width: "80%",
     justifyContent: "space-between",
     alignItems: "center",
-    width: wp(100),
+    width: wp(90),
     alignSelf: "center",
     marginBottom: 0,
-    marginLeft:wp(5)
   },
-  img: { height: hp(4.3), width: wp(9), borderWidth: 1, borderRadius: hp(3) },
-  img_new: { height: hp(3), width: wp(5), borderWidth: 1, borderRadius: hp(3) },
+  img: { height: hp(5), width: wp(10), borderWidth: 1, borderRadius: hp(3) },
   ethrumView: {
-    marginHorizontal: wp(2),
+    marginHorizontal: wp(4),
   },
   view: {
     flex: 1,
@@ -473,20 +433,5 @@ const styles = StyleSheet.create({
   priceDown: {
     color: "rgb(204,51,51)",
   },
-  refresh: { backgroundColor: "#145DA0", width: wp(10), paddingVertical: hp(0.3), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) },
-  asset_options:{
-    backgroundColor: "#145DA0",
-    width:wp(19.5),
-    height:hp(4.5),
-    marginLeft:10,
-    borderRadius:10,
-    justifyContent:"center",
-    alignItems:"center"
-  },
-  asset_op_text:{
-    fontSize:12,
-    color:"#fff",
-    fontWeight:"bold"
-  }
-
+  refresh: { borderColor: "#4CA6EA",borderWidth:1, width: wp(10), paddingVertical: hp(0.3), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) }
 });
