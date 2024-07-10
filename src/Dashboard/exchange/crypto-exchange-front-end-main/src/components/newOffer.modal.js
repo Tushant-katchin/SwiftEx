@@ -470,11 +470,15 @@ const chooseRenderItem = ({ item }) => (
     }
 };
 
-  const Account_active=()=>{
+  const Account_active=async()=>{
+    const data = await AsyncStorageLib.getItem('myDataKey');
+        const parsedData = JSON.parse(data);
+        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        const secretKey_Key = matchedData[0].secretKey;
     console.log("clicked")
-    changeTrust('XETH', SecretKey)
+    await changeTrust('XETH', secretKey_Key)
     .then(() => {
-        return changeTrust('XUSD', SecretKey);
+        return changeTrust('XUSD', secretKey_Key);
     })
     .then(() => {
         console.log('Trustline updates for XETH and XUSD are complete.');
