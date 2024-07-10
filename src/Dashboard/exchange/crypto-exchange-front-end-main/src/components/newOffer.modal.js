@@ -362,7 +362,8 @@ const chooseRenderItem = ({ item }) => (
               // alert("error", "Account Balance not found.");
               setshow(false)
               setactiv(true)
-              settitel("Activate Stellar Account for trading")
+              // settitel("Activate Stellar Account for trading")
+              active_account()
             });
         // }
       }
@@ -776,8 +777,9 @@ const reves_fun=async(fist_data,second_data)=>{
     <View style={{ flexDirection: "row",alignSelf:"center" }}>
               {activ===true?
               <TouchableOpacity style={styles.background_1} onPress={()=>{active_account()}}>
-               <Animated.View style={[styles.frame_1, { borderColor: shiningAnimation }]}>
-               <Text style={{color:'green',fontSize:19,textAlign:"center"}}>{titel}</Text>
+               <Animated.View style={[styles.frame_1, { borderColor: "gray",flexDirection:"row" }]}>
+               <Text style={{color:'green',fontSize:19,textAlign:"center"}}>Updating..</Text>
+               <ActivityIndicator color={"green"}/>
                 </Animated.View>
                 </TouchableOpacity>
                 :

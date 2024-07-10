@@ -30,6 +30,7 @@ import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { GET, authRequest } from "./exchange/crypto-exchange-front-end-main/src/api";
+import { delay } from "lodash";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
@@ -258,9 +259,13 @@ function InvestmentChart(setCurrentWallet) {
   setBottom_loading(true)
     getData();
   get_stellar();
-  setTimeout(() => {
+  // setTimeout(() => {
+  //   setBottom_loading(false);
+  // }, 1000);
+
+  delay(()=>{
     setBottom_loading(false);
-  }, 1000);
+  },2000)
  },[])
 
  const assets=[
