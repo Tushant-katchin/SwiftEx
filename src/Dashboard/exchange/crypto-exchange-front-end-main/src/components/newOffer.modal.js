@@ -396,11 +396,20 @@ const chooseRenderItem = ({ item }) => (
   }
   const active_account=async()=>{
     console.log("<<<<<<<clicked");
-    
     // const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
     const token = await getToken();
     console.log(token)
   try {
+    const storedData_1 = await AsyncStorageLib.getItem('myDataKey');
+      const parsedData = JSON.parse(storedData_1);
+      const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+      console.log('Retrieved data:', matchedData);
+      const publicKey = matchedData[0].publicKey;
+    const storedData = await AsyncStorageLib.getItem('user_email');
+    const postData={
+      email: storedData,
+      publicKey: publicKey,
+    }
         settitel("Activating.....");
     const response = await fetch(REACT_APP_HOST+'/users/updatePublicKeyByEmail', {
       method: 'POST',
@@ -777,8 +786,8 @@ const reves_fun=async(fist_data,second_data)=>{
     <View style={{ flexDirection: "row",alignSelf:"center" }}>
               {activ===true?
               <TouchableOpacity style={styles.background_1} onPress={()=>{active_account()}}>
-               <Animated.View style={[styles.frame_1, { borderColor: "gray",flexDirection:"row" }]}>
-               <Text style={{color:'green',fontSize:19,textAlign:"center"}}>Updating..</Text>
+               <Animated.View style={[styles.frame_1, { borderColor: "gray" ,flexDirection:"row"}]}>
+               <Text style={{color:'green',fontSize:19,textAlign:"center"}}>Updating.</Text>
                <ActivityIndicator color={"green"}/>
                 </Animated.View>
                 </TouchableOpacity>

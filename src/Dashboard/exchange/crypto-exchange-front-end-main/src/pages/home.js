@@ -240,7 +240,7 @@ export const HomeView = ({ setPressed }) => {
   const fetchProfileData = async () => {
     try {
       const { res, err } = await authRequest("/users/getUserDetails", GET);
-      // console.log("_+++++++",res)
+      await AsyncStorage.setItem("user_email",res.email);
       if (err)return [navigation.navigate("exchangeLogin"),setMessage(` ${err.message} please log in again!`)];
       setProfile(res);
     } catch (err) {
