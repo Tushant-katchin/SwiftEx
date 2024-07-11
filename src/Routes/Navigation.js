@@ -69,6 +69,7 @@ import classic from "../Dashboard/exchange/crypto-exchange-front-end-main/src/co
 import Assets_manage from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/stellar/Assets_manage";
 import send_recive from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/stellar/send_recive";
 import SendXLM from "../Dashboard/tokens/sendXLM";
+import Asset_info from "../Dashboard/Asset_info";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -396,6 +397,13 @@ const AuthStack = () => (
 <Stack.Screen
         name="SendXLM"
         component={SendXLM}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Asset_info"
+        component={Asset_info}
         options={{
           headerShown: false,gestureEnabled:false,
         }}

@@ -25,9 +25,11 @@ import { GetBalance, getAllBalances } from "../utilities/web3utilities";
 import { getXrpBalance } from "../components/Redux/actions/auth";
 import alert from "./reusables/Toasts";
 import Icon from "../icon";
+import { useNavigation } from "@react-navigation/native";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
+  const navigation=useNavigation()
   const state = useSelector((state) => state);
   const [pull, setPull] = useState(false)
   const wallet = useSelector((state) => state.wallet);
@@ -262,7 +264,7 @@ function InvestmentChart(setCurrentWallet) {
       }}>
  <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.flatlistContainer}>
+      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}>
 
 
 
@@ -291,7 +293,7 @@ function InvestmentChart(setCurrentWallet) {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.flatlistContainer}>
+      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"ETH"})}}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Etherimage} style={styles.img} />
           <View style={styles.ethrumView}>
@@ -316,7 +318,7 @@ function InvestmentChart(setCurrentWallet) {
           {ethBalance ? ethBalance : 0} ETH
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.flatlistContainer}>
+      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"Matic"})}} >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Maticimage} style={styles.img} />
           <View style={styles.ethrumView}>
@@ -341,7 +343,7 @@ function InvestmentChart(setCurrentWallet) {
           {maticBalance ? maticBalance : 0} MAT
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.flatlistContainer}>
+      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"XRP"})}}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Xrpimage} style={styles.img} />
           <View style={styles.ethrumView}>
@@ -367,7 +369,7 @@ function InvestmentChart(setCurrentWallet) {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.flatlistContainer}>
+      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"XLM"})}}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={stellar} style={styles.img} />
           <View style={styles.ethrumView}>
