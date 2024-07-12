@@ -233,7 +233,7 @@ const Asset_info = ({ route }) => {
                         <Icon type={'materialCommunity'} name='arrow-top-right' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
                         <Text style={styles.opt_text}>Send</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.opt_cons} onPress={() => { navigation.navigate("classic",{Asset_type:asset_type}) }}>
+                    <TouchableOpacity style={styles.opt_cons} disabled={asset_type==="XRP"||asset_type==="XLM"} onPress={() => { navigation.navigate("classic",{Asset_type:asset_type}) }}>
                         <Image source={brridge_new} style={styles.image_brige} />
                         {/* <Icon type={'materialCommunity'} name='swap-horizontal-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} /> */}
                         <Text style={styles.opt_text}>Bridge</Text>
