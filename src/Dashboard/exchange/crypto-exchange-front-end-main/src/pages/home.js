@@ -836,7 +836,7 @@ const close_=()=>{
           <TouchableOpacity
             style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1,width: wp(45),marginLeft:3,paddingHorizontal:wp(0)}]}
             onPress={() => {
-              navigation.navigate("classic")
+              navigation.navigate("classic",{Asset_type:"Ethereum"})
             }}
           >
             <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold",marginStart:47}}>Bridge Tokens</Text>
