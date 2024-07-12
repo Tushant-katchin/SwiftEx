@@ -58,6 +58,7 @@ export const NewOfferModal = () => {
   const [AssetIssuerPublicKey, setAssetIssuerPublicKey] = useState("");
   const [route, setRoute] = useState("BUY");
   const [Loading, setLoading] = useState(false);
+  const [open_offer, setopen_offer] = useState(false);
   const [u_email,setemail]=useState('');
   const [titel,settitel]=useState("UPDATING..");
   // const [PublicKey, setPublicKey] = useState("GBHRHA3KGRJBXBFER7VHI3WS5SKUXOP5TQ3YITVD7WJ2D3INGK62FZJR");
@@ -117,6 +118,10 @@ const chooseItemList = [
   { id: 5, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD",visible_0:"USDC",visible_1:"ETH"},
 
 ]
+const chooseItemList_1 = [
+  {id:1,name:"BUY"},
+  {id:1,name:"SELL"},
+]
 const [visible_value, setvisible_value] = useState(chooseItemList[0].name);
 const [top_value,settop_value]=useState(chooseItemList[0].visible_0)
 const [top_value_0,settop_value_0]=useState(chooseItemList[0].visible_1)
@@ -126,6 +131,11 @@ const chooseFilteredItemList = chooseItemList.filter(
 const chooseRenderItem = ({ item }) => (
   <TouchableOpacity onPress={() => {setvisible_value(item.name),settop_value(item.visible_0),settop_value_0(item.visible_1),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
     <Text style={styles.chooseItemText}>{item.name}</Text>
+  </TouchableOpacity>
+);
+const chooseRenderItem_1 = ({ item }) => (
+  <TouchableOpacity onPress={() => {setRoute(item.name),setopen_offer(false)}} style={[styles.chooseItemContainer,{backgroundColor:item.name==="BUY"?"green":"red",borderRadius:5,height:hp(6),justifyContent:"center"}]}>
+    <Text style={[styles.chooseItemText,{marginLeft:5}]}>{item.name}</Text>
   </TouchableOpacity>
 );
   ///////////////////////////////////start offer function
@@ -743,9 +753,29 @@ const reves_fun=async(fist_data,second_data)=>{
 
               </View>
 
-              <View style={{ width: '40%', marginTop: 19 }}>
+              <View style={{ width: '40%', marginTop: 19, }}>
                 <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Select Offer</Text>
-                <Picker
+                <TouchableOpacity style={{width:wp(29),height:hp(4),marginTop:hp(1.5),borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,borderRadius:5,padding:3,marginLeft:wp(5)}} onPress={()=>{
+                  setopen_offer(open_offer?false:true)
+                }}>
+                  <Text style={{color:"#fff",fontSize:16,textAlign:"center"}}>{route}</Text>
+                  <Modal
+        animationType="slide"
+        transparent={true}
+        visible={open_offer}
+      >
+        <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setopen_offer(false)}>
+          <View style={[styles.chooseModalContent]}>
+            <FlatList
+              data={chooseItemList_1}
+              renderItem={chooseRenderItem_1}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+                </TouchableOpacity>
+                {/* <Picker
                   mode={"dropdown"}
                   selectedValue={route}
                   style={Platform.OS === "ios" ? { marginTop: -50, width: '120%', color: "white", marginLeft: -15 } : { marginTop: 3, width: "90%", color: "white", marginLeft: 14 }}
@@ -753,7 +783,7 @@ const reves_fun=async(fist_data,second_data)=>{
                 >
                   <Picker.Item label="BUY" value="BUY" color={Platform.OS === "ios" ? "white" : "black"} />
                   <Picker.Item label="SELL" value="SELL" color={Platform.OS === "ios" ? "white" : "black"} />
-                </Picker>
+                </Picker> */}
               </View>
        </View>
 
@@ -842,7 +872,7 @@ const reves_fun=async(fist_data,second_data)=>{
                     </View>:<></>}
              </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input,{backgroundColor:"#fff"}]}
                 keyboardType="numeric"
                 returnKeyType="done"
                 value={offer_amount}
@@ -882,7 +912,7 @@ const reves_fun=async(fist_data,second_data)=>{
                 </View> : <></>}
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input,{backgroundColor:"#fff"}]}
                 returnKeyType="done"
                 keyboardType="numeric"
                 value={offer_price}

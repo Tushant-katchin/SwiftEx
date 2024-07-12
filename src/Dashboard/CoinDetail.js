@@ -27,12 +27,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Chart from "./Chart";
+// import Chart from "./Chart";
 import MarketChart from "./MarketChart";
 import { urls } from "./constants";
 import IconWithCircle from "../Screens/iconwithCircle";
 import Icon from "../icon";
-import { AreaChart, Grid, LineChart, XAxis, YAxis } from "react-native-svg-charts";
+import { Area, Chart, HorizontalAxis, Line, Tooltip, VerticalAxis } from "react-native-responsive-linechart";
+import { delay } from "lodash";
 
 export const CoinDetails = (props) => {
 
@@ -79,11 +80,11 @@ export const CoinDetails = (props) => {
     //fetchKline()
   }, [timeFrame]);
 
-  useEffect(()=>{
-    setTimeout(()=>{
-      setload("true");
-    },500)
-  })
+  // useEffect(()=>{
+  //   setTimeout(()=>{
+  //     // setload("true");
+  //   },500)
+  // })
 
   async function getChart(name, timeFrame) {
     if (timeFrame === "1h") {
@@ -108,8 +109,15 @@ export const CoinDetails = (props) => {
             ((lastTrade - firstTrade) / firstTrade) *
             100
           ).toFixed(2);
-
-          setData(trades);
+          const transformedData = resp.map(item => ({
+            x: new Date(item[0]), // Use the timestamp for x
+            y: parseFloat(item[4]) // Use the closing price for y
+        }));
+          setData(transformedData);
+          console.log("----1st---",transformedData)
+          delay(()=>{
+            setload("true");
+          },1000);
           console.log(trades);
         })
         .catch((err) => {
@@ -138,7 +146,15 @@ export const CoinDetails = (props) => {
             100
           ).toFixed(2);
 
-          setData(trades);
+          const transformedData = resp.map(item => ({
+            x: new Date(item[0]), // Use the timestamp for x
+            y: parseFloat(item[4]) // Use the closing price for y
+        }));
+          setData(transformedData);
+          console.log("---2nd----",transformedData)
+          delay(()=>{
+            setload("true");
+          },1000);
           console.log(trades);
         })
         .catch((err) => {
@@ -166,8 +182,15 @@ export const CoinDetails = (props) => {
             ((lastTrade - firstTrade) / firstTrade) *
             100
           ).toFixed(2);
-
-          setData(trades);
+          const transformedData = resp.map(item => ({
+            x: new Date(item[0]), // Use the timestamp for x
+            y: parseFloat(item[4]) // Use the closing price for y
+        }));
+          setData(transformedData);
+          console.log("----3rd---",transformedData)
+          delay(()=>{
+            setload("true");
+          },1000);
           console.log(trades);
         })
         .catch((err) => {
@@ -196,7 +219,15 @@ export const CoinDetails = (props) => {
             100
           ).toFixed(2);
 
-          setData(trades);
+const transformedData = resp.map(item => ({
+                    x: new Date(item[0]), // Use the timestamp for x
+                    y: parseFloat(item[4]) // Use the closing price for y
+                }));
+          setData(transformedData);
+          console.log("----4th---",transformedData)
+          delay(()=>{
+            setload("true");
+          },1000);
           console.log(trades);
         })
         .catch((err) => {
@@ -332,7 +363,7 @@ export const CoinDetails = (props) => {
           <Text style={{ color: pressed == "3" ? "#fff" : "grey" }}>3d</Text>
         </TouchableOpacity>
       </View>
-      <YAxis
+      {/* <YAxis
         data={Data ? Data : data}
         style={{
           // marginRight: wp(59),
@@ -366,13 +397,12 @@ export const CoinDetails = (props) => {
           fontSize: 12,
           fontWeight: "500"
         }}
-      />
+      /> */}
     <View style={{
           height: hp(30),
           width: wp(70),
-          marginLeft:hp(8),
+          marginLeft:hp(-13),
           alignSelf: "center",
-          marginTop: hp(6),
         }}>
            {/* <LineChart
         style={{
@@ -386,14 +416,29 @@ export const CoinDetails = (props) => {
       /> */}
 
 {load===false?<ActivityIndicator color={"green"} size={"large"} style={{marginTop:hp(13),marginLeft:-40}}/>:
-      <LineChart
-      style={{ flex: 1 }}
-      data={Data ? Data : data}
-      svg={{ stroke: 'rgb(134, 65, 244)' }}
-      contentInset={{ top: 10, bottom: 10 }}
-      >
-      <Grid />
-    </LineChart>
+    //   <LineChart
+    //   style={{ flex: 1 }}
+    //   data={Data ? Data : data}
+    //   svg={{ stroke: 'rgb(134, 65, 244)' }}
+    //   contentInset={{ top: 10, bottom: 10 }}
+    //   >
+    //   <Grid />
+    // </LineChart>
+    <Chart
+                        style={{ height: hp(39), width: wp(95), padding: 1 }}
+                        data={Data}
+                        padding={{ left: 45, bottom: 30, right: 20, top: 30 }}
+                        xDomain={{ min: new Date(Data[0].x).getTime(), max: new Date(Data[Data.length - 1].x).getTime() }}
+                        yDomain={{ min: Math.min(...Data.map(d => d.y)), max: Math.max(...Data.map(d => d.y)) }}
+                    >
+                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2) } }} />
+                        <HorizontalAxis tickCount={3} />
+                        <Area theme={{ gradient: { from: { color: '#44bd32' }, to: { color: '#44bd32', opacity: 0.2 } } }} />
+                        <Line
+                            tooltipComponent={<Tooltip />}
+                            theme={{ stroke: { color: '#44bd32', width: 5 }, scatter: { default: { width: 8, height: 8, rx: 4, color: '#44ad32' }, selected: { color: 'red' } } }}
+                        />
+                    </Chart>
 }
           </View>
       {/* <AreaChart
