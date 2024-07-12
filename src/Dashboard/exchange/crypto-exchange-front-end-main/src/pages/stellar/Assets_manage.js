@@ -24,32 +24,8 @@ const Assets_manage = () => {
     const [TRUST_ASSET, setTRUST_ASSET] = useState(false);
     const [assets, setassets] = useState([
         {
-            "asset_code": "XETH",
-            "asset_issuer": "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI",
-            "asset_type": "credit_alphanum4",
-            "balance": "0.0000000",
-            "buying_liabilities": "0.0000000",
-            "is_authorized": true,
-            "is_authorized_to_maintain_liabilities": true,
-            "last_modified_ledger": 367795,
-            "limit": "922337203685.4775807",
-            "selling_liabilities": "0.0000000",
-        },
-        {
-            "asset_code": "XUSD",
-            "asset_issuer": "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI",
-            "asset_type": "credit_alphanum4",
-            "balance": "0.0000000",
-            "buying_liabilities": "0.0000000",
-            "is_authorized": true,
-            "is_authorized_to_maintain_liabilities": true,
-            "last_modified_ledger": 367796,
-            "limit": "922337203685.4775807",
-            "selling_liabilities": "0.0000000",
-        },
-        {
             "asset_type": "native",
-            "balance": "9999.9999800",
+            "balance": "0.0000000",
             "buying_liabilities": "0.0000000",
             "selling_liabilities": "0.0000000",
         },

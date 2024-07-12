@@ -872,7 +872,7 @@ const reves_fun=async(fist_data,second_data)=>{
                     </View>:<></>}
              </View>
               <TextInput
-                style={[styles.input,{backgroundColor:"#fff"}]}
+                style={[styles.input,{backgroundColor:"silver"}]}
                 keyboardType="numeric"
                 returnKeyType="done"
                 value={offer_amount}
@@ -912,7 +912,7 @@ const reves_fun=async(fist_data,second_data)=>{
                 </View> : <></>}
               </View>
               <TextInput
-                style={[styles.input,{backgroundColor:"#fff"}]}
+                style={[styles.input,{backgroundColor:"silver"}]}
                 returnKeyType="done"
                 keyboardType="numeric"
                 value={offer_price}

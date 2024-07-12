@@ -50,17 +50,17 @@ export default function App() {
       })
     }, 1500);
   }, []);
-  useEffect(() => {
-    const disableBackButton = () => {
-      return true;
-    };
-    if(Platform.OS==="android")
-    { BackHandler.addEventListener('hardwareBackPress', disableBackButton);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', disableBackButton);
-    };}
+  // useEffect(() => {
+  //   const disableBackButton = () => {
+  //     return true;
+  //   };
+  //   if(Platform.OS==="android")
+  //   { BackHandler.addEventListener('hardwareBackPress', disableBackButton);
+  //   return () => {
+  //     BackHandler.removeEventListener('hardwareBackPress', disableBackButton);
+  //   };}
 
-  }, []);
+  // }, []);
 
  
   return (

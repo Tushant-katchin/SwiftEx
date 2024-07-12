@@ -433,7 +433,7 @@ export const ProfileView = (props) => {
   ];
   const navigation = useNavigation();
   const copyToClipboard = () => {
-    Clipboard.setString(profile.walletAddress);
+    Clipboard.setString(state.wallet.address);
     alert("success", "Copied");
   };
   return (
@@ -627,7 +627,7 @@ export const ProfileView = (props) => {
               <View style={{borderColor:"#485DCA",borderWidth:0.9,borderRadius:5,flexDirection:"row"}}>
 
                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(70),marginTop:1.9}}>
-                   <Text style={{color:"#fff",margin:5,padding:3}}>{profile.walletAddress}</Text>
+                   <Text style={{color:"#fff",margin:5,padding:3}}>{state.wallet.address}</Text>
                     </ScrollView>
               <View style={{ marginHorizontal:1,marginLeft:10 }}>
               
