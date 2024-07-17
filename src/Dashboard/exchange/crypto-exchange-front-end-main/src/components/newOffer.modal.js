@@ -583,7 +583,7 @@ const reves_fun=async(fist_data,second_data)=>{
             alignItems: "center",
           }}
         >
-          <TouchableOpacity onPress={() => navigation.navigate("/")}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon
               name={"left"}
               type={"antDesign"}

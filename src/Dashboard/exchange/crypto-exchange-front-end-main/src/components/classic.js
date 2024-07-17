@@ -118,7 +118,7 @@ const classic = ({ route }) => {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity onPress={() => nav.navigate("Home")}>
+          <TouchableOpacity onPress={() => nav.goBack()}>
             <Icon
               name={"left"}
               type={"antDesign"}

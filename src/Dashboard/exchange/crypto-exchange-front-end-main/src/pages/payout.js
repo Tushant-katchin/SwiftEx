@@ -213,7 +213,7 @@ const Payout = () => {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity onPress={() => navigation.navigate("/")}>
+          <TouchableOpacity onPress={() =>navigation.goBack()}>
             <Icon
               name={"left"}
               type={"antDesign"}

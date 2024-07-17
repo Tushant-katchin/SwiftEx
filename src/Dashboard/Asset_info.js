@@ -155,6 +155,11 @@ const Asset_info = ({ route }) => {
         }, 1500);
 
     }
+    const trade_bridge = async () => {
+        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+        token ? navigation.navigate("classic",{Asset_type:asset_type}) : navigation.navigate("exchangeLogin")
+    }
     const cashout_manage = async () => {
         const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
         const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
@@ -240,7 +245,7 @@ const Asset_info = ({ route }) => {
                         <Icon type={'materialCommunity'} name='arrow-top-right' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
                         <Text style={styles.opt_text}>Send</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.opt_cons} disabled={asset_type==="XRP"||asset_type==="XLM"} onPress={() => { navigation.navigate("classic",{Asset_type:asset_type}) }}>
+                    <TouchableOpacity style={styles.opt_cons} disabled={asset_type==="XRP"||asset_type==="XLM"} onPress={() => { trade_bridge() }}>
                         <Image source={brridge_new} style={styles.image_brige} />
                         {/* <Icon type={'materialCommunity'} name='swap-horizontal-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} /> */}
                         <Text style={styles.opt_text}>Bridge</Text>
