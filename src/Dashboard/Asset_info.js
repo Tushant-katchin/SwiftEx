@@ -214,7 +214,14 @@ const Asset_info = ({ route }) => {
                         yDomain={{ min: Math.min(...chart.map(d => d.y)), max: Math.max(...chart.map(d => d.y)) }}
                     >
                         <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2) } }} />
-                        <HorizontalAxis tickCount={3} />
+                        <HorizontalAxis tickCount={10} theme={{
+                            labels: {
+                                formatter: (v) => {
+                                    const date = new Date(v);
+                                    return `${date.getHours()}:${date.getMinutes()}`;
+                                },
+                            },
+                        }} />
                         <Area theme={{ gradient: { from: { color: '#44bd32' }, to: { color: '#44bd32', opacity: 0.2 } } }} />
                         <Line
                             tooltipComponent={<Tooltip />}
