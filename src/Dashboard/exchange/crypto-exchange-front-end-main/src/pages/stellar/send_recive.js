@@ -16,7 +16,9 @@ import { useSelector } from "react-redux";
 import { RNCamera } from 'react-native-camera';
 
 
-const send_recive = () => {
+const send_recive = ({route}) => {
+    const {bala,asset_name}=route.params;
+    console.log("---------------------------------",bala,asset_name)
   const cameraRef = useRef(null);
     const state = useSelector((state) => state);
     const FOCUSED = useIsFocused();
@@ -64,7 +66,7 @@ const send_recive = () => {
                         alignItems: "center",
                     }}
                 >
-                    <TouchableOpacity onPress={() => navigation.navigate("/")}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Icon
                             name={"left"}
                             type={"antDesign"}
@@ -190,7 +192,7 @@ const send_recive = () => {
                             />
                             </TouchableOpacity>
                             </View>
-                            <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 16, marginTop: 10 }]}>Available: 10</Text>
+                            <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 16, marginTop: 10 }]}>Available: {bala}</Text>
                             <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 18, marginTop: 15 }]}>Amount</Text>
                             <TextInput placeholder="Enter amount" placeholderTextColor={"gray"} value={recepi_amount} style={[styles.text_input,{marginTop: 2}]} onChangeText={(value) => { setrecepi_amount(value) }} />
                             <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 18, marginTop: 15 }]}>Transaction memo</Text>
