@@ -322,6 +322,14 @@ PODS:
   - React-jsinspector (0.64.3)
   - react-native-biometrics (3.0.1):
     - React-Core
+  - react-native-camera (4.2.1):
+    - React-Core
+    - react-native-camera/RCT (= 4.2.1)
+    - react-native-camera/RN (= 4.2.1)
+  - react-native-camera/RCT (4.2.1):
+    - React-Core
+  - react-native-camera/RN (4.2.1):
+    - React-Core
   - react-native-get-random-values (1.7.2):
     - React-Core
   - react-native-image-base64 (0.1.4):
@@ -499,6 +507,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
+  - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -614,6 +623,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-biometrics:
     :path: "../node_modules/react-native-biometrics"
+  react-native-camera:
+    :path: "../node_modules/react-native-camera"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
   react-native-image-base64:
@@ -730,6 +741,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
   react-native-biometrics: 352e5a794bfffc46a0c86725ea7dc62deb085bdc
+  react-native-camera: 210a872c84d3aa0982a9223047ef9e743ed694fa
   react-native-get-random-values: 30b3f74ca34e30e2e480de48e4add2706a40ac8f
   react-native-image-base64: acfe962aa79535d826a2668e66474e85a9ee468d
   react-native-image-picker: c3bc863c4c82db8175229bee5bedffc21b713e42

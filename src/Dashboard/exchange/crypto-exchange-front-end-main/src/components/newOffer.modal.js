@@ -723,7 +723,7 @@ const reves_fun=async(fist_data,second_data)=>{
        <View style={{flexDirection:"row",justifyContent:"space-between",padding:Platform.OS==="android"?10:19}}>
        <View style={{ width: '40%', marginTop: 19 }}>
                 <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="android"&&30}}>{Platform.OS==="android"?"Trading Pair":"Trading Pair"}</Text>
-                <TouchableOpacity  style={Platform.OS === "ios" ? { marginTop: 40, width: '120%', borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1, marginLeft: 15,paddingVertical:10 } : { marginTop: 13, width: "90%", color: "white", marginLeft:30,borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,height:"19%",justifyContent:"center",alignItems:"center",borderRadius:5 }} onPress={()=>{setchooseModalPair(true)}}>
+                <TouchableOpacity  style={Platform.OS === "ios" ? { marginTop: 10, width: '90%', borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1, marginLeft: 15,paddingVertical:7.6,alignItems:"center",borderRadius:6 } : { marginTop: 13, width: "90%", color: "white", marginLeft:30,borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,height:"19%",justifyContent:"center",alignItems:"center",borderRadius:5 }} onPress={()=>{setchooseModalPair(true)}}>
                   <Text style={{fontSize:15,color:"#fff"}}>{top_value+"/"+top_value_0}</Text>
                 </TouchableOpacity>
                 
@@ -755,7 +755,7 @@ const reves_fun=async(fist_data,second_data)=>{
 
               <View style={{ width: '40%', marginTop: 19, }}>
                 <Text style={{color:"#fff",fontSize:21,textAlign:"center"}}>Select Offer</Text>
-                <TouchableOpacity style={{width:wp(29),height:hp(4),marginTop:hp(1.5),borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,borderRadius:5,padding:3,marginLeft:wp(5)}} onPress={()=>{
+                <TouchableOpacity style={{width:wp(29),height:hp(4),marginTop:hp(1.5),borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,borderRadius:5,padding:3,marginLeft:wp(5),justifyContent:"center"}} onPress={()=>{
                   setopen_offer(open_offer?false:true)
                 }}>
                   <Text style={{color:"#fff",fontSize:16,textAlign:"center"}}>{route}</Text>
@@ -792,7 +792,7 @@ const reves_fun=async(fist_data,second_data)=>{
           style={{
             display: "flex",
             alignItems: "center",
-            marginTop:Platform.OS==="ios"?-30:-80
+            marginTop:Platform.OS==="ios"?30:-80
           }}
         >
           <View

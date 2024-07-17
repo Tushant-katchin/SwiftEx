@@ -1,20 +1,23 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { Image, Modal, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Alert, Image, Modal, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { REACT_APP_LOCAL_TOKEN } from "../../ExchangeConstants";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Icon from "../../../../../../icon";
 import darkBlue from "../../../../../../../assets/darkBlue.png";
 import Bridge from "../../../../../../../assets/Bridge.png";
 import QRCode from "react-native-qrcode-svg";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
+import { RNCamera } from 'react-native-camera';
+
 
 const send_recive = () => {
+  const cameraRef = useRef(null);
     const state = useSelector((state) => state);
     const FOCUSED = useIsFocused();
     const navigation = useNavigation();
@@ -23,8 +26,23 @@ const send_recive = () => {
     const [recepi_address, setrecepi_address] = useState("");
     const [recepi_memo, setrecepi_memo] = useState("");
     const [recepi_amount, setrecepi_amount] = useState("");
+    const [qrData, setQrData] = useState('');
 
     const [qrvalue, setqrvalue] = useState("");
+    const [isModalVisible, setModalVisible] = useState(false);
+    const onBarCodeRead = (e) => {
+        if (e.data !== qrData) { 
+          setQrData(e.data);
+          Alert.alert("QR Code ","QR Code Decoded successfully..");
+          setrecepi_address("");
+          setrecepi_address(e.data);
+          toggleModal();
+        }
+      };
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+      };
+
     const get_data=async()=>{
         const storedData = await AsyncStorageLib.getItem('myDataKey');
             const parsedData = JSON.parse(storedData);
@@ -37,7 +55,7 @@ const send_recive = () => {
         setmode_selected("SED");
     }, [FOCUSED])
     return (
-        <SafeAreaView>
+        <>
             <View style={styles.headerContainer1_TOP}>
                 <View
                     style={{
@@ -163,12 +181,14 @@ const send_recive = () => {
                         <>
                             <View style={[styles.text_input,{flexDirection:"row",alignItems:"center"}]}>
                             <TextInput placeholder="Enter stellar address" placeholderTextColor={"gray"} value={recepi_address} style={{height:"100%",width:"80%",fontSize:19,color:"#fff"}}  onChangeText={(value) => { setrecepi_address(value) }} />
+                           <TouchableOpacity onPress={()=>{toggleModal();}}>
                             <Icon
                             name={"qrcode-scan"}
                             type={"materialCommunity"}
                             size={28}
                             color={"white"}
-                        />
+                            />
+                            </TouchableOpacity>
                             </View>
                             <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 16, marginTop: 10 }]}>Available: 10</Text>
                             <Text style={[styles.mode_text, { textAlign: "left", marginLeft: 19, fontSize: 18, marginTop: 15 }]}>Amount</Text>
@@ -200,8 +220,34 @@ const send_recive = () => {
                             </Text>
                         </View>
                 }
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ backgroundColor: '#145DA0', padding: 20, borderRadius: 10,width:"90%",height:"50%" }}>
+            <Text style={{color:"white",fontWeight:"700",alignSelf:"center",fontSize:19}} onPress={()=>{
+              toggleModal();
+            }}>Scan QR.</Text>
+              <View style={styles.QR_scan_con}>
+                <RNCamera
+                  ref={cameraRef}
+                  style={styles.preview}
+                  onBarCodeRead={onBarCodeRead}
+                  captureAudio={false}
+                >
+                  <View style={styles.rectangleContainer}>
+                    <View style={styles.rectangle} />
+                  </View>
+                </RNCamera>
+              </View>
+          </View>
+        </View>
+      </Modal>
             </View>
-        </SafeAreaView>
+        </>
     )
 }
 const styles = StyleSheet.create({
@@ -265,7 +311,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         flexDirection: "row",
         width: wp(100),
-        paddingHorizontal: wp(2),
+        paddingHorizontal: wp(0.3),
     },
     logoImg_TOP: {
         height: hp("8"),
@@ -313,6 +359,28 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "gray",
         marginStart: 5
-    }
+    },
+    QR_scan_con:{
+        width:wp(80),
+        height:hp(40),
+        borderRadius:5,
+        justifyContent:"center",
+        alignItems:"center"
+      },
+      preview: {
+        flex:1
+      },
+      rectangleContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      rectangle: {
+        height: 250,
+        width: 250,
+        borderWidth: 2,
+        borderColor: 'white',
+        borderRadius: 10,
+      },
 })
 export default send_recive;

@@ -26,6 +26,10 @@
 	<string>SwiftEx</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to scan QR Code.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>We need access to your microphone to scan QR Code.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

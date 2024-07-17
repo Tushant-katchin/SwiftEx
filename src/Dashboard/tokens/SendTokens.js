@@ -12,7 +12,8 @@ import {
   Pressable,
   Modal,
   Platform,
-  Image
+  Image,
+  Alert
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -23,6 +24,7 @@ import title_icon from "../../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { RNCamera } from 'react-native-camera';
 import {
   getBalance,
   getEthBalance,
@@ -44,6 +46,8 @@ var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const SendTokens = (props) => {
+  const cameraRef = useRef(null);
+  const [qrData, setQrData] = useState('');
   const EthBalance = useSelector((state) => state.EthBalance);
   const MaticBalance = useSelector((state) => state.MaticBalance);
   const type = useSelector((state) => state.walletType);
@@ -61,6 +65,15 @@ const SendTokens = (props) => {
   const navigation = useNavigation();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const onBarCodeRead = (e) => {
+    if (e.data !== qrData) { 
+      setQrData(e.data);
+      Alert.alert("QR Code ","QR Code Decoded successfully..");
+      setAddress("");
+      setAddress(e.data);
+      toggleModal();
+    }
+  };
 
   const getXrpBal = async (address) => {
     console.log(address);
@@ -469,6 +482,18 @@ const SendTokens = (props) => {
             <Text style={{color:"white",fontWeight:"700",alignSelf:"center",fontSize:19}} onPress={()=>{
               toggleModal();
             }}>Scan QR.</Text>
+              <View style={style.QR_con}>
+                <RNCamera
+                  ref={cameraRef}
+                  style={style.preview}
+                  onBarCodeRead={onBarCodeRead}
+                  captureAudio={false}
+                >
+                  <View style={style.rectangleContainer}>
+                    <View style={style.rectangle} />
+                  </View>
+                </RNCamera>
+              </View>
           </View>
         </View>
       </Modal>
@@ -544,4 +569,26 @@ const style = StyleSheet.create({
   },
   msgText: { color: "red", textAlign: "center" },
   btnView: { width: wp(30), alignSelf: "center", marginTop: hp(8) },
+  QR_con:{
+    width:wp(80),
+    height:hp(40),
+    borderRadius:5,
+    justifyContent:"center",
+    alignItems:"center"
+  },
+  preview: {
+    flex:1
+  },
+  rectangleContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rectangle: {
+    height: 250,
+    width: 250,
+    borderWidth: 2,
+    borderColor: 'white',
+    borderRadius: 10,
+  },
 });

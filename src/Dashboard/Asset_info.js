@@ -328,8 +328,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: Platform.OS === "ios" ? hp(7) : hp(10), // Adjust as needed
-        paddingHorizontal: wp(2),
+        height: Platform.OS === "ios" ? hp(8.5) : hp(10), // Adjust as needed
+        paddingHorizontal:  Platform.OS === "ios" ? wp(3.5):wp(2),
     },
     icon: {
         paddingVertical: hp(1.9),
@@ -340,7 +340,8 @@ const styles = StyleSheet.create({
         fontWeight: Platform.OS === "ios" ? "normal" : "bold",
         textAlign: "center",
         flex: 1,
-        marginLeft: 19.5
+        marginLeft: 19.5,
+        marginTop:Platform.OS === "ios" ?hp(3):hp(0)
     },
     image: {
         height: hp(9),

@@ -11,7 +11,9 @@ import {
     ScrollView,
     ActivityIndicator,
     Button,
-    Keyboard
+    Keyboard,
+    Alert,
+    Modal
 } from "react-native";
 import {
     widthPercentageToDP as wp,
@@ -27,6 +29,7 @@ import darkBlue from "../../../assets/darkBlue.png"
 import { delay, isInteger } from "lodash";
 import { alert } from "../reusables/Toasts";
 import { isFloat } from "validator";
+import { RNCamera } from 'react-native-camera';
 const StellarSdK = require('stellar-base');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -42,9 +45,25 @@ const SendXLM = (props) => {
     const [disable, setdisable] = useState(false);
     const [Message, setMessage] = useState("");
     const [Payment_loading,setPayment_loading]=useState(false);
-
+    const cameraRef = useRef(null);
+    const [qrData, setQrData] = useState('');
     const state = useSelector((state) => state);
     const navigation = useNavigation();
+    const [isModalVisible, setModalVisible] = useState(false);
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+
+    const onBarCodeRead = (e) => {
+        if (e.data !== qrData) {
+            setQrData(e.data);
+            Alert.alert("QR Code ", "QR Code Decoded successfully..");
+            setAddress("");
+            setAddress(e.data);
+            toggleModal();
+        }
+    };
+
     useEffect(async () => {
         setAddress()
         setAmount()
@@ -210,8 +229,7 @@ const SendXLM = (props) => {
                         placeholder="Recipient Address"
                         style={style.input}
                     />
-                    <TouchableOpacity onPress={() => {
-                    }}>
+                    <TouchableOpacity onPress={() => {toggleModal()}}>
                         <Icon name="scan" type={"ionicon"} size={20} color={"blue"} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
@@ -301,6 +319,32 @@ const SendXLM = (props) => {
                         {Payment_loading===true?<ActivityIndicator color={"green"}/>:<Text style={{color:"#fff",fontSize:16}}>SEND</Text>}
                     </TouchableOpacity>
             </View>
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ backgroundColor: '#145DA0', padding: 20, borderRadius: 10,width:"90%",height:"50%" }}>
+            <Text style={{color:"white",fontWeight:"700",alignSelf:"center",fontSize:19}} onPress={()=>{
+              toggleModal();
+            }}>Scan QR.</Text>
+              <View style={style.QR_con}>
+                <RNCamera
+                  ref={cameraRef}
+                  style={style.preview}
+                  onBarCodeRead={onBarCodeRead}
+                  captureAudio={false}
+                >
+                  <View style={style.rectangleContainer}>
+                    <View style={style.rectangle} />
+                  </View>
+                </RNCamera>
+              </View>
+          </View>
+        </View>
+      </Modal>
         </>
 
     );
@@ -373,4 +417,26 @@ const style = StyleSheet.create({
     },
     msgText: { color: "red", textAlign: "center" },
     btnView: { width: wp(30),height:hp(4),alignSelf: "center",alignItems:"center",justifyContent:"center", marginTop: hp(8),backgroundColor:"blue" },
+    QR_con:{
+        width:wp(80),
+        height:hp(40),
+        borderRadius:5,
+        justifyContent:"center",
+        alignItems:"center"
+      },
+      preview: {
+        flex:1
+      },
+      rectangleContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      rectangle: {
+        height: 250,
+        width: 250,
+        borderWidth: 2,
+        borderColor: 'white',
+        borderRadius: 10,
+      },
 });
