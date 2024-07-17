@@ -293,7 +293,7 @@ const SendXLM = (props) => {
 
                     <TouchableOpacity
                         disabled={disable}
-                        style={[style.btnView,{backgroundColor:disable?"gray":"blue"}]}
+                        style={[style.btnView,{backgroundColor:disable?"gray":"green"}]}
                         onPress={() => {
                             setPayment_loading(true);
                            if(!address||!amount)
@@ -316,7 +316,7 @@ const SendXLM = (props) => {
                            }
                         }}
                     >
-                        {Payment_loading===true?<ActivityIndicator color={"green"}/>:<Text style={{color:"#fff",fontSize:16}}>SEND</Text>}
+                        {Payment_loading===true?<ActivityIndicator color={"#fff"}/>:<Text style={{color:"#fff",fontSize:16}}>Send</Text>}
                     </TouchableOpacity>
             </View>
             <Modal
@@ -434,7 +434,7 @@ const style = StyleSheet.create({
         paddingHorizontal: wp(4),
     },
     msgText: { color: "red", textAlign: "center" },
-    btnView: { width: wp(30),height:hp(4),alignSelf: "center",alignItems:"center",justifyContent:"center", marginTop: hp(8),backgroundColor:"blue" },
+    btnView: { width: wp(40),height:hp(6.6),alignSelf: "center",alignItems:"center",justifyContent:"center", marginTop: hp(8),backgroundColor:"blue",borderRadius:19 },
     QR_con:{
         width:wp(80),
         height:hp(40),

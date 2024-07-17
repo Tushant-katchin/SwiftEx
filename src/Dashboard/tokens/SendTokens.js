@@ -398,11 +398,10 @@ const SendTokens = (props) => {
 
         <Text style={style.msgText}>{message}</Text>
 
-        <View style={style.btnView}>
-          <Button
+        {/* <View style={style.btnView}> */}
+          <TouchableOpacity
             disabled={disable}
-            color="blue"
-            title="Send"
+            style={[style.btnView,{backgroundColor:disable?"gray":"green"}]}
             onPress={async () => {
               console.log(walletType);
               let privateKey;
@@ -469,7 +468,9 @@ const SendTokens = (props) => {
                 );
               }
             }}
-          ></Button>
+          >
+            <Text style={{color:"#fff",fontSize:16}}>Send</Text>
+          </TouchableOpacity>
         </View>
         <Modal
         animationType="slide"
@@ -515,7 +516,7 @@ const SendTokens = (props) => {
           </View>
         </View> */}
       </Modal>
-      </View>
+      {/* </View> */}
     </Animated.View>
   );
 };
@@ -586,7 +587,7 @@ const style = StyleSheet.create({
     paddingHorizontal: wp(4),
   },
   msgText: { color: "red", textAlign: "center" },
-  btnView: { width: wp(30), alignSelf: "center", marginTop: hp(8) },
+  btnView: { width: wp(40),height:hp(6.6),alignSelf: "center",alignItems:"center",justifyContent:"center", marginTop: hp(8),borderRadius:19 },
   QR_con:{
     width:wp(80),
     height:hp(40),
