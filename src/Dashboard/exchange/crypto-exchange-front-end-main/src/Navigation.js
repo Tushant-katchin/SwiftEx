@@ -67,7 +67,7 @@ export function ExchangeNavigation() {
         tabBarStyle: {
           // position: "absolute",
           backgroundColor: "white",
-          height: hp(11.4),
+          height: hp(9.4),
           backgroundColor: "#4CA6EA",
         },
         headerTitleAlign: "center",

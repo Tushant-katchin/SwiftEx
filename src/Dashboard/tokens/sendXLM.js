@@ -325,7 +325,25 @@ const SendXLM = (props) => {
         visible={isModalVisible}
         onRequestClose={toggleModal}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+         <RNCamera
+      ref={cameraRef}
+      style={style.preview}
+      onBarCodeRead={onBarCodeRead}
+      captureAudio={false}
+    >
+         <View style={style.header}>
+            <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
+      <Icon name="arrow-left" size={24} color="#fff" style={style.backIcon}/>
+            </TouchableOpacity>
+      <Text style={style.title}>Scan QR Code</Text>
+    </View>
+      <View style={style.rectangleContainer}>
+        <View style={style.rectangle}>
+          <View style={style.innerRectangle} />
+        </View>
+      </View>
+    </RNCamera>
+        {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <View style={{ backgroundColor: '#145DA0', padding: 20, borderRadius: 10,width:"90%",height:"50%" }}>
             <Text style={{color:"white",fontWeight:"700",alignSelf:"center",fontSize:19}} onPress={()=>{
               toggleModal();
@@ -343,7 +361,7 @@ const SendXLM = (props) => {
                 </RNCamera>
               </View>
           </View>
-        </View>
+        </View> */}
       </Modal>
         </>
 
@@ -438,5 +456,20 @@ const style = StyleSheet.create({
         borderWidth: 2,
         borderColor: 'white',
         borderRadius: 10,
+      },
+      header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingHorizontal: 16,
+        height: 60,
+      },
+      backIcon: {
+        marginRight:wp(28),
+      },
+      title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color:"#fff"
       },
 });
