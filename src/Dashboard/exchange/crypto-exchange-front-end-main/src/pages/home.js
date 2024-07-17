@@ -1,4 +1,4 @@
-import React ,{ useState, useEffect,useFocusEffect } from "react";
+import React ,{ useState, useEffect } from "react";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Bridge from "../../../../../../assets/Bridge.png";
 
@@ -20,12 +20,13 @@ import {
   Alert,
   Animated,
   Easing,
+  BackHandler,
 } from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useSelector } from "react-redux";
 import { getRegistrationToken } from "../utils/fcmHandler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CommonActions, useIsFocused, useNavigation } from "@react-navigation/native";
+import { CommonActions, useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import walletImg from "../../../../../../assets/walletImg.png";
 import idCard from "../../../../../../assets/idCard.png";
@@ -421,6 +422,23 @@ const close_=()=>{
     setcon_modal(false)
   },1500)
 }
+useFocusEffect(
+  React.useCallback(() => {
+    const onBackPress = () => {
+      // Return true to disable the back button
+      navigation.navigate("Home")
+      return true;
+    };
+
+    // Add event listener for hardware back button press
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    // Clean up the event listener when component is unmounted
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  }, [])
+);
+
   return (
     <>
 <View style={styles.headerContainer1_TOP}>
