@@ -111,11 +111,11 @@ const getAccountDetails = async () => {
 };
 
 const chooseItemList = [
-  { id: 1, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"ETH",visible_1:"USDC"},
-  { id: 2, name: "BTC/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"BTC",visible_1:"XLM"},
-  { id: 3, name: "SWIFTEX/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"SWIFTEX",visible_1:"XLM"},
-  { id: 4, name: "ETH/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"ETH",visible_1:"XLM"},
-  { id: 5, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD",visible_0:"USDC",visible_1:"ETH"},
+  { id: 1, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 2, name: "BNB/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 3, name: "SWIFTEX/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
+  { id: 4, name: "ETH/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
+  { id: 5, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
 
 ]
 const chooseItemList_1 = [
@@ -125,11 +125,13 @@ const chooseItemList_1 = [
 const [visible_value, setvisible_value] = useState(chooseItemList[0].name);
 const [top_value,settop_value]=useState(chooseItemList[0].visible_0)
 const [top_value_0,settop_value_0]=useState(chooseItemList[0].visible_1)
+const [top_domain,settop_domain]=useState(chooseItemList[0].asset_dom)
+const [top_domain_0,settop_domain_0]=useState(chooseItemList[0].asset_dom_1)
 const chooseFilteredItemList = chooseItemList.filter(
   item => item.name.toLowerCase().includes(chooseSearchQuery.toLowerCase())
 );
 const chooseRenderItem = ({ item }) => (
-  <TouchableOpacity onPress={() => {setvisible_value(item.name),settop_value(item.visible_0),settop_value_0(item.visible_1),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+  <TouchableOpacity onPress={() => {setvisible_value(item.name),settop_value(item.visible_0),settop_domain(item.asset_dom),settop_domain_0(item.asset_dom_1),settop_value_0(item.visible_1),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
     <Text style={styles.chooseItemText}>{item.name}</Text>
   </TouchableOpacity>
 );
@@ -569,6 +571,8 @@ const shiningAnimation = animation.interpolate({
 const reves_fun=async(fist_data,second_data)=>{
   settop_value_0(fist_data)
   settop_value(second_data)
+  settop_domain(top_domain_0);
+  settop_domain_0(top_domain)
 }
 
 
@@ -705,6 +709,7 @@ const reves_fun=async(fist_data,second_data)=>{
     >
       <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
         <Text style={{ fontSize: 24, color: "#fff" }}>{top_value}</Text>
+        <Text style={{ fontSize: 10, color: "gray" }}>{top_domain}</Text>
       </View>
       <View style={{ flex: 0 }}>
         <Icon
@@ -717,6 +722,7 @@ const reves_fun=async(fist_data,second_data)=>{
       </View>
       <View style={{ flex: 1, alignItems: "flex-start", paddingLeft: 10 }}>
         <Text style={{ fontSize: 24, color: "#fff" }}>{top_value_0}</Text>
+        <Text style={{ fontSize: 10, color: "gray" }}>{top_domain_0}</Text>
       </View>
     </View>
        
