@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGOUT, WALLET_SUCCESS, IMPORT_SUCCESS, BALANCE_SUCCESS, CONFIRMOTP,EXTENDED , COLLAPSE, IMPORTALLWALLETS, SETCURRENTWALLET, ADDTOALLWALLETS, CHECKWALLETS, GETWALLETSDATA, IMPORTUSINGFILE, GETDIRECTORYURI, SETTOKEN, NEWWALLET, SETUSER, SETPROVIDER, SETWALLETTYPE, ETHBALANCESUCCESS, XRPBALANCESUCCESS, MATICBALANCESUCCESS, SETPLATFORM} from "../actions/type";
+import { LOGIN_SUCCESS, LOGOUT, WALLET_SUCCESS, IMPORT_SUCCESS, BALANCE_SUCCESS, CONFIRMOTP,EXTENDED , COLLAPSE, IMPORTALLWALLETS, SETCURRENTWALLET, ADDTOALLWALLETS, CHECKWALLETS, GETWALLETSDATA, IMPORTUSINGFILE, GETDIRECTORYURI, SETTOKEN, NEWWALLET, SETUSER, SETPROVIDER, SETWALLETTYPE, ETHBALANCESUCCESS, XRPBALANCESUCCESS, MATICBALANCESUCCESS, SETPLATFORM, RAPID_STELLAR} from "../actions/type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const emailId = AsyncStorage.getItem('emailId')
@@ -178,6 +178,14 @@ case IMPORTALLWALLETS:
                                isLoggedIn:true,
                                platform:payload.platform
                            }  
+    case RAPID_STELLAR:
+                            return {
+                              ...state,
+                              ETH_KEY: action.payload.ETH_KEY,
+                              STELLAR_PUBLICK_KEY: action.payload.STELLAR_PUBLICK_KEY,
+                              STELLAR_SECRET_KEY: action.payload.STELLAR_SECRET_KEY,
+                              STELLAR_ADDRESS_STATUS:action.payload.STELLAR_ADDRESS_STATUS
+                            }
                       
     default:
       return state;

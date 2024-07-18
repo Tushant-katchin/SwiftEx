@@ -104,7 +104,7 @@ export const HomeView = ({ setPressed }) => {
   const [kyc_status,setkyc_status]=useState(true);
   const [con_modal,setcon_modal]=useState(false)
 
-
+  console.log("-=-=000-=----======",state.STELLAR_ADDRESS_STATUS)
 
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;

@@ -26,6 +26,7 @@ import { getXrpBalance } from "../components/Redux/actions/auth";
 import alert from "./reusables/Toasts";
 import Icon from "../icon";
 import { useNavigation } from "@react-navigation/native";
+import { RAPID_STELLAR } from "../components/Redux/actions/type";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
@@ -196,7 +197,7 @@ function InvestmentChart(setCurrentWallet) {
 
   useEffect(async () => {
     try {
-
+      await getData_dispatch();
       getTokenBalance();
     } catch (e) {
       console.log(e)
@@ -213,7 +214,55 @@ function InvestmentChart(setCurrentWallet) {
     />
   );
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
-
+  const getData_dispatch = async () => {
+    try {
+      const storedData = await AsyncStorageLib.getItem('myDataKey');
+      if (storedData !== null) {
+        const parsedData = JSON.parse(storedData);
+        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        try {
+          StellarSdk.Network.useTestNetwork();
+          const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+          server.loadAccount(matchedData[0].publicKey)
+            .then(account => {
+              account.balances.forEach(balance => {
+              dispatch({
+                type: RAPID_STELLAR,
+                payload: {
+                  ETH_KEY:matchedData[0].Ether_address,
+                  STELLAR_PUBLICK_KEY:matchedData[0].publicKey,
+                  STELLAR_SECRET_KEY:matchedData[0].secretKey,
+                  STELLAR_ADDRESS_STATUS:true
+                },
+              })
+              console.log("==Dispacthed success==")
+              });
+            })
+            .catch(error => {
+              console.log('Error loading account:', error);
+              // active_account()
+              dispatch({
+                type: RAPID_STELLAR,
+                payload: {
+                  ETH_KEY:matchedData[0].Ether_address,
+                  STELLAR_PUBLICK_KEY:matchedData[0].publicKey,
+                  STELLAR_SECRET_KEY:matchedData[0].secretKey,
+                  STELLAR_ADDRESS_STATUS:false
+                },
+              })
+              console.log("==Dispacthed success==")
+              console.log(':===ERROR STELLER ACCOUNT NEED TO ACTIVATE===:');
+            });
+        } catch (error) {
+          console.log("Error in get_stellar")
+         }
+    } else {
+        console.log('No data found for key steller keys to dispacth');
+    }
+    } catch (error) {
+      console.error('Error retrieving data:', error);
+    }
+  };
   const get_stellar = async () => {
     // const publicKey="GCW6DBA7KLB5HZEJEQ2F5F552SLQ66KZFKEPPIPI3OF7XNLIAGCP6JER";
     try {
@@ -251,6 +300,7 @@ function InvestmentChart(setCurrentWallet) {
           refreshing={pull}
           onRefresh={() => {
             setPull(true);
+            getData_dispatch()
             getTokenBalance();
             get_stellar();
             getData();
