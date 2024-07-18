@@ -129,7 +129,7 @@ const SendTokens = (props) => {
       } else {
         if (Type) {
           if (Type == "Ethereum") {
-            setBalance(EthBalance._z);
+            setBalance(EthBalance._z?EthBalance._z:EthBalance);
             // await dispatch(
             //   getEthBalance(
             //     state.wallet.address ? state.wallet.address : address
