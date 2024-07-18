@@ -129,14 +129,15 @@ const SendTokens = (props) => {
       } else {
         if (Type) {
           if (Type == "Ethereum") {
-            await dispatch(
-              getEthBalance(
-                state.wallet.address ? state.wallet.address : address
-              )
-            ).then((res) => {
-              console.log(res.EthBalance);
-              setBalance(res.EthBalance);
-            });
+            setBalance(EthBalance);
+            // await dispatch(
+            //   getEthBalance(
+            //     state.wallet.address ? state.wallet.address : address
+            //   )
+            // ).then((res) => {
+            //   console.log(res.EthBalance);
+            //   setBalance(res.EthBalance);
+            // });
           } else if (Type == "Matic") {
             console.log(MaticBalance);
             await dispatch(
