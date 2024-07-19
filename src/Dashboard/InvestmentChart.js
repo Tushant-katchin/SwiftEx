@@ -25,12 +25,13 @@ import { GetBalance, getAllBalances } from "../utilities/web3utilities";
 import { getXrpBalance } from "../components/Redux/actions/auth";
 import alert from "./reusables/Toasts";
 import Icon from "../icon";
-import { useNavigation } from "@react-navigation/native";
-import { RAPID_STELLAR } from "../components/Redux/actions/type";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { RAPID_STELLAR, SET_ASSET_DATA } from "../components/Redux/actions/type";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
   const navigation=useNavigation()
+  const foused=useIsFocused()
   const state = useSelector((state) => state);
   const [pull, setPull] = useState(false)
   const wallet = useSelector((state) => state.wallet);
@@ -182,9 +183,13 @@ function InvestmentChart(setCurrentWallet) {
       setPull(false)
     });
   }
+  useEffect(async()=>{
+    await getData_dispatch();
+  },[foused])
 
   useEffect(async () => {
     try {
+      await getTokenBalance();
       await getData();
       await getTokenBalance()
       getEthBnbPrice();
@@ -216,6 +221,7 @@ function InvestmentChart(setCurrentWallet) {
   let LeftContent2 = (props) => <Avatar.Image {...props} source={Etherimage} />;
   const getData_dispatch = async () => {
     try {
+      console.log("_+_+_+UPDATING STATE_+_+_")
       const storedData = await AsyncStorageLib.getItem('myDataKey');
       if (storedData !== null) {
         const parsedData = JSON.parse(storedData);
@@ -225,6 +231,10 @@ function InvestmentChart(setCurrentWallet) {
           const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
           server.loadAccount(matchedData[0].publicKey)
             .then(account => {
+              dispatch({
+                type: SET_ASSET_DATA,
+                payload: account.balances,
+              })
               account.balances.forEach(balance => {
               dispatch({
                 type: RAPID_STELLAR,

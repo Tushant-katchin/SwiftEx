@@ -2,7 +2,7 @@ import React ,{ useState, useEffect } from "react";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Bridge from "../../../../../../assets/Bridge.png";
 
-import { authRequest, GET, POST } from "../api";
+import { authRequest, GET, getToken, POST } from "../api";
 import { NewOfferModal } from "../components/newOffer.modal";
 import { FieldView } from "./profile";
 import { OfferListView, OfferListViewHome } from "./offers";
@@ -23,11 +23,11 @@ import {
   BackHandler,
 } from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getRegistrationToken } from "../utils/fcmHandler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions, useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
-import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
+import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import walletImg from "../../../../../../assets/walletImg.png";
 import idCard from "../../../../../../assets/idCard.png";
 
@@ -45,13 +45,16 @@ import { LineChart } from "react-native-chart-kit";
 import { Platform,Modal} from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useRef } from "react";
+import { RAPID_STELLAR, SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
 // import StellarSdk from '@stellar/stellar-sdk';
+const StellarSdk = require('stellar-sdk');
+StellarSdk.Network.useTestNetwork();
 
 export const HomeView = ({ setPressed }) => {
+  const dispatch_ = useDispatch()
   const [modalContainer_menu,setmodalContainer_menu]=useState(false);
   const AnchorViewRef = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
-
   const handleScroll = (xOffset) => {
     if (AnchorViewRef.current) {
       AnchorViewRef.current.scrollTo({ x: xOffset, animated: true });
@@ -104,8 +107,6 @@ export const HomeView = ({ setPressed }) => {
   const [kyc_status,setkyc_status]=useState(true);
   const [con_modal,setcon_modal]=useState(false)
 
-  console.log("-=-=000-=----======",state.STELLAR_ADDRESS_STATUS)
-
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
   const navigation = useNavigation();
@@ -121,6 +122,102 @@ export const HomeView = ({ setPressed }) => {
       });
     });
   };
+
+  //activate stellar account function
+  const active_account=async()=>{
+    console.log("<<<<<<<clicked");
+    const token = await getToken();
+    console.log(token)
+  try {
+    const storedData = await AsyncStorageLib.getItem('user_email');
+    const postData={
+      email: storedData,
+      publicKey: state.STELLAR_PUBLICK_KEY,
+    }
+    const response = await fetch(REACT_APP_HOST+'/users/updatePublicKeyByEmail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const data = await response.json();
+     if(data.success===true)
+     {
+        await changeTrust()
+     }
+    if (response.ok) {
+      console.log("===",data.success);
+    } else {
+      console.error('Error:', data);
+    }
+  } catch (error) {
+    console.error('Network error:', error);
+  }
+  
+  }
+ 
+ 
+ 
+ const changeTrust = async () => {
+    try {
+      console.log(":++++ Entered into trusting ++++:")
+const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+        const account = await server.loadAccount(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY).publicKey());
+        const transaction = new StellarSdk.TransactionBuilder(account, {
+            fee: StellarSdk.BASE_FEE,
+            networkPassphrase: StellarSdk.Network.current().networkPassphrase,
+        })
+            .addOperation(
+                StellarSdk.Operation.changeTrust({
+                    asset: new StellarSdk.Asset("XETH", "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI"),
+                })
+            )
+            .addOperation(
+                StellarSdk.Operation.changeTrust({
+                    asset: new StellarSdk.Asset("XUSD", "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI"),
+                })
+            )
+            .setTimeout(30)
+            .build();
+
+        transaction.sign(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY));
+
+        const result = await server.submitTransaction(transaction);
+        dispatch_({
+          type: RAPID_STELLAR,
+          payload: {
+            ETH_KEY:state.ETH_KEY,
+            STELLAR_PUBLICK_KEY:state.STELLAR_PUBLICK_KEY,
+            STELLAR_SECRET_KEY:state.STELLAR_SECRET_KEY,
+            STELLAR_ADDRESS_STATUS:true
+          },
+        })
+        console.log(`Trustline updated successfully`);
+        StellarSdk.Network.useTestNetwork();
+          server.loadAccount(state.STELLAR_PUBLICK_KEY)
+            .then(account => {
+              console.log('Balances for account:', state.STELLAR_PUBLICK_KEY);
+              account.balances.forEach(balance => {
+                dispatch_({
+                  type: SET_ASSET_DATA,
+                  payload: account.balances,
+                })
+              });
+            })
+            .catch(error => {
+              console.log('Error loading account:', error);
+            });
+
+    } catch (error) {
+        console.error(`Error changing trust:`, error);
+    }
+};
+
+
+
 
   const getData_new_Kyc = async () => {
     try {
@@ -185,6 +282,10 @@ export const HomeView = ({ setPressed }) => {
     }
   };
   useEffect(()=>{
+    if(state.STELLAR_ADDRESS_STATUS===false)
+    {
+      active_account()
+    }
     getData()
     getAccountDetails();
     getData_new_Kyc()
@@ -487,7 +588,7 @@ useFocusEffect(
   {Platform.OS === "android" ? (
     <Text style={styles.text_TOP}>Home</Text>
   ) : (
-    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Home</Text>
+    <Text style={[styles.text_TOP, styles.text1_ios_TOP,{marginTop:-21,    marginStart: wp(35),    }]}>Home</Text>
   )}
 
   <TouchableOpacity onPress={() => navigation.navigate("Home")}>

@@ -47,9 +47,10 @@ export const NewOfferModal = () => {
   const { user, open, getOffersData, onCrossPress }=back_data.params;
   const isFocused = useIsFocused();
   const state = useSelector((state) => state);
+  const [ALL_STELLER_BALANCES,setALL_STELLER_BALANCES]=useState([]);
   const [loading, setloading] = useState(false)
   const [show, setshow] = useState(false)
-  const [activ,setactiv]=useState(true);
+  const [activ,setactiv]=useState(false);
   const [selectedValue, setSelectedValue] = useState("XETH");
   const [SelectedBaseValue, setSelectedBaseValue] = useState("XUSD");
   const [Balance, setbalance] = useState('');
@@ -87,6 +88,8 @@ const [modalContainer_menu,setmodalContainer_menu]=useState(false);
 const [chooseModalPair,setchooseModalPair]=useState(false);
 const [total_price,settotal_price]=useState(0);
 const [total_price_info,settotal_price_info]=useState(false);
+
+
 
 const getAccountDetails = async () => {
       const storedData = await AsyncStorageLib.getItem('myDataKey');
@@ -317,20 +320,8 @@ const chooseRenderItem_1 = ({ item }) => (
   //////////////////////////////////end
   const getData = async () => {
     try {
-      const data = await AsyncStorageLib.getItem('myDataKey');
-      if (data) {
-        const parsedData = JSON.parse(data);
-        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-        console.log('Retrieved data:', matchedData);
-        const publicKey = matchedData[0].publicKey;
-        console.log("===========",publicKey)
-        setPublicKey(publicKey)
-        const secretKey_Key = matchedData[0].secretKey;
-        console.log("===========",secretKey_Key)
-        setSecretKey(secretKey_Key)
-      } else {
-        console.log('No data found for key steller keys');
-      }
+        setPublicKey(state.STELLAR_PUBLICK_KEY)
+        setSecretKey(state.STELLAR_SECRET_KEY)
     } catch (error) {
       console.error('Error getting data for key steller keys:', error);
     }
@@ -338,53 +329,20 @@ const chooseRenderItem_1 = ({ item }) => (
   
 
   const get_stellar = async (asset) => {
+    console.log("-=-=-=-=-=aaa",asset)
     try {
-       const storedData = await AsyncStorageLib.getItem('myDataKey');
-      if (storedData !== null) {
-        const parsedData = JSON.parse(storedData);
-        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-        console.log('Retrieved data:', matchedData);
-        const publicKey = matchedData[0].publicKey;
-        console.log("===========",publicKey)
-        setPublicKey(publicKey)
-        const secretKey_Key = matchedData[0].secretKey;
-        console.log("===========",secretKey_Key)
-        setSecretKey(secretKey_Key)
-       
-          setbalance("");
-          setshow(true)
-          console.log("<><", publicKey)
-          StellarSdk.Network.useTestNetwork();
-          const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-          server.loadAccount(publicKey)
-            .then(account => {
-              console.log('Balances for account:', publicKey);
-              account.balances.forEach(balance => {
+  
+              ALL_STELLER_BALANCES.forEach(balance => {
                 if (balance.asset_code === asset) {
-                  console.log(`${balance.asset_code}: ${balance.balance}`);
+                  console.log("----+++++++-----",balance)
+                  setactiv(false)
                   setbalance(balance.balance)
                   setshow_bal(true)
-                  setactiv(false)
                 }
               });
-              setshow(false)
-            })
-            .catch(error => {
-              console.log('Error loading account:', error);
-              // alert("error", "Account Balance not found.");
-              setshow(false)
-              setactiv(true)
-              // settitel("Activate Stellar Account for trading")
-              active_account()
-            });
-        // }
-      }
-      else {
-        console.log('No data found in AsyncStorage');
-      }
     } catch (error) {
       console.log("Error in get_stellar")
-      alert("error", "Something went wrong.");
+      alert("success", "Please wait account is updating....");
       setshow(false)
     }
   }
@@ -502,7 +460,11 @@ const chooseRenderItem_1 = ({ item }) => (
     });
   }
  
-  
+  useEffect(async()=>{
+    setactiv(false)
+    setshow_bal(true)
+    await get_stellar("XETH")
+  },[isFocused])
   useEffect(()=>{
     getAccountDetails();
     getData();
@@ -511,6 +473,7 @@ const chooseRenderItem_1 = ({ item }) => (
 
   },[isFocused])
   useEffect(() => {
+    setALL_STELLER_BALANCES(state.assetData)
     getAccountDetails();
     setinfo_(false);
     setinfo_amount(false);
@@ -825,7 +788,7 @@ const reves_fun=async(fist_data,second_data)=>{
 
     <View style={{ flexDirection: "row",alignSelf:"center" }}>
               {activ===true?
-              <TouchableOpacity style={styles.background_1} onPress={()=>{active_account()}}>
+              <TouchableOpacity style={styles.background_1}>
                <Animated.View style={[styles.frame_1, { borderColor: "gray" ,flexDirection:"row"}]}>
                <Text style={{color:'green',fontSize:19,textAlign:"center"}}>Updating.</Text>
                <ActivityIndicator color={"green"}/>
