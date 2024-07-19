@@ -224,13 +224,13 @@ const Payout = () => {
         </View>
 
         {Platform.OS === "android" ? (
-          <Text style={styles.text_TOP}>Deposit/withdrawal</Text>
+          <Text style={styles.text_TOP}>Deposit/Withdrawal</Text>
         ) : (
-          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Deposit/withdrawal</Text>
+          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Deposit/Withdrawal</Text>
         )}
 
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Image source={darkBlue} style={styles.logoImg_TOP} />
+          <Image source={darkBlue} style={[styles.logoImg_TOP,{marginStart:Platform.OS==="android"?wp(20):wp(1)}]} />
         </TouchableOpacity>
 
         <View style={{ alignItems: "center" }}>
@@ -541,9 +541,9 @@ const Payout = () => {
       <TouchableOpacity style={[styles.next_btn,{marginTop:5}]} onPress={() => { setsearch_text(''),setshow_anchors(false),setselect_asset_modal(true) }}>
           <Text style={styles.next_btn_txt}>Back</Text>
         </TouchableOpacity>
-      <TouchableOpacity disabled={true} style={[styles.next_btn,{marginTop:5,backgroundColor:"gray"}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
+      {/* <TouchableOpacity disabled={true} style={[styles.next_btn,{marginTop:5,backgroundColor:"gray"}]} onPress={() => { setsearch_text(''),setkyc_modal(true) }}>
           <Text style={styles.next_btn_txt}>Next</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         </View>
       </View>}
 
@@ -804,12 +804,11 @@ const styles = StyleSheet.create({
     marginStart: wp(20)
   },
   text1_ios_TOP: {
-    color: "white",
-    fontWeight: "700",
-    alignSelf: "center",
-    marginStart: wp(20),
-    top: 19,
-    fontSize: 17
+    alignSelf:"center",
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: 'white',
+      paddingTop:hp(3),
   },
   modalContainer_option_top: {
     // flex: 1,

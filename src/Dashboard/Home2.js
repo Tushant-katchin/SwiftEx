@@ -28,7 +28,7 @@ import {
   TabBar,
   TabBarIndicator,
 } from "react-native-tab-view";
-import { useIsFocused, useRoute } from "@react-navigation/native";
+import { useIsFocused, useNavigationState, useRoute } from "@react-navigation/native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import useFirebaseCloudMessaging from "./notifications/firebaseNotifications";
 import {
@@ -370,22 +370,44 @@ const Home2 = ({ navigation }) => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   AppState.addEventListener("change", (changedState) => {
+  //     currentState.current = changedState;
+  //     setAppState(currentState.current);
+  //     console.log(currentState.current);
+  //     if (currentState.current === "background") {
+  //       console.log(currentState.current);
+
+  //       //navigation.navigate("appLock");
+  //       /* if(routeName.name!=='exchangeLogin'){
+            
+  //         }*/
+  //       setVisible(true)
+  //     }
+  //   });
+  // }, []);
+
+  
+  const currentRoute = useNavigationState(state => state.routes[state.index].name);
   useEffect(() => {
-    AppState.addEventListener("change", (changedState) => {
+    const handleAppStateChange = (changedState) => {
       currentState.current = changedState;
       setAppState(currentState.current);
       console.log(currentState.current);
       if (currentState.current === "background") {
-        console.log(currentState.current);
-
-        //navigation.navigate("appLock");
-        /* if(routeName.name!=='exchangeLogin'){
-            
-          }*/
-        setVisible(true)
+        
+        if (currentRoute !== "Exchange") {
+          setVisible(true);
+        }
       }
-    });
-  }, []);
+    };
+    
+    AppState.addEventListener("change", handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener("change", handleAppStateChange);
+    };
+  }, [currentRoute]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -411,6 +433,7 @@ const Home2 = ({ navigation }) => {
     getToken();
   }, []);
   useEffect(() => {
+    
     console.log('wallet changed')
   }, [state.wallet.name])
 

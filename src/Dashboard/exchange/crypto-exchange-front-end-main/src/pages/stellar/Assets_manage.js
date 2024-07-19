@@ -102,7 +102,7 @@ const Assets_manage = () => {
                 )}
 
                 <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                    <Image source={darkBlue} style={styles.logoImg_TOP} />
+                    <Image source={darkBlue} style={[styles.logoImg_TOP,{marginLeft: Platform.OS==="android"?wp(22):wp(19)}]} />
                 </TouchableOpacity>
 
                 <View style={{ alignItems: "center" }}>
@@ -317,12 +317,11 @@ const styles = StyleSheet.create({
         marginStart: wp(34)
     },
     text1_ios_TOP: {
-        color: "white",
-        fontWeight: "700",
-        alignSelf: "center",
-        marginStart: wp(31),
-        top: 19,
-        fontSize: 17
+        alignSelf:"center",
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: 'white',
+      paddingTop:hp(3),
     },
     modalContainer_option_top: {
         // flex: 1,

@@ -60,7 +60,7 @@ export function ExchangeNavigation() {
             iconName = "person-circle-outline";
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size} color={color} style={{marginLeft:route.name==="On/Off Ramp"?17:0}} />;
         },
         tabBarActiveTintColor: "blue",
         tabBarInactiveTintColor: "white",
@@ -120,7 +120,8 @@ export function ExchangeNavigation() {
         options={{
           tabBarLabelStyle:{
             fontSize: hp(1.6),
-            marginBottom:6.9
+            marginBottom:6.9,
+            width:wp(25)
           },
           headerShown: true,
           header: () => {
@@ -136,7 +137,9 @@ export function ExchangeNavigation() {
         options={{
           tabBarLabelStyle:{
             fontSize: hp(1.6),
-            marginBottom:6.9
+            marginBottom:6.9,
+            width:wp(25),
+            marginLeft:wp(5)
           },
           headerShown: true,
           header: () => {

@@ -185,7 +185,7 @@ headerText: {
   fontWeight: 'bold',
   color: 'white',
   paddingTop:19,
-  paddingLeft:53
+  paddingLeft:40
 },
 headerImage: {
   width: 80,

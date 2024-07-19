@@ -132,7 +132,7 @@ export const FieldView = ({
     <View>
       {type === "kyc" ? (
         <>
-          <Text style={styles.KYC}>
+          {/* <Text style={styles.KYC}>
             KYC STATUS{" "}
             {value === false ? (
               "FALSE"
@@ -144,36 +144,8 @@ export const FieldView = ({
                 style={styles.checkImg}
               />
             )}
-          </Text>
-          {value === true ? (
-            <>
-              <View style={styles.idCardContainer}>
-                <View style={styles.walletContainer}>
-                  <Text style={styles.idtext}>Identity Status</Text>
-                  <Image source={idCard} style={styles.idcardImg} />
-                </View>
-                <View style={styles.walletContainer}>
-                  <Icon
-                    name={"check-outline"}
-                    type={"materialCommunity"}
-                    color={"#008C62"}
-                    style={styles.checkImg}
-                  />
-                  <Text style={styles.connectedText}>Verified!</Text>
-                </View>
-              </View>
-            </>
-          ) : 
-          // (
-            // <Button
-            //   title="apply"
-            //   onPress={() => {
-            //     applyForKyc();
-            //   }}
-            // />
-            // )
-            <></>
-          }
+          </Text> */}
+
         </>
       ) : (
         <>
@@ -433,7 +405,7 @@ export const ProfileView = (props) => {
   ];
   const navigation = useNavigation();
   const copyToClipboard = () => {
-    Clipboard.setString(state.wallet.address);
+    Clipboard.setString(state.STELLAR_PUBLICK_KEY);
     alert("success", "Copied");
   };
   return (
@@ -463,7 +435,7 @@ export const ProfileView = (props) => {
   )}
 
   <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    <Image source={darkBlue} style={styles.logoImg_TOP} />
+    <Image source={darkBlue} style={[styles.logoImg_TOP,{marginLeft: Platform.OS==="android"?wp(21.4):wp(18)}]} />
   </TouchableOpacity>
 
   <View style={{ alignItems: "center" }}>
@@ -583,10 +555,10 @@ export const ProfileView = (props) => {
         </View>
 
         <View>
-    <Image source={darkBlue} style={{ height: hp("9"),width: wp("12"),alignSelf:"flex-end",position:"absolute"}} />
+    {/* <Image source={darkBlue} style={{ height: hp("9"),width: wp("12"),alignSelf:"flex-end",position:"absolute"}} /> */}
         <View style={{justifyContent:"center",marginTop:hp(2.7)}}>
 
-        <Text style={{color:"#35CA1D",fontSize:16,alignSelf:"flex-end",position:"absolute"}}>SwiftEx</Text>
+        {/* <Text style={{color:"#35CA1D",fontSize:16,alignSelf:"flex-end",position:"absolute"}}>SwiftEx</Text> */}
         <FieldView
           title="KYC Status"
           value={profile.isVerified}
@@ -627,7 +599,7 @@ export const ProfileView = (props) => {
               <View style={{borderColor:"#485DCA",borderWidth:0.9,borderRadius:5,flexDirection:"row"}}>
 
                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(70),marginTop:1.9}}>
-                   <Text style={{color:"#fff",margin:5,padding:3}}>{state.wallet.address}</Text>
+                   <Text style={{color:"#fff",margin:5,padding:3}}>{state.STELLAR_PUBLICK_KEY}</Text>
                     </ScrollView>
               <View style={{ marginHorizontal:1,marginLeft:10 }}>
               
@@ -1097,12 +1069,11 @@ const styles = StyleSheet.create({
     marginStart:wp(34)
   },
   text1_ios_TOP: {
-    color: "white",
-    fontWeight: "700",
-    alignSelf: "center",
-    marginStart: wp(31),
-    top:19,
-    fontSize:17
+    alignSelf:"center",
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    paddingTop:hp(3),
   },
   modalContainer_option_top: {
     // flex: 1,

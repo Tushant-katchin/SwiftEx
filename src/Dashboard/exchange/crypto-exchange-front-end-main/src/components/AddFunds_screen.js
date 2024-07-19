@@ -672,12 +672,11 @@ const styles = StyleSheet.create({
     marginStart: wp(30)
   },
   text1_ios_TOP: {
-    color: "white",
-    fontWeight: "700",
-    alignSelf: "center",
-    marginStart: wp(31),
-    top: 19,
-    fontSize: 17
+    alignSelf:"center",
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: 'white',
+      paddingTop:hp(5),
   },
   toggleContainer: {
     alignSelf: "center",

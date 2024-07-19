@@ -588,7 +588,7 @@ useFocusEffect(
   {Platform.OS === "android" ? (
     <Text style={styles.text_TOP}>Home</Text>
   ) : (
-    <Text style={[styles.text_TOP, styles.text1_ios_TOP,{marginTop:-21,    marginStart: wp(35),    }]}>Home</Text>
+    <Text style={[styles.text_TOP, styles.text1_ios_TOP,{marginTop:-15,    marginStart: wp(35),    }]}>Home</Text>
   )}
 
   <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -930,7 +930,7 @@ useFocusEffect(
                         Offer_condition(Offer_active)
                     }}
                   >
-                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Trading</Text>
+                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold" }}>Trade</Text>
                   </TouchableOpacity>
                   
                   {/* <NewOfferModal

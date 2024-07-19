@@ -567,7 +567,7 @@ const reves_fun=async(fist_data,second_data)=>{
         )}
       
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Image source={darkBlue} style={styles.logoImg_TOP} />
+          <Image source={darkBlue} style={[styles.logoImg_TOP,{marginLeft:Platform.OS==="android"?wp(14):wp(12)}]} />
         </TouchableOpacity>
       
         <View style={{ alignItems: "center" }}>
@@ -1116,12 +1116,12 @@ const styles = StyleSheet.create({
     marginStart:wp(27)
   },
   text1_ios_TOP: {
-    color: "white",
-    fontWeight: "700",
-    alignSelf: "center",
-    marginStart: wp(31),
-    top:19,
-    fontSize:17
+    alignSelf:"center",
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: 'white',
+      paddingTop:hp(3),
+      
   },
   background_1: {
     // width: '8%',

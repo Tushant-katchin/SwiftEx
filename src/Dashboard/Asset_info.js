@@ -17,7 +17,9 @@ import { delay } from "lodash";
 import { alert } from "./reusables/Toasts";
 import { Grid, LineChart, XAxis, YAxis } from "react-native-svg-charts";
 import { Area, Chart, HorizontalAxis, Line, Tooltip, VerticalAxis } from "react-native-responsive-linechart";
+import { useSelector } from "react-redux";
 const Asset_info = ({ route }) => {
+  const state = useSelector((state) => state);
     const FOUCUSED = useIsFocused();
     const { asset_type } = route.params;
     const navigation = useNavigation()
@@ -36,6 +38,7 @@ const Asset_info = ({ route }) => {
         phoneNumber: "93400xxxx",
         isEmailVerified: false,
     });
+    const [token, settoken] = useState("");
     const [timeData, setTimeData] = useState([
         "5m",
         "10m",
@@ -44,7 +47,9 @@ const Asset_info = ({ route }) => {
         "25m",
         "30m",
     ]);
-    useEffect(() => {
+    useEffect(async() => {
+        const token_1 = await AsyncStorageLib.getItem(REACT_APP_LOCAL_TOKEN);
+        settoken(token_1)
         setchart_show(true)
         setLoading(true)
         setVisible(false);
@@ -84,7 +89,7 @@ const Asset_info = ({ route }) => {
                 setfinal(temp)
                 delay(() => {
                     setLoading(false);
-                }, 1000)
+                }, 100)
             }
             )
             .catch((error) => console.error(error));
@@ -152,22 +157,22 @@ const Asset_info = ({ route }) => {
         setfinal(filteredData);
         delay(() => {
             setLoading(false);
-        }, 1500);
+        }, 100);
 
     }
     const trade_bridge = async () => {
-        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+        // const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        // const token = await AsyncStorageLib.getItem(REACT_APP_LOCAL_TOKEN);
         token ? navigation.navigate("classic",{Asset_type:asset_type}) : navigation.navigate("exchangeLogin")
     }
     const cashout_manage = async () => {
-        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+        // const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        // const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
         token ? navigation.navigate("payout") : navigation.navigate("exchangeLogin")
     }
     const trade_manage = async () => {
-        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
+        // const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+        // const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
         token ? await for_trading() : navigation.navigate("exchangeLogin")
     }
     const for_trading = async () => {
@@ -182,8 +187,8 @@ const Asset_info = ({ route }) => {
     };
     const getOffersData = async () => {
         try {
-            const { res, err } = await authRequest("/offers", GET);
-            if (err) return console.log(`${err.message}`);
+            // const { res, err } = await authRequest("/offers", GET);
+            // if (err) return console.log(`${err.message}`);
             //  setOffers(res);
         } catch (err) {
             console.log(err)
@@ -353,7 +358,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         flex: 1,
         marginLeft: 19.5,
-        marginTop:Platform.OS === "ios" ?hp(3):hp(0)
+        marginTop:Platform.OS === "ios" ?hp(4):hp(0)
     },
     image: {
         height: hp(9),

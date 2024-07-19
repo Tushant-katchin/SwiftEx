@@ -1,7 +1,7 @@
 import "./global";
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import { useEffect, useState, useRef } from "react";
-import { StyleSheet, Text, View, AppState, BackHandler, Platform } from "react-native";
+import { StyleSheet, Text, View, AppState, BackHandler, Platform, StatusBar } from "react-native";
 import { Provider as StoreProvider } from "react-redux";
 import store from "./src/components/Redux/Store";
 import NavigationProvider from "./src/Routes/Navigation";
@@ -69,7 +69,8 @@ export default function App() {
         <PaperProvider>
           
             <View style={styles.container}>
-              <StatusBar hidden />
+              {/* <StatusBar  backgroundColor="#011434" /> */}
+              {Platform.OS==="ios"?<StatusBar hidden={true}/>:<StatusBar barStyle={"light-content"} backgroundColor={"#011434"}/>}
 
               <NavigationProvider />
             </View>

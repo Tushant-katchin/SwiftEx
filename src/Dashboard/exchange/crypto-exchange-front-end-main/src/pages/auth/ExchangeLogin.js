@@ -375,6 +375,10 @@ const FOCUSED=useIsFocused();
     const formattedInput = input.replace(/\s/g, '');
     setcon_passcode(formattedInput);
   };
+  const onChangelmail = (input) => {
+    const formattedInput = input.replace(/\s/g, '').toLowerCase();
+    setEmail(formattedInput)
+  };
   return (
     <>
      {lodaing_ver==true?alert("success","Email Verifying...."):<></>}
@@ -402,7 +406,7 @@ const FOCUSED=useIsFocused();
                   {active_forgot===true?"Recover to your account":"Login to your account"}
                 </Text>
                
-                <TextInput autoCapitalize="none" textContentType="emailAddress" placeholder={"Email Adderss"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { setEmail(text) }} />
+                <TextInput autoCapitalize="none" textContentType="emailAddress" placeholder={"Email Adderss"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { onChangelmail(text) }} />
                 {active_forgot===false?<TextInput autoCapitalize="none" placeholder={"Password"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
                 <TouchableOpacity style={styles.PresssableBtn}
                   onPress={() => {

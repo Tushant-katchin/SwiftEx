@@ -167,7 +167,7 @@ const AuthStack = () => (
       <Stack.Screen
         name="Wallet"
         component={Wallet}
-        options={{ headerShown: false,gestureEnabled:false }}
+        options={{ headerShown: false,}}
       />
       <Stack.Screen
         name="ImportWallet"
@@ -202,6 +202,7 @@ const AuthStack = () => (
         name="CoinDetails"
         component={CoinDetails}
         options={{
+          gestureEnabled:true,
           header: () => {
             return <WalletHeader title="Coin-Detail" />;
           },
@@ -219,7 +220,7 @@ const AuthStack = () => (
         name="classic"
         component={classic}
         options={{
-          headerShown: false,gestureEnabled:false,
+          headerShown: false,
         }}
       />
 
@@ -390,7 +391,7 @@ const AuthStack = () => (
         name="Send"
         component={SendTokens}
         options={{
-          headerShown: false,gestureEnabled:false,
+          headerShown: false,
         }}
       />
 
@@ -405,7 +406,7 @@ const AuthStack = () => (
         name="Asset_info"
         component={Asset_info}
         options={{
-          headerShown: false,gestureEnabled:false,
+          headerShown: false,
         }}
       />
 
@@ -432,6 +433,7 @@ const AuthStack = () => (
         name="AllWallets"
         component={AllWallets}
         options={{
+          gestureEnabled:true,
           header: () => {
             return <WalletHeader title="All Wallets" />;
           },
@@ -441,7 +443,7 @@ const AuthStack = () => (
         name="Biometric"
         component={BiometricPage}
         options={{
-          headerShown: false,gestureEnabled:false,
+          headerShown: false,
           headerTitleAlign:"center",
           headerTitle:"Authentication",
           // headerStyle: { backgroundColor: "#000C66" },
@@ -499,8 +501,8 @@ const AuthStack = () => (
         name="payout"
         component={Payout}
         options={{
-          headerShown: false,gestureEnabled:false,
-    statusBarHidden:true,
+          headerShown: false,
+    // statusBarHidden:true,
           headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -513,7 +515,7 @@ const AuthStack = () => (
         name="newOffer_modal"
         component={NewOfferModal}
         options={{
-          headerShown: false,gestureEnabled:false,
+          headerShown: false,
           headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -526,7 +528,7 @@ const AuthStack = () => (
         name="Assets_manage"
         component={Assets_manage}
         options={{
-          headerShown: false,gestureEnabled:false,
+          headerShown: false,
           headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {
@@ -538,7 +540,7 @@ const AuthStack = () => (
         name="send_recive"
         component={send_recive}
         options={{
-          headerShown: false,gestureEnabled:false,
+          headerShown: false,
           headerStyle: { backgroundColor: "#4CA6EA" },
           headerTintColor: "white",
           headerTitleStyle: {

@@ -305,7 +305,7 @@ const SendTokens = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-{Platform.OS==="ios"?<View style={{backgroundColor:"#4CA6EA",flexDirection:"row",height:"7%"}}>
+{Platform.OS==="ios"?<View style={{backgroundColor:"#4CA6EA",flexDirection:"row",height: hp(8)}}>
 <Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
 <Text style={{color:"white",alignSelf:"center",marginLeft:"19%",marginTop:'9%',fontSize:19}}>Transaction Details</Text>
 <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>

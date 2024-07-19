@@ -15,7 +15,8 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
-  Image
+  Image,
+  Platform
 } from "react-native";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 
@@ -346,7 +347,7 @@ const fetchData_ = async (key) => {
   )}
 
   <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    <Image source={darkBlue} style={styles.logoImg_TOP} />
+    <Image source={darkBlue} style={[styles.logoImg_TOP,{marginLeft:Platform.OS==="android"?wp(15):wp(10)}]} />
   </TouchableOpacity>
 
   <View style={{ alignItems: "center" }}>
@@ -735,12 +736,11 @@ const styles = StyleSheet.create({
     marginStart:wp(26.5)
   },
   text1_ios_TOP: {
-    color: "white",
-    fontWeight: "700",
-    alignSelf: "center",
-    marginStart: wp(25),
-    top:19,
-    fontSize:17
+    alignSelf:"center",
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: 'white',
+      paddingTop:hp(3),
   },
   linearStyle1: {
     width: wp(95),
