@@ -43,11 +43,11 @@ if (network === "BSC") {
     <Center>
       <TouchableOpacity
       style={{backgroundColor:"#fff",borderRadius:16,marginLeft:0,padding:'6%'}}
-        onPress={ () => {
-          setShowModal(true)
+        // onPress={ () => {
+          // setShowModal(true)
          // console.log('pressed')
        //SendNotification('title','test')
-        }}
+        // }}
       >
         <Text style={{color:"white",fontWeight: "bold"}}>Add Test Faucet Balance</Text>
       </TouchableOpacity>

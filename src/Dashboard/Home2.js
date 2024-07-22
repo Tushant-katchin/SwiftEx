@@ -386,9 +386,11 @@ const Home2 = ({ navigation }) => {
   //     }
   //   });
   // }, []);
-
-  
-  const currentRoute = useNavigationState(state => state.routes[state.index].name);
+  const extractRouteName = (key) => {
+    const [routeName] = key.split('-');
+    return routeName;
+  };
+  const currentRoute = useNavigationState(state => state.routes[state.index]?.state?.history[1]?.key);
   useEffect(() => {
     const handleAppStateChange = (changedState) => {
       currentState.current = changedState;
@@ -396,7 +398,12 @@ const Home2 = ({ navigation }) => {
       console.log(currentState.current);
       if (currentState.current === "background") {
         
-        if (currentRoute !== "Exchange") {
+        // if (currentRoute !== routeName) {
+        //   setVisible(true);
+        // }
+        if (currentRoute && extractRouteName(currentRoute) === "On/Off Ramp") {
+        }
+        else{
           setVisible(true);
         }
       }

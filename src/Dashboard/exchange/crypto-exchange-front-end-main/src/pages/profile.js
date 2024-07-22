@@ -522,7 +522,7 @@ export const ProfileView = (props) => {
       </TouchableOpacity>
     </Modal>
 
-    <ScrollView>
+    <View>
       <View style={styles.content}>
         <Text style={{ color: "#fff" }}>{message}</Text>
 
@@ -726,7 +726,7 @@ export const ProfileView = (props) => {
           </View>
         )}
       </View>
-    </ScrollView>
+    </View>
     </>
   );
 };
