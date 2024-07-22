@@ -386,7 +386,7 @@ const FOCUSED=useIsFocused();
       <SafeAreaView style={styles.container}>
         <View
           // style={styles.container}
-          onStartShouldSetResponder={() => Keyboard.dismiss()}
+          // onStartShouldSetResponder={() => Keyboard.dismiss()}
         >
           {isOtpSent === false ? (
             <View style={styles.content}>
@@ -465,7 +465,7 @@ const FOCUSED=useIsFocused();
               )}
 
               <View style={{
-    marginTop: active_forgot===false?hp(15):hp(25),
+    marginTop: active_forgot===false?hp(10):hp(25),
     height: hp(6),
     width: 400,
     backgroundColor: "#003166",
@@ -608,7 +608,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     textAlign: "center",
-    justifyContent: "space-evenly",
+    // justifyContent: "space-evenly",
     marginTop: hp("1"),
     color: "white",
   },

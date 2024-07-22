@@ -155,7 +155,7 @@ const Passcode = (props) => {
         <Text style={style.welcomeText}>
           {" "}
           {status == "verify"
-            ? "please re enter pin"
+            ? "Please Re-enter your pin"
             : status === "pinset"
             ? "Please enter your pin"
             : "Please create a pin"}

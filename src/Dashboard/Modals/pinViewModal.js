@@ -121,9 +121,9 @@ const PinViewModal = ({
           <Text style={style.welcomeText}>
             {" "}
             {status == "verify"
-              ? "please re enter pin"
+              ? "Please Re-enter your pin"
               : status === "pinset"
-              ? "please enter your pin"
+              ? "Please enter your pin"
               : "Please create a pin"}
           </Text>
           <View style={{ marginTop: hp(10) }}>

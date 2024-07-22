@@ -56,7 +56,7 @@ const Asset_info = ({ route }) => {
         seticonType("");
         handle_asset_call(asset_type)
         getChart(asset_type)
-    }, [FOUCUSED])
+    }, [])
 
     const handle_asset_call = async (asset_type) => {
         asset_type === "XLM" ? feth_detial_Xlm() : fetchKline()
@@ -250,7 +250,7 @@ const Asset_info = ({ route }) => {
                         <Icon type={'materialCommunity'} name='arrow-top-right' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
                         <Text style={styles.opt_text}>Send</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.opt_cons} disabled={asset_type==="XRP"||asset_type==="XLM"} onPress={() => { trade_bridge() }}>
+                    <TouchableOpacity style={styles.opt_cons} disabled={asset_type==="XRP"||asset_type==="XLM"} onPress={async() => { await trade_bridge() }}>
                         <Image source={brridge_new} style={styles.image_brige} />
                         {/* <Icon type={'materialCommunity'} name='swap-horizontal-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} /> */}
                         <Text style={styles.opt_text}>Bridge</Text>
@@ -265,11 +265,11 @@ const Asset_info = ({ route }) => {
                 </View>
                 <View style={styles.opt_other}>
                     <View style={styles.T_C_con}>
-                        <TouchableOpacity style={styles.opt_other_cons} onPress={() => { trade_manage() }}>
+                        <TouchableOpacity style={styles.opt_other_cons} onPress={async() => { await  trade_manage() }}>
                             <Icon type={'materialCommunity'} name='chart-timeline-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
                             <Text style={styles.opt_other_text}>Trade</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.opt_other_cons} onPress={() => { cashout_manage() }}>
+                        <TouchableOpacity style={styles.opt_other_cons} onPress={async() => { await cashout_manage() }}>
                             <Icon type={'materialCommunity'} name='cash' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
                             <Text style={styles.opt_other_text}>Cashout</Text>
                         </TouchableOpacity>

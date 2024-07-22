@@ -327,7 +327,7 @@ const TransactionPinModal = ({
           <Text style={style.welcomeText1}>
             {" "}
             {status == "verify"
-              ? "please re enter pin"
+              ? "Please Re-enter your pin"
               : status === "pinset"
               ? "Please enter your pin"
               : "Please create a pin"}

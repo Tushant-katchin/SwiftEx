@@ -177,7 +177,7 @@ export const ExchangeHeaderIcon = (props) => {
           size={28}
           color={"white"}
           onPress={() => {
-            navigation.navigate("Home")
+            navigation.goBack()
           //  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
           //  AsyncStorage.removeItem(LOCAL_TOKEN);
           //  Navigate()

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity, ActivityIndicator } from "react-native";
 import {
   Avatar,
   Card,
@@ -22,7 +22,7 @@ import Xrpimage from "../../assets/xrp.png";
 import stellar from "../../assets/Stellar_(XLM).png"
 import bnbimage from "../../assets/bnb-icon2_2x.png";
 import { GetBalance, getAllBalances } from "../utilities/web3utilities";
-import { getXrpBalance } from "../components/Redux/actions/auth";
+import { getXrpBalance,getEthBalance } from "../components/Redux/actions/auth";
 import alert from "./reusables/Toasts";
 import Icon from "../icon";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
@@ -38,7 +38,7 @@ function InvestmentChart(setCurrentWallet) {
   const [bnbBalance, getBnbBalance] = useState(0.00);
   const [xrpBalance, GetXrpBalance] = useState(0.00);
   const [maticBalance, getMaticBalance] = useState(0.00);
-  const [ethBalance, getEthBalance] = useState(0.00);
+  const [ethBalance, getEthBalance_] = useState(0.00);
   const [xmlBalance, setxmlBalance] = useState(0.00);
   const [current_xlm, setcurrent_xlm] = useState(0.00)
   const EthBalance = useSelector((state) => state.EthBalance);
@@ -94,12 +94,12 @@ function InvestmentChart(setCurrentWallet) {
       console.log(JSON.parse(type))
       if (JSON.parse(type) === "Ethereum") {
         if (EthBalance) {
-          getEthBalance(Number(EthBalance).toFixed(2));
+          getEthBalance_(Number(EthBalance).toFixed(2));
           getBnbBalance(0.00);
           getMaticBalance(0.00);
           GetXrpBalance(0.00);
         } else {
-          getEthBalance(0.00);
+          getEthBalance_(0.00);
           getBnbBalance(0.00);
           getMaticBalance(0.00);
           GetXrpBalance(0.00);
@@ -110,12 +110,12 @@ function InvestmentChart(setCurrentWallet) {
         // console.log('balance',balance)
         if (bal) {
           getBnbBalance(Number(bal).toFixed(2));
-          getEthBalance(0.00);
+          getEthBalance_(0.00);
           getMaticBalance(0.00);
           GetXrpBalance(0.00);
         } else {
           getBnbBalance(0.00);
-          getEthBalance(0.00);
+          getEthBalance_(0.00);
           getMaticBalance(0.00);
           GetXrpBalance(0.00);
         }
@@ -128,11 +128,11 @@ function InvestmentChart(setCurrentWallet) {
           dispatch(getXrpBalance(wallet.address))
           GetXrpBalance(xrpBalance)
           getBnbBalance(0.00);
-          getEthBalance(0.00);
+          getEthBalance_(0.00);
           getMaticBalance(0.00);
         } else {
           getBnbBalance(0.00);
-          getEthBalance(0.00);
+          getEthBalance_(0.00);
           getMaticBalance(0.00);
           GetXrpBalance(0.00);
         }
@@ -143,10 +143,10 @@ function InvestmentChart(setCurrentWallet) {
         if (
           EthBalance >= 0
         ) {
-          getEthBalance(Number(EthBalance).toFixed(2));
+          getEthBalance_(Number(EthBalance).toFixed(2));
 
         } else {
-          getEthBalance(0.00);
+          getEthBalance_(0.00);
         }
         if (bal >= 0) {
           console.log('bal', bal)
@@ -165,7 +165,6 @@ function InvestmentChart(setCurrentWallet) {
           GetXrpBalance(Number(xrpBalance).toFixed(2));
 
 
-
         } else {
           GetXrpBalance(0.00);
         }
@@ -175,7 +174,7 @@ function InvestmentChart(setCurrentWallet) {
           getMaticBalance(0.00);
         }
       } else {
-        getEthBalance(0.00);
+        getEthBalance_(0.00);
         getBnbBalance(0.00);
         getMaticBalance(0.00);
         GetXrpBalance(0.00);
@@ -185,18 +184,23 @@ function InvestmentChart(setCurrentWallet) {
   }
   useEffect(async()=>{
     await getData_dispatch();
+    await get_stellar();
   },[foused])
 
   useEffect(async () => {
+    setLoading(true);
     try {
       await getTokenBalance();
       await getData();
-      await getTokenBalance()
+      // await getTokenBalance()
       getEthBnbPrice();
-      // get_stellar();
-
+      get_stellar();
+      setTimeout(()=>{
+        setLoading(false);
+      },1000)
     } catch (e) {
       console.log(e)
+      setLoading(false);
     }
   }, []);
 
@@ -245,6 +249,7 @@ function InvestmentChart(setCurrentWallet) {
                   STELLAR_ADDRESS_STATUS:true
                 },
               })
+              dispatch(getEthBalance(matchedData[0].Ether_address))
               console.log("==Dispacthed success==")
               });
             })
@@ -274,7 +279,7 @@ function InvestmentChart(setCurrentWallet) {
     }
   };
   const get_stellar = async () => {
-    // const publicKey="GCW6DBA7KLB5HZEJEQ2F5F552SLQ66KZFKEPPIPI3OF7XNLIAGCP6JER";
+    // const publicKey="GANYSCWEP2XDKE76CTEWJTKUXS7EFPNT5XH22YESHK7DMGUXESD4SYMJ";
     try {
       console.log("<><", publicKey)
 
@@ -286,11 +291,19 @@ function InvestmentChart(setCurrentWallet) {
           account.balances.forEach(balance => {
             if (balance.asset_type === "native") {
               console.log(`${balance.asset_type}: ${balance.balance}`);
-              setxmlBalance(balance.balance)
-          }
+              const temp_bal = balance.balance;
+              const fullString = temp_bal.toString();
+              // Extract the first 3 digits
+              const substring = fullString.slice(0, 3);
+              // Convert the substring back to an integer (optional)
+              const displayedInt = parseInt(substring, 10);
+              setxmlBalance(displayedInt?displayedInt:0.00)
+            }
           });
         })
         .catch(error => {
+          const test="0.00"
+          setxmlBalance(test)
           console.log('Error loading account:', error);
           alert("error", "Need to fund amount.")
         });
@@ -319,7 +332,10 @@ function InvestmentChart(setCurrentWallet) {
       }
 
       nestedScrollEnabled={true} contentContainerStyle={{ paddingBottom: hp(60) }} sp>
-      <TouchableOpacity style={styles.refresh} onPress={() => {
+      {
+        loading===true?<ActivityIndicator color={"green"} size={"large"} style={{marginTop:hp(10)}}/>
+        :<>
+        <TouchableOpacity style={styles.refresh} onPress={() => {
         getAllBalances(state, dispatch)
       }}>
  <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
@@ -378,7 +394,7 @@ function InvestmentChart(setCurrentWallet) {
           {ethBalance ? ethBalance : 0} ETH
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"Matic"})}} >
+      {/* <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"Matic"})}} >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Maticimage} style={styles.img} />
           <View style={styles.ethrumView}>
@@ -402,7 +418,7 @@ function InvestmentChart(setCurrentWallet) {
         >
           {maticBalance ? maticBalance : 0} MAT
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"XRP"})}}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Xrpimage} style={styles.img} />
@@ -430,6 +446,8 @@ function InvestmentChart(setCurrentWallet) {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"XLM"})}}>
+      
+
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={stellar} style={styles.img} />
           <View style={styles.ethrumView}>
@@ -440,26 +458,22 @@ function InvestmentChart(setCurrentWallet) {
                 fontWeight: "bold",
               }}
             >
-              $ {current_xlm}
+              $ {current_xlm?current_xlm:0.78}
             </Text>
           </View>
         </View>
 
-        {/* <Text
-            style={{
-              color: "black",
-              fontWeight: "bold",
-            }}
-          >
-            {xmlBalance ? xmlBalance : "0.00"} XLM 
-          </Text> */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "6.9%", marginLeft: '46%' }}>
-          <Text style={{ alignSelf: 'flex-end', color: "black", fontWeight: "bold" }}>
-            {xmlBalance ? xmlBalance : "0.00"}
-          </Text>
-        </ScrollView>
-        <Text style={{ color: "black", fontWeight: "bold" }}> XLM</Text>
+        <Text
+          style={{
+            color: "black",
+            fontWeight: "bold",
+          }}
+        >
+          {xmlBalance ? xmlBalance : 0.00} XLM
+        </Text>
       </TouchableOpacity>
+        </>
+      }
 
     </ScrollView>
   );
