@@ -43,8 +43,8 @@ const alchemyUrl = RPC.ETHRPC;
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 export const NewOfferModal = () => {
   const [chooseSearchQuery, setChooseSearchQuery] = useState('');
-  const back_data=useRoute();
-  const { user, open, getOffersData, onCrossPress }=back_data.params;
+  // const back_data=useRoute();
+  // const { user, open, getOffersData, onCrossPress }=back_data.params;
   const isFocused = useIsFocused();
   const state = useSelector((state) => state);
   const [ALL_STELLER_BALANCES,setALL_STELLER_BALANCES]=useState([]);

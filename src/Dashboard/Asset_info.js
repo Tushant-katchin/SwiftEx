@@ -54,8 +54,10 @@ const Asset_info = ({ route }) => {
         setLoading(true)
         setVisible(false);
         seticonType("");
-        handle_asset_call(asset_type)
+        setTimeout(() => {
+            handle_asset_call(asset_type)
         getChart(asset_type)
+        }, 500);
     }, [])
 
     const handle_asset_call = async (asset_type) => {
@@ -241,36 +243,36 @@ const Asset_info = ({ route }) => {
 
                 </View>
                 <View style={styles.opt_con}>
-                    <TouchableOpacity style={styles.opt_cons} onPress={() => {
+                    <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_cons} onPress={() => {
                         asset_type === "XLM" ? navigation.navigate("SendXLM") :
                             navigation.navigate("Send", {
                                 token: asset_type === "ETH" ? "Ethereum" : asset_type,
                             })
                     }}>
-                        <Icon type={'materialCommunity'} name='arrow-top-right' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
+                        <Icon type={'materialCommunity'} name='arrow-top-right' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
                         <Text style={styles.opt_text}>Send</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.opt_cons} disabled={asset_type==="XRP"||asset_type==="XLM"} onPress={async() => { await trade_bridge() }}>
+                    <TouchableOpacity  style={styles.opt_cons} disabled={chart_show&&Loading||asset_type==="XRP"||asset_type==="XLM"} onPress={async() => { await trade_bridge() }}>
                         <Image source={brridge_new} style={styles.image_brige} />
                         {/* <Icon type={'materialCommunity'} name='swap-horizontal-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} /> */}
                         <Text style={styles.opt_text}>Bridge</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.opt_cons} onPress={() => {
+                    <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_cons} onPress={() => {
                         setVisible(true);
                         seticonType(asset_type);
                     }}>
-                        <Icon type={'materialCommunity'} name='arrow-bottom-left' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
+                        <Icon type={'materialCommunity'} name='arrow-bottom-left' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
                         <Text style={styles.opt_text}>Request</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.opt_other}>
                     <View style={styles.T_C_con}>
-                        <TouchableOpacity style={styles.opt_other_cons} onPress={async() => { await  trade_manage() }}>
-                            <Icon type={'materialCommunity'} name='chart-timeline-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
+                        <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_other_cons} onPress={async() => { await  trade_manage() }}>
+                            <Icon type={'materialCommunity'} name='chart-timeline-variant' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
                             <Text style={styles.opt_other_text}>Trade</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.opt_other_cons} onPress={async() => { await cashout_manage() }}>
-                            <Icon type={'materialCommunity'} name='cash' size={25} color={"#4CA6EA"} style={styles.opt_icon} />
+                        <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_other_cons} onPress={async() => { await cashout_manage() }}>
+                            <Icon type={'materialCommunity'} name='cash' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
                             <Text style={styles.opt_other_text}>Cashout</Text>
                         </TouchableOpacity>
                     </View>
