@@ -17,9 +17,9 @@ import {
 } from "react-native";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
-import { getBalance } from "../../components/Redux/actions/auth";
+import { getBalance, getEthBalance } from "../../components/Redux/actions/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { RPC, urls } from "../constants";
 import {
   getNonce,
@@ -66,9 +66,11 @@ import { useBiometricsForSwapTransaction } from "../../biometrics/biometric";
 import { alert } from "../reusables/Toasts";
 
 const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
+  const FOCUSED=useIsFocused()
+  const state = useSelector((state) => state);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
-  const [balance, setBalance] = useState("");
+  const [balance, setBalance] = useState("0.00");
   const [openChain, setOpenChain] = useState(false);
   const [chooseChain, setChooseChain] = useState([]);
   const [swapType, setSwapType] = useState("");
@@ -82,22 +84,30 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
   const [trade, setTrade] = useState();
   const [walletType, setWalletType] = useState("");
   const [pinViewVisible, setPinViewVisible] = useState(false);
-  const state = useSelector((state) => state);
   const [disable, setDisable] = useState(true);
   const [message, setMessage] = useState("");
-  const [coin0, setCoin0] = useState({
-    name: "Token1",
-    address: "",
-    symbol: "",
-    ChainId: "",
-    logoUri: "",
-  });
+  const [coin0, setCoin0] = useState(
+    {
+      name: "Ethereum",
+      address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      symbol: "WETH",
+      ChainId: "1",
+      logoUri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+    }
+    // {
+    //   name: "Ethereum",
+    //   address: "",
+    //   symbol: "",
+    //   ChainId: "",
+    //   logoUri: "",
+    // }
+   );
   const [coin1, setCoin1] = useState({
-    name: "Token2",
-    address: "",
-    symbol: "",
-    ChainId: "",
-    logoUri: "",
+    name: "1inch",
+    address: "0x111111111117dC0aa78b770fA6A738034120C302",
+    symbol: "1INCH",
+    ChainId: "1",
+    logoUri: "https://assets.coingecko.com/coins/images/13469/thumb/1inch-token.png?1608803028",
   });
   const [tradePrice, setTradePrice] = useState({
     token1totoken2: "0",
@@ -107,6 +117,11 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
   const [coinType, setCoinType] = useState();
   const navigation = useNavigation();
   console.log(state.wallet);
+  
+    useEffect(async() => {
+        let bal = await AsyncStorageLib.getItem("EthBalance");
+        setBalance(bal)
+    }, [FOCUSED]);
 
   const dispatch = useDispatch();
   const SaveTransaction = async (type, hash, walletType, chainType) => {
@@ -1399,7 +1414,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                     style={{ height: hp(3), width: wp(6) }}
                   />
                   <Text style={{ marginRight: wp(13) }}>
-                    {coin0.symbol ? coin0.symbol : "ETH"}
+                    {coin0.symbol ? coin0.symbol==="WETH"?"ETH":coin0.symbol : "ETH"}
                   </Text>
                 </TouchableOpacity>
 

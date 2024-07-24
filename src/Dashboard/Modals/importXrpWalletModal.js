@@ -251,15 +251,18 @@ const ImportXrpWalletModal = ({
             <TouchableOpacity
               onPress={async () => {
                 const text = await Clipboard.getStringAsync();
-                console.log(text)
-                setText(text)
+                // console.log(text)
+                // setText(text)
                 // setText('abc')
                 console.log(label)
                 if (label === 'mnemonic') {
-                  Paste(setMnemonic);
+                  // Paste(setMnemonic);
+                  setMnemonic(text)
+                  setText(text)
                 } else if (label === 'privateKey') {
-                  Paste(setPrivateKey);
-                  // setText(text)
+                  // Paste(setPrivateKey);
+                  setPrivateKey(text)
+                  setText(text)
                 }
               }}
             >

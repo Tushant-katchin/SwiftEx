@@ -465,7 +465,7 @@ const FOCUSED=useIsFocused();
               )}
 
               <View style={{
-    marginTop: active_forgot===false?hp(10):hp(25),
+    marginTop: active_forgot===false?Platform.OS==="android"?hp(10):hp(16):hp(25),
     height: hp(6),
     width: 400,
     backgroundColor: "#003166",

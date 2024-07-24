@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     borderRadius: hp(2.5),
     marginBottom: hp(1),
     alignItems: "center",
-    marginTop:hp(2),
+    marginTop:Platform.OS==="android"?hp(2):hp(4),
   },
   buttonText: {
     color: "#fff",

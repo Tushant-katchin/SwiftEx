@@ -233,7 +233,7 @@ const TokenList = ({
         >
           <View>
             <Text>{item.name}</Text>
-            <Text style={{ color: "gray", fontSize: 12 }}>0 {item.symbol}</Text>
+            <Text style={{ color: "gray", fontSize: 12 }}>0 {item.symbol==="WETH"?"ETH":item.symbol}</Text>
           </View>
           <Text>{item.chainId == 56 ? "bnb" : "eth"}</Text>
         </View>

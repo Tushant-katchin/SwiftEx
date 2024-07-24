@@ -224,18 +224,22 @@ const ImportEthereumModal = ({
               onPress={async () => {
                 // setText('abc')
                 const text = await Clipboard.getStringAsync();
-                console.log(text)
-                setText(text)
+                // console.log(text)
+                // setText(text)
                 // setText('abc')
                 console.log(label)
                 if (label === 'mnemonic') {
-                  Paste(setMnemonic);
+                  setMnemonic(text)
+                setText(text)
+                  // Paste(setMnemonic);
                 } else if (label === 'privateKey') {
-                  Paste(setPrivateKey);
-                  // setText(text)
+                  // Paste(setPrivateKey);
+                  setPrivateKey(text)
+                  setText(text)
                 } else if (label === 'JSON') {
-                  Paste(setJson);
-                  // setText(text)
+                  // Paste(setJson);
+                  setJson(text)
+                  setText(text)
                 }
               }}
             >
@@ -244,6 +248,7 @@ const ImportEthereumModal = ({
             <Text>Phrase</Text>
             <TextInput
               style={style.input}
+              value={text}
               onChangeText={(text) => {
                 if (label === "privateKey") {
                   setText(text);

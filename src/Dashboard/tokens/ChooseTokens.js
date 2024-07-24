@@ -109,7 +109,7 @@ const ChooseTokens = ({ setModalVisible }) => {
     >
    
 
-      <Icon type={'entypo'}  name='cross' color={"white"} size={24} style={style.crossIcon}  onPress={()=>{setModalVisible(false)}}/>
+      <Icon type={'entypo'}  name='cross' color={"white"} size={29} style={style.crossIcon}  onPress={()=>{setModalVisible(false)}}/>
       {/* <TokenHeader setVisible={setModalVisible} name={'Choose Wallet'}/> */}
       <Text style={{fontSize:19,color:"white",textAlign:"center"}}>Choose Wallet</Text>
 

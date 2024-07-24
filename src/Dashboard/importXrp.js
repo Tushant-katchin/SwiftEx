@@ -39,6 +39,8 @@ import { genUsrToken } from "./Auth/jwtHandler";
 import { utils } from "xrpl-accountlib";
 import { ethers } from "ethers";
 import { alert } from "./reusables/Toasts";
+import * as Clipboard from "expo-clipboard";
+
 const ImportXrp = (props) => {
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -170,29 +172,32 @@ const ImportXrp = (props) => {
         <View style={style.inputView}>
         <TouchableOpacity onPress={async ()=>{
            // setText('abc')
+           const text_copy = await Clipboard.getStringAsync();
            
             if (label === "privateKey") {
-              await Paste(setText)
-              .then((text)=>{
-                console.log(text)
-                setPrivateKey(text)
-              })
+              setText(text_copy)
+                setPrivateKey(text_copy)
+              // await Paste(setText)
+              // .then((text)=>{
+              //   console.log(text)
+              // })
 
             } else if (label === "mnemonic") {
+              setText(text_copy)
+              setMnemonic(text_copy)
               
-              Paste(setText)
-              .then((text)=>{
+              // Paste(setText)
+              // .then((text)=>{
 
-                setMnemonic(text)
-              })
+              // })
 
             } else if (label === "JSON") {
-              Paste(
-                setText
-              ).then((text)=>{
+              // Paste(
+                // setText
+              // ).then((text)=>{
 
                 setJson(text)
-              })
+              // })
 
 
             } else {
@@ -203,6 +208,7 @@ const ImportXrp = (props) => {
           </TouchableOpacity>
             <Text>Phrase</Text>
           <TextInput
+          value={text}
             style={style.input}
             onChangeText={(text) => {
               if (label === "mnemonic") {

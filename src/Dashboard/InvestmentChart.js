@@ -340,34 +340,7 @@ function InvestmentChart(setCurrentWallet) {
       }}>
  <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}>
-
-
-
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={bnbimage} style={styles.img} />
-          <View style={styles.ethrumView}>
-            <Text>BNB</Text>
-            <Text
-              style={{
-                color: "grey",
-                fontWeight: "bold",
-              }}
-            >
-              ${bnbPrice >= 0 ? bnbPrice : 300}
-            </Text>
-          </View>
-        </View>
-        <Text
-          style={{
-            color: "black",
-
-            fontWeight: "bold",
-          }}
-        >
-          {bnbBalance ? bnbBalance : 0} BNB
-        </Text>
-      </TouchableOpacity>
+      
 
       <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"ETH"})}}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -419,7 +392,7 @@ function InvestmentChart(setCurrentWallet) {
           {maticBalance ? maticBalance : 0} MAT
         </Text>
       </TouchableOpacity> */}
-      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"XRP"})}}>
+      {/* <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"XRP"})}}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Xrpimage} style={styles.img} />
           <View style={styles.ethrumView}>
@@ -443,7 +416,7 @@ function InvestmentChart(setCurrentWallet) {
         >
           {xrpBalance ? xrpBalance : 0} XRP
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"XLM"})}}>
       
@@ -470,6 +443,34 @@ function InvestmentChart(setCurrentWallet) {
           }}
         >
           {xmlBalance ? xmlBalance : 0.00} XLM
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}>
+
+
+
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={bnbimage} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text>BNB</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              ${bnbPrice >= 0 ? bnbPrice : 300}
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            color: "black",
+
+            fontWeight: "bold",
+          }}
+        >
+          {bnbBalance ? bnbBalance : 0} BNB
         </Text>
       </TouchableOpacity>
         </>

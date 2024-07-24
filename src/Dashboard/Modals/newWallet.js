@@ -80,7 +80,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
         }}
       >
         <View style={style.Body}>
-          <Icon type={'entypo'} name='cross' size={24} color={"white"} style={style.crossIcon} onPress={onCrossPress}/>
+          <Icon type={'entypo'} name='cross' size={29} color={"white"} style={style.crossIcon} onPress={onCrossPress}/>
           <View style={{alignSelf:"center",alignItems:"center"}}>
           <Animated.Image
             style={{
@@ -95,13 +95,14 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
           <Text style={style.welcomeText}>
             In the next page , you will see your secret phrase
           </Text>
-          <View
+          <TouchableOpacity
             style={{
               display: "flex",
               flexDirection: "row",
               marginTop: hp(5),
               alignItems: "center",
             }}
+            onPress={()=>{setCheckBox(!Checked)}}
           >
             <Text style={style.welcomeText2}>
               If i loose my private key , my funds will be lost
@@ -112,15 +113,16 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
                 onValueChange={() => setCheckBox(!Checked)}
               />
             </View>
-          </View>
+          </TouchableOpacity>
 
-          <View
+          <TouchableOpacity
             style={{
               display: "flex",
               flexDirection: "row",
               marginTop: hp(5),
               alignItems: "center",
             }}
+            onPress={() => setCheckBox2(!Checked2)}
           >
             <Text style={style.welcomeText2}>
               If i share my private key , my funds can get stolen
@@ -131,7 +133,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
                 onValueChange={() => setCheckBox2(!Checked2)}
               />
             </View>
-          </View>
+          </TouchableOpacity>
           {loading ? (
             <ActivityIndicator size="large" color="white" />
           ) : (

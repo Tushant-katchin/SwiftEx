@@ -154,7 +154,9 @@ const MyWallet = (props) => {
         <Text style={{width:wp("78%"),color:'gray'}}>{user ? user : "Main Wallet 1"}</Text>
       </View>
 
-      <View>
+      <TouchableOpacity onPress={() => {
+              setVisible(!visible);
+            }}>
         <View style={styles.mainContainer}>
           <TouchableOpacity
             style={styles.iconContainer}
@@ -171,7 +173,7 @@ const MyWallet = (props) => {
             }}/>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
       <Text style={styles.text}>
         If you lose access to this device,your funds will be lost,unless you
         back up!

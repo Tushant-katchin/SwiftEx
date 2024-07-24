@@ -107,6 +107,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         : state.wallet.address
     );
     alert("success", "Copied");
+    closeModal()
   };
 
   const saveTransactions = async (txData) => {

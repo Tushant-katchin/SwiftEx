@@ -82,7 +82,7 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
             type={"entypo"}
             name="cross"
             color={"white"}
-            size={24}
+            size={29}
             onPress={onCrossPress}
             style={style.crossIcon}
           />
@@ -100,14 +100,14 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
           <Text style={style.welcomeText}>
             In the next page , you will see your secret phrase
           </Text>
-          <View
+          <TouchableOpacity
             style={{
               display: "flex",
               flexDirection: "row",
               marginTop: hp(5),
               alignItems: "center",
             }}
-          >
+          onPress={()=>{setCheckBox(!Checked)}}>
             <Text style={style.welcomeText2}>
               If i loose my private key , my funds will be lost
             </Text>
@@ -117,15 +117,16 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
                 onValueChange={() => setCheckBox(!Checked)}
               />
             </View>
-          </View>
+          </TouchableOpacity>
 
-          <View
+          <TouchableOpacity
             style={{
               display: "flex",
               flexDirection: "row",
               marginTop: hp(5),
               alignItems: "center",
             }}
+            onPress={()=>{setCheckBox2(!Checked2)}}
           >
             <Text style={style.welcomeText2}>
               If i share my private key , my funds can get stolen
@@ -136,7 +137,7 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
                 onValueChange={() => setCheckBox2(!Checked2)}
               />
             </View>
-          </View>
+          </TouchableOpacity>
           {loading ? (
             <ActivityIndicator size="large" color="white" />
           ) : (

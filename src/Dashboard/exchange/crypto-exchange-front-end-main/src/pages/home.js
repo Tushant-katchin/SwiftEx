@@ -432,7 +432,7 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
       console.log(walletType);
       setWalletType(JSON.parse(walletType));
     });
-  }, []);
+  }, [Focused_screen]);
 
 const kyc=()=>{
   console.log("called");

@@ -46,6 +46,8 @@ import { useNavigation } from "@react-navigation/native";
 import Header from "../reusables/Header";
 import { RPC, WSS } from "../constants";
 import { alert } from "../reusables/Toasts";
+import Icon from "../../icon";
+import { delay } from "lodash";
 
 const xrpl = require("xrpl");
 
@@ -316,6 +318,9 @@ const AllWallets = (props) => {
                             // getBalance(state);
 
                             alert("success", "Wallet Selected " + item.name);
+                            delay(()=>{
+                              navigation.navigate("Home");
+                            },400)
                           } else {
                             alert(
                               "error",
@@ -411,13 +416,34 @@ const AllWallets = (props) => {
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
+                    justifyContent:"space-between"
 
                   }}
                 >
+                  <View style={{
+                    flexDirection: "row",
+                    alignItems: "center"
+                  }}>
                   <Image style={item.walletType === "Multi-coin" ? style.multiImgStyle : style.img} source={LeftContent} />
                   <Text style={{ marginHorizontal: wp(3) }} left={LeftContent}>
                     {item.name}
                   </Text>
+                  </View>
+                  {item.name===state.wallet.name&&
+                  <View style={{
+                    flexDirection: "row",
+                    alignItems: "center"
+                  }}>
+                  <Text style={{ textAlign:"center",marginRight:wp(2),backgroundColor:"green",padding:wp(0.9),color:"#fff",borderRadius:5 }} left={LeftContent}>
+                    Active
+                  </Text>
+                  <Icon
+                    name="check-decagram"
+                    type={"materialCommunity"}
+                    size={hp(3)}
+                    color="green"
+                  />
+                  </View>}
                 </View>
 
               </TouchableOpacity>

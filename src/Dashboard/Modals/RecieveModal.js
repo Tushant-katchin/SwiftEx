@@ -90,7 +90,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
             type={"entypo"}
             name="cross"
             color={"white"}
-            size={24}
+            size={29}
             style={style.crossIcon}
             onPress={() => {
               setModalVisible(false);

@@ -11,7 +11,7 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
-  Alert,StatusBar
+  Alert,StatusBar,Platform
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -105,7 +105,9 @@ const Wallet = ({ navigation }) => {
           />
         </View>
         </TouchableOpacity>
-        <View style={styles.Button}>
+       
+       <View style={{flexDirection:"row",justifyContent:"center",marginTop:hp(5),width:wp(80),alignSelf:"center",}}> 
+       <View style={styles.Button}>
           {/* <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
@@ -119,7 +121,7 @@ const Wallet = ({ navigation }) => {
                 setNewWalletModal(true);
               }}
             >
-              <Text style={{color:"white",fontWeight:"700"}}>Create wallet</Text>
+              <Text style={{color:"white",fontWeight:"700"}}>Create Wallet</Text>
             </TouchableOpacity>
           {/* </LinearGradient> */}
           {/* <Button
@@ -130,14 +132,31 @@ const Wallet = ({ navigation }) => {
             }}
           ></Button> */}
 
-          <TouchableOpacity
-            onPress={() => {
-              setVisible(true);
-            }}
-          >
-            <Text style={styles.Text}>Import Wallet</Text>
-          </TouchableOpacity>
         </View>
+        <View style={styles.Button}>
+            <TouchableOpacity
+            style={[styles.PresssableBtn,{marginLeft:wp(3)}]}
+              onPress={() => {
+                setVisible(true);
+              }}
+            >
+              <Text style={{color:"white",fontWeight:"700"}}>Import Wallet</Text>
+            </TouchableOpacity>
+        </View>
+        <View style={styles.Button}>
+            <TouchableOpacity
+            style={[styles.PresssableBtn,{marginLeft:wp(3)}]}
+              onPress={() => {
+                navigation.navigate("AllWallets")
+              }}
+            >
+              <Text style={{color:"white",fontWeight:"700"}}>Choose Wallet</Text>
+            </TouchableOpacity>
+        </View>
+        
+
+       </View>
+
       </View>
       <SelectWallet
         visible={visible}
@@ -218,10 +237,10 @@ const styles = StyleSheet.create({
   },
   PresssableBtn: {
     backgroundColor: "#4CA6EA",
-    padding: hp(1),
+    padding: hp(1.5),
     width: wp(30),
     alignSelf: "center",
-    paddingHorizontal: wp(3),
+    paddingHorizontal: Platform.OS==="android"?wp(3):wp(2),
     borderRadius: hp(0.8),
     marginBottom: hp(2),
     alignItems: "center",

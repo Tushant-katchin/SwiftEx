@@ -60,14 +60,14 @@ const GenerateWallet = (props) => {
         </Text>
         <Animated.Image style={style.logoStyle} source={darkBlue} />
 
-        <View style={style.textview}>
+        <TouchableOpacity style={style.textview} onPress={() => setCheckBox(!Checked)}>
           <Text style={style.txtStyle}>
             If I lose my private key , my funds will be lost
           </Text>
           <Switch value={Checked} onValueChange={() => setCheckBox(!Checked)} />
-        </View>
+        </TouchableOpacity>
 
-        <View style={style.textview}>
+        <TouchableOpacity style={style.textview} onPress={() => setCheckBox2(!Checked2)}>
           <Text style={style.txtStyle}>
             If I share my private key , my funds can get stolen
           </Text>
@@ -75,7 +75,7 @@ const GenerateWallet = (props) => {
             value={Checked2}
             onValueChange={() => setCheckBox2(!Checked2)}
           />
-        </View>
+        </TouchableOpacity>
         {loading ? (
           <ActivityIndicator size="large" color="white" />
         ) : (

@@ -234,7 +234,7 @@ const Settings = (props) => {
           size={hp(2)}
           color="black"
         />
-        <Text style={styles.text}>Wallets</Text>
+        <Text style={styles.text}>Choose Wallet</Text>
       </TouchableOpacity>
       <View style={styles.bottomBorder}>
         <TouchableOpacity
