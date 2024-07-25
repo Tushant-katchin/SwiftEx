@@ -89,7 +89,6 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     setModalVisible2(true);
     setModalVisible3(false);
   };
-
   const openModal3= async()=>{
       const walletType = await AsyncStorageLib.getItem("walletType");
       console.log(JSON.parse(walletType));
@@ -413,12 +412,12 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   }, [state.wallet.name]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#fff",marginTop:0 }}>
+    <SafeAreaView style={{ backgroundColor: state.THEME.THEME===false?"#fff":"black",marginTop:0 }}>
     <View>
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer,{ backgroundColor: state.THEME.THEME===false?"#fff":"black"}]}>
       
         <Pressable onPress={() => alert("Notifications will be added soon")}>
-          <Icon name="bell" type={"fontisto"} size={24} />
+          <Icon name="bell" type={"fontisto"} size={24} color={ state.THEME.THEME===false?"black":"#fff"} />
         </Pressable>
         <FaucetModal showModal={showModal} setShowModal={setShowModal} />
 
@@ -435,16 +434,16 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         </TouchableOpacity> */}
         {/* <Pressable style={{alignItems:"center"}} onPress={() => openExtended()}> */}
         <TouchableOpacity style={{alignItems:"center"}} onPress={() => openExtended()}>
-          <Icon name="sliders" type={"FAIcon"} size={24} />
+          <Icon name="sliders" type={"FAIcon"} size={24} color={ state.THEME.THEME===false?"black":"#fff"} />
         </TouchableOpacity>
       </View>
       <View style={{ marginVertical: hp(2) }}>
-        <Text style={styles.dollartxt}>
+        <Text style={[styles.dollartxt,{color:state.THEME.THEME===false?"black":"#fff"}]}>
           $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>
         <Text
           style={{
-            color: "black",
+            color:state.THEME.THEME===false?"black":"#fff",
             textAlign: "center",
             fontWeight: "400",
             fontStyle: "italic",
@@ -517,14 +516,14 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       />
 
       <TouchableOpacity
-        style={styles.iconmainContainer}
+        style={[styles.iconmainContainer,{backgroundColor:state.THEME.THEME===false?"#fff":"black",borderColor:"#145DA0",borderWidth:1}]}
         onPress={() => {
           navigation.navigate("Market");
         }}
       >
         <View style={styles.iconTextContainer}>
-          <Icon name="graph" type={"simpleLine"} size={hp(3)} />
-          <Text style={{ marginHorizontal: hp(1), color: "black" }}>
+          <Icon name="graph" type={"simpleLine"} size={hp(3)} color={state.THEME.THEME===false?"black":"#fff"}/>
+          <Text style={{ marginHorizontal: hp(1), color:state.THEME.THEME===false?"black":"#fff" }}>
             Market insights
           </Text>
         </View>

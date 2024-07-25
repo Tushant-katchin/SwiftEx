@@ -91,10 +91,10 @@ try{
     <View
       style={{
         height: hp(100),
-        backgroundColor: "white",
+        backgroundColor: state.THEME.THEME===false?"#fff":"black",
       }}
     >
-      <View style={styles.footer}>
+      <View style={[styles.footer,{backgroundColor: state.THEME.THEME===false?"#fff":"black"}]}>
         <View elevation={5} style={{ height: hp(100) }}>
           <ScrollView
             alwaysBounceVertical={true}
@@ -155,12 +155,12 @@ try{
                       <Image source={LeftContent} style={styles.img} />
                       <View style={{ marginHorizontal: wp(3) }}>
                         <View style={{flexDirection:"row",width:"70%",justifyContent:"space-between"}}>
-                          <Text>{item.type}</Text>
+                          <Text style={{color: state.THEME.THEME===false?"black":"#fff"}}>{item.type}</Text>
                           {item.type==="Send"?Platform.OS==="android"?<View style={{transform:[{rotate:'46deg'}]}}><Icon name="arrow-up" size={23} color="red"/></View>:<View style={{transform:[{rotate:'46deg'}]}}><Icon name="arrow-up" size={23} color="red"/></View>:<></>}
                           {item.type==="Recieved"?Platform.OS==="android"?<View style={{transform:[{rotate:'230deg'}],marginLeft:"91%"}}><Icon name="arrow-up" size={23} color="green"/></View>:<View style={{transform:[{rotate:'230deg'}],marginLeft:"91%"}}><Icon name="arrow-up" size={23} color="green"/></View>:<></>}
                           {item.type==="Swap"? <Icon type={"fa"} name="exchange" size={23} color="green" />:<></>}                
                         </View>
-                        <Text style={styles.text} numberOfLines={1}>
+                        <Text style={[styles.text,{color: state.THEME.THEME===false?"black":"#fff"}]} numberOfLines={1}>
                           {item.hash}
                         </Text>
                       </View>
@@ -171,7 +171,7 @@ try{
             ) : (
               <Text
                 style={{
-                  color: "black",
+                  color: state.THEME.THEME===false?"black":"#fff",
                   textAlign: "center",
                   fontSize: 19,
                   marginTop: hp(40),

@@ -66,12 +66,12 @@ const MyPrivateKey = (props) => {
   const RenderItem = ({ item, index }) => {
     console.log("-------------", item);
     return (
-      <Pressable style={style.pressable} onPress={()=>{
+      <Pressable style={[style.pressable,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]} onPress={()=>{
         console.log("Hello World")
       }}>
-        <Text style={style.pressText}>{index + 1}</Text>
+        <Text style={[style.pressText,{color:state.THEME.THEME===false?"black":"#fff"}]}>{index + 1}</Text>
 
-        <Text style={style.itemText}>{item}</Text>
+        <Text style={[style.itemText,{color:state.THEME.THEME===false?"black":"#fff"}]}>{item}</Text>
       </Pressable>
     );
   };
@@ -92,7 +92,7 @@ const MyPrivateKey = (props) => {
     }
 }
   return (
-    <View style={{ backgroundColor: "white", height: hp(100) }}>
+    <View style={{ backgroundColor:state.THEME.THEME===false?"#fff":"black", height: hp(100) }}>
       <Animated.View // Special animatable View
         style={{ opacity: fadeAnim }}
       >
@@ -106,13 +106,13 @@ const MyPrivateKey = (props) => {
           }}
           source={title_icon}
         /> */}
-          <Text style={style.backupText}>Backup Mnemonic Phrase</Text>
-          <Text style={style.welcomeText1}>
+          <Text style={[style.backupText,{color:state.THEME.THEME===false?"black":"#fff"}]}>Backup Mnemonic Phrase</Text>
+          <Text style={[style.welcomeText1,{color:state.THEME.THEME===false?"black":"#fff"}]}>
             Please select the Mnemonic in order to ensure the backup is
             correct.
           </Text>
         </View>
-        <View style={{ marginTop: hp(3) }}>
+        <View style={{ marginTop: hp(3),backgroundColor:state.THEME.THEME===false?"#fff":"black" }}>
          {mnemonic.length>0?
           
            <FlatList
@@ -142,11 +142,11 @@ const MyPrivateKey = (props) => {
           >Copy</Button>
         </View>
 
-        <Text style={{ color: "black", marginLeft: wp(4.7), }}>
+        <Text style={{ color:state.THEME.THEME===false?"black":"#fff", marginLeft: wp(4.7), }}>
             Stellar Private Key
           </Text>
         <View style={{ marginLeft: wp(1),flexDirection:"row",justifyContent:"space-around",alignItems:'center',marginTop:10}}>
-        <Text style={{ color: "black",width:wp(70) }}>
+        <Text style={{ color:state.THEME.THEME===false?"black":"#fff",width:wp(70) }}>
             {STTELLAR_KEY}
           </Text>
           <Button 
@@ -159,14 +159,14 @@ const MyPrivateKey = (props) => {
 
         
         <View style={style.dotView}>
-          <Icon name="dot-single" type={"entypo"} size={20} />
-          <Text style={{ color: "black" }}>
+          <Icon name="dot-single" type={"entypo"} size={20} color={state.THEME.THEME===false?"black":"#fff"}/>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>
             Keep your mnemonic in a safe place isolated from any network
           </Text>
         </View>
         <View style={style.dotView1}>
-          <Icon name="dot-single" type={"entypo"} size={20} />
-          <Text style={style.welcomeText}>
+          <Icon name="dot-single" type={"entypo"} size={20} color={state.THEME.THEME===false?"black":"#fff"}/>
+          <Text style={[style.welcomeText,{color:state.THEME.THEME===false?"black":"#fff"}]}>
             Don't share and store mnemonic with a network, such as email,photo,
             social apps, and so on
           </Text>

@@ -68,10 +68,10 @@ const Nfts = () => {
 
   return (
     <Animated.View
-      style={styles.mainContainer}>
+      style={[styles.mainContainer,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
        
 <Image source={monkey} style={styles.img}/>
-<Text style={styles.text}>Collectibles will appear here</Text>
+<Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Collectibles will appear here</Text>
 <TouchableOpacity style={styles.btnContainer}>
   <Text style={styles.btnText}>Receive</Text>
 </TouchableOpacity>

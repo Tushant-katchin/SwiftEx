@@ -53,7 +53,7 @@ const MyHeader = ({ title, changeState, state, extended, setExtended, title1 }) 
   return (
     <Animated.View >
       <View style={{
-        backgroundColor: "#4CA6EA",
+        backgroundColor: state.THEME.THEME===false?"#4CA6EA":"black",
         justifyContent: "space-between",
         alignItems: "center",
         alignSelf: "center",
@@ -61,6 +61,7 @@ const MyHeader = ({ title, changeState, state, extended, setExtended, title1 }) 
         paddingVertical: hp(2),
         width: wp(100),
         // paddingHorizontal: wp(2),
+        height:hp(9.5)
       }} >
         <Button
           color="#fff"

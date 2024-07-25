@@ -11,6 +11,7 @@ import { CommonActions, useNavigation } from "@react-navigation/native";
 import darkBlue from "../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { width } from "@mui/system";
+import { useSelector } from "react-redux";
 
 export const ExchangeHeader = (props) => {
   const navigation = useNavigation();
@@ -58,7 +59,7 @@ export const ExchangeHeader = (props) => {
 export const WalletHeader = (props) => {
   const { title, title1, IconName, IconType } = props;
   const navigation = useNavigation();
-
+  const state=useSelector((state)=>state);
   return (
     // <View style={styles.walletContainer} onPress={() => {
     //   // navigation.goBack();
@@ -81,7 +82,7 @@ export const WalletHeader = (props) => {
     //    {Platform.OS==='ios'?<Image source={darkBlue} style={styles.logoImg_ios}/>:<Image source={darkBlue} style={styles.logoImg}/>}
     //   </TouchableOpacity>
     // </View>
-    <View style={styles.header}>
+    <View style={[styles.header,{backgroundColor:state.THEME.THEME===false? "#4CA6EA":"black",borderWidth:0.5,borderBottomColor:state.THEME.THEME===false? "#4CA6EA":"gray"}]}>
     <TouchableOpacity style={styles.backButton} onPress={()=>{navigation.goBack()}}>
     <Icon name={"left"} type={"antDesign"} size={29} color={"white"}/>
     </TouchableOpacity>

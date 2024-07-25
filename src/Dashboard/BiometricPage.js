@@ -8,8 +8,10 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StyleSheet,TouchableOpacity,Image } from "react-native"
 import Icon from "../icon";
 import darkBlue from "../../assets/Dark-Blue.png";
+import { useSelector } from "react-redux"
 export default function BiometricPage()
 {
+    const state=useSelector((state)=>state);
     const [Checked, setCheckBox] = useState(false)
     const navigation=useNavigation();
     function checkBiometric(Checked){
@@ -34,8 +36,8 @@ export default function BiometricPage()
   
 
     return(
-        <View style={{backgroundColor:'white', height:heightPercentageToDP(100)}}>
-<View style={styles.header}>
+        <View style={{backgroundColor:state.THEME.THEME===false?"#fff":"black", height:heightPercentageToDP(100)}}>
+<View style={[styles.header,{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black"}]}>
     <TouchableOpacity style={styles.backButton} onPress={()=>{navigation.goBack()}}>
     <Icon name={"left"} type={"antDesign"} size={29} color={"white"}/>
     </TouchableOpacity>
@@ -48,7 +50,7 @@ export default function BiometricPage()
             <View style={{  display:'flex', flexDirection:'row', justifyContent:'space-evenly', marginTop:50}}>
              <View>
             {/* <Text style={{fontSize:17}}>Enable Biometric Authentication</Text> */}
-    {Platform.OS==='ios'?<Text style={{fontSize:17}}>Enable Face ID Authentication</Text>:<Text style={{fontSize:17}}>Enable Biometric Authentication</Text>}
+    {Platform.OS==='ios'?<Text style={{fontSize:17,color:state.THEME.THEME===false?"black":"#fff"}}>Enable Face ID Authentication</Text>:<Text style={{fontSize:17,color:state.THEME.THEME===false?"black":"#fff"}}>Enable Biometric Authentication</Text>}
             </View>   
             <Switch
               value={Checked}
@@ -69,6 +71,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderColor:"gray",
+    borderWidth:0.5
   },
   backButton: {
     paddingHorizontal: 10,

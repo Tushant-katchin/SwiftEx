@@ -311,9 +311,9 @@ const Home2 = ({ navigation }) => {
     <TabBar
       {...props}
       indicatorStyle={{ backgroundColor: "#4CA6EA" }}
-      style={{ backgroundColor: "#fff" }}
+      style={ {backgroundColor:state.THEME.THEME===false?"#fff":"black"} }
       activeColor={"#4CA6EA"}
-      inactiveColor={"black"}
+      inactiveColor={state.THEME.THEME===false?"black":"#fff"}
       pressColor={"black"}
 
     />

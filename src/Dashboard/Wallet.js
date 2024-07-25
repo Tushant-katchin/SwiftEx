@@ -38,7 +38,7 @@ const Wallet = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [newWalletModal, setNewWalletModal] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
+  const state=useSelector((state)=>state);
   useEffect(()=>{
       setNewWalletModal(false);
   },[foucuse])
@@ -56,7 +56,7 @@ const Wallet = ({ navigation }) => {
         style={{
           height: hp(95),
           marginTop: "auto",
-          backgroundColor: "white",
+          backgroundColor: state.THEME.THEME===false?"#fff":"black",
           borderRadius: 20,
         }}
       >
@@ -79,10 +79,10 @@ const Wallet = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 20, color: "black",fontWeight:"700"}}>
+          <Text style={{ fontSize: 20, color: state.THEME.THEME===false?"black":"#fff",fontWeight:"700"}}>
             Private and secure
           </Text>
-          <Text style={{ color: "black",fontWeight:"400" }}>
+          <Text style={{ color: state.THEME.THEME===false?"black":"#fff",fontWeight:"400" }}>
             Private Keys never leave your device
           </Text>
         </View>

@@ -288,7 +288,7 @@ const transformedData = resp.map(item => ({
 
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor:state.THEME.THEME===false?"#fff":"black"}}>
     {/* // <ScrollView
     //   contentContainerStyle={{ backgroundColor: "white"}}
     // > */}
@@ -415,7 +415,7 @@ const transformedData = resp.map(item => ({
         contentInset={{ top: 10, bottom: 10 }}
       /> */}
 
-{load===false?<ActivityIndicator color={"green"} size={"large"} style={{marginTop:hp(13),marginLeft:-40}}/>:
+{load===false?<ActivityIndicator color={state.THEME.THEME===false?"green":"#fff"} size={"large"} style={{marginTop:hp(13),marginLeft:110}}/>:
     //   <LineChart
     //   style={{ flex: 1 }}
     //   data={Data ? Data : data}
@@ -431,18 +431,36 @@ const transformedData = resp.map(item => ({
                         xDomain={{ min: new Date(Data[0].x).getTime(), max: new Date(Data[Data.length - 1].x).getTime() }}
                         yDomain={{ min: Math.min(...Data.map(d => d.y)), max: Math.max(...Data.map(d => d.y)) }}
                     >
-                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2) } }} />
-                        <HorizontalAxis tickCount={10} theme={{
+                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2) ,label: { color:state.THEME.THEME===false?"black":"#fff" }} }} />
+                        <HorizontalAxis  tickCount={10} theme={{
                           labels: {
                             formatter: (v) => {
                               const date = new Date(v);
                               return `${date.getHours()}:${date.getMinutes()}`;
                             },
+                            label: { color:state.THEME.THEME===false?"black":"#fff" }
                           },
                         }} />
                         <Area theme={{ gradient: { from: { color: '#44bd32' }, to: { color: '#44bd32', opacity: 0.2 } } }} />
                         <Line
-                            tooltipComponent={<Tooltip />}
+                            tooltipComponent={<Tooltip theme={{ label: {
+                              color: 'white',
+                              fontSize: 12,
+                              fontWeight: 700,
+                              textAnchor: 'middle',
+                              opacity: 1,
+                              dx: 0,
+                              dy: 16.5,
+                            },
+                            shape: {
+                              width: 70,
+                              height: 20,
+                              dx: 0,
+                              dy: 20,
+                              rx: 4,
+                              color: 'black',
+                            },
+                            }}/>}
                             theme={{ stroke: { color: '#44bd32', width: 5 }, scatter: { default: { width: 8, height: 8, rx: 4, color: '#44ad32' }, selected: { color: 'red' } } }}
                         />
                     </Chart>
@@ -464,45 +482,45 @@ const transformedData = resp.map(item => ({
         <Grid />
       </AreaChart> */}
     <View style={{ marginTop: hp(9) }}>
-    <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
-          <Text> Last 24h :</Text>
+    <View style={[styles.iconText,{backgroundColor:state.THEME.THEME===false?"#f2f2f2":"black"}]}>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}> Last 24h :</Text>
           <View style={styles.arrowText}>
-            <Text style={styles.heading}>
+            <Text style={[styles.heading,{color:state.THEME.THEME===false?"black":"#fff"}]}>
               {props?.route?.params?.data?.price_change_percentage_24h}%
             </Text>
-            <Icon name="arrow-up-right" type={"feather"} size={20} />
+            <Icon name="arrow-up-right" type={"feather"} size={20}  color={state.THEME.THEME===false?"black":"#fff"} />
           </View>
         </View>
         <View style={[styles.iconText]}>
-          <Text>USD :</Text>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>USD :</Text>
           <View style={styles.arrowText}>
-            <Text style={styles.heading}>$ {props?.route?.params?.data?.current_price}</Text>
-            <Icon name="arrow-up-right" type={"feather"} size={20} />
+            <Text style={[styles.heading,{color:state.THEME.THEME===false?"black":"#fff"}]}>$ {props?.route?.params?.data?.current_price}</Text>
+            <Icon name="arrow-up-right" type={"feather"} size={20} color={state.THEME.THEME===false?"black":"#fff"} />
           </View>
         </View>
 
-        <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
-          <Text>Market Cap : </Text>
-          <Text style={styles.heading}> ${props?.route?.params?.data?.market_cap}</Text>
+        <View style={[styles.iconText,{backgroundColor:state.THEME.THEME===false?"#f2f2f2":"black"}]}>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>Market Cap : </Text>
+          <Text style={[styles.heading,{color:state.THEME.THEME===false?"black":"#fff"}]}> ${props?.route?.params?.data?.market_cap}</Text>
         </View>
 
         <View style={[styles.iconText]}>
-          <Text>Total Supply :</Text>
-          <Text style={styles.heading}>${props?.route?.params?.data?.total_supply}</Text>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>Total Supply :</Text>
+          <Text style={[styles.heading,{color:state.THEME.THEME===false?"black":"#fff"}]}>${props?.route?.params?.data?.total_supply}</Text>
         </View>
 
-        <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
-          <Text> 24H high :</Text>
-          <Text style={styles.heading}>${props?.route?.params?.data?.high_24h} </Text>
+        <View style={[styles.iconText,{backgroundColor:state.THEME.THEME===false?"#f2f2f2":"black"}]}>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}> 24H high :</Text>
+          <Text style={[styles.heading,{color:state.THEME.THEME===false?"black":"#fff"}]}>${props?.route?.params?.data?.high_24h} </Text>
         </View>
         <View style={[styles.iconText]}>
 
-          <Text> 24H low :</Text>
-          <Text style={styles.heading}>${props?.route?.params?.data?.low_24h}</Text>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}> 24H low :</Text>
+          <Text style={[styles.heading,{color:state.THEME.THEME===false?"black":"#fff"}]}>${props?.route?.params?.data?.low_24h}</Text>
         </View>
-        <View style={[styles.iconText,{backgroundColor:"#f2f2f2"}]}>
-          <Text> All Time High :</Text>
-          <Text style={styles.heading}>${props?.route?.params?.data?.ath}</Text>
+        <View style={[styles.iconText,{backgroundColor:state.THEME.THEME===false?"#f2f2f2":"black"}]}>
+          <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}> All Time High :</Text>
+          <Text style={[styles.heading,{color:state.THEME.THEME===false?"black":"#fff"}]}>${props?.route?.params?.data?.ath}</Text>
         </View>
       </View>
 

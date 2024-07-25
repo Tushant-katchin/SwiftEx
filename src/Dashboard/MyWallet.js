@@ -147,9 +147,9 @@ const MyWallet = (props) => {
   
 
   return (
-    <View style={styles.mainView}>
-      <View style={styles.labelInputContainer}>
-        <Text style={styles.label}>Name</Text>
+    <View style={[styles.mainView,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+      <View style={[styles.labelInputContainer,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+        <Text style={[styles.label,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>Name</Text>
       
         <Text style={{width:wp("78%"),color:'gray'}}>{user ? user : "Main Wallet 1"}</Text>
       </View>
@@ -164,17 +164,17 @@ const MyWallet = (props) => {
               setVisible(!visible);
             }}
           >
-            <Icon name="document-text-sharp" type={"ionicon"} size={20} />
-            <Text style={styles.secretText}>Show Secret Phrase</Text>
+            <Icon name="document-text-sharp" type={"ionicon"} size={20} color={state.THEME.THEME===false?"black":"#fff"} />
+            <Text style={[styles.secretText,{color:state.THEME.THEME===false?"black":"#fff"}]}>Show Secret Phrase</Text>
           </TouchableOpacity>
           <View style={styles.rightIcon}>
-            <Icon name="right" type={"antDesign"} color={"#DADADA"} size={20} onPress={() => {
+            <Icon name="right" type={"antDesign"} color={state.THEME.THEME===false?"black":"#fff"} size={20} onPress={() => {
               setVisible(!visible);
             }}/>
           </View>
         </View>
       </TouchableOpacity>
-      <Text style={styles.text}>
+      <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>
         If you lose access to this device,your funds will be lost,unless you
         back up!
       </Text>

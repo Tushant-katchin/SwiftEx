@@ -25,6 +25,8 @@ import { setPlatform } from "../components/Redux/actions/auth";
 import { useBiometrics } from "../biometrics/biometric";
 import { useFocusEffect } from "@react-navigation/native";
 import { alert } from "./reusables/Toasts";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { SET_APP_THEME } from "../components/Redux/actions/type";
 
 const Passcode = (props) => {
   const [pin, setPin] = useState();
@@ -60,6 +62,11 @@ const Passcode = (props) => {
     }, [])
   );
   useEffect(async () => {
+    const Checked=await AsyncStorageLib.getItem("APP_THEME");
+    dispatch({
+      type: SET_APP_THEME,
+      payload: { THEME: Checked===null?false:Checked==="false"?false:true},
+    });
     const Check = await AsyncStorage.getItem("pin");
     const biometric = await AsyncStorage.getItem("Biometric");
     if (biometric === "SET") {
@@ -104,7 +111,10 @@ const Passcode = (props) => {
         } else {
           
           pinView.current.clearAll();
-          alert("error","password did not match. please try again");
+          setTimeout(()=>{
+            alert("error","PIN did not match. Please try again.");
+           },200)
+          // alert("error","password ");
           setStatus("");
         }
       } else if (status === "pinset") {
@@ -125,7 +135,9 @@ const Passcode = (props) => {
           }
         } else {
           pinView.current.clearAll();
+         setTimeout(()=>{
           alert("error","Incorrect pin try again.");
+         },100)
         }
       } else {
         setPin(enteredPin);

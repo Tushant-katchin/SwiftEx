@@ -318,6 +318,7 @@ function InvestmentChart(setCurrentWallet) {
 
   return (
     <ScrollView
+     style={{backgroundColor:state.THEME.THEME===false?"#fff":"black"}}
       refreshControl={
         <RefreshControl
           refreshing={pull}
@@ -338,7 +339,7 @@ function InvestmentChart(setCurrentWallet) {
         <TouchableOpacity style={styles.refresh} onPress={() => {
         getAllBalances(state, dispatch)
       }}>
- <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color="black" style={{ marginLeft: 1 }} />
+ <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color={state.THEME.THEME===false?"black":"#fff"} style={{ marginLeft: 1 }} />
       </TouchableOpacity>
       
 
@@ -346,7 +347,7 @@ function InvestmentChart(setCurrentWallet) {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Etherimage} style={styles.img} />
           <View style={styles.ethrumView}>
-            <Text>Ethereum</Text>
+            <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>Ethereum</Text>
             <Text
               style={{
                 color: "grey",
@@ -360,7 +361,7 @@ function InvestmentChart(setCurrentWallet) {
 
         <Text
           style={{
-            color: "black",
+            color:state.THEME.THEME===false?"black":"#fff",
             fontWeight: "bold",
           }}
         >
@@ -424,7 +425,7 @@ function InvestmentChart(setCurrentWallet) {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={stellar} style={styles.img} />
           <View style={styles.ethrumView}>
-            <Text>XLM</Text>
+            <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>XLM</Text>
             <Text
               style={{
                 color: "grey",
@@ -438,7 +439,7 @@ function InvestmentChart(setCurrentWallet) {
 
         <Text
           style={{
-            color: "black",
+            color:state.THEME.THEME===false?"black":"#fff",
             fontWeight: "bold",
           }}
         >
@@ -452,7 +453,7 @@ function InvestmentChart(setCurrentWallet) {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={bnbimage} style={styles.img} />
           <View style={styles.ethrumView}>
-            <Text>BNB</Text>
+            <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>BNB</Text>
             <Text
               style={{
                 color: "grey",
@@ -465,7 +466,7 @@ function InvestmentChart(setCurrentWallet) {
         </View>
         <Text
           style={{
-            color: "black",
+            color:state.THEME.THEME===false?"black":"#fff",
 
             fontWeight: "bold",
           }}

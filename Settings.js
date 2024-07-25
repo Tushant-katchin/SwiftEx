@@ -196,7 +196,7 @@
 // });
 
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -209,19 +209,28 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ToggleSwitch from "toggle-switch-react-native";
 import { Switch } from "react-native-paper";
 import { REACT_APP_LOCAL_TOKEN } from "./src/Dashboard/exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import Icon from "./src/icon";
+import { SET_APP_THEME } from "./src/components/Redux/actions/type";
+import { useIsFocused } from "@react-navigation/native";
 const Settings = (props) => {
+  const focused=useIsFocused();
   const [Checked, setCheckBox] = useState(false);
   const [PUSH_NOTIFICATION,setPUSH_NOTIFICATION]=useState(false)
   const dispatch = useDispatch();
+  const state=useSelector((state)=>state);
+  useEffect(async()=>{
+    const Checked=await AsyncStorageLib.getItem("APP_THEME");
+    setCheckBox(Checked===null?false:Checked==="false"?false:true);
+    await AsyncStorageLib.setItem("APP_THEME",JSON.stringify(state.THEME.THEME));
+  },[focused,state.THEME.THEME,Checked])
   return (
     <SafeAreaView>
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.setHeading}>Settings</Text>
+    <ScrollView contentContainerStyle={[styles.container,{backgroundColor:state.THEME.THEME===false?"white":"black"}]}>
+      <Text style={[styles.setHeading,{color:state.THEME.THEME===false?"black":"#fff"}]}>Settings</Text>
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate("AllWallets");
@@ -232,9 +241,9 @@ const Settings = (props) => {
           name="wallet-outline"
           type={"materialCommunity"}
           size={hp(2)}
-          color="black"
+          color={state.THEME.THEME===false?"black":"#fff"}
         />
-        <Text style={styles.text}>Choose Wallet</Text>
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Choose Wallet</Text>
       </TouchableOpacity>
       <View style={styles.bottomBorder}>
         <TouchableOpacity
@@ -244,8 +253,8 @@ const Settings = (props) => {
           style={styles.accountBox1}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon name="moon-o" type={"fa"} size={hp(2)} color="black" />
-            <Text style={styles.text}>Dark Mode</Text>
+            <Icon name="moon-o" type={"fa"} size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />
+            <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Dark Mode</Text>
           </View>
           <View style={Platform.OS == "android" ? { paddingRight: wp(2) } : { paddingRight: wp(3.5) }}>
             <ToggleSwitch
@@ -254,8 +263,13 @@ const Settings = (props) => {
               offColor="gray"
               labelStyle={{ color: "black", fontWeight: "900" }}
               size="small"
-              onToggle={() => {
+              onToggle={async() => {
                 setCheckBox(!Checked);
+                dispatch({
+                  type: SET_APP_THEME,
+                  payload: { THEME: Checked===false?true:false},
+                });
+                
               }}
               // onToggle={(isOff) => console.log("changed to : ", isOff)}
             />
@@ -285,8 +299,8 @@ const Settings = (props) => {
           }
         }}
       >
-        <Icon type={"fa"} name="exchange" size={hp(2)} color="black" />
-        <Text style={styles.text}>Exchange</Text>
+        <Icon type={"fa"} name="exchange" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Exchange</Text>
       </TouchableOpacity>
       {/* <TouchableOpacity
         style={styles.accountBox}
@@ -301,7 +315,7 @@ const Settings = (props) => {
           size={hp(2)}
           color="black"
         />
-        <Text style={styles.text}>Contacts</Text>
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Contacts</Text>
       </TouchableOpacity> */}
       {/* <TouchableOpacity
         style={styles.accountBox}
@@ -310,8 +324,8 @@ const Settings = (props) => {
           props.navigation.navigate("Biometric");
         }}
       >
-        <Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" />
-        <Text style={styles.text}>Biometric Authenticaton</Text>
+        <Icon type={"ionicon"} name="finger-print" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Biometric Authenticaton</Text>
       </TouchableOpacity> */}
 
       <TouchableOpacity
@@ -321,8 +335,8 @@ const Settings = (props) => {
           //alert("coming soon");
         }}
       >
-        <Icon type={"fa"} name="dollar" size={hp(2)} color="black" />
-        <Text style={styles.text}>Transactions</Text>
+        <Icon type={"fa"} name="dollar" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Transactions</Text>
       </TouchableOpacity>
 
 <TouchableOpacity
@@ -332,9 +346,9 @@ const Settings = (props) => {
           props.navigation.navigate("Biometric");
         }}
       >
-        {/* <Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" /> */}
-        {Platform.OS === 'android' ?<Icon type={"ionicon"} name="finger-print" size={hp(2)} color="black" />: <Icon type={"material"} name="lock-outline" size={hp(2)} color="black" />}
-        {Platform.OS === 'android' ? <Text style={styles.text}>Biometric Authenticaton</Text>:<Text style={styles.text}>Authenticaton</Text>}
+        {/* <Icon type={"ionicon"} name="finger-print" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} /> */}
+        {Platform.OS === 'android' ?<Icon type={"ionicon"} name="finger-print" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />: <Icon type={"material"} name="lock-outline" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />}
+        {Platform.OS === 'android' ? <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Biometric Authenticaton</Text>:<Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Authenticaton</Text>}
       </TouchableOpacity>
 
       <View style={styles.bottomBorder}></View>
@@ -346,8 +360,8 @@ const Settings = (props) => {
           alert("Coming soon.")
         }}
       >
-        <Icon type={"antDesign"} name="setting" size={hp(2)} color="black" />
-        <Text style={styles.text}>Preference</Text>
+        <Icon type={"antDesign"} name="setting" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Preference</Text>
       </TouchableOpacity>
       {/* <TouchableOpacity
         style={styles.accountBox}
@@ -362,7 +376,7 @@ const Settings = (props) => {
           size={hp(2)}
           color="black"
         />
-        <Text style={styles.text}>Security</Text>
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Security</Text>
       </TouchableOpacity> */}
       <View style={styles.bottomBorder}>
         {/* <TouchableOpacity
@@ -378,15 +392,15 @@ const Settings = (props) => {
             size={hp(2)}
             color="black"
           />
-          <Text style={styles.text}>Push Notification</Text>
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Push Notification</Text>
         </TouchableOpacity> */}
 
         {/* NEW CODE FOR PUSH NOTIFICATION */}
      
          <View style={styles.accountBox1}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon type={"materialCommunity"} name="bell-outline" size={hp(2)} color="black"/>
-            <Text style={styles.text}>Push Notification</Text>
+          <Icon type={"materialCommunity"} name="bell-outline" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"}/>
+            <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Push Notification</Text>
           </View>
           <View style={Platform.OS == "android" ? { paddingRight: wp(2) } : { paddingRight: wp(3.5) }}>
             <ToggleSwitch
@@ -413,8 +427,8 @@ const Settings = (props) => {
           alert("Coming soon.")
         }}
       >
-        <Icon type={"feather"} name="help-circle" size={hp(2)} color="black" />
-        <Text style={styles.text}>Help Center</Text>
+        <Icon type={"feather"} name="help-circle" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />
+        <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Help Center</Text>
       </TouchableOpacity>
       
       <TouchableOpacity
@@ -430,8 +444,8 @@ const Settings = (props) => {
       })*/
           }}
         >
-          <Icon name="chevron-right" size={hp(2)} color="black" />
-          <Text style={styles.text}>Log Out</Text>
+          <Icon name="chevron-right" size={hp(2)} color={state.THEME.THEME===false?"black":"#fff"} />
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Log Out</Text>
         </TouchableOpacity>
     </ScrollView>
     </SafeAreaView>

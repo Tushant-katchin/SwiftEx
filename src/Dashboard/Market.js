@@ -20,8 +20,10 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "../icon";
 import { alert } from "./reusables/Toasts";
 import { REACT_APP_HOST } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
+import { useSelector } from "react-redux";
 
 const Market = (props) => {
+  const state=useSelector((state)=>state);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState();
   const [trades, setTrades] = useState();
@@ -97,7 +99,7 @@ const requestOptions = {
 
 
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View style={{ backgroundColor: state.THEME.THEME===false?"#fff":"black" }}>
     {Platform.OS === 'ios' &&  <StatusBar hidden={true} />}
       <View style={{ height: hp(100) }}>
         <View style={Styles.searchContainer}>
@@ -156,10 +158,10 @@ const requestOptions = {
                   >
                     <Image source={{ uri: image }} style={Styles.img} />
                     <View style={Styles.flatContainerText}>
-                      <Text >{item.name}</Text>
-                      <Text>{`$ ${item.current_price ? item.current_price.toFixed(2) : "0"
+                      <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>{item.name}</Text>
+                      <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>{`$ ${item.current_price ? item.current_price.toFixed(2) : "0"
                         }`}</Text>
-                      <Text>{`Last 24h: ${item.price_change_percentage_24h
+                      <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>{`Last 24h: ${item.price_change_percentage_24h
                           ? item.price_change_percentage_24h.toFixed(1)
                           : "0"
                         }%`}</Text>

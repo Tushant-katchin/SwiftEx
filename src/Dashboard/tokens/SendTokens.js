@@ -305,7 +305,7 @@ const SendTokens = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-{Platform.OS==="ios"?<View style={{backgroundColor:"#4CA6EA",flexDirection:"row",height: hp(8)}}>
+{Platform.OS==="ios"?<View style={{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",flexDirection:"row",height: hp(8),borderColor:"gray",borderWidth:0.5}}>
 <Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
 <Text style={{color:"white",alignSelf:"center",marginLeft:"19%",marginTop:'9%',fontSize:19}}>Transaction Details</Text>
 <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
@@ -314,7 +314,7 @@ const SendTokens = (props) => {
     marginLeft: Platform.OS==="ios"?wp(11):wp(6)}}/>
 </TouchableOpacity>
     </View>:
-<View style={{backgroundColor:"#4CA6EA",flexDirection:"row"}}>
+<View style={{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",flexDirection:"row",borderWidth:0.5,borderColor:"gray"}}>
 <Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
 <Text style={{color:"white",alignSelf:"center",marginLeft:"20%",fontWeight:'bold',fontSize:17}}>Transaction Details</Text>
 <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
@@ -324,7 +324,7 @@ const SendTokens = (props) => {
 </TouchableOpacity>
 </View>}
       {/* <WalletHeader title={props.route.params.token}/> */}
-      <View style={{ backgroundColor: "white", height: hp(100) }}>
+      <View style={{ backgroundColor:state.THEME.THEME===false?"#fff":"black", height: hp(100) }}>
         <View style={style.inputView}>
           <TextInput
           value={address}
@@ -338,6 +338,7 @@ const SendTokens = (props) => {
               setAddress(input);
             }}
             placeholder="Recipient Address"
+            placeholderTextColor={"gray"}
             style={style.input}
           ></TextInput>
           <TouchableOpacity onPress={()=>{
@@ -352,10 +353,10 @@ const SendTokens = (props) => {
           </TouchableOpacity>
         </View>
         <View style={{flexDirection:"row",width:wp(90)}}>
-        <Text style={style.balance_heading}>Available balance :-{" "}</Text>
+        <Text style={[style.balance_heading,{color:state.THEME.THEME===false?"black":"#fff"}]}>Available balance :-{" "}</Text>
         <View style={{width:wp(13)}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{width:wp(11)}}>
-        <Text style={style.balance}>
+        <Text style={[style.balance,{color:state.THEME.THEME===false?"black":"#fff"}]}>
           {balance ? balance : show===false?<Text style={{ color: "#C1BDBD" }}>0</Text>:<></>}
         </Text>
               </ScrollView>
@@ -376,6 +377,7 @@ const SendTokens = (props) => {
               setAmount(input);
             }}
             placeholder="Amount"
+            placeholderTextColor={"gray"}
             style={style.input}
           ></TextInput>
           <Pressable

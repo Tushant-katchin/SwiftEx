@@ -207,7 +207,7 @@ const Asset_info = ({ route }) => {
 
     return (
         <>
-            <View style={styles.container}>
+            <View style={[styles.container,{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",borderBottomColor:"gray",borderWidth:0.5}]}>
                 <TouchableOpacity onPress={(() => navigation.goBack())}>
                     <Icon type={'antDesign'} name='left' size={29} color={'white'} style={styles.icon} />
                 </TouchableOpacity>
@@ -216,8 +216,8 @@ const Asset_info = ({ route }) => {
                     <Image source={darkBlue} style={styles.image} />
                 </TouchableOpacity>
             </View>
-            <ScrollView style={styles.main_con}>
-                <View style={styles.chart_con}>
+            <ScrollView style={[styles.main_con,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+                <View style={[styles.chart_con,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
                     {chart_show === false ? <Chart
                         style={{ height: hp(35), width: wp(99), padding: 1 }}
                         data={chart}
@@ -225,24 +225,42 @@ const Asset_info = ({ route }) => {
                         xDomain={{ min: new Date(chart[0].x).getTime(), max: new Date(chart[chart.length - 1].x).getTime() }}
                         yDomain={{ min: Math.min(...chart.map(d => d.y)), max: Math.max(...chart.map(d => d.y)) }}
                     >
-                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2) } }} />
+                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2),label:{color:state.THEME.THEME===false?"black":"#fff"} } }} />
                         <HorizontalAxis tickCount={10} theme={{
                             labels: {
                                 formatter: (v) => {
                                     const date = new Date(v);
                                     return `${date.getHours()}:${date.getMinutes()}`;
                                 },
+                                label:{color:state.THEME.THEME===false?"black":"#fff"}
                             },
                         }} />
                         <Area theme={{ gradient: { from: { color: '#44bd32' }, to: { color: '#44bd32', opacity: 0.2 } } }} />
                         <Line
-                            tooltipComponent={<Tooltip />}
+                            tooltipComponent={<Tooltip theme={{ label: {
+                                color: 'white',
+                                fontSize: 12,
+                                fontWeight: 700,
+                                textAnchor: 'middle',
+                                opacity: 1,
+                                dx: 0,
+                                dy: 16.5,
+                              },
+                              shape: {
+                                width: 50,
+                                height: 20,
+                                dx: 0,
+                                dy: 20,
+                                rx: 4,
+                                color: 'black',
+                              },
+                              }}/>}
                             theme={{ stroke: { color: '#44bd32', width: 5 }, scatter: { default: { width: 8, height: 8, rx: 4, color: '#44ad32' }, selected: { color: 'red' } } }}
                         />
-                    </Chart> : <ActivityIndicator color={"green"} size={"large"} />}
+                    </Chart> : <ActivityIndicator color={state.THEME.THEME===false?"green":"#fff"} size={"large"} />}
 
                 </View>
-                <View style={styles.opt_con}>
+                <View style={[styles.opt_con,{backgroundColor:state.THEME.THEME===false?"#fff":"black",borderColor:"gray",borderWidth:0.5}]}>
                     <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_cons} onPress={() => {
                         asset_type === "XLM" ? navigation.navigate("SendXLM") :
                             navigation.navigate("Send", {
@@ -250,80 +268,80 @@ const Asset_info = ({ route }) => {
                             })
                     }}>
                         <Icon type={'materialCommunity'} name='arrow-top-right' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
-                        <Text style={styles.opt_text}>Send</Text>
+                        <Text style={[styles.opt_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Send</Text>
                     </TouchableOpacity>
                     <TouchableOpacity  style={styles.opt_cons} disabled={chart_show&&Loading||asset_type==="XRP"||asset_type==="XLM"} onPress={async() => { await trade_bridge() }}>
                         <Image source={brridge_new} style={styles.image_brige} />
                         {/* <Icon type={'materialCommunity'} name='swap-horizontal-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} /> */}
-                        <Text style={styles.opt_text}>Bridge</Text>
+                        <Text style={[styles.opt_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Bridge</Text>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_cons} onPress={() => {
                         setVisible(true);
                         seticonType(asset_type);
                     }}>
                         <Icon type={'materialCommunity'} name='arrow-bottom-left' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
-                        <Text style={styles.opt_text}>Request</Text>
+                        <Text style={[styles.opt_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Request</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.opt_other}>
-                    <View style={styles.T_C_con}>
+                <View style={[styles.opt_other,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+                    <View style={[styles.T_C_con,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
                         <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_other_cons} onPress={async() => { await  trade_manage() }}>
                             <Icon type={'materialCommunity'} name='chart-timeline-variant' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
-                            <Text style={styles.opt_other_text}>Trade</Text>
+                            <Text style={[styles.opt_other_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Trade</Text>
                         </TouchableOpacity>
                         <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_other_cons} onPress={async() => { await cashout_manage() }}>
                             <Icon type={'materialCommunity'} name='cash' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
-                            <Text style={styles.opt_other_text}>Cashout</Text>
+                            <Text style={[styles.opt_other_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Cashout</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.horizontalLine} />
-                    {Loading === true ? <ActivityIndicator color={"green"} size={"large"} style={{ alignSelf: "center" }} /> :
+                    {Loading === true ? <ActivityIndicator color={state.THEME.THEME===false?"green":"#fff"} size={"large"} style={{ alignSelf: "center" }} /> :
                         final.map((list, index) => {
                             return (
                                 <>
-                                    <Text style={[styles.opt_market_head, { marginTop: hp(1) }]}>{asset_type} price (24H)</Text>
+                                    <Text style={[styles.opt_market_head, { marginTop: hp(1),color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type} price (24H)</Text>
                                     <View style={{ flexDirection: "row", padding: 4 }}>
                                         <View style={{ width: wp(40) }}>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>Price</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.current_price : asset_type === "XLM" ? list.current_price : list.current_price} price (24H)</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>Price</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.current_price : asset_type === "XLM" ? list.current_price : list.current_price} price (24H)</Text>
                                         </View>
                                         <View>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>Price (USD)</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.current_price : list.current_price}$</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>Price (USD)</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.current_price : list.current_price}$</Text>
                                         </View>
                                     </View>
                                     <View style={{ flexDirection: "row", marginLeft: 1.9 }}>
                                         <View style={{ width: wp(40) }}>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>24H high</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.high_24h : list.high_24h}$</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>24H high</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.high_24h : list.high_24h}$</Text>
                                         </View>
                                         <View>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>24H low</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.low_24h : list.low_24h}$</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>24H low</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.low_24h : list.low_24h}$</Text>
                                         </View>
                                     </View>
 
                                     {/* Market */}
                                     <View style={styles.horizontalLine} />
-                                    <Text style={[styles.opt_market_head, { marginTop: hp(1), marginLeft: 1 }]}>Market stats</Text>
+                                    <Text style={[styles.opt_market_head, { marginTop: hp(1), marginLeft: 1 ,color:state.THEME.THEME===false?"black":"#fff"}]}>Market stats</Text>
                                     <View style={{ flexDirection: "row", padding: 4 }}>
                                         <View style={{ width: wp(40) }}>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>Market cap</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.market_cap : list.market_cap}$</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>Market cap</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.market_cap : list.market_cap}$</Text>
                                         </View>
                                         <View>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>Volume</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.total_volume : list.total_volume}</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>Volume</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.total_volume : list.total_volume}</Text>
                                         </View>
                                     </View>
                                     <View style={{ flexDirection: "row", marginLeft: 1.9 }}>
                                         <View style={{ width: wp(40) }}>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>Supply</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.total_supply : list.total_supply}</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>Supply</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.total_supply : list.total_supply}</Text>
                                         </View>
                                         <View>
-                                            <Text style={[styles.opt_market_head, { fontSize: 14, color: "gray" }]}>Price changes % 24h</Text>
-                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15 }]}>{asset_type === "XLM" ? list.price_change_percentage_24h : list.price_change_percentage_24h}</Text>
+                                            <Text style={[styles.opt_market_head, { fontSize: 14,color:state.THEME.THEME===false?"black":"#fff" }]}>Price changes % 24h</Text>
+                                            <Text style={[styles.opt_market_head, { marginTop: -10, fontSize: 15,color:state.THEME.THEME===false?"black":"#fff" }]}>{asset_type === "XLM" ? list.price_change_percentage_24h : list.price_change_percentage_24h}</Text>
                                         </View>
                                     </View>
                                 </>

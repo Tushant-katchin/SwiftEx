@@ -9,8 +9,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import darkBlue from "../../../assets/darkBlue.png";
 import { REACT_APP_LOCAL_TOKEN } from "../exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
+import { useSelector } from "react-redux";
 
 export const AppHeader = ({name}) => {
+  const state=useSelector((state)=>state);
   const navigation = useNavigation();
 //   return (
 //     <View>
@@ -149,7 +151,7 @@ export const AppHeader = ({name}) => {
 // });
 
 return (
-<View style={styles.header}>
+<View style={[styles.header,{backgroundColor:state.THEME.THEME===false? "#4CA6EA":"black",borderBottomColor:state.THEME.THEME===false? "#4CA6EA":"gray",borderWidth:0.5}]}>
     <TouchableOpacity style={styles.backButton} onPress={()=>{navigation.navigate("Home")}}>
     <Icon name={"left"} type={"antDesign"} size={29} color={"white"}/>
     </TouchableOpacity>

@@ -473,7 +473,15 @@ const CheckMnemonic = (props) => {
     console.log(wallet);
   }, [fadeAnim, Spin]);
   // <Text style={style.pressText}>{index + 1}</Text>
-
+  const deselectAll = () => {
+    setData(prevData =>
+      prevData.map(item => ({
+        ...item,
+        selected: false
+      }))
+    );
+    setMnemonic([]);
+  };
   const RenderItem = ({ item, index }) => {
     let Data = data.map((item) => {
       return item;
@@ -710,6 +718,7 @@ getData();
               } else {
                 setLoading(false);
                 SetMnemonic([]);
+                deselectAll()
                 return alert(
                   "error",
                   "Wrong Mnemonic. Please retry with correct mnemonic "

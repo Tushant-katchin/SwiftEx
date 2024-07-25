@@ -54,7 +54,15 @@ const CheckNewWalletMnemonic = ({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
-
+  const deselectAll = () => {
+    setData(prevData =>
+      prevData.map(item => ({
+        ...item,
+        selected: false
+      }))
+    );
+    setMnemonic([]);
+  };
   
   const closeModal = () => {
     SetVisible(false);
@@ -296,6 +304,7 @@ const CheckNewWalletMnemonic = ({
                   }
                   else{
                     setLoading(false)
+                    deselectAll()
                     alert(
                       "error",
                       "Wrong Mnemonic. Please retry with correct mnemonic "

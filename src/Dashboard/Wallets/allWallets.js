@@ -268,7 +268,7 @@ const AllWallets = (props) => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={style.body}>
+    <ScrollView contentContainerStyle={[style.body,{backgroundColor: state.THEME.THEME===false?"#fff":"black"}]}>
       {Wallets[0] ? (
         Wallets[0].map((item,index) => {
           if (item.walletType === "BSC") {
@@ -425,7 +425,7 @@ const AllWallets = (props) => {
                     alignItems: "center"
                   }}>
                   <Image style={item.walletType === "Multi-coin" ? style.multiImgStyle : style.img} source={LeftContent} />
-                  <Text style={{ marginHorizontal: wp(3) }} left={LeftContent}>
+                  <Text style={{color:state.THEME.THEME===false?"black":"#fff", marginHorizontal: wp(3) }} left={LeftContent}>
                     {item.name}
                   </Text>
                   </View>

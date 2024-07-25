@@ -211,6 +211,7 @@ const NewWalletPrivateKey = ({
               style={{ width: wp("78%") }}
               placeholder={user ? user : "Enter your account name"}
               placeholderTextColor={"gray"}
+              maxLength={20}
             />
           </View>
 
@@ -226,8 +227,9 @@ const NewWalletPrivateKey = ({
           <View style={{ width: wp(95) }}>
             <TouchableOpacity
               style={{
-                backgroundColor:
-                  accountName && !/\s/.test(accountName) ? "#4CA6EA" : "gray",
+                // backgroundColor:
+                  // accountName && !/\s/.test(accountName) ? "#4CA6EA" : "gray",
+                  backgroundColor:!accountName || !/\S/.test(accountName)?"gray":"green",
                 width: wp(55),
                 alignSelf: "center",
                 alignItems: "center",
@@ -235,7 +237,8 @@ const NewWalletPrivateKey = ({
                 marginTop: hp(1.5),
                 paddingVertical: hp(1.7),
               }}
-              disabled={accountName && !/\s/.test(accountName) ? false : true}
+              // disabled={accountName && !/\s/.test(accountName) ? false : true}
+              disabled={!accountName || !/\S/.test(accountName)}
               onPress={() => {
                 //setVisible(!visible)
                 let wallet = Wallet;

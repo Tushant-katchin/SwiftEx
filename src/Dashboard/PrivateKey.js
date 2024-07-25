@@ -131,17 +131,20 @@ const PrivateKey = (props) => {
           onChangeText={(text) => setAccountName(text)}
           placeholderTextColor="gray"
           autoCapitalize={"none"}
+          maxLength={20}
         />
         <TouchableOpacity
           style={{alignSelf: "center",
           alignItems: "center",
-          backgroundColor:accountName && !/\s/.test(accountName) ?'green':"grey",
+          // backgroundColor:accountName && !/\s/.test(accountName) ?'green':"grey",
+          backgroundColor:!accountName || !/\S/.test(accountName)?"gray":"green",
           marginTop: hp(2),
          width: wp(60),
           padding: 10,
           borderRadius: 10,
         }}
-          disabled={accountName && !/\s/.test(accountName)  ? false : true}
+          // disabled={accountName && !/\s/.test(accountName)  ? false : true}
+          disabled={!accountName || !/\S/.test(accountName)}
           onPress={() => {
             //setVisible(!visible)
             console.log(accountName.length)

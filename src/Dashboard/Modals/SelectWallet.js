@@ -42,6 +42,7 @@ import { WalletHeader } from "../header";
 import ImportStellarModal from "./importStellarModal";
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
+  const state=useSelector((state)=>state);
   const [MultiCoinModal, setMultiCoinMoodal] = useState(false);
   const [BscWallet, setBscWalletVisible] = useState(false);
   const [EthereumWallet, setEthereumWallet] = useState(false);
@@ -119,9 +120,9 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
         setVisible(false);
       }}
     >
-      <View style={style.Body}>
+      <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
         {/* <ModalHeader Function={closeModal}  name={'Import'}/> */}
-        <WalletHeader title="Select Wallet" />
+        <WalletHeader title="Select Wallet" IconType="Wallet"/>
         <TouchableOpacity
           style={style.Box2}
           onPress={() => {
@@ -129,7 +130,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={darkBlue} style={style.darkBlueimg}/>
-          <Text style={style.text1}> Multi-Coin Wallet </Text>
+          <Text style={[style.text1,{color:state.THEME.THEME===false?"black":"#fff"}]}> Multi-Coin Wallet </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}
@@ -138,7 +139,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={Bnbimage} style={style.img} />
-          <Text style={style.text}>Binance Smart Chain</Text>
+          <Text style={[style.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Binance Smart Chain</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}
@@ -147,7 +148,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={Etherimage} style={style.img} />
-          <Text style={style.text}>Ethereum</Text>
+          <Text style={[style.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Ethereum</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}
@@ -156,7 +157,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={Maticimage} style={style.img} />
-          <Text style={style.text}>Polygon(Matic)</Text>
+          <Text style={[style.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Polygon(Matic)</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}
@@ -165,7 +166,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={Xrpimage} style={style.img} />
-          <Text style={style.text}> Xrp</Text>
+          <Text style={[style.text,{color:state.THEME.THEME===false?"black":"#fff"}]}> Xrp</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}
@@ -174,7 +175,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={stellarImg} style={style.img} />
-          <Text style={style.text}> Stellar</Text>
+          <Text style={[style.text,{color:state.THEME.THEME===false?"black":"#fff"}]}> Stellar</Text>
         </TouchableOpacity>
       </View>
       <View>

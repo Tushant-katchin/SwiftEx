@@ -21,6 +21,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { SendNotification } from "../notifications/pushController";
+import { useSelector } from "react-redux";
 
 export const FaucetModal = ({ showModal, setShowModal }) => {
   const [network, setNetwork] = useState("");
@@ -39,17 +40,18 @@ if (network === "BSC") {
   setUrl(' ')
 }
   },[network])
+  const state=useSelector((state)=>state)
   return (
     <Center>
       <TouchableOpacity
-      style={{backgroundColor:"#fff",borderRadius:16,marginLeft:0,padding:'6%'}}
+      style={{backgroundColor: state.THEME.THEME===false?"#fff":"black",borderRadius:16,marginLeft:0,padding:'6%'}}
         // onPress={ () => {
           // setShowModal(true)
          // console.log('pressed')
        //SendNotification('title','test')
         // }}
       >
-        <Text style={{color:"white",fontWeight: "bold"}}>Add Test Faucet Balance</Text>
+        <Text style={{color:state.THEME.THEME===false?"white":"black",fontWeight: "bold"}}>Add Test Faucet Balance</Text>
       </TouchableOpacity>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="400px">

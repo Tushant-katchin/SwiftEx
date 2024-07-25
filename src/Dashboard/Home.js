@@ -160,7 +160,7 @@ const Dashboard = ({ navigation }) => {
 
           tabBarLabel: ({ focused }) => {
             let iconColor;
-            iconColor = focused ? "#131E3A" : "white";
+            iconColor = focused ? statee.THEME.THEME===false?"#131E3A":"#145DA0":statee.THEME.THEME===false?"#131E3A":"gray";
             return (
               <Text
                 style={{
@@ -174,14 +174,14 @@ const Dashboard = ({ navigation }) => {
               </Text>
             );
           },
-          tabBarActiveTintColor: "#131E3A",
-          tabBarInactiveTintColor: "white",
+          tabBarActiveTintColor: statee.THEME.THEME===false?"#131E3A":"#145DA0",
+          tabBarInactiveTintColor: statee.THEME.THEME===false?"white":"gray",
           tabBarStyle: {
             position: "absolute",
-            backgroundColor: "#4CA6EA",
-            height: Platform.OS == 'android' ?  hp("9") : hp("11")
-            // borderTopColor: "black",
-            // borderTopWidth: 1,
+            backgroundColor: statee.THEME.THEME===false?"#4CA6EA":"black",
+            height: Platform.OS == 'android' ?  hp("9") : hp("11"),
+            borderTopColor: statee.THEME.THEME===false?"#131E3A":"#145DA0",
+            borderTopWidth: 1,
           },
           headerTitleAlign: "center",
 
@@ -215,7 +215,7 @@ const Dashboard = ({ navigation }) => {
               iconName = "ios-home-sharp"; //for icon or image
               let iconColor;
 
-              iconColor = focused ? "#131E3A" : "white";
+              iconColor = focused ? statee.THEME.THEME===false?"#131E3A":"#145DA0":statee.THEME.THEME===false?"#fff":"gray";
               return (
                 <View>
                   <Text>
