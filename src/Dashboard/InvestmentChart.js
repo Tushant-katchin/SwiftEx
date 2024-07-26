@@ -183,7 +183,7 @@ function InvestmentChart(setCurrentWallet) {
     });
   }
   useEffect(async()=>{
-    await getData_dispatch();
+    // await getData_dispatch();
     await get_stellar();
   },[foused])
 
@@ -311,7 +311,8 @@ function InvestmentChart(setCurrentWallet) {
       console.log("Error in get_stellar")
     }
   }
- useEffect(()=>{
+ useEffect(async()=>{
+    await getData_dispatch();
     getData();
   get_stellar();
  },[])

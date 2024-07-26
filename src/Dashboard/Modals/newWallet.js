@@ -80,7 +80,9 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
         }}
       >
         <View style={style.Body}>
-          <Icon type={'entypo'} name='cross' size={29} color={"white"} style={style.crossIcon} onPress={onCrossPress}/>
+          <TouchableOpacity disabled={loading} onPress={onCrossPress}>
+          <Icon type={'entypo'} name='cross' size={29} color={"white"} style={style.crossIcon} />
+          </TouchableOpacity>
           <View style={{alignSelf:"center",alignItems:"center"}}>
           <Animated.Image
             style={{
