@@ -416,8 +416,10 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
       style={{ opacity: fadeAnim }}
     >
       <Modal
-        animationIn="slideInLeft"
-        animationOut="slideOutRight"
+        // animationIn="slideInLeft"
+        // animationOut="slideOutRight"
+        animationIn="fadeIn"
+        animationOut="fadeOut"
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={modalVisible}

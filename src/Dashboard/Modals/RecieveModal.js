@@ -68,8 +68,8 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
       style={{ opacity: fadeAnim }}
     >
       <Modal
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
+        animationIn="fadeIn"
+        animationOut="fadeOut"
         // animationOut="slideOutRight"
         // animationInTiming={500}
         // animationOutTiming={650}
