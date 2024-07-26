@@ -491,7 +491,7 @@ const SendTokens = (props) => {
             <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
       <Icon name="arrow-left" size={24} color="#fff" style={style.backIcon}/>
             </TouchableOpacity>
-      <Text style={style.title}>Scan QR Code</Text>
+      <Text style={[style.title,{marginTop:Platform.OS==="ios"?hp(5):0}]}>Scan QR Code</Text>
     </View>
       <View style={style.rectangleContainer}>
         <View style={style.rectangle}>

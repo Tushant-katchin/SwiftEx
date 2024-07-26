@@ -46,6 +46,7 @@ import { Platform,Modal} from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useRef } from "react";
 import { RAPID_STELLAR, SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
+import PinModal from "../../../../PIN";
 // import StellarSdk from '@stellar/stellar-sdk';
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -55,9 +56,23 @@ export const HomeView = ({ setPressed }) => {
   const [modalContainer_menu,setmodalContainer_menu]=useState(false);
   const AnchorViewRef = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
+  const [ShowButtonRight,setShowButtonRight]=useState(false);
+  const [ShowButtonLeft,setShowButtonLeft]=useState(false);
   const handleScroll = (xOffset) => {
     if (AnchorViewRef.current) {
       AnchorViewRef.current.scrollTo({ x: xOffset, animated: true });
+    }
+  };
+  const handleScroll_new = (event) => {
+    const xOffset = event.nativeEvent.contentOffset.x;
+    if (xOffset > 100) {
+      setShowButtonRight(false);
+      setShowButtonLeft(true);
+    }
+    if(xOffset<30)
+    {
+      setShowButtonLeft(false);
+        setShowButtonRight(true);
     }
   };
   const Focused_screen=useIsFocused();
@@ -106,6 +121,17 @@ export const HomeView = ({ setPressed }) => {
   const [kyc_modal,setkyc_modal]=useState(false);
   const [kyc_status,setkyc_status]=useState(true);
   const [con_modal,setcon_modal]=useState(false)
+  const [isPinModalVisible, setIsPinModalVisible] = useState(false);
+  const [enteredPin, setEnteredPin] = useState('');
+
+  const handlePinComplete = (pin) => {
+    setEnteredPin(pin);
+    priview_steller()
+  };
+
+  const togglePinModal = () => {
+    setIsPinModalVisible(!isPinModalVisible);
+  };
 
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
@@ -122,6 +148,10 @@ export const HomeView = ({ setPressed }) => {
       });
     });
   };
+  useEffect(()=>{
+    setShowButtonRight(true);
+    setShowButtonLeft(false);
+  },[Focused_screen])
 
   //activate stellar account function
   const active_account=async()=>{
@@ -282,6 +312,7 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
     }
   };
   useEffect(()=>{
+    setIsPinModalVisible(false)
     if(state.STELLAR_ADDRESS_STATUS===false)
     {
       active_account()
@@ -707,23 +738,23 @@ useFocusEffect(
       
                <View style={styles.container_a}>
                   {/* <View style={{flexDirection:"row",justifyContent:"space-between",zIndex:20,position:"absolute",width:wp(95),marginTop:80}}> */}
-                  <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
+                 {ShowButtonLeft? <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5}} onPress={() => {
           if (AnchorViewRef.current && contentWidth !== 0) {
             const backOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) - 3 * contentWidth / Anchor.length;
             handleScroll(backOffset);
 
-          }}}><Icon name={"left"} type={"antDesign"} size={25} color={"white"}/>
-               </TouchableOpacity>
+          }}}><Icon name={"left"} type={"antDesign"} size={25} color={"white"} style={{marginRight:5}}/>
+               </TouchableOpacity>:<></>}
 
-               <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5,alignSelf:"flex-end"}} onPress={() => {
+              {ShowButtonRight? <TouchableOpacity style={{zIndex:20,position:"absolute",width:wp(8),marginTop:80,backgroundColor:"rgba(255,255,255,0.2)",borderRadius:10,padding:5,alignSelf:"flex-end"}} onPress={() => {
           if (AnchorViewRef.current && contentWidth !== 0) {
             const nextOffset = (AnchorViewRef.current.contentOffset ? AnchorViewRef.current.contentOffset.x : 0) + 3 * contentWidth / Anchor.length;
             handleScroll(nextOffset);
           }
-        }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>
+        }}><Icon name={"right"} type={"antDesign"} size={25} color={"white"}/></TouchableOpacity>:<></>}
                   {/* </View> */}
                 <Text style={{textAlign:"left",marginHorizontal:10,marginTop:10,fontWeight: "bold",fontSize:20,color:"#fff"}}>Anchors</Text>
-      <ScrollView ref={AnchorViewRef} horizontal style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",padding:8,borderRadius:10}} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)}>
+      <ScrollView ref={AnchorViewRef} horizontal style={{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",padding:8,borderRadius:10,marginHorizontal:19,marginLeft:wp(6)}} showsHorizontalScrollIndicator={false} onContentSizeChange={(width) => setContentWidth(width)} onScroll={handleScroll_new}>
               {Anchor.map((list, index) => {
                 return (
                   <View>
@@ -884,9 +915,9 @@ useFocusEffect(
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:2.2,borderRadius:5}}>
                    <Text style={[styles.textColor,styles.width_scrroll]}>{show_steller_key}</Text>
                     </ScrollView>
-                    <TouchableOpacity onPress={()=>{priview_steller()}} onLongPress={()=>{copyToClipboard(steller_key_private)}}>
+                    <TouchableOpacity onPress={()=>{show_steller_key==="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"?setIsPinModalVisible(true):copyToClipboard(steller_key_private)}}>
                     <Icon
-                      name={show_steller_key==="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"?"eye":"eye-off"}
+                      name={show_steller_key==="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"?"eye":"content-copy"}
                       type={"materialCommunity"}
                       color={"rgba(129, 108, 255, 0.97)"}
                       size={24}
@@ -1013,7 +1044,9 @@ useFocusEffect(
         </View> 
         
             <OfferListViewHome/>
-
+            {isPinModalVisible && (
+        <PinModal onPinComplete={handlePinComplete} onClose={togglePinModal} />
+      )}
     </ScrollView>
     </>
   );

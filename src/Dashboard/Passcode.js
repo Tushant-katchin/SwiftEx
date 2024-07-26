@@ -17,7 +17,7 @@ import darkBlue from "../../assets/darkBlue.png";
 
 import { Animated } from "react-native";
 import ReactNativePinView from "react-native-pin-view";
-import Icon from "react-native-vector-icons/Ionicons";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { Platform } from "react-native";
@@ -27,6 +27,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { alert } from "./reusables/Toasts";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { SET_APP_THEME } from "../components/Redux/actions/type";
+import Icon from "../icon";
 
 const Passcode = (props) => {
   const [pin, setPin] = useState();
@@ -217,7 +218,8 @@ const Passcode = (props) => {
             customLeftButton={
               
                 <Icon
-                  name={"finger-print"}
+                  type={"materialCommunity"} 
+                  name={Platform.OS==="android"?"fingerprint":"face-recognition"}
                   size={36}
                   color={"gray"}
                   onPress={async ()=>{
@@ -225,16 +227,17 @@ const Passcode = (props) => {
                     if (biometric === "SET") {
                       useBiometrics(props.navigation);
                     }else{
-                      alert('error','Enable biometrics in your device settings.')
+                          Platform.OS==="android"?
+                          alert('error','Enable biometrics in your device settings.'):
+                          alert('error','Enable face Id in your device settings.')
                     }
-                
                   }}
                 />
             
             }
             customRightButton={
               showRemoveButton ? (
-                <Icon name={"ios-backspace"} size={36} color={"gray"} />
+                <Icon type={"materialCommunity"} name={"backspace"} size={36} color={"gray"} />
               ) : undefined
             }
 

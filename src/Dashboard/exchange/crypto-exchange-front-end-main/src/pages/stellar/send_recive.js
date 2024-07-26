@@ -257,7 +257,7 @@ const send_recive = ({route}) => {
             <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
       <Icon name="arrow-left" size={24} color="#fff" style={styles.backIcon}/>
             </TouchableOpacity>
-      <Text style={styles.title}>Scan QR Code</Text>
+      <Text style={[styles.title,{marginTop:Platform.OS==="ios"?hp(5):0}]}>Scan QR Code</Text>
     </View>
       <View style={styles.rectangleContainer}>
         <View style={styles.rectangle}>

@@ -31,7 +31,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { REACT_APP_HOST } from "../../ExchangeConstants";
 
 export const ExchangeLogin = (props) => {
-  const [value, setValue] = useState("");
+  const [VERFIY_OTP, setVERFIY_OTP] = useState(false);
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
@@ -98,7 +98,9 @@ const FOCUSED=useIsFocused();
   const submitPhoneNumber = async () => {
      if(!Email||!login_Passcode)
      {
-      alert("error","Both fields are required");
+      setTimeout(()=>{
+        alert("error","Both fields are required");
+      },400)
       setEmail("");
       setlogin_Passcode("");
       setLoading(false)
@@ -124,14 +126,18 @@ const FOCUSED=useIsFocused();
         .then((result) => {
           if(result.message==="Invalid credintials"||result.statusCode===400)
           {
-            alert("error","Invalid credintials");
+            setTimeout(()=>{
+              alert("error","Invalid credintials");
+            },400)
             setEmail("");
             setlogin_Passcode("");
             setLoading(false);
           }
           else{
             saveToken(result.token);
-            alert("success","Success");
+            setTimeout(()=>{
+              alert("success","Success");
+            },400)
             setLoading(false);
             setEmail("");
             setlogin_Passcode("");
@@ -146,7 +152,9 @@ const FOCUSED=useIsFocused();
   const submitOtp = async () => {
     try {
       if (!otp) {
-        alert("error","OTP is required");
+        setTimeout(()=>{
+          alert("error","OTP is required");
+        },400)
         return setMessage("OTP is required");
       }
       const { err } = await verifyLoginOtp({
@@ -155,7 +163,9 @@ const FOCUSED=useIsFocused();
       });
       if (err) {
         setMessage(err.message);
-        alert("error","Worng OTP")
+        setTimeout(()=>{
+          alert("error","Worng OTP")
+        },400)
         setOtp(null);
       } else {
         setOtp(null);
@@ -179,7 +189,9 @@ const FOCUSED=useIsFocused();
       setLoading(false);
       setcon_passcode("");
       setpasscode("");
-      alert("error", "Both fields are required");
+      setTimeout(()=>{
+        alert("error", "Both fields are required");
+      },400)
     }
     else {
       //  if(len>8||len0>8)
@@ -208,13 +220,17 @@ const FOCUSED=useIsFocused();
                 setpasscode_view(false);
                 setpasscode("");
                 setcon_passcode("");
-                alert("success", "Exchange Account Ready.");
+                setTimeout(()=>{
+                  alert("success", "Exchange Account Ready.");
+                },400)
                 setIsOtpSent(false);
                 navigation.navigate("exchange");
               } else {
                 setpasscode("");
                setcon_passcode("");
-                alert("error", "Something went worng.");
+               setTimeout(()=>{
+                 alert("error", "Something went worng.");
+               },400)
               }
             })
             .catch((error) => {
@@ -226,7 +242,9 @@ const FOCUSED=useIsFocused();
           setLoading(false);
           setpasscode("");
           setcon_passcode("");
-          alert("error", "Password Not Match.");
+          setTimeout(()=>{
+            alert("error", "Password Not Match.");
+          },400)
         }
       //  }
       //  else{
@@ -244,12 +262,17 @@ const FOCUSED=useIsFocused();
   }
 
   const get_otp_forget = async () => {
+    setVERFIY_OTP(true);
+    Keyboard.dismiss()
     setlodaing_ver(true);
     setLoading_fog(true);
     if (!Email) {
       setlodaing_ver(false);
        setLoading_fog(false);
-      alert("error", "Email reqired.");
+       setTimeout(()=>{
+         alert("error", "Email reqired.");
+       },400)
+      setVERFIY_OTP(false);
     } else {
       try {
         const myHeaders = new Headers();
@@ -272,8 +295,11 @@ const FOCUSED=useIsFocused();
               setlodaing_ver(false);
               setLoading_fog(true);
               setEmail("");
-              alert("success", "OTP sent in your mail.");
+              setTimeout(()=>{
+                alert("success", "OTP sent in your mail.");
+              },400)
               setLoading_fog(false);
+              setVERFIY_OTP(false);
               navigation.navigate("exchangeLogin", {
                 phoneNumber: Email,
               });
@@ -283,7 +309,10 @@ const FOCUSED=useIsFocused();
               setLoading_fog(true);
               setEmail("");
               setLoading_fog(false);
-              alert("error", "User not found.");
+              setTimeout(()=>{
+                alert("error", "User not found.");
+              },400)
+              setVERFIY_OTP(false);
             }
             console.log(result)
           })
@@ -409,6 +438,7 @@ const FOCUSED=useIsFocused();
                 <TextInput autoCapitalize="none" textContentType="emailAddress" placeholder={"Email Adderss"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16 }} value={Email} onChangeText={(text) => { onChangelmail(text) }} />
                 {active_forgot===false?<TextInput autoCapitalize="none" placeholder={"Password"} placeholderTextColor={"gray"} style={{ backgroundColor: "white", padding: 16, borderRadius: 5, fontSize: 16,marginTop:19 }} value={login_Passcode} onChangeText={(text) => { setlogin_Passcode(text) }} secureTextEntry={true} />:<></>}                
                 <TouchableOpacity style={styles.PresssableBtn}
+                disabled={VERFIY_OTP}
                   onPress={() => {
                     if (active_forgot === false) {
                       setLoading(true);
@@ -418,7 +448,9 @@ const FOCUSED=useIsFocused();
                       } catch (e) {
                         setLoading(true);
                         console.log(e);
-                        alert("error", e);
+                        setTimeout(()=>{
+                          alert("error", e);
+                        },400)
                       }
                       setShowMessage(true);
                       Keyboard.dismiss();
