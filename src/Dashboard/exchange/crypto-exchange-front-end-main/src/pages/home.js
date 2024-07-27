@@ -46,7 +46,6 @@ import { Platform,Modal} from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useRef } from "react";
 import { RAPID_STELLAR, SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
-import PinModal from "../../../../PIN";
 // import StellarSdk from '@stellar/stellar-sdk';
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -115,23 +114,11 @@ export const HomeView = ({ setPressed }) => {
     {name:"Finclusive",status:"Pending",image: require('../../../../../../assets/FINCLUSIVE.png'),city:"Benin / Burkina Faso / Cape Verde / Cote D'Ivoire / Gambia / Ghana / Guinea / Guinea-Bissau / Liberia / Mali / Mauritania / Niger / Nigeria / Senegal / Sierra Leone / Togo",Crypto_Assets:"USDC",Fiat_Assets:"$ USD" },
   ];
   const [steller_key_private,setsteller_key_private]=useState("");
-  const [show_steller_key,setshow_steller_key]=useState("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
   const [Anchor_modal,setAnchor_modal]=useState(false);
   const [index_Anchor,setindex_Anchor]=useState(0);
   const [kyc_modal,setkyc_modal]=useState(false);
   const [kyc_status,setkyc_status]=useState(true);
   const [con_modal,setcon_modal]=useState(false)
-  const [isPinModalVisible, setIsPinModalVisible] = useState(false);
-  const [enteredPin, setEnteredPin] = useState('');
-
-  const handlePinComplete = (pin) => {
-    setEnteredPin(pin);
-    priview_steller()
-  };
-
-  const togglePinModal = () => {
-    setIsPinModalVisible(!isPinModalVisible);
-  };
 
   const bootstrapStyleSheet = new BootstrapStyleSheet();
   const { s, c } = bootstrapStyleSheet;
@@ -312,7 +299,6 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
     }
   };
   useEffect(()=>{
-    setIsPinModalVisible(false)
     if(state.STELLAR_ADDRESS_STATUS===false)
     {
       active_account()
@@ -506,12 +492,7 @@ const copyToClipboard = (data) => {
   alert("success", "Copied");
 };
 
-const priview_steller=()=>{
-  setshow_steller_key(steller_key_private);
-  setTimeout(()=>{
-  setshow_steller_key("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-  },3000);
-}
+
 
 
 const animation = useRef(new Animated.Value(0)).current;
@@ -910,21 +891,7 @@ useFocusEffect(
                     </TouchableOpacity>
                   </View> 
 
-                  <View style={{flexDirection:"row",marginTop:10}}>
-                    <Text style={styles.textColor}>Stellar Private Key  </Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(60),borderColor:"#485DCA",borderWidth:0.9,paddingVertical:2.2,borderRadius:5}}>
-                   <Text style={[styles.textColor,styles.width_scrroll]}>{show_steller_key}</Text>
-                    </ScrollView>
-                    <TouchableOpacity onPress={()=>{show_steller_key==="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"?setIsPinModalVisible(true):copyToClipboard(steller_key_private)}}>
-                    <Icon
-                      name={show_steller_key==="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"?"eye":"content-copy"}
-                      type={"materialCommunity"}
-                      color={"rgba(129, 108, 255, 0.97)"}
-                      size={24}
-                      style={{marginTop:0.3,marginLeft:2.9}}
-                      />
-                    </TouchableOpacity>
-                  </View> 
+                  
                 </View>
               </View>
             ) : (
@@ -1044,9 +1011,6 @@ useFocusEffect(
         </View> 
         
             <OfferListViewHome/>
-            {isPinModalVisible && (
-        <PinModal onPinComplete={handlePinComplete} onClose={togglePinModal} />
-      )}
     </ScrollView>
     </>
   );
