@@ -47,7 +47,22 @@ const Asset_info = ({ route }) => {
         "25m",
         "30m",
     ]);
+    const [tooltip_info_0, settooltip_info_0] = useState(false);
+    const [tooltip_info_1, settooltip_info_1] = useState(false);
+    const [tooltip_info_2, settooltip_info_2] = useState(false);
+    useEffect(() => {
+        const timeoutId = setTimeout(()=>{hide_tooltips()}, 2000);
+        return () => clearTimeout(timeoutId);
+      }, [tooltip_info_0,tooltip_info_1,tooltip_info_2]);
+      const hide_tooltips=()=>{
+        settooltip_info_0(false)
+        settooltip_info_1(false)
+        settooltip_info_2(false)
+      }
     useEffect(async() => {
+        settooltip_info_0(false)
+        settooltip_info_1(false)
+        settooltip_info_2(false)
         const token_1 = await AsyncStorageLib.getItem(REACT_APP_LOCAL_TOKEN);
         settoken(token_1)
         setchart_show(true)
@@ -261,6 +276,17 @@ const Asset_info = ({ route }) => {
 
                 </View>
                 <View style={[styles.opt_con,{backgroundColor:state.THEME.THEME===false?"#fff":"black",borderColor:"gray",borderWidth:0.5}]}>
+                    <TouchableOpacity onPress={() => { settooltip_info_0(true),settooltip_info_1(false),settooltip_info_2(false) }} style={styles.tooltip_con}>
+                        {tooltip_info_0 ? <View style={[styles.tooltip_con_txt,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+                            <Text style={{color:state.THEME.THEME===false?"black":"#fff",textAlign:"center"}}>Allbridge enables cross-chain asset transfers between multiple blockchain networks.</Text>
+                        </View> :
+                            <Icon
+                                name={"information-outline"}
+                                type={"materialCommunity"}
+                                color={"rgba(129, 108, 255, 0.97)"}
+                                size={21}
+                            />}
+                    </TouchableOpacity>
                     <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_cons} onPress={() => {
                         asset_type === "XLM" ? navigation.navigate("SendXLM") :
                             navigation.navigate("Send", {
@@ -285,10 +311,32 @@ const Asset_info = ({ route }) => {
                 </View>
                 <View style={[styles.opt_other,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
                     <View style={[styles.T_C_con,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+                    <TouchableOpacity onPress={() => { settooltip_info_0(false),settooltip_info_1(true),settooltip_info_2(false) }} style={[styles.tooltip_con,{marginLeft: wp(30),}]}>
+                        {tooltip_info_1 ? <View style={[styles.tooltip_con_txt,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+                            <Text style={{color:state.THEME.THEME===false?"black":"#fff",textAlign:"center"}}>Trading involves buying, selling, or exchanging cryptocurrencies for profit.</Text>
+                        </View> :
+                            <Icon
+                                name={"information-outline"}
+                                type={"materialCommunity"}
+                                color={"rgba(129, 108, 255, 0.97)"}
+                                size={21}
+                            />}
+                    </TouchableOpacity>
                         <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_other_cons} onPress={async() => { await  trade_manage() }}>
                             <Icon type={'materialCommunity'} name='chart-timeline-variant' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
                             <Text style={[styles.opt_other_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Trade</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { settooltip_info_0(false),settooltip_info_1(false),settooltip_info_2(true) }} style={[styles.tooltip_con,{marginLeft: wp(70),}]}>
+                        {tooltip_info_2 ? <View style={[styles.tooltip_con_txt,{backgroundColor:state.THEME.THEME===false?"#fff":"black",marginLeft: wp(-20)}]}>
+                            <Text style={{color:state.THEME.THEME===false?"black":"#fff",textAlign:"center"}}>Cashout involves converting assets or cryptocurrencies into fiat money.</Text>
+                        </View> :
+                            <Icon
+                                name={"information-outline"}
+                                type={"materialCommunity"}
+                                color={"rgba(129, 108, 255, 0.97)"}
+                                size={21}
+                            />}
+                    </TouchableOpacity>
                         <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_other_cons} onPress={async() => { await cashout_manage() }}>
                             <Icon type={'materialCommunity'} name='cash' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
                             <Text style={[styles.opt_other_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Cashout</Text>
@@ -470,6 +518,20 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginTop: hp(2)
     },
+    tooltip_con: {
+        position: "absolute",
+        zIndex: 10,
+        alignSelf: "flex-start",
+        marginLeft: wp(40),
+        marginTop: hp(2)
+    },
+    tooltip_con_txt:{
+        marginTop: hp(-2),
+        width:wp(35),
+        borderRadius:14,
+        borderColor: "#4CA6EA",
+        borderWidth:3
+    }
 });
 
 export default Asset_info;
