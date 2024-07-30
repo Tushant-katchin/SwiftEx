@@ -270,7 +270,8 @@ const Payout = () => {
         textAlign: 'center',
         color:"#fff",
         flex: 1,
-        marginLeft:wp(13)
+        marginLeft:wp(13),
+        marginTop:Platform.OS==="ios"?hp(3):hp(0)
       }}>Deposit/Withdrawal</Text>
 
       {/* Right Image and Menu Icon */}

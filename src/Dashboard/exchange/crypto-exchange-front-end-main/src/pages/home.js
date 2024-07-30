@@ -603,7 +603,8 @@ useFocusEffect(
         textAlign: 'center',
         color:"#fff",
         flex: 1,
-        marginLeft:wp(13)
+        marginLeft:wp(13),
+        marginTop:Platform.OS==="ios"?hp(3):hp(0)
       }}>Home</Text>
 
       {/* Right Image and Menu Icon */}

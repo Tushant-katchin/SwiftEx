@@ -347,7 +347,8 @@ const fetchData_ = async (key) => {
         textAlign: 'center',
         color:"#fff",
         flex: 1,
-        marginLeft:wp(13)
+        marginLeft:wp(13),
+        marginTop:Platform.OS==="ios"?hp(3):hp(0)
       }}>Transactions</Text>
 
       {/* Right Image and Menu Icon */}
@@ -383,7 +384,7 @@ const fetchData_ = async (key) => {
             transparent={true}
             visible={modalContainer_menu}>
 
-            <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
+            <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-330,marginRight:-20}]} onPress={() => { setmodalContainer_menu(false) }}>
               <View style={styles.modalContainer_option_sub}>
 
 

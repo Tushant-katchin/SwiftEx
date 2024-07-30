@@ -33,7 +33,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { EthereumSecret, smart_contract_Address,RPC } from "../../../../constants";
 import contractABI from './contractABI.json';
 import { authRequest, GET, getToken, POST } from "../api";
-import { REACT_APP_HOST } from "../ExchangeConstants";
+import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Bridge from "../../../../../../assets/Bridge.png";
 const Web3 = require('web3');
@@ -642,7 +642,7 @@ const reves_fun=async(fist_data,second_data)=>{
                 <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
                   console.log('clicked');
                   const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-                  AsyncStorage.removeItem(LOCAL_TOKEN);
+                  AsyncStorageLib.removeItem(LOCAL_TOKEN);
                   setmodalContainer_menu(false)
                   navigation.navigate('exchangeLogin');
                 }}>
