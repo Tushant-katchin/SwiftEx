@@ -593,7 +593,7 @@ useFocusEffect(
               size={28}
               color={"white"}
               style={{marginLeft:wp(2)}}
-              onPress={() =>navigation.goBack()}
+              onPress={() =>navigation.navigate("Home")}
             />
 
       {/* Middle Text */}
