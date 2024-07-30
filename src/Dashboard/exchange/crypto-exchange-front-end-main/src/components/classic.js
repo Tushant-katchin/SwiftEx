@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, View, Text, Picker, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput, Image, Platform } from 'react-native';
+import { Modal, View, Text, Picker, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput, Image, Platform, Keyboard } from 'react-native';
 import Icon from "../../../../../icon";
 import { FlatList } from 'native-base';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
@@ -14,9 +14,13 @@ import { REACT_APP_LOCAL_TOKEN } from '../ExchangeConstants';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import darkBlue from '../../../../../../assets/darkBlue.png'
 import steller_img from '../../../../../../assets/Stellar_(XLM).png'
+import bnbimage from "../../../../../../assets/bnb-icon2_2x.png";
+
+import { GET, authRequest } from '../api';
 const classic = ({ route }) => {
+  const navigation=useNavigation();
   const { Asset_type } = route.params;
-  const TEMPCHOSE=Asset_type==="ETH"?"Ethereum":Asset_type==="BNB"?"Bitcoin":Asset_type 
+  const TEMPCHOSE=Asset_type==="ETH"?"Ethereum":Asset_type==="BNB"?"BNB":Asset_type 
   console.log("-=-=-=-=-=-=-=-------=======",Asset_type,TEMPCHOSE)
   const state = useSelector((state) => state);
   const nav = useNavigation();
@@ -33,19 +37,50 @@ const classic = ({ route }) => {
   const [amount, setamount] = useState('');
   const [chooseModalVisible_choose, setchooseModalVisible_choose] = useState(false);
   const chooseItemList = [
-    { id: 1, name: "Bitcoin", url: "https://tokens.pancakeswap.finance/images/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" },
-    { id: 2, name: "Ethereum", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" },
-    { id: 3, name: "Matic", url: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
+    { id: 1, name: "Ethereum", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" },
+    { id: 2, name: "BNB", url: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" },
+    // { id: 3, name: "Matic", url: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
   ]
   const chooseItemList_ETH = [
     { id: 1, name: "USDC", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
-    chooseSelectedItemId === "Ethereum" ? { id: 2, name: "Ethereum", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" } :
-    chooseSelectedItemId === "Matic"?{ id: 2, name: "Matic", url: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }:{ id: 2, name: "Bitcoin", url: "https://tokens.pancakeswap.finance/images/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" },
-
-
+    chooseSelectedItemId === "Ethereum" ? { id: 2, name: "USDT", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" } :
+    chooseSelectedItemId === "Matic"?{ id: 2, name: "Matic", url: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }:{ id: 2, name: "BNB", url: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" },
   ];
+  const [Profile, setProfile] = useState({
+    isVerified: false,
+    firstName: "jane",
+    lastName: "doe",
+    email: "xyz@gmail.com",
+    phoneNumber: "93400xxxx",
+    isEmailVerified: false,
+});
+const [open, setOpen] = useState(false);
 
+  const for_trading = async () => {
+    try {
+        const { res, err } = await authRequest("/users/getUserDetails", GET);
+        setProfile(res);
+        await getOffersData()
+    } catch (err) {
+        console.log(err)
+    }
+};
+const getOffersData = async () => {
+  try {
+      // const { res, err } = await authRequest("/offers", GET);
+      // if (err) return console.log(`${err.message}`);
+      //  setOffers(res);
+  } catch (err) {
+      console.log(err)
+  }
+  setfianl_modal(false)
+  navigation.navigate("newOffer_modal", {
+      user: { Profile },
+      open: { open },
+      getOffersData: { getOffersData }
+  });
 
+}
   const handleUpdate = (id) => {
     if (idIndex === 1) {
       setChooseSelectedItemId(id);
@@ -78,97 +113,197 @@ const classic = ({ route }) => {
       nav.goBack()
     }, 1300)
   }
-
   return (
-    <View style={{ backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)", flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <View style={styles.headerContainer1_TOP}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={con_modal}>
-          <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
-            <View style={{
-              backgroundColor: '#fff',
-              padding: 20,
-              borderRadius: 10,
-              alignItems: 'center',
-              width: "90%",
-              height: "20%",
-              justifyContent: "center"
-            }}>
-              <Icon
-                name={"check-circle-outline"}
-                type={"materialCommunity"}
-                size={60}
-                color={"green"}
-              />
-              <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 10 }} onPress={() => { setcon_modal(false) }}>KYC Success</Text>
-            </View>
-          </View>
-        </Modal>
-        <View
-          style={{
-            justifyContent: "space-around",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity onPress={() => nav.goBack()}>
-            <Icon
+    <View style={{ backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",width:wp(100),height:hp(100)}}>
+      <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      // padding: 10,
+      backgroundColor: '#4CA6EA',
+      elevation: 4,
+    }}>
+      {/* Left Icon */}
+      <Icon
               name={"left"}
               type={"antDesign"}
               size={28}
               color={"white"}
+              style={{marginLeft:wp(2)}}
+              onPress={() =>navigation.goBack()}
             />
-          </TouchableOpacity>
-        </View>
 
-        {Platform.OS === "android" ? (
-          <Text style={styles.text_TOP}>Bridge</Text>
-        ) : (
-          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Bridge</Text>
-        )}
+      {/* Middle Text */}
+      <Text style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color:"#fff",
+        flex: 1,
+        marginLeft:wp(13)
+      }}>Bridge</Text>
 
-        <TouchableOpacity onPress={() => nav.navigate("Home")}>
-          <Image source={darkBlue} style={[styles.logoImg_TOP,{marginLeft: Platform.OS==="android"?wp(22):wp(19)}]} />
+      {/* Right Image and Menu Icon */}
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Image
+          source={darkBlue}
+          style={{
+            height: hp("8"),
+            width: wp("12"),
+            marginRight: 10,
+            borderRadius: 15,
+          }}
+        />
         </TouchableOpacity>
-
-        <View style={{ alignItems: "center" }}>
-          {/* <TouchableOpacity
-      onPress={() => {
-        console.log('clicked');
-        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        AsyncStorage.removeItem(LOCAL_TOKEN);
-        Navigate();
-        nav.navigate('Home');
-      }}
-    >
-      <Icon
-        name={"logout"}
-        type={"materialCommunity"}
-        size={30}
-        color={"#fff"}
-      />
-    </TouchableOpacity> */}
-          <TouchableOpacity
+        <TouchableOpacity
             onPress={() => {
               setmodalContainer_menu(true)
             }}
           >
-            <Icon
+        <Icon
               name={"menu"}
               type={"materialCommunity"}
               size={30}
               color={"#fff"}
             />
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalContainer_menu}>
+
+            <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
+              <View style={styles.modalContainer_option_sub}>
+
+
+
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"anchor"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"badge-account-outline"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>KYC</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"playlist-check"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>My Subscription</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
+                  console.log('clicked');
+                  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+                  AsyncStorage.removeItem(LOCAL_TOKEN);
+                  setmodalContainer_menu(false)
+                  navigation.navigate('exchangeLogin');
+                }}>
+                  <Icon
+                    name={"logout"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"#fff"}
+                  />
+                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
+                  <Icon
+                    name={"close"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"#fff"}
+                  />
+                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
       </View>
+    </View>
+      <View style={styles.modalHeader}>
+            <Text style={styles.textModal}>Import asset on exchange</Text>
+          </View>
+
+          <View style={{ flexDirection: "row", justifyContent: "space-between",marginTop: hp(3),paddingHorizontal:wp(4) }}>
+
+            <View style={{ width: wp(30), alignSelf: "center" }}>
+              <Text style={[styles.textModal, { fontSize: 18 }]}>Select wallet</Text>
+
+              <TouchableOpacity style={[styles.modalOpen, { width: wp(40) }]} onPress={() => { setChooseModalVisible(true); setIdIndex(1); }}>
+                {chooseSelectedItemId === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemId === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemId === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
+                <Text>{chooseSelectedItemId === null ? chooseItemList[1].name : chooseSelectedItemId}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ width: wp(40), alignSelf: "center" }}>
+              <Text style={[styles.textModal, { fontSize: 18 }]}>Choose asset</Text>
+              <TouchableOpacity style={[styles.modalOpen, { width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
+                {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
+                <View style={{marginTop:3}}>
+                <Text>{chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho}</Text>
+                <Text style={{color:"gray",fontSize:10}}>centre.io</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+
+          <View style={{ flexDirection: "row", justifyContent: "space-between" ,marginTop:19,paddingHorizontal:wp(4)}}>
+            <View style={{ width: wp(40), alignSelf: "center" }}>
+            <Text style={[styles.textModal, { fontSize: 18 }]}>Amount</Text>
+              <TextInput placeholder='0.0' placeholderTextColor={"gray"} keyboardType="number-pad" style={[styles.modalOpen, { padding:10, width: wp(40),fontSize:18 }]} onChangeText={(value) => { setamount(value) }} returnKeyType="done"/>
+            </View>
+            <View style={{ width: wp(40), alignSelf: "center" }}>
+              <Text style={[styles.textModal, { fontSize: 18 }]}>Receive</Text>
+              <View style={[styles.modalOpen, { backgroundColor: "silver", width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
+                {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
+                <Text>{chooseSelectedItemIdCho === null ? "USDC" : chooseSelectedItemIdCho === "USDC" ? chooseSelectedItemId === "Matic" || chooseSelectedItemIdCho === "Matic" ? "apUSDC" : "USDC" : chooseSelectedItemIdCho === "BNB" ? "BNB" : chooseSelectedItemIdCho === "Matic" ? "apMATIC" : "aeETH"}</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={{ width: wp(90),borderRadius:10, alignSelf: "flex-start",marginTop:40,height: hp(6.9),backgroundColor: '#ededeb',alignItems:"flex-start",justifyContent:"center",marginLeft:wp(4),paddingHorizontal:wp(1) }}>
+              <View style={{flexDirection:"row",alignItems:"center",width:wp(50)}}>
+              <Text style={{fontSize:16,textAlign:"center"}}>Address: </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%"}}>
+                <Text style={{fontSize:17 }}>{state.wallet.address}</Text>
+              </ScrollView>
+              </View>
+              <View style={{flexDirection:"row",alignItems:"center",width:wp(30)}}>
+              <Text style={{fontSize:16,textAlign:"center"}}>Balance: </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%"}}>
+                <Text style={{fontSize:17 }}>{state.EthBalance}</Text>
+              </ScrollView>
+              </View>
+          </View>
+
+            <TouchableOpacity
+              // disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
+              style={[styles.nextButton, { backgroundColor: !amount?"gray":'green',height:hp(6),marginTop:hp(5) }]}
+            disabled={!amount} onPress={() => { Keyboard.dismiss(),setfianl_modal(true) }}
+            >
+              <Text style={styles.nextButtonText}>Confirm Transaction</Text>
+            </TouchableOpacity>
       <Modal
         animationType="fade"
         transparent={true}
@@ -242,43 +377,7 @@ const classic = ({ route }) => {
         transparent={true}
         visible={main_modal}
       > */}
-      <View style={styles.modalContainer}>
-        <View style={[styles.modalContent, { marginTop: hp(8) }]}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.textModal}>Choose blockchain and asset</Text>
-          </View>
-          <View style={{ marginLeft: wp(3) }}>
-            <Text style={[styles.textModal, { fontSize: 18 }]}>From</Text>
 
-            <TouchableOpacity style={styles.modalOpen} onPress={() => { setChooseModalVisible(true); setIdIndex(1); }}>
-              {chooseSelectedItemId === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemId === "Bitcoin" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemId === "Matic"?<Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }}style={styles.logoImg_TOP_1}/>:<Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
-              <Text>{ chooseSelectedItemId === null? chooseItemList[1].name : chooseSelectedItemId}</Text>
-            </TouchableOpacity>
-            <Text style={[styles.textModal, { fontSize: 18 }]}>To</Text>
-            <TouchableOpacity style={[styles.modalOpen, { backgroundColor: "silver" }]} onPress={() => { }}>
-              <Image source={steller_img} style={styles.logoImg_TOP_1} />
-              <Text>Stellar</Text>
-            </TouchableOpacity>
-            <Text style={[styles.textModal, { fontSize: 18 }]}>Choose asset</Text>
-            <TouchableOpacity style={styles.modalOpen} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
-              {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Bitcoin" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic"?<Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} />:<Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
-              <Text>{chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho}</Text>
-            </TouchableOpacity>
-            <Text style={[styles.textModal, { fontSize: 18 }]}>Receive</Text>
-            <View style={[styles.modalOpen, { backgroundColor: "silver" }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
-              {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Bitcoin" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho=== "Matic"?<Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }}style={styles.logoImg_TOP_1}/>:<Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
-                <Text>{chooseSelectedItemIdCho === null ? "aeUSDC" : chooseSelectedItemIdCho==="USDC"?chooseSelectedItemId==="Matic"||chooseSelectedItemIdCho==="Matic"?"apUSDC":"aeUSDC":chooseSelectedItemIdCho==="Bitcoin"?"abBNB":chooseSelectedItemIdCho==="Matic"?"apMATIC":"aeETH"}</Text>
-            </View>
-            <TouchableOpacity
-              // disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
-              style={[styles.nextButton, { backgroundColor: 'green' }]}
-              onPress={handleNext}
-            >
-              <Text style={styles.nextButtonText}>Next</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
       {/* </Modal> */}
 
       <Modal
@@ -320,7 +419,7 @@ const classic = ({ route }) => {
             borderRadius: 10,
             alignItems: 'center',
             width: "90%",
-            height: "20%",
+            height: "25%",
             justifyContent: "center"
           }}>
             <Icon
@@ -330,6 +429,9 @@ const classic = ({ route }) => {
               color={"green"}
             />
             <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 10, color: "#fff" }} onPress={() => { nav.goBack() }}>Transaction Success</Text>
+            {/* <TouchableOpacity style={[styles.confirmButton, { backgroundColor: "green" }]} onPress={() => {  for_trading() }}>
+              <Text style={styles.confirmButtonText}>Trade</Text>
+            </TouchableOpacity> */}
           </View>
         </View>
       </Modal>
@@ -395,7 +497,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'rgba(33, 43, 83, 1)',
-    width: wp(90),
+    width: wp(100),
     height: hp(100)
   },
   modalHeader: {
@@ -410,7 +512,7 @@ const styles = StyleSheet.create({
   },
   modalOpen: {
     width: '90%',
-    height: hp(8),
+    height: hp(6),
     backgroundColor: '#ededeb',
     alignItems: "center",
     borderRadius: 10,

@@ -77,116 +77,132 @@ const Assets_manage = () => {
     }, [FOCUSED])
     return (
         <>
-            <View style={styles.headerContainer1_TOP}>
-                <View
-                    style={{
-                        justifyContent: "space-around",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <TouchableOpacity onPress={() => navigation.navigate("/")}>
-                        <Icon
-                            name={"left"}
-                            type={"antDesign"}
-                            size={28}
-                            color={"white"}
-                        />
-                    </TouchableOpacity>
-                </View>
+           <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      // padding: 10,
+      backgroundColor: '#4CA6EA',
+      elevation: 4,
+    }}>
+      {/* Left Icon */}
+      <Icon
+              name={"left"}
+              type={"antDesign"}
+              size={28}
+              color={"white"}
+              style={{marginLeft:wp(2)}}
+              onPress={() =>navigation.goBack()}
+            />
 
-                {Platform.OS === "android" ? (
-                    <Text style={styles.text_TOP}>Assets</Text>
-                ) : (
-                    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Assets</Text>
-                )}
+      {/* Middle Text */}
+      <Text style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color:"#fff",
+        flex: 1,
+        marginLeft:wp(13)
+      }}>Assets</Text>
 
-                <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                    <Image source={darkBlue} style={[styles.logoImg_TOP,{marginLeft: Platform.OS==="android"?wp(22):wp(19)}]} />
+      {/* Right Image and Menu Icon */}
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Image
+          source={darkBlue}
+          style={{
+            height: hp("8"),
+            width: wp("12"),
+            marginRight: 10,
+            borderRadius: 15,
+          }}
+        />
+        </TouchableOpacity>
+        <TouchableOpacity
+            onPress={() => {
+              setmodalContainer_menu(true)
+            }}
+          >
+        <Icon
+              name={"menu"}
+              type={"materialCommunity"}
+              size={30}
+              color={"#fff"}
+            />
+        </TouchableOpacity>
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalContainer_menu}>
+
+            <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
+              <View style={styles.modalContainer_option_sub}>
+
+
+
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"anchor"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
                 </TouchableOpacity>
 
-                <View style={{ alignItems: "center" }}>
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"badge-account-outline"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>KYC</Text>
+                </TouchableOpacity>
 
-                    <TouchableOpacity
-                        onPress={() => {
-                            setmodalContainer_menu(true)
-                        }}
-                    >
-                        <Icon
-                            name={"menu"}
-                            type={"materialCommunity"}
-                            size={30}
-                            color={"#fff"}
-                        />
-                    </TouchableOpacity>
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={modalContainer_menu}>
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"playlist-check"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>My Subscription</Text>
+                </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
-                            <View style={styles.modalContainer_option_sub}>
+                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
+                  console.log('clicked');
+                  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+                  AsyncStorage.removeItem(LOCAL_TOKEN);
+                  setmodalContainer_menu(false)
+                  navigation.navigate('exchangeLogin');
+                }}>
+                  <Icon
+                    name={"logout"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"#fff"}
+                  />
+                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
+                </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.modalContainer_option_view}>
-                                    <Icon
-                                        name={"anchor"}
-                                        type={"materialCommunity"}
-                                        size={30}
-                                        color={"gray"}
-                                    />
-                                    <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.modalContainer_option_view}>
-                                    <Icon
-                                        name={"badge-account-outline"}
-                                        type={"materialCommunity"}
-                                        size={30}
-                                        color={"gray"}
-                                    />
-                                    <Text style={styles.modalContainer_option_text}>KYC</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.modalContainer_option_view}>
-                                    <Icon
-                                        name={"playlist-check"}
-                                        type={"materialCommunity"}
-                                        size={30}
-                                        color={"gray"}
-                                    />
-                                    <Text style={styles.modalContainer_option_text}>My Subscription</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
-                                    console.log('clicked');
-                                    const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-                                    AsyncStorage.removeItem(LOCAL_TOKEN);
-                                    setmodalContainer_menu(false)
-                                    navigation.navigate('exchangeLogin');
-                                }}>
-                                    <Icon
-                                        name={"logout"}
-                                        type={"materialCommunity"}
-                                        size={30}
-                                        color={"#fff"}
-                                    />
-                                    <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
-                                    <Icon
-                                        name={"close"}
-                                        type={"materialCommunity"}
-                                        size={30}
-                                        color={"#fff"}
-                                    />
-                                    <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </TouchableOpacity>
-                    </Modal>
-                </View>
-            </View>
+                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
+                  <Icon
+                    name={"close"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"#fff"}
+                  />
+                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
+      </View>
+    </View>
 
             <View style={[styles.main_con]}>
                 <Text style={styles.mode_text}>My Assets</Text>

@@ -70,6 +70,7 @@ import Assets_manage from "../Dashboard/exchange/crypto-exchange-front-end-main/
 import send_recive from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/stellar/send_recive";
 import SendXLM from "../Dashboard/tokens/sendXLM";
 import Asset_info from "../Dashboard/Asset_info";
+import App_updates from "../Dashboard/App_updates";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
@@ -264,6 +265,18 @@ const AuthStack = () => (
         component={Welcome}
         options={{
           headerShown: false,gestureEnabled:false,
+          headerStyle: { backgroundColor: "#000C66" },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="App_updates"
+        component={App_updates}
+        options={{
+          headerShown: false,
           headerStyle: { backgroundColor: "#000C66" },
           headerTintColor: "white",
           headerTitleStyle: {

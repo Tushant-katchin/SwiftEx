@@ -299,7 +299,7 @@ const Asset_info = ({ route }) => {
                     <TouchableOpacity  style={styles.opt_cons} disabled={chart_show&&Loading||asset_type==="XRP"||asset_type==="XLM"} onPress={async() => { await trade_bridge() }}>
                         <Image source={brridge_new} style={styles.image_brige} />
                         {/* <Icon type={'materialCommunity'} name='swap-horizontal-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} /> */}
-                        <Text style={[styles.opt_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Bridge</Text>
+                        <Text style={[styles.opt_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Bridge & Trade</Text>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={chart_show&&Loading} style={styles.opt_cons} onPress={() => {
                         setVisible(true);

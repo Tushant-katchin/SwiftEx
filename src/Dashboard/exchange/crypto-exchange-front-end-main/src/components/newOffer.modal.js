@@ -114,11 +114,12 @@ const getAccountDetails = async () => {
 };
 
 const chooseItemList = [
-  { id: 1, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 2, name: "BNB/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 3, name: "SWIFTEX/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
-  { id: 4, name: "ETH/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
-  { id: 5, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 1, name: "XLM/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"XLM",visible_1:"USDC",asset_dom:"steller.org",asset_dom_1:"centre.io"},
+  { id: 2, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 3, name: "BNB/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 4, name: "SWIFTEX/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
+  { id: 5, name: "ETH/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
+  { id: 6, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
 
 ]
 const chooseItemList_1 = [
@@ -542,117 +543,132 @@ const reves_fun=async(fist_data,second_data)=>{
   return (
    
     <>
-    <View style={styles.headerContainer1_TOP}>
-        <View
-          style={{
-            justifyContent: "space-around",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon
+    <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      // padding: 10,
+      backgroundColor: '#4CA6EA',
+      elevation: 4,
+    }}>
+      {/* Left Icon */}
+      <Icon
               name={"left"}
               type={"antDesign"}
               size={28}
               color={"white"}
+              style={{marginLeft:wp(2)}}
+              onPress={() =>navigation.goBack()}
             />
-          </TouchableOpacity>
-        </View>
-      
-        {Platform.OS === "android" ? (
-          <Text style={styles.text_TOP}>Create Offer</Text>
-        ) : (
-          <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Create Offer</Text>
-        )}
-      
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Image source={darkBlue} style={[styles.logoImg_TOP,{marginLeft:Platform.OS==="android"?wp(14):wp(12)}]} />
-        </TouchableOpacity>
-      
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
-           onPress={() => {
-            setmodalContainer_menu(true)
-           }}
-         >
-           <Icon
-             name={"menu"}
-             type={"materialCommunity"}
-             size={30}
-             color={"#fff"}
-           />
-         </TouchableOpacity>
-        </View>
-        <Modal
-      animationType="fade"
-      transparent={true}
-      visible={modalContainer_menu}>
-       
-      <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-350,marginRight:-20}]}  onPress={()=>{setmodalContainer_menu(false)}}> 
-      <View style={styles.modalContainer_option_sub}>
-     
 
+      {/* Middle Text */}
+      <Text style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color:"#fff",
+        flex: 1,
+        marginLeft:wp(13)
+      }}>Create Offer</Text>
 
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"anchor"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"badge-account-outline"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>KYC</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.modalContainer_option_view}>
-      <Icon
-        name={"playlist-check"}
-        type={"materialCommunity"}
-        size={30}
-        color={"gray"}
-      />
-      <Text style={styles.modalContainer_option_text}>My Subscription</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.modalContainer_option_view}   onPress={() => {
-        console.log('clicked');
-        const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-        AsyncStorage.removeItem(LOCAL_TOKEN);
-        setmodalContainer_menu(false)
-        navigation.navigate('exchangeLogin');
+      {/* Right Image and Menu Icon */}
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
       }}>
-      <Icon
-        name={"logout"}
-        type={"materialCommunity"}
-        size={30}
-        color={"#fff"}
-      />
-      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Logout</Text>
-      </TouchableOpacity>
+         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Image
+          source={darkBlue}
+          style={{
+            height: hp("8"),
+            width: wp("12"),
+            marginRight: 10,
+            borderRadius: 15,
+          }}
+        />
+        </TouchableOpacity>
+        <TouchableOpacity
+            onPress={() => {
+              setmodalContainer_menu(true)
+            }}
+          >
+        <Icon
+              name={"menu"}
+              type={"materialCommunity"}
+              size={30}
+              color={"#fff"}
+            />
+        </TouchableOpacity>
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalContainer_menu}>
 
-      <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{setmodalContainer_menu(false)}}>
-      <Icon
-        name={"close"}
-        type={"materialCommunity"}
-        size={30}
-        color={"#fff"}
-      />
-      <Text style={[styles.modalContainer_option_text,{color:"#fff"}]}>Close Menu</Text>
-      </TouchableOpacity>
+            <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-350,marginRight:-20}]} onPress={() => { setmodalContainer_menu(false) }}>
+              <View style={styles.modalContainer_option_sub}>
+
+
+
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"anchor"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"badge-account-outline"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>KYC</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view}>
+                  <Icon
+                    name={"playlist-check"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"gray"}
+                  />
+                  <Text style={styles.modalContainer_option_text}>My Subscription</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
+                  console.log('clicked');
+                  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+                  AsyncStorage.removeItem(LOCAL_TOKEN);
+                  setmodalContainer_menu(false)
+                  navigation.navigate('exchangeLogin');
+                }}>
+                  <Icon
+                    name={"logout"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"#fff"}
+                  />
+                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
+                  <Icon
+                    name={"close"}
+                    type={"materialCommunity"}
+                    size={30}
+                    color={"#fff"}
+                  />
+                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
       </View>
-      </TouchableOpacity>
-    </Modal>
-      </View>
+    </View>
       <View
         style={{
           backgroundColor: "#011434",

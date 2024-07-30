@@ -237,7 +237,9 @@ const styles = StyleSheet.create({
   },
   PresssableBtn: {
     backgroundColor: "#4CA6EA",
-    padding: hp(1.5),
+    // padding: hp(),
+    height:hp(5),
+    justifyContent:"center",
     width: wp(30),
     alignSelf: "center",
     paddingHorizontal: Platform.OS==="android"?wp(3):wp(2),

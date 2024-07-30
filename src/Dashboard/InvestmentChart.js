@@ -337,12 +337,17 @@ function InvestmentChart(setCurrentWallet) {
       {
         loading===true?<ActivityIndicator color={"green"} size={"large"} style={{marginTop:hp(10)}}/>
         :<>
+        <View style={{flexDirection:"row" ,alignItems:"center",width:wp(96)}}>
         <TouchableOpacity style={styles.refresh} onPress={() => {
         getAllBalances(state, dispatch)
       }}>
  <Icon type={"materialCommunity"} name="refresh" size={hp(3)} color={state.THEME.THEME===false?"black":"#fff"} style={{ marginLeft: 1 }} />
       </TouchableOpacity>
-      
+      <View style={{flexDirection:"row",justifyContent:"flex-end",width:wp(80),marginTop:hp(1.6)}}>
+      <Text style={{color:state.THEME.THEME===false?"black":"#fff",fontSize:16,fontWeight:"500"}}>Balance</Text>
+      </View>
+        </View>
+    
 
       <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"ETH"})}}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -473,6 +478,34 @@ function InvestmentChart(setCurrentWallet) {
           }}
         >
           {bnbBalance ? bnbBalance : 0} BNB
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}>
+
+
+
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={{uri:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"}} style={styles.img} />
+          <View style={styles.ethrumView}>
+            <Text style={{color:state.THEME.THEME===false?"gray":"gray"}}>BTC</Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              $1209
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            color:state.THEME.THEME===false?"gray":"gray",
+
+            fontWeight: "bold",
+          }}
+        >
+          0.00 BTC
         </Text>
       </TouchableOpacity>
         </>

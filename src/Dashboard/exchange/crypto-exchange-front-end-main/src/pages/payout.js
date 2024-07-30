@@ -205,14 +205,13 @@ const Payout = () => {
   }
   return (
     <View style={styles.main}>
-      <View style={styles.headerContainer1_TOP}>
-        <View
-          style={{
-            justifyContent: "space-around",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
+     {/* <View style={{    backgroundColor: "#4CA6EA",
+    alignItems: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+    width: wp(100),
+    justifyContent:"space-between"
+    }}>
           <TouchableOpacity onPress={() =>navigation.goBack()}>
             <Icon
               name={"left"}
@@ -221,20 +220,18 @@ const Payout = () => {
               color={"white"}
             />
           </TouchableOpacity>
-        </View>
-
+        <View style={{backgroundColor:"pink",alignItems:"center",width:wp(60)}}>
         {Platform.OS === "android" ? (
-          <Text style={styles.text_TOP}>Deposit/Withdrawal</Text>
+          <Text>Deposit/Withdrawal</Text>
         ) : (
           <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Deposit/Withdrawal</Text>
         )}
-
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Image source={darkBlue} style={[styles.logoImg_TOP,{marginStart:Platform.OS==="android"?wp(20):wp(1)}]} />
+        </View>
+        <View style={{width:wp(20),flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+        <TouchableOpacity onPress={() => navigation.navigate("")}>
+          <Image source={darkBlue} style={[{ height: hp("8"),width: wp("12")}]} />
         </TouchableOpacity>
-
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
+        <TouchableOpacity
             onPress={() => {
               setmodalContainer_menu(true)
             }}
@@ -246,7 +243,65 @@ const Payout = () => {
               color={"#fff"}
             />
           </TouchableOpacity>
-          <Modal
+        </View>
+     </View> */}
+  <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      // padding: 10,
+      backgroundColor: '#4CA6EA',
+      elevation: 4,
+    }}>
+      {/* Left Icon */}
+      <Icon
+              name={"left"}
+              type={"antDesign"}
+              size={28}
+              color={"white"}
+              style={{marginLeft:wp(2)}}
+              onPress={() =>navigation.goBack()}
+            />
+
+      {/* Middle Text */}
+      <Text style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color:"#fff",
+        flex: 1,
+        marginLeft:wp(13)
+      }}>Deposit/Withdrawal</Text>
+
+      {/* Right Image and Menu Icon */}
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Image
+          source={darkBlue}
+          style={{
+            height: hp("8"),
+            width: wp("12"),
+            marginRight: 10,
+            borderRadius: 15,
+          }}
+        />
+        </TouchableOpacity>
+        <TouchableOpacity
+            onPress={() => {
+              setmodalContainer_menu(true)
+            }}
+          >
+        <Icon
+              name={"menu"}
+              type={"materialCommunity"}
+              size={30}
+              color={"#fff"}
+            />
+        </TouchableOpacity>
+        <Modal
             animationType="fade"
             transparent={true}
             visible={modalContainer_menu}>
@@ -314,9 +369,8 @@ const Payout = () => {
               </View>
             </TouchableOpacity>
           </Modal>
-        </View>
       </View>
-
+    </View>
       {/* header end */}
       {select_asset_modal && <View style={styles.select_asset_modal}>
         <Text style={styles.select_asset_heading}>Select Assets</Text>
@@ -784,7 +838,7 @@ const styles = StyleSheet.create({
   },
   headerContainer1_TOP: {
     backgroundColor: "#4CA6EA",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     alignItems: "center",
     alignSelf: "center",
     flexDirection: "row",
