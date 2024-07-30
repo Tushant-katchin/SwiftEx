@@ -1,7 +1,5 @@
 import React ,{ useState, useEffect } from "react";
 import darkBlue from "../../../../../../assets/darkBlue.png";
-import Bridge from "../../../../../../assets/Bridge.png";
-
 import { authRequest, GET, getToken, POST } from "../api";
 import { NewOfferModal } from "../components/newOffer.modal";
 import { FieldView } from "./profile";
@@ -21,6 +19,7 @@ import {
   Animated,
   Easing,
   BackHandler,
+  FlatList,
 } from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,6 +56,22 @@ export const HomeView = ({ setPressed }) => {
   const [contentWidth, setContentWidth] = useState(0);
   const [ShowButtonRight,setShowButtonRight]=useState(false);
   const [ShowButtonLeft,setShowButtonLeft]=useState(false);
+  const [open_chart_api,setopen_chart_api]=useState(false);
+  const [chart_api,setchart_api]=useState([
+    {id:0,name:"XLM  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&start_time=1722171295000&end_time=1722258595000&resolution=900000&offset=0&limit=10&order=desc",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png',img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
+    {id:1,name:"ETH  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=native&start_time=1722229906000&resolution=60000&offset=0&limit=8&order=desc",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",img_0:"https://tokens.pancakeswap.finance/images/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png"},
+    {id:2,name:"XLM  ",name_0:"EURC",url:"https://horizon.stellar.org/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722229906000&resolution=60000&offset=0&limit=8&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png'},
+    {id:3,name:"USDC",name_0:"EURC",url:"https://horizon.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722229906000&resolution=60000&offset=0&limit=8&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
+  ])
+  const [chart_index,setchart_index]=useState(0);
+  const chooseRenderItem_1 = ({ item }) => (
+    <TouchableOpacity onPress={() => {setchart_index(item.id),setopen_chart_api(false)}} style={[styles.chooseItemContainer,{borderRadius:5,height:hp(6),justifyContent:"flex-start"}]}>
+      <Image source={ { uri: item.img_0 }} style={{width:wp(7.7),height:hp(3.5)}}/>
+      <Text style={[styles.chooseItemText]}>{item.name}   vs</Text>
+      <Image source={ { uri: item.img }} style={{width:wp(7.7),height:hp(3.5),marginLeft:wp(3)}}/>
+      <Text style={[styles.chooseItemText]}>{item.name_0}</Text>
+    </TouchableOpacity>
+  );
   const handleScroll = (xOffset) => {
     if (AnchorViewRef.current) {
       AnchorViewRef.current.scrollTo({ x: xOffset, animated: true });
@@ -413,7 +428,8 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 
   const fetchData = async () => {
     try {
-      const response =await fetch('https://horizon-testnet.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code='+base_asset_code+'&base_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&counter_asset_type=credit_alphanum4&counter_asset_code='+counter_asset_code+'&counter_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&resolution=60000&offset=0&limit=6&order=desc')
+      // const response =await fetch('https://horizon-testnet.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code='+base_asset_code+'&base_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&counter_asset_type=credit_alphanum4&counter_asset_code='+counter_asset_code+'&counter_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&resolution=60000&offset=0&limit=6&order=desc')
+      const response =await fetch(chart_api[chart_index].url)
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -450,7 +466,7 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
     fetchData()
     const intervalId = setInterval(fetchData, 3000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [chart_index]);
 
   useEffect(() => {
     AsyncStorageLib.getItem("walletType").then((walletType) => {
@@ -1028,6 +1044,7 @@ useFocusEffect(
         type={"materialCommunity"}
         size={28}
         color={"white"}
+        onPress={()=>{setopen_chart_api(true)}}
       />
     </View>
     <LineChart
@@ -1056,10 +1073,25 @@ useFocusEffect(
     borderRadius: hp(1.6),
     marginBottom: hp(1),
     marginTop:hp(1.4)}}>
-              <Text style={{fontSize: 19,color: "white",textAlign:"center",fontWeight:"500"}}>Trade between XETH vs XUSD</Text>
+              <Text style={{fontSize: 19,color: "white",textAlign:"center",fontWeight:"500"}}>Trade between {chart_api[chart_index].name} vs {chart_api[chart_index].name_0}</Text>
         </View>
         </View> 
-        
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={open_chart_api}
+      >
+        <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setopen_chart_api(false)}>
+          <View style={[styles.chooseModalContent]}>
+          <Text style={{fontSize:21,color:"#fff"}}>Select Assets Pair</Text>
+            <FlatList
+              data={chart_api}
+              renderItem={chooseRenderItem_1}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
             <OfferListViewHome/>
     </ScrollView>
     </>
@@ -1320,6 +1352,33 @@ fontSize:20,
 fontWeight:"bold",
 color:"gray",
 marginStart:5
-}
+},
+chooseModalContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+},
+chooseModalContent: {
+  backgroundColor: 'rgba(33, 43, 83, 1)',
+  padding: 20,
+  borderRadius: 10,
+  width: '80%',
+  maxHeight: '80%',
+},
+chooseItemContainer: {
+  marginVertical: 3,
+  flexDirection: 'row',
+  alignItems: 'center',
+  borderColor: 'rgba(28, 41, 77, 1)',
+  borderWidth: 0.9,
+  borderBottomColor: '#fff',
+  marginBottom: 4,
+},
+chooseItemText: {
+  fontSize: 19,
+  color: '#fff',
+  marginLeft:wp(3)
+},
   
 });

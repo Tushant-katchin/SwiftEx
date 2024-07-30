@@ -480,7 +480,8 @@ function InvestmentChart(setCurrentWallet) {
           {bnbBalance ? bnbBalance : 0} BNB
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}>
+      {/* <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}> */}
+      <TouchableOpacity style={styles.flatlistContainer} >
 
 
 
