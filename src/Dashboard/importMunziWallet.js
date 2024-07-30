@@ -123,7 +123,7 @@ const ImportMunziWallet = (props) => {
             }}
           />
         </View>
-
+        {!accountName?<Text style={[style.text,{color:"red"}]}>Input Wallet Name</Text>:<></>}
         <Text style={style.text}>
           Typically 12 (sometimes 18.24) words separated by single spaces
         </Text>
@@ -143,12 +143,12 @@ const ImportMunziWallet = (props) => {
         </View>
 
           <TouchableOpacity
-            style={style.btn}
-            disabled={disable}
+            style={[style.btn,{backgroundColor:!accountName || !/\S/.test(accountName)?"gray":"green",}]}
+            disabled={disable||!accountName || !/\S/.test(accountName)?true:false}
             onPress={async () => {
               const pin = await AsyncStorageLib.getItem("pin");
               if (!accountName) {
-                return alert("please enter an accountName to proceed");
+                return alert("error", "Please enter an wallet name to proceed");
               }
               setLoading(true);
               setTimeout(async () => {

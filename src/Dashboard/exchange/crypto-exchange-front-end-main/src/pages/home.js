@@ -1074,7 +1074,7 @@ useFocusEffect(
     borderRadius: hp(1.6),
     marginBottom: hp(1),
     marginTop:hp(1.4)}}>
-              <Text style={{fontSize: 19,color: "white",textAlign:"center",fontWeight:"500"}}>Trade between {chart_api[chart_index].name} vs {chart_api[chart_index].name_0}</Text>
+              <Text style={{fontSize: 19,color: "white",textAlign:"center",fontWeight:"500"}}>Trade between {chart_api[chart_index].name==="USDC"?chart_api[chart_index].name+"  ":chart_api[chart_index].name}vs  {chart_api[chart_index].name_0}</Text>
         </View>
         </View> 
         <Modal

@@ -310,10 +310,10 @@ const ImportBinanceWallet = ({
 
           <TouchableOpacity
             style={style.btn}
-            disabled={disable}
+            disabled={disable||!accountName || !/\S/.test(accountName)?true:false}
             onPress={async () => {
               if (!accountName) {
-                return alert("error", "please enter an accountName to proceed");
+                return alert("error", "Please enter an wallet name to proceed");
               }
               setLoading(true);
               if (label === "mnemonic") {

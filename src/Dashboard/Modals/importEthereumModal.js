@@ -308,10 +308,10 @@ const ImportEthereumModal = ({
 
           <TouchableOpacity
             style={style.btn}
-            disabled={disable}
+            disabled={disable||!accountName || !/\S/.test(accountName)?true:false}
             onPress={async () => {
               if (!accountName) {
-                return alert("please enter an accountName to proceed");
+                return alert("error", "Please enter an wallet name to proceed");
               }
               setLoading(true);
 

@@ -268,13 +268,14 @@ const ImportOtherWallets = (props) => {
         >
           <Text style={{ color: "red" }}>{message}</Text>
         </View>
+        {!accountName?<Text style={[{margin:20,color:"red"}]}>Input Wallet Name</Text>:<></>}
         <TouchableOpacity
           style={style.btn}
           disabled={disable}
           onPress={async () => {
             const pin = await AsyncStorageLib.getItem("pin");
             if (!accountName) {
-              return alert("error", "please enter an accountName to proceed");
+              return alert("error", "Please enter an wallet name to proceed");
             }
             setLoading(true);
             setTimeout(() => {

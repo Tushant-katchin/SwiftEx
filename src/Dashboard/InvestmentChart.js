@@ -452,7 +452,7 @@ function InvestmentChart(setCurrentWallet) {
           {xmlBalance ? xmlBalance : 0.00} XLM
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}>
+      <TouchableOpacity style={[styles.flatlistContainer,{backgroundColor:"silver", width: wp(100),height:hp(10),paddingHorizontal:wp(5)}]} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}>
 
 
 
@@ -468,6 +468,14 @@ function InvestmentChart(setCurrentWallet) {
             >
               ${bnbPrice >= 0 ? bnbPrice : 300}
             </Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              Available Soon
+            </Text>
           </View>
         </View>
         <Text
@@ -481,14 +489,14 @@ function InvestmentChart(setCurrentWallet) {
         </Text>
       </TouchableOpacity>
       {/* <TouchableOpacity style={styles.flatlistContainer} onPress={()=>{navigation.navigate("Asset_info",{asset_type:"BNB"})}}> */}
-      <TouchableOpacity style={styles.flatlistContainer} >
+      <TouchableOpacity style={[styles.flatlistContainer,{marginVertical: hp(0),backgroundColor:"silver", width: wp(100),height:hp(10),paddingHorizontal:wp(5),borderTopColor:"#fff",borderColor:"silver",borderWidth:1 }]} >
 
 
 
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center"}}>
           <Image source={{uri:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"}} style={styles.img} />
           <View style={styles.ethrumView}>
-            <Text style={{color:state.THEME.THEME===false?"gray":"gray"}}>BTC</Text>
+            <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>BTC</Text>
             <Text
               style={{
                 color: "grey",
@@ -497,11 +505,19 @@ function InvestmentChart(setCurrentWallet) {
             >
               $1209
             </Text>
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+              }}
+            >
+              Available Soon
+            </Text>
           </View>
         </View>
         <Text
           style={{
-            color:state.THEME.THEME===false?"gray":"gray",
+            color:state.THEME.THEME===false?"black":"#fff",
 
             fontWeight: "bold",
           }}

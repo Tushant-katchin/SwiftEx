@@ -111,12 +111,21 @@ const Nfts = () => {
 <TouchableOpacity style={styles.btnContainer}>
   <Text style={styles.btnText}>Receive</Text>
 </TouchableOpacity> */}
-      <TouchableOpacity style={[styles.drop_down_con]} onPress={()=>{setopen_offer(true)}}>
-          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Select Blockchain</Text>
-          <Icon type={"materialCommunity"} name="menu-down" size={hp(2.9)} color={state.THEME.THEME===false?"black":"#fff"} style={{margin:hp(2),}}/>
-      </TouchableOpacity>
+      {/* <TouchableOpacity style={[styles.drop_down_con]} onPress={()=>{setopen_offer(true)}}> */}
+      <View style={[styles.drop_down_con]}>
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Ethereum</Text>
+          <Icon type={"materialCommunity"} name="menu-down" size={hp(2.9)} color={state.THEME.THEME===false?"#fff":"black"} style={{margin:hp(2),}}/>
+      </View>
       <TextInput style={[styles.drop_down_con,{paddingLeft:10,fontSize:14}]} placeholder="Contract Address" placeholderTextColor={"gray"} value={contract_text} onChangeText={(value)=>{setcontract_text(value)}}/>
 
+      <View style={{flexDirection:"row",justifyContent:"space-around"}}>
+      <TouchableOpacity disabled={!contract_text} style={[styles.Add_asset_btn,{justifyContent:"center",backgroundColor:!contract_text?"gray":"green"}]}>
+          <Text style={[styles.text,{ fontSize:17,textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"#fff":"#fff"}]}>Add Asset</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.Add_asset_btn,{justifyContent:"center",marginRight:wp(4),backgroundColor:"green"}]}>
+          <Text style={[styles.text,{ fontSize:17, textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"#fff":"#fff"}]}>View</Text>
+      </TouchableOpacity>
+      </View>
 
       <Modal
         animationType="slide"
@@ -186,6 +195,17 @@ const styles = StyleSheet.create({
   drop_down_con:{
     width:wp(94),
     height:hp(8),
+    marginTop:hp(3),
+    borderColor: "#4CA6EA",
+    borderWidth:1,
+    borderRadius:10,
+    flexDirection:"row",
+    justifyContent:"space-between",
+    alignItems:"center"
+  },
+  Add_asset_btn:{
+    width:wp(40),
+    height:hp(6),
     marginTop:hp(3),
     borderColor: "#4CA6EA",
     borderWidth:1,

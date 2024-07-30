@@ -42,8 +42,8 @@ const classic = ({ route }) => {
     // { id: 3, name: "Matic", url: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" },
   ]
   const chooseItemList_ETH = [
-    { id: 1, name: "USDC", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
-    chooseSelectedItemId === "Ethereum" ? { id: 2, name: "USDT", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" } :
+    { id: 1, name: "USDT", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" },
+    chooseSelectedItemId === "Ethereum" ? { id: 2, name: "USDC", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" } :
     chooseSelectedItemId === "Matic"?{ id: 2, name: "Matic", url: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }:{ id: 2, name: "BNB", url: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" },
   ];
   const [Profile, setProfile] = useState({
@@ -242,7 +242,7 @@ const getOffersData = async () => {
       </View>
     </View>
       <View style={styles.modalHeader}>
-            <Text style={styles.textModal}>Import asset on exchange</Text>
+            <Text style={styles.textModal}>Import assets on exchange</Text>
           </View>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between",marginTop: hp(3),paddingHorizontal:wp(4) }}>
@@ -258,34 +258,16 @@ const getOffersData = async () => {
             <View style={{ width: wp(40), alignSelf: "center" }}>
               <Text style={[styles.textModal, { fontSize: 18 }]}>Choose asset</Text>
               <TouchableOpacity style={[styles.modalOpen, { width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
-                {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
-                <View style={{marginTop:3}}>
+                {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" }} style={styles.logoImg_TOP_1} />}
                 <Text>{chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho}</Text>
-                <Text style={{color:"gray",fontSize:10}}>centre.io</Text>
-                </View>
               </TouchableOpacity>
             </View>
           </View>
 
-
-          <View style={{ flexDirection: "row", justifyContent: "space-between" ,marginTop:19,paddingHorizontal:wp(4)}}>
-            <View style={{ width: wp(40), alignSelf: "center" }}>
-            <Text style={[styles.textModal, { fontSize: 18 }]}>Amount</Text>
-              <TextInput placeholder='0.0' placeholderTextColor={"gray"} keyboardType="number-pad" style={[styles.modalOpen, { padding:10, width: wp(40),fontSize:18 }]} onChangeText={(value) => { setamount(value) }} returnKeyType="done"/>
-            </View>
-            <View style={{ width: wp(40), alignSelf: "center" }}>
-              <Text style={[styles.textModal, { fontSize: 18 }]}>Receive</Text>
-              <View style={[styles.modalOpen, { backgroundColor: "silver", width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
-                {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
-                <Text>{chooseSelectedItemIdCho === null ? "USDC" : chooseSelectedItemIdCho === "USDC" ? chooseSelectedItemId === "Matic" || chooseSelectedItemIdCho === "Matic" ? "apUSDC" : "USDC" : chooseSelectedItemIdCho === "BNB" ? "BNB" : chooseSelectedItemIdCho === "Matic" ? "apMATIC" : "aeETH"}</Text>
-              </View>
-            </View>
-          </View>
-
           <View style={{ width: wp(90),borderRadius:10, alignSelf: "flex-start",marginTop:40,height: hp(6.9),backgroundColor: '#ededeb',alignItems:"flex-start",justifyContent:"center",marginLeft:wp(4),paddingHorizontal:wp(1) }}>
-              <View style={{flexDirection:"row",alignItems:"center",width:wp(50)}}>
+              <View style={{flexDirection:"row",alignItems:"center",width:wp(85)}}>
               <Text style={{fontSize:16,textAlign:"center"}}>Address: </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%"}}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%",borderRadius:10,borderColor:"#4CA6EA",borderWidth:1,backgroundColor:"silver"}}>
                 <Text style={{fontSize:17 }}>{state.wallet.address}</Text>
               </ScrollView>
               </View>
@@ -296,6 +278,23 @@ const getOffersData = async () => {
               </ScrollView>
               </View>
           </View>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" ,marginTop:19,paddingHorizontal:wp(4)}}>
+            <View style={{ width: wp(40), alignSelf: "center" }}>
+            <Text style={[styles.textModal, { fontSize: 18 }]}>Amount</Text>
+              <TextInput placeholder='0.0' placeholderTextColor={"gray"} keyboardType="number-pad" style={[styles.modalOpen, { padding:10, width: wp(40),fontSize:18 }]} onChangeText={(value) => { setamount(value) }} returnKeyType="done"/>
+            </View>
+            <View style={{ width: wp(40), alignSelf: "center" }}>
+              <Text style={[styles.textModal, { fontSize: 18 }]}>Receive</Text>
+              <View style={[styles.modalOpen, { backgroundColor: "silver", width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
+                {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
+                <View>
+                <Text>{chooseSelectedItemIdCho === null ? "USDC" : chooseSelectedItemIdCho === "USDC" ? chooseSelectedItemId === "Matic" || chooseSelectedItemIdCho === "Matic" ? "apUSDC" : "USDC" : chooseSelectedItemIdCho === "BNB" ? "BNB" : chooseSelectedItemIdCho === "Matic" ? "apMATIC" : "aeETH"}</Text>
+                {chooseSelectedItemIdCho === null||chooseSelectedItemIdCho ==="USDC"?<Text style={{color:"gray",fontSize:10}}>centre.io</Text>:chooseSelectedItemIdCho ==="USDT"?<Text style={{color:"gray",fontSize:10}}>allbridge.io</Text>:<></>}
+                </View>
+              </View>
+            </View>
+          </View>
+
 
             <TouchableOpacity
               // disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
