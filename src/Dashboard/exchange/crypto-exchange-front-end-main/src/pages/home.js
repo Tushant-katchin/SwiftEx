@@ -20,6 +20,7 @@ import {
   Easing,
   BackHandler,
   FlatList,
+  Dimensions,
 } from "react-native";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,7 +41,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 import { alert } from "../../../../reusables/Toasts";
-import { LineChart } from "react-native-chart-kit";
+import { Chart, VerticalAxis, HorizontalAxis, Line, Area, Tooltip } from 'react-native-responsive-linechart';
 import { Platform,Modal} from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useRef } from "react";
@@ -58,10 +59,10 @@ export const HomeView = ({ setPressed }) => {
   const [ShowButtonLeft,setShowButtonLeft]=useState(false);
   const [open_chart_api,setopen_chart_api]=useState(false);
   const [chart_api,setchart_api]=useState([
-    {id:0,name:"XLM  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&start_time=1722171295000&end_time=1722258595000&resolution=900000&offset=0&limit=10&order=desc",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png',img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
-    {id:1,name:"ETH  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=native&start_time=1722229906000&resolution=60000&offset=0&limit=8&order=desc",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",img_0:"https://tokens.pancakeswap.finance/images/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png"},
-    {id:2,name:"XLM  ",name_0:"EURC",url:"https://horizon.stellar.org/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722229906000&resolution=60000&offset=0&limit=8&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png'},
-    {id:3,name:"USDC",name_0:"EURC",url:"https://horizon.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722229906000&resolution=60000&offset=0&limit=8&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
+    {id:0,name:"XLM  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&start_time=1722320811000&resolution=60000&offset=0&limit=20&order=desc",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png',img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
+    {id:1,name:"ETH  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=native&start_time=1722322399000&resolution=60000&offset=0&limit=20&order=desc",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",img_0:"https://tokens.pancakeswap.finance/images/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png"},
+    {id:2,name:"XLM  ",name_0:"EURC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722322255000&resolution=60000&offset=0&limit=20&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png'},
+    {id:3,name:"USDC",name_0:"EURC",url:"https://horizon.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722229906000&resolution=900000&offset=0&limit=50&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
   ])
   const [chart_index,setchart_index]=useState(0);
   const chooseRenderItem_1 = ({ item }) => (
@@ -104,16 +105,12 @@ export const HomeView = ({ setPressed }) => {
     phoneNumber: "93400xxxx",
     isEmailVerified: false,
   });
+  const chartHeight = Dimensions.get('window').height * 0.35;
+  const chartWidth = Dimensions.get('window').width * 0.80;
+  const [API_data,setAPI_data]=useState([]);
   const base_asset_code='XETH';
   const counter_asset_code='XUSD';
-  const [chartData, setChartData] = useState({
-    datasets: [
-      {
-        data: [0],
-        color: () => 'green',
-      },
-    ],
-  });
+  
   const [offers, setOffers] = useState();
   const [walletType, setWalletType] = useState(null);
   const [change, setChange] = useState(false);
@@ -430,41 +427,28 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
     try {
       // const response =await fetch('https://horizon-testnet.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code='+base_asset_code+'&base_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&counter_asset_type=credit_alphanum4&counter_asset_code='+counter_asset_code+'&counter_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&resolution=60000&offset=0&limit=6&order=desc')
       const response =await fetch(chart_api[chart_index].url)
+
+      
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const apiResponse = await response.json();
       const records = apiResponse._embedded.records;
-      // console.log(records);
-      const parsedData = {
-        labels : records.map((record) => {
-          const date = new Date(parseFloat(record.timestamp));
-          const hours = date.getHours().toString().padStart(2, '0');
-          const minutes = date.getMinutes().toString().padStart(2, '0');
-          return `${hours}:${minutes}`;
-        }),
-        
-        datasets: [
-          {
-            data: records.map((record) => parseFloat(record.high)),
-            color: (opacity = 1) => `rgba(0, 186, 0, ${opacity})`, // Green high
-            strokeWidth: 3
-          },
-          {
-            data: records.map((record) => parseFloat(record.low)),
-            color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Red low
-            strokeWidth: 3
-          }
-        ]
-      };
-      setChartData(parsedData);
+      setAPI_data(records);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+  // Transform data for the chart
+  const chartData = API_data.map(item => ({
+    x: new Date(parseInt(item.timestamp)).getTime(), // Convert timestamp to milliseconds
+    y: parseFloat(item.close), // Use the 'close' value for the y-axis
+    avg: parseFloat(item.avg) // Include the 'avg' value
+  }));
+
   useEffect(() => {
     fetchData()
-    const intervalId = setInterval(fetchData, 3000);
+    const intervalId = setInterval(fetchData, 1000);
     return () => clearInterval(intervalId);
   }, [chart_index]);
 
@@ -1048,25 +1032,78 @@ useFocusEffect(
         onPress={()=>{setopen_chart_api(true)}}
       />
     </View>
-    <LineChart
-        data={chartData}
-        width={370}
-        height={310}
-        withDots={true}
-        withVerticalLines={false}
-        withHorizontalLines={false}
-        style={{backgroundColor:"011434",borderRadius:15}}
-        bezier
-        chartConfig={{
-          backgroundColor: '#011434',
-          backgroundGradientFrom: '#212B53',
-          backgroundGradientTo: '#1C294D',
-          decimalPlaces: 3,
-          paddingTop:10,
-          color: (opacity = 0) => `rgba(33,43,83, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity.toFixed(1)})`,
+    <View  style={{  width:370,height:310,alignItems:"center",justifyContent:"center"}}>
+    
+    { API_data.length===0?<ActivityIndicator color={"green"} size={"large"}/>:
+    <Chart
+      style={{  width:370,height:310, padding: 1 }}
+      data={chartData}
+      padding={{ left: 40, bottom: 30, right: 20, top: 30 }}
+      xDomain={{ min: Math.min(...chartData.map(d => d.x)), max: Math.max(...chartData.map(d => d.x)) }}
+      yDomain={{ min: Math.min(...chartData.map(d => d.y)), max: Math.max(...chartData.map(d => d.y)) }}
+    >
+      <VerticalAxis
+        tickCount={10}
+        theme={{
+          grid:{visible:false},
+          labels: {
+            formatter: (v) => v.toFixed(4),
+            label: { color: "#fff" }
+          },
         }}
-        />
+      />
+      <HorizontalAxis
+        tickCount={10}
+        theme={{
+          grid:{visible:false},
+          labels: {
+            formatter: (v) => {
+              const date = new Date(v);
+              return `${date.getHours()}:${date.getMinutes()}`;
+            },
+            label: { color: "#fff" }
+          }
+        }}
+      />
+      <Area
+        theme={{ gradient: { from: { color: '#44bd32' }, to: { color: '#44bd32', opacity: 0.2 } } }}
+      />
+      <Line
+        tooltipComponent={
+          <Tooltip
+            theme={{
+              label: {
+                color: 'white',
+                fontSize: 12,
+                fontWeight: 700,
+                textAnchor: 'middle',
+                opacity: 1,
+                dx: 0,
+                dy: 16.5,
+              },
+              shape: {
+                width: 80,
+                height: 30,
+                dx: 0,
+                dy: 20,
+                rx: 4,
+                color: 'black',
+              }
+            }}
+            formatter={(d) => `Close: ${d.y.toFixed(10)}\nAvg: ${d.avg.toFixed(10)}`}
+          />
+        }
+        theme={{
+          stroke: { color: '#44bd32', width: 5 },
+          scatter: {
+            default: { width: 8, height: 8, rx: 4, color: '#44ad32' },
+            selected: { color: 'red' }
+          }
+        }}
+      />
+    </Chart>
+    }
+    </View>
         <View style={{backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     padding: hp(0.5),
     width: wp(95),

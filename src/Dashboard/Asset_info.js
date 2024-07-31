@@ -240,8 +240,9 @@ const Asset_info = ({ route }) => {
                         xDomain={{ min: new Date(chart[0].x).getTime(), max: new Date(chart[chart.length - 1].x).getTime() }}
                         yDomain={{ min: Math.min(...chart.map(d => d.y)), max: Math.max(...chart.map(d => d.y)) }}
                     >
-                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2),label:{color:state.THEME.THEME===false?"black":"#fff"} } }} />
+                        <VerticalAxis tickCount={10} theme={{ grid:{visible:false},labels: { formatter: (v) => v.toFixed(2),label:{color:state.THEME.THEME===false?"black":"#fff"} } }} />
                         <HorizontalAxis tickCount={10} theme={{
+                            grid:{visible:false},
                             labels: {
                                 formatter: (v) => {
                                     const date = new Date(v);
