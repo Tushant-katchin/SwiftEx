@@ -20,6 +20,23 @@ export function enableBiometrics(){
     console.log('biometrics failed')
   })
 }
+export function enable_face_id(){
+  rnBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
+.then((resultObject) => {
+  const { success } = resultObject
+
+  if (success) {
+    console.log('successful biometrics provided')
+    AsyncStorageLib.setItem('Biometric', 'SET')
+    
+  } else {
+    console.log('user cancelled biometric prompt')
+  }
+})
+.catch(() => {
+  console.log('biometrics failed')
+})
+}
 
 export function useBiometrics(navigation){ 
     rnBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
@@ -67,6 +84,7 @@ export function getBiometrics(){
             console.log('TouchID is supported')
         } else if (available && biometryType === BiometryTypes.FaceID) {
             console.log('FaceID is supported')
+            enable_face_id()
         } else if (available && biometryType === BiometryTypes.Biometrics) {
             console.log('Biometrics is supported')
             enableBiometrics()
