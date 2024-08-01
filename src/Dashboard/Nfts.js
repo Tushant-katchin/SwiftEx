@@ -32,7 +32,11 @@ const Nfts = () => {
   const [open_chain,setopen_chain]=useState(false)
   const [balance, getBalance] = useState(0);
   const [contract_text, setcontract_text] = useState('');
+  const [View_assets,setView_assets]=useState(false);
 
+  useEffect(()=>{
+    setView_assets(false)
+  },[])
 
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -116,16 +120,39 @@ const Nfts = () => {
           <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Ethereum</Text>
           <Icon type={"materialCommunity"} name="menu-down" size={hp(2.9)} color={state.THEME.THEME===false?"#fff":"black"} style={{margin:hp(2),}}/>
       </View>
-      <TextInput style={[styles.drop_down_con,{paddingLeft:10,fontSize:14}]} placeholder="Contract Address" placeholderTextColor={"gray"} value={contract_text} onChangeText={(value)=>{setcontract_text(value)}}/>
+      {!View_assets?<><TextInput style={[styles.drop_down_con,{paddingLeft:10,fontSize:14,color:state.THEME.THEME===false?"black":"#fff"}]} placeholder="Contract Address" placeholderTextColor={"gray"} value={contract_text} onChangeText={(value)=>{setcontract_text(value)}}/>
 
-      <View style={{flexDirection:"row",justifyContent:"space-around"}}>
-      <TouchableOpacity disabled={!contract_text} style={[styles.Add_asset_btn,{justifyContent:"center",backgroundColor:!contract_text?"gray":"green"}]}>
-          <Text style={[styles.text,{ fontSize:17,textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"#fff":"#fff"}]}>Add Asset</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.Add_asset_btn,{justifyContent:"center",marginRight:wp(4),backgroundColor:"green"}]}>
-          <Text style={[styles.text,{ fontSize:17, textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"#fff":"#fff"}]}>View</Text>
-      </TouchableOpacity>
+<View style={{flexDirection:"row",justifyContent:"space-around"}}>
+<TouchableOpacity disabled={!contract_text} style={[styles.Add_asset_btn,{justifyContent:"center",backgroundColor:!contract_text?"gray":"green"}]}>
+    <Text style={[styles.text,{ fontSize:17,textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"#fff":"#fff"}]}>Add Asset</Text>
+</TouchableOpacity>
+<TouchableOpacity style={[styles.Add_asset_btn,{justifyContent:"center",marginRight:wp(4),backgroundColor:"green"}]} onPress={()=>{setView_assets(true)}}>
+    <Text style={[styles.text,{ fontSize:17, textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"#fff":"#fff"}]}>View</Text>
+</TouchableOpacity>
+</View></>
+:
+<>
+<View style={[styles.drop_down_View]}>
+          <View style={{flexDirection:"row",justifyContent:"space-between"}}>
+            <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+              <Image source={{uri:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"}} style={styles.img_icon} />
+              <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff",margin:hp(1)}]}>USDC</Text>
+            </View>
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>0.00</Text>
+          </View>
+
+          <View style={{flexDirection:"row",justifyContent:"space-between"}}>
+          <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+          <Image source={{uri:"https://tokens.pancakeswap.finance/images/0x55d398326f99059fF775485246999027B3197955.png"}} style={styles.img_icon} />
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff",margin:hp(1)}]}>USDT</Text>
+          </View>
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>0.00</Text>
+          </View>
       </View>
+      <TouchableOpacity style={[styles.Add_asset_btn,{alignSelf:"flex-end",justifyContent:"center",marginRight:wp(4),marginTop:hp(1),}]} onPress={()=>{setView_assets(false)}}>
+    <Text style={[styles.text,{ fontSize:17, textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"black":"#fff"}]}>Back</Text>
+</TouchableOpacity>
+</>}
 
       <Modal
         animationType="slide"
@@ -203,6 +230,14 @@ const styles = StyleSheet.create({
     justifyContent:"space-between",
     alignItems:"center"
   },
+  drop_down_View:{
+    width:wp(94),
+    marginTop:hp(3),
+    borderColor: "#4CA6EA",
+    borderWidth:1,
+    borderRadius:10,
+    justifyContent:"space-between",
+  },
   Add_asset_btn:{
     width:wp(40),
     height:hp(6),
@@ -244,5 +279,6 @@ const styles = StyleSheet.create({
   },
   btnText:{
     textAlign:"center"
-  }
+  },
+  img_icon: { height: hp(3.3), width: wp(7.4), borderWidth: 1, borderRadius: hp(3),marginLeft:wp(2) }
 });

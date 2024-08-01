@@ -129,6 +129,7 @@ const Dashboard = ({ navigation }) => {
         shifting={false}
         barStyle={{ backgroundColor: "#131E3A", color: "black" }} //This is where you can manipulate its look.
         screenOptions={({ route }) => ({
+          tabBarHideOnKeyboard: true,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             size = 25;
