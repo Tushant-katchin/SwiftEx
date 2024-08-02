@@ -26,7 +26,7 @@ import {
 } from "react-native-paper";
 import Bnbimage from "../../assets/bnb-icon2_2x.png";
 import Etherimage from "../../assets/ethereum.png";
-import darkBlue from "../../assets/darkBlue.png"
+import darkBlue from "../../assets/multicoin_wallet.png"
 import Xrpimage from "../../assets/xrp.png";
 import stellar from "../../assets/Stellar_(XLM).png"
 import Maticimage from "../../assets/matic.png";
@@ -122,7 +122,7 @@ const ImportAccount = (props) => {
           <Text style={style.text}>Ethereum</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={style.Box}
           onPress={() => {
             props.navigation.navigate("Import Polygon");
@@ -141,7 +141,7 @@ const ImportAccount = (props) => {
           <Image source={Xrpimage} style={style.img} />
 
           <Text style={style.text}>Xrp</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* <TouchableOpacity
           style={style.Box}

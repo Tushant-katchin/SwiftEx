@@ -14,7 +14,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
-import darkBlue from "../../../assets/darkBlue.png"
+import darkBlue from "../../../assets/multicoin_wallet.png"
 import title_icon from "../../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -150,7 +150,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           <Image source={Etherimage} style={style.img} />
           <Text style={[style.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Ethereum</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={style.Box}
           onPress={() => {
             setPolygonwallet(true);
@@ -167,7 +167,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
         >
           <Image source={Xrpimage} style={style.img} />
           <Text style={[style.text,{color:state.THEME.THEME===false?"black":"#fff"}]}> Xrp</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={style.Box}
           onPress={() => {

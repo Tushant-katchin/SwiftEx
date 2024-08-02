@@ -7,7 +7,7 @@ import {
   UIManager,
   Touchable,
   TouchableOpacity,
-  Pressable,StatusBar, SafeAreaView, Image
+  Pressable,StatusBar, SafeAreaView, Image, Modal
 } from "react-native";
 import { Button, Text } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
@@ -41,6 +41,7 @@ import { FaucetModal } from "./Modals/faucetModal";
 import Icon from "../icon";
 import IconWithCircle from "../Screens/iconwithCircle";
 import darkBlue from "../../assets/darkBlue.png"
+import Wallet_selection_bottom from "./Wallets/Wallet_selection_bottom";
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -72,6 +73,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [ethPrice, setEthPrice] = useState(0);
   const [xrpPrice, setXrpPrice] = useState(0);
   const [balanceUsd, setBalance] = useState(0.0);
+  const [Wallet_modal,setWallet_modal]=useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // onPress={() => setModalVisible(true)}
   if (Platform.OS === "android") {
@@ -411,7 +413,9 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       setUser(user);
     }
   }, [state.wallet.name]);
-
+  const handleClosewalletmodal = () => {
+    setWallet_modal(false);
+  };
   return (
     <SafeAreaView style={{ backgroundColor: state.THEME.THEME===false?"#fff":"black",marginTop:0 }}>
     <View>
@@ -422,7 +426,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         </Pressable>
         {/* <FaucetModal showModal={showModal} setShowModal={setShowModal} /> */}
         
-        <TouchableOpacity style={{backgroundColor: state.THEME.THEME===false?"silver":"black",borderRadius:16,justifyContent:"space-between",alignItems:"center",paddingHorizontal:'1%',flexDirection:"row",width:wp(40),borderColor:"#145DA0",borderWidth:1.5}}>
+        <TouchableOpacity style={{backgroundColor: state.THEME.THEME===false?"silver":"black",borderRadius:16,justifyContent:"space-between",alignItems:"center",paddingHorizontal:'1%',flexDirection:"row",width:wp(40),borderColor:"#145DA0",borderWidth:1.5}} onPress={()=>{setWallet_modal(true)}}>
           <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
           <Image
                   source={darkBlue}
@@ -540,6 +544,38 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           </Text>
         </View>
       </TouchableOpacity>
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={Wallet_modal}
+        onRequestClose={() => setWallet_modal(false)}
+      >
+        <View style={styles.modalBackground}>
+            <TouchableOpacity
+              onPress={() => setWallet_modal(false)}
+              style={{marginBottom:Platform.OS==="ios"?hp(-1.5):hp(-2)}}
+            >
+              <IconWithCircle
+          name={"arrowdown"}
+          type={"antDesign"}
+          title={""}
+          // onPress={() => setModalVisible(!modalVisible)}
+        />
+              {/* #2196F3 */}
+            </TouchableOpacity>
+          <View style={[styles.modalView,{backgroundColor:state.THEME.THEME===false?"#fff":"black",borderBottomColor:state.THEME.THEME===false?"#fff":"black"}]}>
+            <View style={styles.modal_heading_view}>
+            <Text style={[styles.modalText,{color:state.THEME.THEME===false?"black":"#fff"}]}>Choose wallet</Text>
+            <TouchableOpacity
+              onPress={() => [setWallet_modal(false),navigation.navigate("Wallet")]}
+            >
+            <Text style={[styles.modalText,{color:'#2196F3'}]}>Add Wallet</Text>
+            </TouchableOpacity>
+            </View>
+        <Wallet_selection_bottom onClose={handleClosewalletmodal}/>
+          </View>
+        </View>
+      </Modal>
     </View>
     </SafeAreaView>
   );
@@ -735,6 +771,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: hp(10),
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  modal_heading_view:{
+    flexDirection:"row",
+    width: wp(100),
+    paddingVertical: 5,
+    paddingHorizontal:16,
+    justifyContent:"space-between"
+  },
+  modalView: {
+    width: wp(100),
+    height:hp(30),
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingVertical:hp(1.5),
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    borderColor:"#2196F3",
+    borderWidth:0.9,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight:"400"
   },
 });
 /*

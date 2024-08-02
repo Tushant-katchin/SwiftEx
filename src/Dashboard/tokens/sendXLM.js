@@ -195,7 +195,7 @@ const SendXLM = (props) => {
 
     return (
         <>
-            {Platform.OS === "ios" ? <View style={{ backgroundColor: state.THEME.THEME===false?"#4CA6EA":"black", flexDirection: "row", height: hp(8),borderColor:"gray",borderWidth:0.5 }}>
+            {Platform.OS === "ios" ? <View style={{ backgroundColor: state.THEME.THEME===false?"#4CA6EA":"black", flexDirection: "row", height: hp(8),borderBottomColor:"gray",borderColor:state.THEME.THEME===false?"#4CA6EA":"black",borderWidth:0.5 }}>
                 <Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={() => { navigation.goBack() }} style={{ padding: hp(1.5), marginTop: '3%' }} />
                 <Text style={{ color: "white", alignSelf: "center", marginLeft: "19%", marginTop: '9%', fontSize: 19 }}>Transaction Details</Text>
                 <TouchableOpacity onPress={() => { navigation.navigate("Home") }}>
@@ -206,7 +206,7 @@ const SendXLM = (props) => {
                     }} />
                 </TouchableOpacity>
             </View> :
-                <View style={{ backgroundColor: state.THEME.THEME===false?"#4CA6EA":"black", flexDirection: "row",borderBottomColor:"gray",borderWidth:0.5 }}>
+                <View style={{ backgroundColor: state.THEME.THEME===false?"#4CA6EA":"black", flexDirection: "row",borderBottomColor:"gray",borderColor:state.THEME.THEME===false?"gray":"black",borderWidth:0.5 }}>
                     <Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={() => { navigation.goBack() }} style={{ padding: hp(1.5), marginTop: '3%' }} />
                     <Text style={{ color: "white", alignSelf: "center", marginLeft: "20%", fontWeight: 'bold', fontSize: 17 }}>Transaction Details</Text>
                     <TouchableOpacity onPress={() => { navigation.navigate("Home") }}>
@@ -228,7 +228,7 @@ const SendXLM = (props) => {
                         }}
                         placeholder="Recipient Address"
                         placeholderTextColor={"gray"}
-                        style={style.input}
+                        style={[style.input,{color:state.THEME.THEME===false?"black":"#fff"}]}
                     />
                     <TouchableOpacity onPress={() => {toggleModal()}}>
                         <Icon name="scan" type={"ionicon"} size={20} color={"blue"} />
@@ -262,7 +262,7 @@ const SendXLM = (props) => {
                         }}
                         placeholder="Amount"
                         placeholderTextColor={"gray"}
-                        style={style.input}
+                        style={[style.input,{color:state.THEME.THEME===false?"black":"#fff"}]}
                     ></TextInput>
                     <TouchableOpacity
                         onPress={() => {
@@ -295,7 +295,7 @@ const SendXLM = (props) => {
 
                     <TouchableOpacity
                         disabled={disable}
-                        style={[style.btnView,{backgroundColor:disable?"gray":"green"}]}
+                        style={[style.btnView,{backgroundColor:disable?"gray":"#3574B6"}]}
                         onPress={() => {
                             setPayment_loading(true);
                            if(!address||!amount)

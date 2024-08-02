@@ -50,9 +50,7 @@ import Icon from "../../icon";
 import { delay } from "lodash";
 
 const xrpl = require("xrpl");
-
-//'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
-const AllWallets = (props) => {
+const Wallet_selection_bottom = ({ onClose }) => {
   const state = useSelector((state) => state);
   const navigation = useNavigation();
   console.log(state.walletType);
@@ -68,6 +66,9 @@ const AllWallets = (props) => {
   let MaticLeftContent = (props) => (
     <Avatar.Image {...props} source={Maticimage} />
   );
+  const handlePress = () => {
+    onClose();
+  };
   const getALlWallets = async () => {
     const user = await AsyncStorageLib.getItem("user");
     console.log(user);
@@ -319,7 +320,8 @@ const AllWallets = (props) => {
 
                             alert("success", "Wallet Selected " + item.name);
                             delay(()=>{
-                              navigation.navigate("Home");
+                              // navigation.navigate("Home");
+                              handlePress()
                             },400)
                           } else {
                             alert(
@@ -352,17 +354,10 @@ const AllWallets = (props) => {
                           await getXrpBal(item.classicAddress).catch((e) => {
                             console.log(e);
                           });
-                          //dispatch(getXrpBalance(item.classicAddress));
                           await AsyncStorageLib.setItem(
                             "walletType",
                             JSON.stringify(item.walletType)
                           );
-
-                          /*  await getXrpBal(item.classicAddress)
-                          .then((response)=>{
-                            console.log(response)
-                          })*/
-                          //dispatch(getXrpBalance(item.classicAddress))
                           alert("success", `Wallet selected : ${item.name}`);
                         } else {
                           alert(
@@ -457,15 +452,12 @@ const AllWallets = (props) => {
   );
 };
 
-export default AllWallets;
+export default Wallet_selection_bottom;
 
 const style = StyleSheet.create({
-  body: { backgroundColor: "white", height: hp(100) },
-  welcomeText: {
-    fontSize: 20,
-    fontWeight: "200",
-    color: "black",
-    marginTop: hp(5),
+  body: { 
+    backgroundColor: "white",
+    width:wp(99)
   },
   wallet: {
     textAlign: "center",
@@ -476,16 +468,6 @@ const style = StyleSheet.create({
     textAlign: "center",
     marginTop: hp(2),
   },
-  welcomeText2: {
-    fontSize: 15,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(1),
-  },
-  Button: {
-    marginTop: hp(10),
-  },
-
   Text: {
     marginTop: hp(5),
     fontSize: 15,
@@ -493,36 +475,10 @@ const style = StyleSheet.create({
     color: "white",
   },
   Box: {
-    marginHorizontal: wp(6),
+    marginHorizontal: wp(0),
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
     padding: 10,
-    // marginTop: hp(2),
     borderColor: "#D7D7D7",
-  },
-  Box2: {
-    height: hp("15%"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(1),
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
-  },
-  Box3: {
-    height: hp("15%"),
-    width: wp("75"),
-    fontSize: 20,
-    fontWeight: "200",
-    color: "white",
-    marginTop: hp(2),
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    backgroundColor: "white",
-    borderTopWidth: 1,
   },
   img: {
     height: hp(4.5),

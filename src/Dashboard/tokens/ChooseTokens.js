@@ -179,7 +179,7 @@ const ChooseTokens = ({ setModalVisible }) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
@@ -238,7 +238,7 @@ const ChooseTokens = ({ setModalVisible }) => {
                 <Title style={{ color: "#fff" }}></Title>
               </View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </Animated.View>
@@ -257,7 +257,7 @@ const style = StyleSheet.create({
   Body: {
     display: "flex",
     bottom: 0,
-    height: hp(52),
+    height: hp(35),
     alignSelf:"center",
     width: wp(100),
     alignItems: "center",

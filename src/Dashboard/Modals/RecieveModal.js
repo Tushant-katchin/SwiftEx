@@ -176,7 +176,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={style.Box3}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
@@ -230,7 +230,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
                 <Title style={{ color: "#fff" }}></Title>
               </View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <Text style={style.walletText}>Please select a wallet type</Text>
         </View>
