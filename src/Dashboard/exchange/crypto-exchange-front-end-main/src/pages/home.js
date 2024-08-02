@@ -471,8 +471,8 @@ const Offer_condition=(data,para)=>{
   }
   else{
   getAccountDetails()
-  if(Offer_active===true)
-  {
+  // if(Offer_active===true)
+  // {
     if (
       walletType === "Ethereum" ||
       walletType === "Multi-coin"
@@ -489,10 +489,10 @@ const Offer_condition=(data,para)=>{
       
       alert('error',"Only Ethereum wallet are supported");
     }
-  }
-  else{
-    Alert.alert("Account","Add Bank Account from Profile Tab.");
-  }
+  // }
+  // else{
+    // Alert.alert("Account","Add Bank Account from Profile Tab.");
+  // }
   }
 }
 const copyToClipboard = (data) => {

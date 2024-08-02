@@ -568,7 +568,8 @@ const reves_fun=async(fist_data,second_data)=>{
         textAlign: 'center',
         color:"#fff",
         flex: 1,
-        marginLeft:wp(13)
+        marginLeft:wp(13),
+        marginTop:Platform.OS==="android"?hp(0):hp(3)
       }}>Create Offer</Text>
 
       {/* Right Image and Menu Icon */}

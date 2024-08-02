@@ -117,7 +117,10 @@ const Nfts = () => {
 </TouchableOpacity> */}
       {/* <TouchableOpacity style={[styles.drop_down_con]} onPress={()=>{setopen_offer(true)}}> */}
       <View style={[styles.drop_down_con]}>
-          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Ethereum</Text>
+          <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+          <Image source={{uri:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"}} style={[styles.img_icon,{ height: hp(3.6), width: wp(7.6)}]} />
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff",marginLeft:5}]}>Ethereum</Text>
+          </View>
           <Icon type={"materialCommunity"} name="menu-down" size={hp(2.9)} color={state.THEME.THEME===false?"#fff":"black"} style={{margin:hp(2),}}/>
       </View>
       {!View_assets?<><TextInput style={[styles.drop_down_con,{paddingLeft:10,fontSize:14,color:state.THEME.THEME===false?"black":"#fff"}]} placeholder="Contract Address" placeholderTextColor={"gray"} value={contract_text} onChangeText={(value)=>{setcontract_text(value)}}/>
@@ -133,6 +136,13 @@ const Nfts = () => {
 :
 <>
 <View style={[styles.drop_down_View]}>
+<View style={{flexDirection:"row",justifyContent:"space-between",marginBottom:-20}}>
+            <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+              <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff",margin:hp(1)}]}>Tokens</Text>
+            </View>
+          <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Balance</Text>
+          </View>
+
           <View style={{flexDirection:"row",justifyContent:"space-between"}}>
             <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
               <Image source={{uri:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"}} style={styles.img_icon} />
@@ -232,7 +242,7 @@ const styles = StyleSheet.create({
   },
   drop_down_View:{
     width:wp(94),
-    marginTop:hp(3),
+    marginTop:hp(1.5),
     borderColor: "#4CA6EA",
     borderWidth:1,
     borderRadius:10,

@@ -7,7 +7,7 @@ import {
   UIManager,
   Touchable,
   TouchableOpacity,
-  Pressable,StatusBar, SafeAreaView
+  Pressable,StatusBar, SafeAreaView, Image
 } from "react-native";
 import { Button, Text } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
@@ -40,6 +40,7 @@ import { tokenAddresses } from "./constants";
 import { FaucetModal } from "./Modals/faucetModal";
 import Icon from "../icon";
 import IconWithCircle from "../Screens/iconwithCircle";
+import darkBlue from "../../assets/darkBlue.png"
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -66,7 +67,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   const [balance, GetBalance] = useState(0.0);
   const [wallet, getWallet] = useState(walletState ? walletState : []);
   const [Type, setType] = useState("");
-  const [user, setUser] = useState();
+  const [user, setUser] = useState("");
   const [bnbPrice, setBnbPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
   const [xrpPrice, setXrpPrice] = useState(0);
@@ -419,7 +420,18 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Pressable onPress={() => alert("Notifications will be added soon")}>
           <Icon name="bell" type={"fontisto"} size={24} color={ state.THEME.THEME===false?"black":"#fff"} />
         </Pressable>
-        <FaucetModal showModal={showModal} setShowModal={setShowModal} />
+        {/* <FaucetModal showModal={showModal} setShowModal={setShowModal} /> */}
+        
+        <TouchableOpacity style={{backgroundColor: state.THEME.THEME===false?"silver":"black",borderRadius:16,justifyContent:"space-between",alignItems:"center",paddingHorizontal:'1%',flexDirection:"row",width:wp(40),borderColor:"#145DA0",borderWidth:1.5}}>
+          <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+          <Image
+                  source={darkBlue}
+                  style={{width:35,height:35}}
+                />
+        <Text style={{color:state.THEME.THEME===false?"white":"#fff",fontWeight: "bold",marginRight:4,fontSize:16}}>{user.slice(0,11)}</Text>
+          </View>
+        <Icon name="chevron-down-outline" type={"ionicon"} size={21} color={"#fff"} />
+      </TouchableOpacity>
 
         {/* <TouchableOpacity
           style={styles.faucetBtn}
@@ -439,7 +451,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       </View>
       <View style={{ marginVertical: hp(2) }}>
         <Text style={[styles.dollartxt,{color:state.THEME.THEME===false?"black":"#fff"}]}>
-          $ {balanceUsd >= 0 ? balanceUsd : 0.0}
+        $ {balanceUsd >= 0 ? balanceUsd : 0.0}
         </Text>
         <Text
           style={{

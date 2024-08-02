@@ -129,7 +129,6 @@ const FOCUSED=useIsFocused();
             setTimeout(()=>{
               alert("error","Invalid credintials");
             },400)
-            setEmail("");
             setlogin_Passcode("");
             setLoading(false);
           }
