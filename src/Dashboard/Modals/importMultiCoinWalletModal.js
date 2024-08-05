@@ -328,6 +328,7 @@ const ImportMultiCoinWalletModal = ({
                         setWalletVisible(false);
                         setVisible(false);
                         setModalVisible(false);
+                    AsyncStorageLib.setItem("currentWallet", accountName);
                         navigation.navigate("AllWallets");
                       }, 0);
                     } else {
