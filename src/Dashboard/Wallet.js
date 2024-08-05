@@ -150,7 +150,7 @@ const Wallet = ({ navigation }) => {
                 navigation.navigate("AllWallets")
               }}
             >
-              <Text style={{color:"white",fontWeight:"700"}}>Choose Wallet</Text>
+              <Text style={{color:"white",fontWeight:"700",textAlign:"center"}}>Choose Wallet</Text>
             </TouchableOpacity>
         </View>
         
