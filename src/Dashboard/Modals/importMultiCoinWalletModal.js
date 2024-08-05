@@ -169,7 +169,7 @@ const ImportMultiCoinWalletModal = ({
         <View style={style.Body}>
           {/* <ModalHeader Function={closeModal} name={'Multi-Coin'}/> */}
           <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} onPress={onCrossPress} />
-          <Text style={style.coinText}>Multi Coin Wallet</Text>
+          <Text style={style.coinText}>Multi-Chain Wallet</Text>
           <View style={style.labelInputContainer}>
             <Text style={style.label}>Name</Text>
             <TextInput

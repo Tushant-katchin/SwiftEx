@@ -183,6 +183,7 @@ const ImportBscWallet = (props) => {
         <View style={style.inputView}>
           <TouchableOpacity onPress={async ()=>{
            // setText('abc')
+           setDisable(false)
             if (label === "privateKey") {
               await Paste(setText)
               .then((text)=>{

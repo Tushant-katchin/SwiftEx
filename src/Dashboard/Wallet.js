@@ -135,7 +135,7 @@ const Wallet = ({ navigation }) => {
         </View>
         <View style={styles.Button}>
             <TouchableOpacity
-            style={[styles.PresssableBtn,{marginLeft:wp(3)}]}
+            style={[styles.PresssableBtn,{marginLeft:wp(1.9)}]}
               onPress={() => {
                 setVisible(true);
               }}
@@ -145,7 +145,7 @@ const Wallet = ({ navigation }) => {
         </View>
         <View style={styles.Button}>
             <TouchableOpacity
-            style={[styles.PresssableBtn,{marginLeft:wp(3)}]}
+            style={[styles.PresssableBtn,{marginLeft:wp(1.9)}]}
               onPress={() => {
                 navigation.navigate("AllWallets")
               }}
@@ -240,9 +240,9 @@ const styles = StyleSheet.create({
     // padding: hp(),
     height:hp(5),
     justifyContent:"center",
-    width: wp(30),
+    width: wp(28),
     alignSelf: "center",
-    paddingHorizontal: Platform.OS==="android"?wp(3):wp(2),
+    paddingHorizontal: Platform.OS==="android"?wp(1):wp(2),
     borderRadius: hp(0.8),
     marginBottom: hp(2),
     alignItems: "center",

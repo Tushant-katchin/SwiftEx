@@ -130,7 +130,7 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
           }}
         >
           <Image source={darkBlue} style={style.darkBlueimg}/>
-          <Text style={[style.text1,{color:state.THEME.THEME===false?"black":"#fff"}]}> Multi-Coin Wallet </Text>
+          <Text style={[style.text1,{color:state.THEME.THEME===false?"black":"#fff"}]}> Multi-Chain Wallet </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={style.Box}
@@ -306,5 +306,6 @@ const style = StyleSheet.create({
   darkBlueimg:{
     height: hp(7),
     width: wp(14),
+    marginHorizontal:wp(0.7)
   }
 });

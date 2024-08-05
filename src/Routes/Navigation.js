@@ -313,7 +313,7 @@ const AuthStack = () => (
         component={ImportMunziWallet}
         options={{
           header: () => {
-            return <WalletHeader title="Import Multi-Coin Wallet" />;
+            return <WalletHeader title="Import Multi-Chain Wallet" />;
           },
         }}
       />

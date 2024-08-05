@@ -99,7 +99,7 @@ const ImportAccount = (props) => {
           }}
         >
           <Image source={darkBlue} style={style.img1} />
-          <Text style={style.text1}>Multi-Coin Wallet</Text>
+          <Text style={[style.text1,{marginHorizontal: wp(2.5),}]}>Multi-Chain Wallet</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -232,6 +232,6 @@ const style = StyleSheet.create({
   },
   img1:{
     height: hp(6),
-    width: wp(10), 
+    width: wp(11.9),
   }
 });
