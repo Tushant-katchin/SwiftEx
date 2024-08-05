@@ -386,6 +386,12 @@ const Home2 = ({ navigation }) => {
   //     }
   //   });
   // }, []);
+
+    const currentRout = useNavigationState(state => {
+      const route = state.routes[state.index];
+      return route.name;
+    });
+
   const extractRouteName = (key) => {
     const [routeName] = key.split('-');
     return routeName;
@@ -401,7 +407,7 @@ const Home2 = ({ navigation }) => {
         // if (currentRoute !== routeName) {
         //   setVisible(true);
         // }
-        if (currentRoute && extractRouteName(currentRoute) === "On/Off Ramp") {
+        if (currentRoute && extractRouteName(currentRoute) === "On/Off Ramp"||currentRout==="Wallet") {
         }
         else{
           setVisible(true);
@@ -414,7 +420,7 @@ const Home2 = ({ navigation }) => {
     return () => {
       AppState.removeEventListener("change", handleAppStateChange);
     };
-  }, [currentRoute]);
+  }, [currentRoute,currentRout]);
 
   useFocusEffect(
     React.useCallback(() => {

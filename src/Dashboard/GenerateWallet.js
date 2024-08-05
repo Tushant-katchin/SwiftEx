@@ -17,6 +17,7 @@ import darkBlue from "../../assets/darkBlue.png";
 import { useDispatch, useSelector } from "react-redux";
 import { Generate_Wallet2 } from "../components/Redux/actions/auth";
 import { alert } from "./reusables/Toasts";
+import Icon from "../icon";
 
 const GenerateWallet = (props) => {
   const [Checked, setCheckBox] = useState(false);
@@ -61,20 +62,35 @@ const GenerateWallet = (props) => {
         <Animated.Image style={style.logoStyle} source={darkBlue} />
 
         <TouchableOpacity style={style.textview} onPress={() => setCheckBox(!Checked)}>
+          {/* <Switch value={Checked} onValueChange={() => setCheckBox(!Checked)} />
+           */}
+           <Icon
+            name={"check-circle"}
+            type={"materialCommunity"}
+            size={25}
+            color={Checked?"green":"gray"}
+            onPress={() => setCheckBox(!Checked)}
+            />
           <Text style={style.txtStyle}>
             If I lose my private key , my funds will be lost
           </Text>
-          <Switch value={Checked} onValueChange={() => setCheckBox(!Checked)} />
         </TouchableOpacity>
 
         <TouchableOpacity style={style.textview} onPress={() => setCheckBox2(!Checked2)}>
+          {/* <Switch
+            value={Checked2}
+            onValueChange={() => setCheckBox2(!Checked2)}
+          /> */}
+          <Icon
+            name={"check-circle"}
+            type={"materialCommunity"}
+            size={25}
+            color={Checked2?"green":"gray"}
+            onPress={() => setCheckBox2(!Checked2)}
+            />
           <Text style={style.txtStyle}>
             If I share my private key , my funds can get stolen
           </Text>
-          <Switch
-            value={Checked2}
-            onValueChange={() => setCheckBox2(!Checked2)}
-          />
         </TouchableOpacity>
         {loading ? (
           <ActivityIndicator size="large" color="white" />
@@ -189,13 +205,14 @@ const style = StyleSheet.create({
     width: wp(58),
     textAlign: "left",
     fontSize: 15,
+    marginLeft:wp(4)
   },
   textview: {
     display: "flex",
     flexDirection: "row",
     marginTop: hp(5),
     width: wp(80),
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     marginTop: hp(6),
     alignSelf: "center",
     alignItems: "center",

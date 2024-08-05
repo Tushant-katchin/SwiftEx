@@ -106,14 +106,21 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
             }}
             onPress={()=>{setCheckBox(!Checked)}}
           >
+            <Icon
+            name={"check-circle"}
+            type={"materialCommunity"}
+            size={25}
+            color={Checked?"green":"gray"}
+            onPress={() => setCheckBox(!Checked)}
+            />
+            <View style={{ marginLeft: 10 }}>
             <Text style={style.welcomeText2}>
               If i loose my private key , my funds will be lost
             </Text>
-            <View style={{ marginLeft: 10 }}>
-              <Switch
+              {/* <Switch
                 value={Checked}
                 onValueChange={() => setCheckBox(!Checked)}
-              />
+              /> */}
             </View>
           </TouchableOpacity>
 
@@ -126,14 +133,21 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
             }}
             onPress={() => setCheckBox2(!Checked2)}
           >
+            <Icon
+          name={"check-circle"}
+          type={"materialCommunity"}
+          size={25}
+          color={Checked2?"green":"gray"}
+          onPress={() => setCheckBox2(!Checked2)}
+          />
+            <View style={{ marginLeft: 10 }}>
             <Text style={style.welcomeText2}>
               If i share my private key , my funds can get stolen
             </Text>
-            <View style={{ marginLeft: 10 }}>
-              <Switch
+              {/* <Switch
                 value={Checked2}
                 onValueChange={() => setCheckBox2(!Checked2)}
-              />
+              /> */}
             </View>
           </TouchableOpacity>
           {loading ? (
@@ -142,7 +156,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
             <Text> </Text>
           )}
 <TouchableOpacity
-            style={{width:wp(30),alignItems:"center"}}
+            style={[style.PresssableBtn,{width:wp(30),alignItems:"center",backgroundColor:  Checked && Checked2? "green":"gray"}]}
               disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
                 setLoading(true);
@@ -176,7 +190,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
                 }, 1);
               }}
             >
-          <LinearGradient
+          {/* <LinearGradient
             start={[1, 0]}
             end={[0, 1]}
             colors={
@@ -184,11 +198,11 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
                 ? ["rgba(33, 43, 83, 1)","rgba(28, 41, 77, 1)"]
                 : ["gray", "gray"]
             }
-            style={style.PresssableBtn}
-          >
+            // style={style.PresssableBtn}
+          > */}
 
               <Text style={{ color: "white" }}>Continue</Text>
-          </LinearGradient>
+          {/* </LinearGradient> */}
             </TouchableOpacity>
           </View>
           {/* <ModalHeader Function={closeModal} name={"Import"} /> */}
@@ -258,7 +272,6 @@ const style = StyleSheet.create({
     backgroundColor: "white",
   },
   PresssableBtn: {
-    backgroundColor: "#4CA6EA",
     padding: hp(1),
     width: wp(30),
     alignSelf: "center",

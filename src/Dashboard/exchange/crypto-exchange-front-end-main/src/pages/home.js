@@ -973,7 +973,7 @@ useFocusEffect(
               {profile.isVerified===true ? (
                 <View style={{flexDirection:"row",justifyContent:"center"}}>
                   <TouchableOpacity 
-                    style={[styles.PresssableBtn,{width: wp(93),marginLeft:3}]}
+                    style={[styles.PresssableBtn,{width: wp(93),marginLeft:3,height:hp(7)}]}
                     onPress={() => {
                      // setOpen(true)
                         Offer_condition(Offer_active)
@@ -1002,23 +1002,22 @@ useFocusEffect(
 </View>
         <View style={{ backgroundColor: "#011434",flexDirection:"row",justifyContent:"center" }}>
           <TouchableOpacity
-            style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1,width: wp(45),marginLeft:3,paddingHorizontal:wp(0)}]}
+            style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1,width: wp(45),height:hp(7),marginLeft:3,paddingHorizontal:wp(0)}]}
             onPress={() => {
               navigation.navigate("classic",{Asset_type:"Ethereum"})
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold",marginStart:47}}>Bridge Tokens</Text>
-            <View style={{width:45,height:27,justifyContent:"center",alignSelf:"center"}}>
-            {/* <Image source={Bridge} style={{width:"130%",height:"130%"}} /> */}
-            </View>
+            <Text style={{ color: "#fff", fontSize: 17, fontWeight: "bold",textAlign:"center"}}>Bridge Tokens</Text>
           </TouchableOpacity>
           <TouchableOpacity 
-                    style={[styles.PresssableBtn,{width: wp(45),marginLeft:10,marginTop:1,}]}
+                    style={[styles.PresssableBtn,{height:hp(7),width: wp(45),marginLeft:10,marginTop:1,justifyContent:"center"}]}
                     onPress={() => {
                       navigation.navigate("Assets_manage");
                     }}
                   >
-                    <Text style={{ color: "#fff",fontSize:19,fontWeight:"bold",paddingVertical:2 }}>Assets</Text>
+            <Text style={{ color: "#fff", fontSize: 17, fontWeight: "bold",textAlign:"center"}}>Assets</Text>
+
+                    {/* <Text style={{ color: "#fff",fontSize:18,fontWeight:"bold" }}>Assets</Text> */}
                   </TouchableOpacity>
         </View>
 
@@ -1104,15 +1103,17 @@ useFocusEffect(
     </Chart>
     }
     </View>
-        <View style={{backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
+        <TouchableOpacity style={{backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     padding: hp(0.5),
     width: wp(95),
     alignSelf: "center",
     borderRadius: hp(1.6),
     marginBottom: hp(1),
-    marginTop:hp(1.4)}}>
+    marginTop:hp(1.4)}}
+    onPress={()=>{setopen_chart_api(true)}}
+    >
               <Text style={{fontSize: 19,color: "white",textAlign:"center",fontWeight:"500"}}>Trade between {chart_api[chart_index].name==="USDC"?chart_api[chart_index].name+"  ":chart_api[chart_index].name}vs  {chart_api[chart_index].name_0}</Text>
-        </View>
+        </TouchableOpacity>
         </View> 
         <Modal
         animationType="slide"
