@@ -15,7 +15,7 @@ import {
 import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { AddToAllWallets } from "../../components/Redux/actions/auth";
+import { AddToAllWallets,setCurrentWallet } from "../../components/Redux/actions/auth";
 import { urls } from "../constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -323,6 +323,14 @@ const ImportMultiCoinWalletModal = ({
                       setLoading(false);
                       return;
                     } else if (response.status === "success") {
+                      dispatch(
+                        setCurrentWallet(
+                          wallet.address,
+                          accountName,
+                          wallet.privateKey,
+                          trimmedPhrase
+                        )
+                      )
                       setTimeout(() => {
                         setLoading(false);
                         setWalletVisible(false);

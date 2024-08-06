@@ -15,7 +15,7 @@ import {
 } from "react-native-responsive-screen";
 import { Animated } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { AddToAllWallets } from "../../components/Redux/actions/auth";
+import { AddToAllWallets,setCurrentWallet } from "../../components/Redux/actions/auth";
 import { urls } from "../constants";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import "react-native-get-random-values";
@@ -304,6 +304,15 @@ const CheckNewWalletMnemonic = ({
                               setLoading(false);
                               return;
                             } else if (response.status === "success") {
+                              AsyncStorageLib.setItem("currentWallet",Wallet?.accountName)
+                              dispatch(
+                                setCurrentWallet(
+                                  Wallet?.address,
+                                  Wallet?.accountName,
+                                  Wallet?.privateKey,
+                                  Wallet?.mnemonic ? Wallet.mnemonic : ""
+                                )
+                              )
                               setTimeout(() => {
                                 setLoading(false);
                                 SetVisible(false);
