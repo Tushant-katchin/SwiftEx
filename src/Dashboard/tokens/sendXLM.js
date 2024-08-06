@@ -13,7 +13,8 @@ import {
     Button,
     Keyboard,
     Alert,
-    Modal
+    Modal,
+    PermissionsAndroid
 } from "react-native";
 import {
     widthPercentageToDP as wp,
@@ -51,7 +52,7 @@ const SendXLM = (props) => {
     const navigation = useNavigation();
     const [isModalVisible, setModalVisible] = useState(false);
     const toggleModal = () => {
-        setModalVisible(!isModalVisible);
+        checkPermission();
     };
 
     const onBarCodeRead = (e) => {
@@ -191,6 +192,26 @@ const SendXLM = (props) => {
               setPayment_loading(false);
             }
           }
+        
+            const checkPermission = async () => {
+              if (Platform.OS === 'android') {
+                const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
+                if (result===true) {
+                    setModalVisible(!isModalVisible);
+                } else {
+                  const requestResult = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+                  if (requestResult === PermissionsAndroid.RESULTS.GRANTED) {
+                    setModalVisible(!isModalVisible);
+                  } else {
+                    alert("error","Permissions not allowed");
+                  }
+                }
+              } else {
+                // iOS permission is handled through Info.plist
+                
+              }
+            };
+        
 
 
     return (

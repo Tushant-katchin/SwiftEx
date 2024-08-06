@@ -42,6 +42,7 @@ const NewWalletPrivateKey = ({
   setNewWalletVisible,
   onCrossPress,
 }) => {
+  const state=useSelector((state)=>state);
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
   const [newWallet, setNewWallet] = useState(Wallet);
@@ -126,9 +127,9 @@ const NewWalletPrivateKey = ({
     console.log("============------------", item);
     setData(data);
     return (
-      <TouchableOpacity style={style.flatBtn}>
-        <Text style={{ textAlign: "right" }}>{index + 1}</Text>
-        <Text>{item}</Text>
+      <TouchableOpacity style={[style.flatBtn,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>
+        <Text style={{ textAlign: "right",color:"#fff" }}>{index + 1}</Text>
+        <Text style={{ color:"#fff" }}>{item}</Text>
       </TouchableOpacity>
     );
   };
@@ -156,17 +157,17 @@ const NewWalletPrivateKey = ({
         }}
       >
 
-        <View style={style.Body}>
+        <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>
           {/* <ModalHeader Function={closeModal} name={'Private Key'}/> */}
           <Icon
             type={"entypo"}
             name={"cross"}
-            color={"gray"}
+            color={"#fff"}
             size={24}
             style={style.croosIcon}
             onPress={onCrossPress}
           />
-          <Text style={style.backupText}>Backup Mnemonic Phrase</Text>
+          <Text style={[style.backupText,{color:"#fff"}]}>Backup Mnemonic Phrase</Text>
           <Text style={style.welcomeText1}>
             Please select the mnemonic in order to ensure the backup is
             correct.
@@ -184,14 +185,14 @@ const NewWalletPrivateKey = ({
           </View>
 
           <View style={style.dotView}>
-            <Icon name="dot-single" type={"entypo"} size={20} />
-            <Text style={{ color: "black" }}>
+            <Icon name="dot-single" type={"entypo"} size={20} color={"gray"}/>
+            <Text style={{ color: "gray" }}>
               Keep your mnemonic in a safe place isolated from network
             </Text>
           </View>
           <View style={style.dotView1}>
-            <Icon name="dot-single" type={"entypo"} size={20} />
-            <Text style={{ color: "black", width: "90%" }}>
+            <Icon name="dot-single" type={"entypo"} size={20} color={"gray"}/>
+            <Text style={{ color: "gray", width: "90%" }}>
               Don't share and store mnemonic with a network, such as
               email,photo, social apps, and so on
             </Text>
@@ -201,8 +202,8 @@ const NewWalletPrivateKey = ({
           </Text> */}
           {/* <Text style={style.welcomeText2}> Account Name</Text> */}
 
-          <View style={style.labelInputContainer}>
-            <Text style={style.label}>Account Name</Text>
+          <View style={[style.labelInputContainer]}>
+            <Text style={[style.label,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>Account Name</Text>
             <TextInput
               value={accountName}
               onChangeText={(text) => {
@@ -229,13 +230,15 @@ const NewWalletPrivateKey = ({
               style={{
                 // backgroundColor:
                   // accountName && !/\s/.test(accountName) ? "#4CA6EA" : "gray",
-                  backgroundColor:!accountName || !/\S/.test(accountName)?"gray":"green",
+                  backgroundColor:!accountName || !/\S/.test(accountName)?"gray":"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
                 width: wp(55),
                 alignSelf: "center",
                 alignItems: "center",
                 borderRadius: 10,
                 marginTop: hp(1.5),
                 paddingVertical: hp(1.7),
+                borderColor:"#145DA0",
+                borderWidth:0.9
               }}
               // disabled={accountName && !/\s/.test(accountName) ? false : true}
               disabled={!accountName || !/\S/.test(accountName)}
@@ -283,6 +286,8 @@ const style = StyleSheet.create({
     alignSelf: "center",
     paddingBottom: hp(2),
     marginTop: hp(3),
+    borderColor:"#145DA0",
+    borderWidth:0.9,
   },
   welcomeText: {
     fontSize: 20,
@@ -402,11 +407,12 @@ const style = StyleSheet.create({
   label: {
     position: "absolute",
     zIndex: 100,
-    backgroundColor: "white",
+    backgroundColor: "#011434",
     paddingHorizontal: 5,
     left: 12,
     color: "#4CA6EA",
     top: -12,
+    borderRadius:10
   },
   croosIcon: {
     alignSelf: "flex-end",

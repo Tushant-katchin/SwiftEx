@@ -432,6 +432,7 @@ const getData = async () => {
 
 const CheckMnemonic = (props) => {
   console.log("||||||||||||||||||||||||||||||||||||||||||||||",props.route.params.wallet.addres)
+  const wallet_Men = props.route.params.wallet.mnemonic.split(' ');
 
   const genrate_keypair = (ether_add) => {
     const pair = StellarSdk.Keypair.random();
@@ -472,74 +473,64 @@ const CheckMnemonic = (props) => {
     const wallet = props?.route?.params?.wallet;
     console.log(wallet);
   }, [fadeAnim, Spin]);
-  // <Text style={style.pressText}>{index + 1}</Text>
-  const deselectAll = () => {
-    setData(prevData =>
-      prevData.map(item => ({
-        ...item,
-        selected: false
-      }))
-    );
-    setMnemonic([]);
-  };
-  const RenderItem = ({ item, index }) => {
-    let Data = data.map((item) => {
-      return item;
-    });
-    let newArray = [];
-    newArray = Mnemonic;
-    return (
-      <TouchableOpacity
-        style={{
-          borderColor: "#D7D7D7",
-          borderWidth: 0.5,
-          backgroundColor: item.selected ? "#4CA6EA" : "#F2F2F2",
-          width: wp(30),
-          justifyContent: "center",
-          paddingVertical: hp(2),
-          paddingHorizontal: 3,
-          position: "relative",
-        }}
-        onPress={() => {
-          console.log("pressed");
-          if (!item.selected) {
-            Data[index].selected = true;
-            newArray.push(item.mnemonic);
-            console.log(newArray);
-            SetMnemonic(newArray);
-            setData(Data);
-          } else {
-            Data[index].selected = false;
-            const data = newArray.filter((Item) => {
-              return Item != item.mnemonic;
-            });
-            console.log(data);
-            SetMnemonic(data);
-            setData(Data);
-          }
-        }}
-      >
-        <Text style={style.itemText}>{item.mnemonic}</Text>
-      </TouchableOpacity>
-    );
-  };
+  
 
   function func(a, b) {
     return 0.5 - Math.random();
   }
 
-  useEffect(() => {
-    let data = props.route.params.mnemonic.map((item) => {
-      let data = {
-        mnemonic: item,
-        selected: false,
-      };
-      return data;
-    });
-    console.log(data);
-    const newData = data.sort(func);
-    setData(newData);
-  }, []);
+  // useEffect(() => {
+  //   let data = props.route.params.mnemonic.map((item) => {
+  //     let data = {
+  //       mnemonic: item,
+  //       selected: false,
+  //     };
+  //     return data;
+  //   });
+  //   console.log(data);
+  //   const newData = data.sort(func);
+  //   setData(newData);
+  // }, []);
+
+ // New Menomic verify
+ const [showVerification, setShowVerification] = useState(false);
+ const [answers, setAnswers] = useState(Array(4).fill(null));
+ const [shuffledQuestions, setShuffledQuestions] = useState([]);
+ const questions = [
+   { question: "Word #1", options: [wallet_Men[0], wallet_Men[1],wallet_Men[2]], correct: wallet_Men[0] },
+   { question: "Word #4", options: [wallet_Men[3], wallet_Men[4],wallet_Men[5]], correct: wallet_Men[3] },
+   { question: "Word #7", options: [wallet_Men[6], wallet_Men[7],wallet_Men[8]], correct: wallet_Men[6] },
+   { question: "Word #10", options: [wallet_Men[9], wallet_Men[10],wallet_Men[11]], correct: wallet_Men[9] },
+ ];
+ useEffect(() => {
+   shuffleQuestions();
+ }, []);
+
+ const shuffleArray = (array) => {
+   for (let i = array.length - 1; i > 0; i--) {
+     const j = Math.floor(Math.random() * (i + 1));
+     [array[i], array[j]] = [array[j], array[i]];
+   }
+   return array;
+ };
+
+ const shuffleQuestions = () => {
+   const newShuffledQuestions = questions.map(q => ({
+     ...q,
+     options: shuffleArray([...q.options])
+   }));
+   setShuffledQuestions(newShuffledQuestions);
+ };
+
+ const handleAnswer = (index, option) => {
+   const newAnswers = [...answers];
+   newAnswers[index] = option;
+   setAnswers(newAnswers);
+ };
+
+
+
+
 
   return (
     <Animated.View // Special animatable View
@@ -548,67 +539,38 @@ const CheckMnemonic = (props) => {
       <View style={style.Body}>
         <Text style={style.verifyText}>Verify Secret Phrase</Text>
         <Text style={style.wordText}>
-          Tap the words to put them next to each other in the correct order.
+        Please top on the correct answer of the below seed phrases.
         </Text>
 
         <View style={{ marginTop: hp(8) }}>
-          <FlatList
-            data={data}
-            // data={props.route.params.wallet.wallet.mnemonic}
-            renderItem={RenderItem}
-            numColumns={3}
-            contentContainerStyle={{
-              alignSelf: "center",
-            }}
-          />
-        </View>
-        <View
-          style={{
-            marginTop: hp(3),
-            // display: "flex",
-            flexWrap: "wrap",
-            flexDirection: "row",
-            // backgroundColor: "red",
-            // alignContent: "center",
-            // alignSelf: "center",
-            // alignItems: "center",
-            // justifyContent: "center",
-            marginLeft: wp(6),
-
-            // width: wp(40),
-
-          }}
-        >
-          {Mnemonic.length > 0 ? (
-            Mnemonic.map((item) => {
-              console.log("mnemonic words", item);
-              return (
-                <Text
+        {shuffledQuestions.map((q, index) => (
+            <View key={index} style={{ marginVertical: 5 }}>
+              <Text style={{marginLeft:wp(3),color:"black"}}>{q.question}</Text>
+             <View style={{flexDirection:"row",marginLeft:wp(19)}}>
+             {q.options.map((option, optIndex) => (
+                <TouchableOpacity
+                  key={optIndex}
                   style={{
-                    color: "black",
-                    marginHorizontal: 4,
-                    borderWidth: StyleSheet.hairlineWidth * 1,
-                    marginTop: hp(2),
-                    alignItems: "center",
-                    padding: hp(1)
-                    // width:wp(50)
+                    backgroundColor: answers[index] === option ? 'lightblue' : 'white',
+                    borderRadius:6,
+                    borderColor:"#4CA6EA",
+                    borderWidth:0.6,
+                    marginHorizontal:wp(1.5),
+                    width:wp(20),
+                    height:hp(5),
+                    alignItems:"center",
+                    justifyContent:"center"
                   }}
+                  onPress={() => handleAnswer(index, option)}
                 >
-                  {item}
-                </Text>
-              );
-            })
-          ) : (
-            <Text style={{ color: "black", textAlign: "center", alignSelf: "center" }}>Nothing added yet</Text>
-          )}
+                  <Text style={{color:"black"}}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+             </View>
+            </View>
+          ))}
         </View>
-        {/* <TextInput
-          style={style.textInput}
-          onChangeText={(text) => {
-            setMnemonic(text);
-          }}
-          placeholder={"Enter your secret phrase here"}
-        /> */}
+        
         {loading ? (
           <ActivityIndicator size="large" color="green" />
         ) : (
@@ -617,16 +579,14 @@ const CheckMnemonic = (props) => {
         <TouchableOpacity
           style={style.ButtonView}
           onPress={async () => {
+            const isCorrect = answers.every((answer, index) => answer === shuffledQuestions[index].correct);
+                if (isCorrect) {
             setLoading(true);
             try {
               const pin = await AsyncStorageLib.getItem("pin");
               console.log(Mnemonic);
               console.log(props.route.params.mnemonic);
 
-              if (
-                JSON.stringify(Mnemonic) ==
-                JSON.stringify(props.route.params.mnemonic)
-              ) {
                 console.log(pin);
                 const body = {
                   accountName: props.route.params.wallet.accountName,
@@ -714,19 +674,16 @@ const CheckMnemonic = (props) => {
                 console.log("navigating to home screen");
                 props.navigation.navigate("HomeScreen");
                 alert("success", "correct mnemonic");
-getData();      
-              } else {
-                setLoading(false);
-                SetMnemonic([]);
-                deselectAll()
-                return alert(
-                  "error",
-                  "Wrong Mnemonic. Please retry with correct mnemonic "
-                );
-              }
+                getData();      
             } catch (e) {
               console.log(e);
             }
+          }
+          else {
+            alert("error","Incorrect Answers, please try again");
+            setAnswers(Array(4).fill(null));
+            shuffleQuestions();
+          }
           }}
         >
           <Text style={{ color: "white" }}>Done</Text>

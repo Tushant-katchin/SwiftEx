@@ -35,6 +35,7 @@ const CheckNewWalletMnemonic = ({
   setNewWalletVisible,
   onCrossPress
 }) => {
+  const state=useSelector((state)=>state);
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
 
@@ -50,6 +51,43 @@ const CheckNewWalletMnemonic = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const Spin = new Animated.Value(0);
+    
+  // New Menomic verify
+  const [showVerification, setShowVerification] = useState(false);
+  const [answers, setAnswers] = useState(Array(4).fill(null));
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
+  const questions = [
+    { question: "Word #1", options: [Wallet?.Mnemonic[0], Wallet?.Mnemonic[1],Wallet?.Mnemonic[2]], correct: Wallet?.Mnemonic[0] },
+    { question: "Word #4", options: [Wallet?.Mnemonic[3], Wallet?.Mnemonic[4],Wallet?.Mnemonic[5]], correct: Wallet?.Mnemonic[3] },
+    { question: "Word #7", options: [Wallet?.Mnemonic[6], Wallet?.Mnemonic[7],Wallet?.Mnemonic[8]], correct: Wallet?.Mnemonic[6] },
+    { question: "Word #10", options: [Wallet?.Mnemonic[9], Wallet?.Mnemonic[10],Wallet?.Mnemonic[11]], correct: Wallet?.Mnemonic[9] },
+  ];
+  useEffect(() => {
+    shuffleQuestions();
+  }, []);
+
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  const shuffleQuestions = () => {
+    const newShuffledQuestions = questions.map(q => ({
+      ...q,
+      options: shuffleArray([...q.options])
+    }));
+    setShuffledQuestions(newShuffledQuestions);
+  };
+
+  const handleAnswer = (index, option) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = option;
+    setAnswers(newAnswers);
+  };
+
   const SpinValue = Spin.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
@@ -106,49 +144,49 @@ const CheckNewWalletMnemonic = ({
 
 
 
-  console.log("000000000000000", Wallet?.mnemonic);
-  const RenderItem = ({ item, index }) => {
-    console.log("----------------------", item);
-    let Data = data.map((item) => {
-      return item;
-    });
-    let newArray = [];
-    newArray = Mnemonic;
-    return (
-      <TouchableOpacity
-        style={{
-          borderColor: "#D7D7D7",
-          borderWidth: 0.5,
-          backgroundColor: item.selected ? "#4CA6EA" : "#F2F2F2",
-          width: wp(30),
-          justifyContent: "center",
-          paddingVertical: hp(2),
-          paddingHorizontal: 3,
-          position: "relative",
-        }}
-        onPress={() => {
-          console.log("pressed");
-          if (!item.selected) {
-            Data[index].selected = true;
-            newArray.push(item.mnemonic);
-            console.log(newArray);
-            SetMnemonic(newArray);
-            setData(Data);
-          } else {
-            Data[index].selected = false;
-            const data = newArray.filter((Item) => {
-              return Item != item.mnemonic;
-            });
-            console.log(data);
-            SetMnemonic(data);
-            setData(Data);
-          }
-        }}
-      >
-        <Text style={style.itemText}>{item.mnemonic}</Text>
-      </TouchableOpacity>
-    );
-  };
+  console.log("000000000000000", Wallet?.Mnemonic);
+ 
+  //   console.log("----------------------", item);
+  //   let Data = data.map((item) => {
+  //     return item;
+  //   });
+  //   let newArray = [];
+  //   newArray = Mnemonic;
+  //   return (
+  //     <TouchableOpacity
+  //       style={{
+  //         borderColor: "#D7D7D7",
+  //         borderWidth: 0.5,
+  //         backgroundColor: item.selected ? "#4CA6EA" : "#F2F2F2",
+  //         width: wp(30),
+  //         justifyContent: "center",
+  //         paddingVertical: hp(2),
+  //         paddingHorizontal: 3,
+  //         position: "relative",
+  //       }}
+  //       onPress={() => {
+  //         console.log("pressed");
+  //         if (!item.selected) {
+  //           Data[index].selected = true;
+  //           newArray.push(item.mnemonic);
+  //           console.log(newArray);
+  //           SetMnemonic(newArray);
+  //           setData(Data);
+  //         } else {
+  //           Data[index].selected = false;
+  //           const data = newArray.filter((Item) => {
+  //             return Item != item.mnemonic;
+  //           });
+  //           console.log(data);
+  //           SetMnemonic(data);
+  //           setData(Data);
+  //         }
+  //       }}
+  //     >
+  //       <Text style={style.itemText}>{item.mnemonic}</Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -165,41 +203,40 @@ const CheckNewWalletMnemonic = ({
           SetVisible(false);
         }}
       >
-        <View style={style.Body}>
+        <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>
           {/* <ModalHeader Function={closeModal} name={'Check Mnemonic'}/> */}
-          <Icon type={'entypo'} name='cross' color={'gray'} size={24} style={style.crossIcon} onPress={onCrossPress}/>
+          <Icon type={'entypo'} name='cross' color={'#fff'} size={24} style={style.crossIcon} onPress={onCrossPress}/>
           <Text style={style.verifyText}>Verify Secret Phrase</Text>
           <Text style={style.wordText}>
-            Tap the words to put them next to each other in the correct order.
+           Please top on the correct answer of the below seed phrases.
           </Text>
-
-          <View style={{ marginTop: hp(6) }}>
-            <FlatList
-              data={data}
-              // data={props.route.params.wallet.wallet.mnemonic}
-              renderItem={RenderItem}
-              numColumns={3}
-              contentContainerStyle={{
-                alignSelf: "center",
-              }}
-            />
-          </View>
-          <View style={{display:'flex',flexDirection:'row',flexWrap:"wrap",alignItems:"center",marginTop:hp(2)}}>
-            {Mnemonic.length>0?Mnemonic.map((item)=>{
-              console.log("mnemonic words",item)
-            return(
-              <Text style={{color:'black',textAlign:'center',fontStyle:'italic',marginTop:hp(1),margin:10,}} >{item}</Text>
-            )
-           }):<Text style={{color:'black',marginTop:hp(4),marginHorizontal:wp(6)}} >nothing added yet</Text>}
-          </View>
-
-          {/* <TextInput
-            style={style.textInput}
-            onChangeText={(text) => {
-              setMnemonic(text);
-            }}
-            placeholder={"Enter your secret phrase here"}
-          /> */}
+          {shuffledQuestions.map((q, index) => (
+            <View key={index} style={{ marginVertical: 5 }}>
+              <Text style={{marginLeft:wp(3),color:"#fff"}}>{q.question}</Text>
+             <View style={{flexDirection:"row",marginLeft:wp(19)}}>
+             {q.options.map((option, optIndex) => (
+                <TouchableOpacity
+                  key={optIndex}
+                  style={{
+                    backgroundColor: answers[index] === option ? 'lightblue' : 'white',
+                    borderRadius:6,
+                    borderColor:"#4CA6EA",
+                    borderWidth:0.6,
+                    marginHorizontal:wp(1.5),
+                    width:wp(20),
+                    height:hp(5),
+                    alignItems:"center",
+                    justifyContent:"center"
+                  }}
+                  onPress={() => handleAnswer(index, option)}
+                >
+                  <Text>{option}</Text>
+                </TouchableOpacity>
+              ))}
+             </View>
+            </View>
+          ))}
+      
 
           {loading ? (
             <ActivityIndicator size="large" color="green" />
@@ -217,107 +254,86 @@ const CheckNewWalletMnemonic = ({
             <TouchableOpacity
               style={style.ButtonView}
               onPress={async () => {
-                setLoading(true);
-                try {
-                  const user = await AsyncStorageLib.getItem("user");
-
-                  if (JSON.stringify(Mnemonic) === JSON.stringify(Wallet.Mnemonic)) {
-                    /*const response = await saveUserDetails().then(async (response)=>{
-                 if(response===400){
-                   return 
-                  }
-                  else if(response===401){
-                    return 
-                  }
-                }).catch((e)=>{
-                  console.log(e)
-                  setLoading(false)
-                  SetVisible(false)
-                  setModalVisible(false)
-                  
-                  
-                })*/
-
-                    let wallets = [];
-                    const data = await AsyncStorageLib.getItem(
-                      `${user}-wallets`
-                    )
-                      .then((response) => {
-                        console.log(response);
-                        JSON.parse(response).map((item) => {
-                          wallets.push(item);
+                const isCorrect = answers.every((answer, index) => answer === shuffledQuestions[index].correct);
+                if (isCorrect) {
+                  setLoading(true);
+                  try {
+                    const user = await AsyncStorageLib.getItem("user");
+                      let wallets = [];
+                      const data = await AsyncStorageLib.getItem(
+                        `${user}-wallets`
+                      )
+                        .then((response) => {
+                          console.log(response);
+                          JSON.parse(response).map((item) => {
+                            wallets.push(item);
+                          });
+                        })
+                        .catch((e) => {
+                          setWalletVisible(false);
+                          setVisible(false);
+                          setModalVisible(false);
+                          console.log(e);
                         });
-                      })
-                      .catch((e) => {
-                        setWalletVisible(false);
-                        setVisible(false);
-                        setModalVisible(false);
-                        console.log(e);
-                      });
-
-                    //wallets.push(accounts)
-                    const allWallets = [
-                      {
-                        address: Wallet.address,
-                        privateKey: Wallet.privateKey,
-                        name: Wallet.accountName,
-                        mnemonic: Wallet.mnemonic,
-                        walletType: "Multi-coin",
-                        xrp: {
-                          address: Wallet.xrp.address,
-                          privateKey: Wallet.xrp.privateKey,
+  
+                      //wallets.push(accounts)
+                      const allWallets = [
+                        {
+                          address: Wallet.address,
+                          privateKey: Wallet.privateKey,
+                          name: Wallet.accountName,
+                          mnemonic: Wallet.mnemonic,
+                          walletType: "Multi-coin",
+                          xrp: {
+                            address: Wallet.xrp.address,
+                            privateKey: Wallet.xrp.privateKey,
+                          },
+                          wallets: wallets,
                         },
-                        wallets: wallets,
-                      },
-                    ];
-                    // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
-
-                    dispatch(AddToAllWallets(allWallets, user)).then(
-                      (response) => {
-                        if (response) {
-                          if (response.status === "Already Exists") {
-                            alert(
-                              "error",
-                              "Account with same name already exists"
-                            );
-                            setLoading(false);
-                            return;
-                          } else if (response.status === "success") {
-                            setTimeout(() => {
+                      ];
+                      // AsyncStorageLib.setItem(`${accountName}-wallets`,JSON.stringify(wallets))
+  
+                      dispatch(AddToAllWallets(allWallets, user)).then(
+                        (response) => {
+                          if (response) {
+                            if (response.status === "Already Exists") {
+                              alert(
+                                "error",
+                                "Account with same name already exists"
+                              );
                               setLoading(false);
-                              SetVisible(false);
-                              setModalVisible(false);
-                              SetPrivateKeyVisible(false);
-                              setNewWalletVisible(false);
-                              navigation.navigate("AllWallets");
-                            }, 0);
-                          } else {
-                            alert("error", "failed please try again");
-                            return;
+                              return;
+                            } else if (response.status === "success") {
+                              setTimeout(() => {
+                                setLoading(false);
+                                SetVisible(false);
+                                setModalVisible(false);
+                                SetPrivateKeyVisible(false);
+                                setNewWalletVisible(false);
+                                navigation.navigate("AllWallets");
+                              }, 0);
+                            } else {
+                              alert("error", "failed please try again");
+                              return;
+                            }
                           }
                         }
-                      }
-                    );
-
-                    // dispatch(getBalance(wallet.address))
-                    //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                      );
+  
+                      // dispatch(getBalance(wallet.address))
+                      //dispatch(setProvider('https://data-seed-prebsc-1-s1.binance.org:8545'))
+                  } catch (e) {
+                    setLoading(false);
+                    SetVisible(false);
+                    setModalVisible(false);
+                    SetPrivateKeyVisible(false);
+                    setNewWalletVisible(false);
+                    alert("error", "Failed to import wallet. Please try again");
                   }
-                  else{
-                    setLoading(false)
-                    deselectAll()
-                    alert(
-                      "error",
-                      "Wrong Mnemonic. Please retry with correct mnemonic "
-                    );
-                    SetMnemonic([]);
-                  }
-                } catch (e) {
-                  setLoading(false);
-                  SetVisible(false);
-                  setModalVisible(false);
-                  SetPrivateKeyVisible(false);
-                  setNewWalletVisible(false);
-                  alert("error", "Failed to import wallet. Please try again");
+                } else {
+                  alert("error","Incorrect Answers, please try again");
+                  setAnswers(Array(4).fill(null));
+                  shuffleQuestions();
                 }
               }}
             >
@@ -339,6 +355,8 @@ const style = StyleSheet.create({
     width: wp(95),
     borderRadius: 20,
     alignSelf: "center",
+    borderColor:"#145DA0",
+    borderWidth:0.9,
   },
   welcomeText: {
     fontSize: 15,
@@ -415,14 +433,14 @@ const style = StyleSheet.create({
     elevation: 24,
   },
   verifyText: {
-    color: "black",
-    fontSize: 16,
+    color: "#fff",
+    fontSize: 18,
     fontWeight: "600",
     textAlign: "center",
     marginTop: hp(1),
   },
   wordText: {
-    color: "black",
+    color: "#fff",
     textAlign: "center",
     marginTop: hp(1),
     width: wp(88),
@@ -434,13 +452,15 @@ const style = StyleSheet.create({
     marginHorizontal: wp(1.5),
   },
   ButtonView: {
-    backgroundColor: "#4CA6EA",
+    backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     width: wp(85),
     alignSelf: "center",
     alignItems: "center",
     padding: 10,
     borderRadius: 10,
     marginTop: hp(3),
+    borderColor:"#145DA0",
+    borderWidth:0.9,
   },
   crossIcon:{
     alignSelf:"flex-end",

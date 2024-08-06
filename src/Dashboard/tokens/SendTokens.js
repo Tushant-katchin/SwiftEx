@@ -13,7 +13,8 @@ import {
   Modal,
   Platform,
   Image,
-  Alert
+  Alert,
+  PermissionsAndroid
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -295,8 +296,26 @@ const SendTokens = (props) => {
   }, [amount]);
   const [isModalVisible, setModalVisible] = useState(false);
   const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+    checkPermission();
+};
+const checkPermission = async () => {
+  if (Platform.OS === 'android') {
+    const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
+    if (result===true) {
+        setModalVisible(!isModalVisible);
+    } else {
+      const requestResult = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+      if (requestResult === PermissionsAndroid.RESULTS.GRANTED) {
+        setModalVisible(!isModalVisible);
+      } else {
+        alert("error","Permissions not allowed");
+      }
+    }
+  } else {
+    // iOS permission is handled through Info.plist
+    
+  }
+};
   async function a()
   {
     
