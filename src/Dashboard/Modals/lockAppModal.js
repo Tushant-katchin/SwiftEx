@@ -12,6 +12,8 @@ import { Animated } from "react-native";
 import title_icon from "../../../assets/title_icon.png";
 import ReactNativePinView from "react-native-pin-view";
 import Icon from "react-native-vector-icons/Ionicons";
+import ICON from "../../icon"
+import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -27,7 +29,7 @@ import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import darkBlue from '../../../assets/darkBlue.png'
 import { alert } from "../reusables/Toasts";
-
+const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
 const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
   const state = useSelector((state) => state);
   const [pin, setPin] = useState();
@@ -47,7 +49,21 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
-
+  function useBiometrics(){ 
+    rnBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
+  .then((resultObject) => {
+    const { success } = resultObject
+    if (success) {
+      console.log('successful biometrics provided')
+      setPinViewVisible(false)
+    } else {
+      console.log('user cancelled biometric prompt')
+    }
+  })
+  .catch(() => {
+    console.log('biometrics failed')
+  })
+}
   useEffect(async () => {
     const Check = await AsyncStorage.getItem(`pin`);
     console.log(Check);
@@ -164,40 +180,57 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
             onButtonPress={async (key) => {
               console.log(key);
               if (key === "custom_left") {
-                pinView.current.clear();
+                const biometric = await AsyncStorage.getItem("Biometric");
+                if (biometric === "SET") {
+                  useBiometrics();
+                }else{
+                      Platform.OS==="android"?
+                      alert('error','Enable biometrics in your device settings.'):
+                      alert('error','Enable face Id in your device settings.')
+                }
               }
               if (key === "custom_right") {
-                console.log("pressed");
-                const Pin = await AsyncStorage.getItem("pin");
-
-                if (JSON.parse(Pin) === enteredPin) {
-                  console.log(Pin);
-                  setPinViewVisible(false)
-                } else {
-                  pinView.current.clearAll();
-                  alert("error","Incorrect pin try again.");
-
-                }
+                pinView.current.clear();
               }
             }}
             customLeftButton={
+              
+              <ICON
+                type={"materialCommunity"} 
+                name={Platform.OS==="android"?"fingerprint":"face-recognition"}
+                size={36}
+                color={"gray"}
+                onPress={async ()=>{
+                  const biometric = await AsyncStorage.getItem("Biometric");
+                  if (biometric === "SET") {
+                    useBiometrics();
+                  }else{
+                        Platform.OS==="android"?
+                        alert('error','Enable biometrics in your device settings.'):
+                        alert('error','Enable face Id in your device settings.')
+                  }
+                }}
+              />
+          
+          }
+          customRightButton={
               showRemoveButton ? (
                 <Icon name={"ios-backspace"} size={36} color={"gray"} />
               ) : undefined
             }
-            customRightButton={
-              showCompletedButton ? (
-                <Icon
-                  name={"ios-chevron-forward-circle"}
-                  size={36}
-                  color={"#FFF"}
-                />
-              ) : <Icon
-              name={"ios-chevron-forward-circle"}
-              size={36}
-              color={"#FFF"}
-            />
-            }
+            // customRightButton={
+            //   showCompletedButton ? (
+            //     <Icon
+            //       name={"ios-chevron-forward-circle"}
+            //       size={36}
+            //       color={"#FFF"}
+            //     />
+            //   ) : <Icon
+            //   name={"ios-chevron-forward-circle"}
+            //   size={36}
+            //   color={"#FFF"}
+            // />
+            // }
           />
         </View>
       </View>

@@ -168,7 +168,15 @@ const AuthStack = () => (
       <Stack.Screen
         name="Wallet"
         component={Wallet}
-        options={{ headerShown: false,}}
+        options={{  header: () => {
+          return (
+            <WalletHeader
+              title={"Wallet"}
+              IconName="delete"
+              IconType="material"
+            />
+          );
+        },}}
       />
       <Stack.Screen
         name="ImportWallet"

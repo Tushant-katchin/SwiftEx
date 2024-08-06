@@ -391,15 +391,15 @@ export const OfferView = () => {
                   <Text style={styles.modalContainer_option_text}>KYC</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"playlist-check"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>My Subscription</Text>
-                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{navigation.navigate("Wallet")}}>
+      <Icon
+        name={"wallet-outline"}
+        type={"materialCommunity"}
+        size={30}
+        color={"white"}
+      />
+      <Text style={[styles.modalContainer_option_text,{color:"white"}]}>Wallet</Text>
+      </TouchableOpacity>
 
                 <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
                   console.log('clicked');

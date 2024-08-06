@@ -31,6 +31,7 @@ const Payout = () => {
   ];
   const Anchors=[
     // {name:"SwiftEx",by:"centre.io", address: state.wallet.address,image: require('../../../../../../assets/darkBlue.png'), seps: ["SEP 6", "SEP 12", "SEP 24"]},
+    {name:"MoneyGram", address: state.wallet.address,image: require('../../../../../../assets/MONEY_GRAM.png'),dis_ass:"moneygram.com", seps: ["SEP 24"],tom_url:"https://www.moneygram.com/intl/moneygramaccess"},
     {name:"Banxa", address: state.wallet.address,image: require('../../../../../../assets/BANXA.png'),dis_ass:"banxa.com", seps: ["SEP 24"],tom_url:"https://banxa.com/"},
     {name:"Clpx", address: state.wallet.address,image: require('../../../../../../assets/CLPX.png'),dis_ass:"clpx.finance", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clpx.finance/transactions"},
     {name:"Clickpesa", address: state.wallet.address,image: require('../../../../../../assets/CLICKPESA.png'),dis_ass:"clickpesa.com", seps: ["SEP 6", "SEP 24", "SEP 31"],tom_url:"https://clickpesa.com/"},
@@ -331,16 +332,15 @@ const Payout = () => {
                   />
                   <Text style={styles.modalContainer_option_text}>KYC</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"playlist-check"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>My Subscription</Text>
-                </TouchableOpacity>
+ <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{navigation.navigate("Wallet")}}>
+      <Icon
+        name={"wallet-outline"}
+        type={"materialCommunity"}
+        size={30}
+        color={"white"}
+      />
+      <Text style={[styles.modalContainer_option_text,{color:"white"}]}>Wallet</Text>
+      </TouchableOpacity>
 
                 <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
                   console.log('clicked');
