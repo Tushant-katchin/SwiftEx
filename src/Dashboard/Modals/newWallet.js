@@ -27,6 +27,7 @@ import darkBlue from "../../../assets/darkBlue.png";
 import Icon from "../../icon";
 
 const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisible }) => {
+  const state=useSelector((state)=>state);
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -79,7 +80,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
           setVisible(false);
         }}
       >
-        <View style={style.Body}>
+        <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>
           <TouchableOpacity disabled={loading} onPress={onCrossPress}>
           <Icon type={'entypo'} name='cross' size={29} color={"white"} style={style.crossIcon} />
           </TouchableOpacity>
@@ -156,7 +157,7 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
             <Text> </Text>
           )}
 <TouchableOpacity
-            style={[style.PresssableBtn,{width:wp(30),alignItems:"center",backgroundColor:  Checked && Checked2? "green":"gray"}]}
+            style={[style.PresssableBtn,{width:wp(30),alignItems:"center",backgroundColor:  Checked && Checked2? "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)":"gray"}]}
               disabled={loading ? true : Checked && Checked2 ? false : true}
               onPress={() => {
                 setLoading(true);
@@ -225,7 +226,8 @@ export default NewWalletModal;
 
 const style = StyleSheet.create({
   Body: {
-    backgroundColor: "#145DA0",
+    borderColor:"#145DA0",
+    borderWidth:0.9,
     paddingTop:hp(1),
     paddingBottom:hp(8),
     justifyContent: "center",

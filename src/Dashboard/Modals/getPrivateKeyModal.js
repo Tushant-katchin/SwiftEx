@@ -27,6 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "../../icon";
 
 export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
+  const state=useSelector((state)=>state);
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -77,7 +78,7 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
           setVisible(false);
         }}
       >
-        <View style={style.Body}>
+        <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>
           <Icon
             type={"entypo"}
             name="cross"
@@ -159,7 +160,7 @@ export const GetPrivateKeyModal = ({ visible, setVisible, onCrossPress }) => {
           )}
       <TouchableOpacity
               disabled={loading ? true : Checked && Checked2 ? false : true}
-            style={[style.PresssableBtn,{backgroundColor:Checked && Checked2?"green":"gray" }]}
+            style={[style.PresssableBtn,{backgroundColor:Checked && Checked2?"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)":"gray" }]}
               onPress={() => {
                 // setLoading(true);
                 setVisible(false);
@@ -200,6 +201,8 @@ const style = StyleSheet.create({
     width: wp(90),
     alignItems: "center",
     textAlign: "center",
+    borderColor:"#145DA0",
+    borderWidth:0.9
   },
   welcomeText: {
     color: "white",
