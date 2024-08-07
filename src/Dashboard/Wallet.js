@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     // padding: hp(),
     height:hp(5),
     justifyContent:"center",
-    width: wp(28),
+    width: Platform.OS==="ios"?wp(30):wp(30),
     alignSelf: "center",
     paddingHorizontal: Platform.OS==="android"?wp(1):wp(2),
     borderRadius: hp(0.8),

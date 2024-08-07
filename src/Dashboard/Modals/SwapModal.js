@@ -1358,19 +1358,19 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
           setModalVisible(false);
         }}
       >
-        <View style={styles.mainContainermodal}>
+        <View style={[styles.mainContainermodal,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
           <View style={styles.leftView}>
             <MaterialCommunityIcons
               name="arrow-left"
               size={20}
-              color={"black"}
+              color={state.THEME.THEME===false?"black":"#fff"}
               style={{ padding: hp(2) }}
               onPress={() => {
                 setModalVisible(!modalVisible);
                 setTrade(0);
               }}
             />
-            <Text style={styles.swapText}>Swap</Text>
+            <Text style={[styles.swapText,{color:state.THEME.THEME===false?"black":"#fff",}]}>Swap</Text>
           </View>
           <View style={styles.cardBoxContainer}>
             {/* <TokenHeader setVisible={setModalVisible} name={name} /> */}
@@ -1380,8 +1380,8 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
             >
               <View style={styles.tokenView}>
                 {/* <Text style={{ color: "#C1BDBD" }}>You Pay</Text> */}
-                <Text style={{ color: "black" }}>You Pay</Text>
-                <Text style={{ color: "black" }}>{coin0.name}</Text>
+                <Text style={{ color:state.THEME.THEME===false?"black":"#fff",}}>You Pay</Text>
+                <Text style={{ color:state.THEME.THEME===false?"black":"#fff",}}>{coin0.name}</Text>
               </View>
               <View style={styles.tokenView}>
                 <TextInput
@@ -1392,7 +1392,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                   }}
                   placeholder="0"
                   placeholderTextColor={"gray"}
-                  style={styles.textinputCon}
+                  style={[styles.textinputCon,{backgroundColor:state.THEME.THEME===false?"#fff":"black",color:state.THEME.THEME===false?"black":"#fff"}]}
                 />
                 <TouchableOpacity
                   onPress={() => {
@@ -1413,7 +1413,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                     }}
                     style={{ height: hp(3), width: wp(6) }}
                   />
-                  <Text style={{ marginRight: wp(13) }}>
+                  <Text style={{ marginRight: wp(13),color:state.THEME.THEME===false?"black":"#fff", }}>
                     {coin0.symbol ? coin0.symbol==="WETH"?"ETH":coin0.symbol : "ETH"}
                   </Text>
                 </TouchableOpacity>
@@ -1431,10 +1431,10 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
               </View>
 
               <View style={{ flexDirection: "row", width: wp(90) }}>
-                <Text style={{ marginLeft: wp(5), marginTop: hp(2) }}>Balance:{" "}</Text>
+                <Text style={{ marginLeft: wp(5), marginTop: hp(2),color:state.THEME.THEME===false?"black":"#fff", }}>Balance:{" "}</Text>
                 <View style={{ width: wp(13) }}>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(11) }}>
-                    <Text style={{ marginLeft: wp(1), marginTop: hp(2) }}>
+                    <Text style={{ marginLeft: wp(1), marginTop: hp(2),color:state.THEME.THEME===false?"black":"#fff", }}>
                       {balance ? balance : <Text style={{ color: "#C1BDBD" }}>0</Text>}
                     </Text>
                   </ScrollView>
@@ -1469,8 +1469,8 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
             >
               <View style={styles.tokenView}>
                 {/* <Text style={{ color: "#C1BDBD" }}>You Get</Text> */}
-                <Text style={{ color: "black" }}>You Get</Text>
-                <Text style={{ color: "black" }}> {coin1.name}</Text>
+                <Text style={{ color:state.THEME.THEME===false?"black":"#fff", }}>You Get</Text>
+                <Text style={{ color:state.THEME.THEME===false?"black":"#fff", }}> {coin1.name}</Text>
               </View>
               <View style={styles.tokenView}>
                 <View style={{ flexDirection: "row", width: wp(19) }}>
@@ -1502,7 +1502,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                     }}
                     style={{ height: hp(3), width: wp(6) }}
                   />
-                  <Text style={{ marginRight: wp(13) }}>
+                  <Text style={{ marginRight: wp(13),color:state.THEME.THEME===false?"black":"#fff", }}>
                     {coin1.symbol ? coin1.symbol : "WBTC"}
                   </Text>
                 </TouchableOpacity>

@@ -222,11 +222,11 @@ const Asset_info = ({ route }) => {
 
     return (
         <>
-            <View style={[styles.container,{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",borderBottomColor:"gray",borderWidth:0.5}]}>
+            <View style={[styles.container,{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",borderBottomColor:"gray",borderWidth:0.5,height: Platform.OS === "ios" ? state.header_ios.header_ios===91?hp(8.5):hp(10) : hp(10),}]}>
                 <TouchableOpacity onPress={(() => navigation.goBack())}>
                     <Icon type={'antDesign'} name='left' size={29} color={'white'} style={styles.icon} />
                 </TouchableOpacity>
-                <Text style={styles.text}>{asset_type}</Text>
+                <Text style={[styles.text,{ marginTop:Platform.OS === "ios" ?state.header_ios.header_ios===91?hp(4):hp(6):hp(0)}]}>{asset_type}</Text>
                 <TouchableOpacity onPress={(() => navigation.navigate("Home"))}>
                     <Image source={darkBlue} style={styles.image} />
                 </TouchableOpacity>
@@ -414,7 +414,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: Platform.OS === "ios" ? hp(8.5) : hp(10), // Adjust as needed
         paddingHorizontal:  Platform.OS === "ios" ? wp(3.5):wp(2),
     },
     icon: {
@@ -423,11 +422,11 @@ const styles = StyleSheet.create({
     text: {
         color: "white",
         fontSize: Platform.OS === "ios" ? 19 : 17,
-        fontWeight: Platform.OS === "ios" ? "normal" : "bold",
+        fontWeight: Platform.OS === "ios" ? "bold" : "bold",
         textAlign: "center",
         flex: 1,
         marginLeft: 19.5,
-        marginTop:Platform.OS === "ios" ?hp(4):hp(0)
+       
     },
     image: {
         height: hp(9),

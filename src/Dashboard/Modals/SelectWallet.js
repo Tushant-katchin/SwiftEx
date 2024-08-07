@@ -122,7 +122,9 @@ const SelectWallet = ({ props, visible, setVisible, setModalVisible }) => {
     >
       <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
         {/* <ModalHeader Function={closeModal}  name={'Import'}/> */}
+        <View style={{marginTop:hp(1)}}>
         <WalletHeader title="Select Wallet" IconType="Wallet"/>
+        </View>
         <TouchableOpacity
           style={style.Box2}
           onPress={() => {

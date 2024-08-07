@@ -151,11 +151,11 @@ export const AppHeader = ({name}) => {
 // });
 
 return (
-<View style={[styles.header,{backgroundColor:state.THEME.THEME===false? "#4CA6EA":"black",borderBottomColor:state.THEME.THEME===false? "#4CA6EA":"gray",borderWidth:0.5}]}>
+<View style={[styles.header,{height: Platform.OS === "ios" ? state.header_ios.header_ios===91?hp(8.5):hp(10) : hp(10),backgroundColor:state.THEME.THEME===false? "#4CA6EA":"black",borderBottomColor:state.THEME.THEME===false? "#4CA6EA":"gray",borderWidth:0.5}]}>
     <TouchableOpacity style={styles.backButton} onPress={()=>{navigation.navigate("Home")}}>
     <Icon name={"left"} type={"antDesign"} size={29} color={"white"}/>
     </TouchableOpacity>
-    {Platform.OS==='android'?<Text style={[styles.headerText_android,]}>{name}</Text>:<Text style={styles.headerText}>{name}</Text>}
+    {Platform.OS==='android'?<Text style={[styles.headerText_android,]}>{name}</Text>:<Text style={[styles.headerText,{marginTop:state.header_ios.header_ios===91?'7%':'11%'}]}>{name}</Text>}
     <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
     <Image source={darkBlue} style={styles.headerImage} />
     </TouchableOpacity>
@@ -186,7 +186,6 @@ headerText: {
   fontSize: 20,
   fontWeight: 'bold',
   color: 'white',
-  paddingTop:19,
   paddingLeft:40
 },
 headerImage: {

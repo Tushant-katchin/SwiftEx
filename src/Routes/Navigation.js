@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { AppState, View } from "react-native";
+import { AppState, Platform, View } from "react-native";
 import "react-native-gesture-handler";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -90,9 +90,9 @@ const AuthStack = () => (
         name="Passcode"
         component={Passcode}
         options={{
-          headerShown: false,gestureEnabled:false,
-          headerStyle: { backgroundColor: "#000C66" },
-          headerTintColor: "white",
+          headerShown: Platform.OS==="ios"?true:false,gestureEnabled:false,
+          headerStyle: { backgroundColor: '#131E3A' },
+          headerTintColor: '#131E3A',
           headerTitleStyle: {
             fontWeight: "bold",
           },

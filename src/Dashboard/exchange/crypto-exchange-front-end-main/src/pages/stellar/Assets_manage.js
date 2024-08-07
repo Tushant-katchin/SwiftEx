@@ -84,6 +84,7 @@ const Assets_manage = () => {
       // padding: 10,
       backgroundColor: '#4CA6EA',
       elevation: 4,
+      height:state.header_ios.header_ios===91?hp(8):hp(9.5)
     }}>
       {/* Left Icon */}
       <Icon
@@ -102,7 +103,8 @@ const Assets_manage = () => {
         textAlign: 'center',
         color:"#fff",
         flex: 1,
-        marginLeft:wp(13)
+        marginLeft:wp(13),
+        marginTop:Platform.OS==="ios"?state.header_ios.header_ios===91?'7%':'11%':hp(0)
       }}>Assets</Text>
 
       {/* Right Image and Menu Icon */}

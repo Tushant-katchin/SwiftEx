@@ -37,11 +37,11 @@ export default function BiometricPage()
 
     return(
         <View style={{backgroundColor:state.THEME.THEME===false?"#fff":"black", height:heightPercentageToDP(100)}}>
-<View style={[styles.header,{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black"}]}>
+<View style={[styles.header,{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",borderColor:state.THEME.THEME===false?"#4CA6EA":"black",}]}>
     <TouchableOpacity style={styles.backButton} onPress={()=>{navigation.goBack()}}>
     <Icon name={"left"} type={"antDesign"} size={29} color={"white"}/>
     </TouchableOpacity>
-    {Platform.OS==='android'?<Text style={[styles.headerText_android,]}>{"Authentication"}</Text>:<Text style={styles.headerText}>{"Authentication"}</Text>}
+    {Platform.OS==='android'?<Text style={[styles.headerText_android,]}>{"Authentication"}</Text>:<Text style={[styles.headerText,{marginTop:state.header_ios.header_ios===91?'7%':'11%'}]}>{"Authentication"}</Text>}
     <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
     <Image source={darkBlue} style={styles.headerImage} />
     </TouchableOpacity>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderColor:"gray",
+    borderBottomColor:"gray",
     borderWidth:0.5
   },
   backButton: {
@@ -88,8 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
-    paddingTop:19,
-    paddingLeft:53
+    paddingLeft:40
   },
   headerImage: {
     width: 80,

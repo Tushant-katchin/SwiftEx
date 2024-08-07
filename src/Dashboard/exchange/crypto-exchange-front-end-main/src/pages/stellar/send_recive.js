@@ -58,7 +58,7 @@ const send_recive = ({route}) => {
     }, [FOCUSED])
     return (
         <>
-            <View style={styles.headerContainer1_TOP}>
+            <View style={[styles.headerContainer1_TOP,{height:state.header_ios.header_ios===91?hp(8):hp(9.5)}]}>
                 <View
                     style={{
                         justifyContent: "space-around",
@@ -79,7 +79,7 @@ const send_recive = ({route}) => {
                 {Platform.OS === "android" ? (
                     <Text style={[styles.text_TOP, { marginStart: wp(28) }]}>Transaction</Text>
                 ) : (
-                    <Text style={[styles.text_TOP, styles.text1_ios_TOP]}>Transaction</Text>
+                    <Text style={[styles.text_TOP, styles.text1_ios_TOP,{marginTop:Platform.OS==="ios"?state.header_ios.header_ios===91?'7%':'11%':hp(0)}]}>Transaction</Text>
                 )}
 
                 <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -351,7 +351,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: 'white',
-        paddingTop:hp(3),
         marginStart: wp(29)
     },
     modalContainer_option_top: {

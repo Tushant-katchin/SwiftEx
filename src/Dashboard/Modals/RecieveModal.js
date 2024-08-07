@@ -38,7 +38,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
   const [visible, setVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const dispatch = useDispatch();
-
+  const state = useSelector((state) => state);
   let EtherLeftContent = (props) => (
     <Avatar.Image {...props} source={Etherimage} />
   );
@@ -84,7 +84,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           setModalVisible(false);
         }}
       >
-        <View style={style.Body}>
+        <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#145DA0":"black"}]}>
           {/* <ModalHeader Function={closeModal} name={'Receive'}/> */}
           <Icon
             type={"entypo"}
@@ -99,7 +99,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
           <Text style={{ fontSize: 19, color: "#ffffff" }}>Receive</Text>
           <TouchableOpacity
-            style={style.Box3}
+            style={[style.Box3,{backgroundColor: state.THEME.THEME===false?"#F0F8FF":"black"}]}
             onPress={async () => {
 
                 setTimeout(() => {
@@ -110,7 +110,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={stellar} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>XLM</Text>
+              <Text style={{ marginHorizontal: wp(4),color: state.THEME.THEME===false?"black":"#fff" }}>XLM</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>
@@ -118,7 +118,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box3}
+            style={[style.Box3,{backgroundColor: state.THEME.THEME===false?"#F0F8FF":"black"}]}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
               if (
@@ -137,7 +137,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={Bnbimage} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>BNB</Text>
+              <Text style={{ marginHorizontal: wp(4),color: state.THEME.THEME===false?"black":"#fff" }}>BNB</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>
@@ -145,7 +145,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box3}
+            style={[style.Box3,{backgroundColor: state.THEME.THEME===false?"#F0F8FF":"black"}]}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
               if (
@@ -168,7 +168,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
             <View style={style.flatView}>
               <Image source={Etherimage} style={style.img} />
 
-              <Text style={{ marginHorizontal: wp(4) }}>Ethereum</Text>
+              <Text style={{ marginHorizontal: wp(4),color: state.THEME.THEME===false?"black":"#fff" }}>Ethereum</Text>
 
               <View>
                 <Title style={{ color: "#fff" }}></Title>
@@ -198,7 +198,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={maticImage} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>Matic</Text>
+              <Text style={{ marginHorizontal: wp(4),color: state.THEME.THEME===false?"black":"#fff" }}>Matic</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>
@@ -225,7 +225,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
             <View style={style.flatView}>
               <Image source={xrpImage} style={style.img} />
 
-              <Text style={{ marginHorizontal: wp(4) }}>XRP</Text>
+              <Text style={{ marginHorizontal: wp(4),color: state.THEME.THEME===false?"black":"#fff" }}>XRP</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>
@@ -234,7 +234,6 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
           <Text style={style.walletText}>Please select a wallet type</Text>
         </View>
-
         <RecieveAddress
           modalVisible={visible}
           setModalVisible={setVisible}
@@ -271,6 +270,7 @@ const style = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     borderWidth: 1,
+    borderColor:"#145DA0"
   },
   welcomeText: {
     fontSize: 20,
@@ -335,7 +335,7 @@ const style = StyleSheet.create({
   Box3: {
     width: wp(90),
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: "#145DA0",
     borderRadius: hp(1),
     backgroundColor: "#F0F8FF",
     paddingVertical: hp(1.5),

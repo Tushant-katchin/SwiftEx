@@ -324,9 +324,9 @@ const checkPermission = async () => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-{Platform.OS==="ios"?<View style={{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",flexDirection:"row",height: hp(8),borderBottomColor:"gray",borderColor:state.THEME.THEME===false?"gray":"black",borderWidth:0.5}}>
+{Platform.OS==="ios"?<View style={{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",flexDirection:"row",height: state.header_ios.header_ios===91?hp(8):hp(9.5),borderBottomColor:"gray",borderColor:state.THEME.THEME===false?"gray":"black",borderWidth:0.5}}>
 <Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
-<Text style={{color:"white",alignSelf:"center",marginLeft:"19%",marginTop:'9%',fontSize:19}}>Transaction Details</Text>
+<Text style={{color:"white",alignSelf:"center",marginLeft:"17%",marginTop:state.header_ios.header_ios===91?'7%':'11%',fontSize:19}}>Transaction Details</Text>
 <TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
 <Image source={darkBlue} style={{height: hp("9"),
     width: wp("12"),

@@ -34,6 +34,7 @@ import Bridge from "../../../../../../assets/Bridge.png";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import { useIsFocused } from '@react-navigation/native';
 import WebView from "react-native-webview";
+import { useSelector } from "react-redux";
 
 
 
@@ -288,6 +289,7 @@ export const OfferListViewHome = () => {
 };
 
 export const OfferView = () => {
+  const state = useSelector((state) => state);
   const navigation = useNavigation();
   const [offers, setOffers] = useState();
   const [change, setChange] = useState(false);
@@ -311,6 +313,7 @@ export const OfferView = () => {
       // padding: 10,
       backgroundColor: '#4CA6EA',
       elevation: 4,
+      height:state.header_ios.header_ios===91?hp(8):hp(9.5)
     }}>
       {/* Left Icon */}
       <Icon
@@ -330,7 +333,7 @@ export const OfferView = () => {
         color:"#fff",
         flex: 1,
         marginLeft:wp(13),
-        marginTop:Platform.OS==="ios"?hp(3):hp(0)
+        marginTop:Platform.OS==="ios"?state.header_ios.header_ios===91?'7%':'11%':hp(0)
       }}>Offers</Text>
 
       {/* Right Image and Menu Icon */}

@@ -18,6 +18,7 @@ import {
 import { useSelector } from "react-redux";
 import { Avatar, Card, Title, Paragraph } from "react-native-paper";
 import Bnbimage from "../../assets/bnb-icon2_2x.png";
+import steller_img from "../../assets/Stellar_(XLM).png";
 import Etherimage from "../../assets/ethereum.png";
 import Xrpimage from "../../assets/xrp.png";
 import Maticimage from "../../assets/matic.png";
@@ -103,13 +104,18 @@ try{
   
             {transactions[0] ? (
               transactions.map((item) => {
+                console.log("===================",item)
                 const hash = item.hash;
                 console.log(item);
                 let LeftContent;
                 console.log(item.walletType);
                 if (item.walletType === "Ethereum") {
                   LeftContent = Etherimage;
-                } else if (item.walletType === "BSC") {
+                }
+                else if (item.chainType === "XLM") {
+                  LeftContent = steller_img;
+                } 
+                 else if (item.walletType === "BSC") {
                   LeftContent = Bnbimage;
                 } else if (item.walletType == "Xrp") {
                   LeftContent = Xrpimage;

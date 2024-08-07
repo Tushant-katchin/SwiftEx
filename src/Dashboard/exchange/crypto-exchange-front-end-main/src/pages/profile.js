@@ -417,6 +417,7 @@ export const ProfileView = (props) => {
       // padding: 10,
       backgroundColor: '#4CA6EA',
       elevation: 4,
+      height:state.header_ios.header_ios===91?hp(8):hp(9.5)
     }}>
       {/* Left Icon */}
       <Icon
@@ -436,7 +437,7 @@ export const ProfileView = (props) => {
         color:"#fff",
         flex: 1,
         marginLeft:wp(13),
-        marginTop:Platform.OS==="ios"?hp(3):hp(0)
+        marginTop:Platform.OS==="ios"?state.header_ios.header_ios===91?'7%':'11%':hp(0)
       }}>Profile</Text>
 
       {/* Right Image and Menu Icon */}

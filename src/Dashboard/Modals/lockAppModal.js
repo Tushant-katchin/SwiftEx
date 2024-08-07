@@ -24,13 +24,14 @@ import {
 } from "../../components/Redux/actions/auth";
 import Modal from "react-native-modal";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import darkBlue from '../../../assets/darkBlue.png'
 import { alert } from "../reusables/Toasts";
 const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
 const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
+  const FOCUSED=useIsFocused();
   const state = useSelector((state) => state);
   const [pin, setPin] = useState();
   const [status, setStatus] = useState("pinset");
@@ -49,6 +50,18 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
+
+  useEffect(async()=>{
+   await check_other_options()
+  },[FOCUSED])
+  const check_other_options=async()=>{
+    const biometric = await AsyncStorage.getItem("Biometric");
+    console.log("======!!!!1",biometric)
+    if (biometric === "SET") {
+      await useBiometrics();
+    }
+  }
+
   function useBiometrics(){ 
     rnBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
   .then((resultObject) => {

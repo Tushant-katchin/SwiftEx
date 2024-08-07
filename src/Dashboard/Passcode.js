@@ -26,10 +26,11 @@ import { useBiometrics } from "../biometrics/biometric";
 import { useFocusEffect } from "@react-navigation/native";
 import { alert } from "./reusables/Toasts";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { SET_APP_THEME } from "../components/Redux/actions/type";
+import { IOS_HEADER, SET_APP_THEME } from "../components/Redux/actions/type";
 import Icon from "../icon";
-
+import { useHeaderHeight } from '@react-navigation/elements';
 const Passcode = (props) => {
+  const header_Height = useHeaderHeight();
   const [pin, setPin] = useState();
   const [status, setStatus] = useState("");
   const [showRemoveButton, setShowRemoveButton] = useState(false);
@@ -67,6 +68,10 @@ const Passcode = (props) => {
     dispatch({
       type: SET_APP_THEME,
       payload: { THEME: Checked===null?false:Checked==="false"?false:true},
+    });
+    dispatch({
+      type: IOS_HEADER,
+      payload: { header_ios: header_Height},
     });
     const Check = await AsyncStorage.getItem("pin");
     const biometric = await AsyncStorage.getItem("Biometric");
@@ -151,7 +156,7 @@ const Passcode = (props) => {
 
   return (
     <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim }}
+      // style={{ opacity: fadeAnim }}
     >
       <View style={style.Body}>
          <Animated.Image
@@ -159,7 +164,7 @@ const Passcode = (props) => {
             width: wp("20"),
             height: hp("15"),
             padding: 30,
-            marginTop: hp(2),
+            marginTop: Platform.OS==="ios"?hp(-18):hp(2),
             transform: [{ rotate: SpinValue }],
           }}
           source={darkBlue}

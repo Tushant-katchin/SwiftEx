@@ -14,6 +14,7 @@ export const TxDetail = (props) => {
   const etherUrl = `https://sepolia.etherscan.io/tx/${props?.route?.params?.data?.hash}`;
   const MaticUrl = `https://mumbai.polygonscan.com/tx/${props?.route?.params?.data?.hash}`;
   const XrpUrl = `https://test.bithomp.com/explorer/${props?.route?.params?.data?.hash}`;
+  const xlm_url=`https://stellar.expert/explorer/testnet/tx/${props?.route?.params?.data?.hash}`
   console.log(props?.route?.params?.data?.hash);
   useEffect(async () => {
     AsyncStorageLib.getItem("walletType").then(async (Type) => {
@@ -36,7 +37,10 @@ export const TxDetail = (props) => {
           setWalletType("Matic");
         } else if (props?.route?.params?.data?.chainType === "Xrp") {
           setWalletType("Xrp");
-        } else {
+        } else if (props?.route?.params?.data?.chainType === "XLM") {
+          setWalletType("XLM");
+        }
+         else {
           return alert(
             "no chainType found in multi-coin transaction. Error 404"
           );
@@ -57,7 +61,7 @@ export const TxDetail = (props) => {
               ? XrpUrl
               :walletType=='BSC'
               ?url
-              : url,
+              : walletType==="XLM"?xlm_url:url
         }}
       /> 
     </View>

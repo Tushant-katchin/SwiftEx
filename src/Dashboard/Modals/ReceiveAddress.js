@@ -10,6 +10,7 @@ import {
   Clip,
   Image,
   Pressable,
+  Platform,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -428,7 +429,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         backdropTransitionOutTiming={0}
         hideModalContentWhileAnimating
         statusBarTranslucent={true}
-        style={style.modal}
+        style={[style.modal,{backgroundColor:state.THEME.THEME===false?"#fff":"black" }]}
         onBackButtonPress={() => {
           setModalVisible(false);
         }}
@@ -444,7 +445,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             alignItems: "flex-start",
             padding: 15,
             width: "100%",
-            // backgroundColor: "#4CA6EA",
+            backgroundColor:state.THEME.THEME===false?"#fff":"black" 
           }}
         >
           <Icon
@@ -453,22 +454,22 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             type={"antDesign"}
             size={30}
             // color={"#fff"}
-            color={"black"}
+            color={state.THEME.THEME===false?"black":"#fff"}
             onPress={() => {
               setModalVisible(false);
             }}
           />
         </TouchableOpacity>
-        <View style={style.barCode}>
+        <View style={[style.barCode,{backgroundColor:state.THEME.THEME===false?"#fff":"black" }]}>
           <TouchableOpacity style={style.flatView}>
             <Image
-              style={{ width: wp(10), height: hp(5) }}
+              style={{ width: Platform.OS==="ios"?wp(11):wp(10), height: hp(5) }}
               source={
                 iconType === "BNB"? Bnbimage: iconType === "ETH"? Etherimage: iconType === "Xrp"? xrpImage: iconType==="XLM"?stellar:maticImage
               }
             />
 
-            <Text style={{ marginHorizontal: wp(2), color: "#4169e1" }}>
+            <Text style={{ marginHorizontal: wp(2), color: state.THEME.THEME===false?"#4169e1":"#fff" }}>
               {iconType}
             </Text>
           </TouchableOpacity>
@@ -480,9 +481,9 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               //size of QR Code
               size={250}
               //Color of the QR Code (Optional)
-              color="black"
+              color={state.THEME.THEME===false?"black":"#145DA0"}
               //Background Color of the QR Code (Optional)
-              backgroundColor="white"
+              backgroundColor={state.THEME.THEME===false?"#fff":"black" }
               //Logo of in the center of QR Code (Optional)
               logo={{
                 url: "https://raw.githubusercontent.com/AboutReact/sampleresource/master/logosmalltransparen.png",
@@ -497,7 +498,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               // logoBackgroundColor="yellow"
             />
           </View>
-          <Text style={style.addressTxt}>
+          <Text style={[style.addressTxt,{color:state.THEME.THEME===false?"black":"#fff"}]}>
             {iconType==="XLM"?Stellar_add:WalletAddress ? WalletAddress :""}
           </Text>
         </View>

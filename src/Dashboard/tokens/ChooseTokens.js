@@ -39,7 +39,7 @@ import Icon from "../../icon";
 
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const ChooseTokens = ({ setModalVisible }) => {
-  
+  const state=useSelector((state)=>state)
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);
   const [walletType, setWalletType] = useState(false);
@@ -104,7 +104,7 @@ const ChooseTokens = ({ setModalVisible }) => {
 
   return (
     <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim ,  
+      style={{ opacity: fadeAnim ,backgroundColor: state.THEME.THEME===false?"#145DA0":"black"  
     }}
     >
    
@@ -116,7 +116,7 @@ const ChooseTokens = ({ setModalVisible }) => {
       <ScrollView>
         <View style={style.Body}>
         <TouchableOpacity
-            style={walletType==='BSC'||walletType==='Multi-coin'?style.Box3:style.disableBox}
+            style={walletType==='BSC'||walletType==='Multi-coin'?[style.Box3,{backgroundColor:state.THEME.THEME===false?"#F0F8FF":"black"}]:style.disableBox}
             onPress={async () => {
               setModalVisible(false);
               navigation.navigate("SendXLM");
@@ -124,11 +124,11 @@ const ChooseTokens = ({ setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={stellar} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>XLM</Text>
+              <Text style={{ marginHorizontal: wp(4),color:state.THEME.THEME===false?"black":"#F0F8FF"  }}>XLM</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={walletType==='BSC'||walletType==='Multi-coin'?style.Box3:style.disableBox}
+            style={walletType==='BSC'||walletType==='Multi-coin'?[style.Box3,{backgroundColor:state.THEME.THEME===false?"#F0F8FF":"black"}]:style.disableBox}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
@@ -149,12 +149,12 @@ const ChooseTokens = ({ setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={Bnbimage} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>BNB</Text>
+              <Text style={{ marginHorizontal: wp(4),color:state.THEME.THEME===false?"black":"#F0F8FF"  }}>BNB</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box3}
+            style={[style.Box3,{backgroundColor:state.THEME.THEME===false?"#F0F8FF":"black"}]}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
               const Type = JSON.parse(walletType);
@@ -172,7 +172,7 @@ const ChooseTokens = ({ setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={Etherimage} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>Ethereum</Text>
+              <Text style={{ marginHorizontal: wp(4),color:state.THEME.THEME===false?"black":"#F0F8FF" }}>Ethereum</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>
@@ -327,7 +327,7 @@ const style = StyleSheet.create({
   Box3: {
     width: wp(90),
     borderWidth:1,
-    borderColor:"#E0E0E0",
+    borderColor:"#145DA0",
     borderRadius: hp(1),  
     backgroundColor:"#F0F8FF",
     paddingVertical: hp(1.5),

@@ -87,8 +87,9 @@ export const ExchangeRegister = (props) => {
     setFormContent({ ...formContent, lastName: formattedInput })
   };
   const onChangelmail = (input) => {
-    const formattedInput = input.replace(/\s/g, '').toLowerCase();
-    setFormContent({ ...formContent, email: formattedInput })
+    setFormContent({ ...formContent, email: input })
+    // const formattedInput = input.replace(/\s/g, '').toLowerCase();
+    // setFormContent({ ...formContent, email: formattedInput })
   };
 
   return (

@@ -550,6 +550,7 @@ const reves_fun=async(fist_data,second_data)=>{
       // padding: 10,
       backgroundColor: '#4CA6EA',
       elevation: 4,
+      height:state.header_ios.header_ios===91?hp(8):hp(9.5)
     }}>
       {/* Left Icon */}
       <Icon
@@ -569,7 +570,7 @@ const reves_fun=async(fist_data,second_data)=>{
         color:"#fff",
         flex: 1,
         marginLeft:wp(13),
-        marginTop:Platform.OS==="android"?hp(0):hp(3)
+        marginTop:Platform.OS==="ios"?state.header_ios.header_ios===91?'7%':'11%':hp(0)
       }}>Create Offer</Text>
 
       {/* Right Image and Menu Icon */}
