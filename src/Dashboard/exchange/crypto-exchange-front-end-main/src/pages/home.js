@@ -46,6 +46,8 @@ import { Platform,Modal} from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { useRef } from "react";
 import { RAPID_STELLAR, SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
+import SelectWallet from "../../../../Modals/SelectWallet";
+import SELECT_WALLET_EXC from "../../../../Modals/SELECT_WALLET_EXC";
 // import StellarSdk from '@stellar/stellar-sdk';
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -58,6 +60,7 @@ export const HomeView = ({ setPressed }) => {
   const [ShowButtonRight,setShowButtonRight]=useState(false);
   const [ShowButtonLeft,setShowButtonLeft]=useState(false);
   const [open_chart_api,setopen_chart_api]=useState(false);
+  const [VISIBLE_SELECT,setVISIBLE_SELECT]=useState(false);
   const [chart_api,setchart_api]=useState([
     {id:0,name:"XLM  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&start_time=1722320811000&resolution=60000&offset=0&limit=20&order=desc",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png',img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
     {id:1,name:"ETH  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=native&start_time=1722322399000&resolution=60000&offset=0&limit=20&order=desc",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",img_0:"https://tokens.pancakeswap.finance/images/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png"},
@@ -719,7 +722,7 @@ useFocusEffect(
       <Text style={styles.modalContainer_option_text}>KYC</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{navigation.navigate("Wallet")}}>
+      <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{navigation.navigate("Home")}}>
       <Icon
         name={"wallet-outline"}
         type={"materialCommunity"}
@@ -788,7 +791,7 @@ useFocusEffect(
                   {/* </View> */}
                <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
                <Text style={{textAlign:"left",marginHorizontal:10,marginTop:10,fontWeight: "bold",fontSize:20,color:"#fff"}}>Anchors</Text>
-                <TouchableOpacity style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}} onPress={()=>{navigation.navigate("Wallet")}}>
+                <TouchableOpacity style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}} onPress={()=>{navigation.navigate("Home")}}>
                 <Icon
                       name={"chevron-left"}
                       type={"materialCommunity"}
@@ -900,7 +903,11 @@ useFocusEffect(
       </Modal>
     </View>
               <View style={[styles.linearContainer,{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)"}]}>
-
+              <SELECT_WALLET_EXC
+        visible={VISIBLE_SELECT}
+        setVisible={setVISIBLE_SELECT}
+        setModalVisible={setVISIBLE_SELECT}
+      />
             {state.wallet ? (
               <View>
                 <View style={styles.iconwithTextContainer}>
@@ -957,7 +964,7 @@ useFocusEffect(
                       style={{marginTop:0.3,marginLeft:wp(1)}}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{navigation.navigate("AllWallets")}}>
+                    <TouchableOpacity onPress={()=>{setVISIBLE_SELECT(true)}}>
                     <Text style={{color:"#4CA6EA",marginLeft:wp(1),marginTop:hp(0.5),paddingHorizontal:(1.5)}}>Manage</Text>
                     </TouchableOpacity>
                   </View> 
