@@ -42,7 +42,6 @@ import Icon from "../icon";
 import IconWithCircle from "../Screens/iconwithCircle";
 import darkBlue from "../../assets/darkBlue.png"
 import Wallet_selection_bottom from "./Wallets/Wallet_selection_bottom";
-import NotificationCOM from "./Modals/NotificationCOM";
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -437,7 +436,6 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
           </View>
         <Icon name="chevron-down-outline" type={"ionicon"} size={21} color={"#fff"} />
       </TouchableOpacity>
-      <NotificationCOM/>
 
         {/* <TouchableOpacity
           style={styles.faucetBtn}
