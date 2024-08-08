@@ -44,6 +44,7 @@ const SendXLM = (props) => {
     const [steller_key, setsteller_key] = useState();
     const [steller_key_private, setsteller_key_private] = useState();
     const [disable, setdisable] = useState(false);
+    const [ACTIVATION_MODAL, setACTIVATION_MODAL] = useState(false);
     const [Message, setMessage] = useState("");
     const [Payment_loading,setPayment_loading]=useState(false);
     const cameraRef = useRef(null);
@@ -66,6 +67,7 @@ const SendXLM = (props) => {
     };
 
     useEffect(async () => {
+      setACTIVATION_MODAL(false)
         setAddress()
         setAmount()
         setdisable(false)
@@ -73,7 +75,7 @@ const SendXLM = (props) => {
         setLoading(true)
         setMessage();
         setPayment_loading(false);
-    }, [FOCUSED])
+    }, [])
     useEffect(() => {
         let inputValidation;
         let inputValidation1;
@@ -129,7 +131,8 @@ const SendXLM = (props) => {
                 console.log('Error loading account:', error);
                 setLoading(false);
                 setdisable(true);
-                setMessage("Activate Stellar Account from Exchange Tab.")
+                setACTIVATION_MODAL(true)
+                setMessage("Activation required for Stellar Account")
             });
     }
     const handleUsernameChange = (text) => {
@@ -211,7 +214,7 @@ const SendXLM = (props) => {
                 
               }
             };
-        
+            
 
 
     return (
@@ -386,6 +389,31 @@ const SendXLM = (props) => {
           </View>
         </View> */}
       </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={ACTIVATION_MODAL}
+          >
+          <View style={style.AccountmodalContainer}>
+            <View style={style.AccounsubContainer}>
+              <Icon
+                name={"alert-circle-outline"}
+                type={"materialCommunity"}
+                size={60}
+                color={"orange"}
+              />
+              <Text style={style.AccounheadingContainer}>Login to Activate Stellar Wallet</Text>
+              <View style={{ flexDirection: "row",justifyContent:"space-around",width:wp(80),marginTop:hp(3),alignItems:"center" }}>
+                <TouchableOpacity style={style.AccounbtnContainer} onPress={() => {setACTIVATION_MODAL(false),navigation.goBack()}}>
+                   <Text style={style.Accounbtntext}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={style.AccounbtnContainer} onPress={()=>{setACTIVATION_MODAL(false),navigation.navigate("exchangeLogin")}}>
+                   <Text style={style.Accounbtntext}>Login to fund</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
         </>
 
     );
@@ -495,4 +523,40 @@ const style = StyleSheet.create({
         fontWeight: 'bold',
         color:"#fff"
       },
+      AccountmodalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      AccounsubContainer:{
+        backgroundColor:"#131E3A",
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: "90%",
+        height: "29%",
+        justifyContent: "center"
+      },
+      AccounbtnContainer:{
+        width:wp(35),
+        height:hp(5),
+        backgroundColor:"rgba(33, 43, 83, 1)",
+        alignItems:"center",
+        justifyContent:"center",
+        borderRadius:10,
+        borderColor:"#4CA6EA",
+        borderWidth:1
+      },
+      Accounbtntext:{
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#fff"
+      },
+      AccounheadingContainer:{
+        fontSize: 20,
+        fontWeight: "bold",
+        marginTop: 10,
+        color: "#fff"
+      }
 });
