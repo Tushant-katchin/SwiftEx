@@ -188,6 +188,24 @@ const SendXLM = (props) => {
               alert("success","Transaction successful!");
               setdisable(false);
               setPayment_loading(false);
+              try {
+                const user_current = await state.user;
+                const type = "Send";
+                const chainType = "XLM";
+                const walletType=await state.walletType;
+                const saveTransaction = await SaveTransaction(
+                  type,
+                  transactionResult.hash,
+                  user_current,
+                  chainType,
+                  walletType,
+                  chainType
+                );
+                console.log(saveTransaction);
+                navigation.navigate("Transactions");
+              } catch (e) {
+                console.log(e);
+              }
             } catch (error) {
               console.error('Error sending XLM:', error);
               alert("error","Transaction Failed");
