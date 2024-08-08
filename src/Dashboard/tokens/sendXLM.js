@@ -31,6 +31,7 @@ import { delay, isInteger } from "lodash";
 import { alert } from "../reusables/Toasts";
 import { isFloat } from "validator";
 import { RNCamera } from 'react-native-camera';
+import { REACT_APP_LOCAL_TOKEN } from "../exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 const StellarSdK = require('stellar-base');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -52,6 +53,7 @@ const SendXLM = (props) => {
     const state = useSelector((state) => state);
     const navigation = useNavigation();
     const [isModalVisible, setModalVisible] = useState(false);
+    const [token, settoken] = useState("");
     const toggleModal = () => {
         checkPermission();
     };
@@ -67,6 +69,8 @@ const SendXLM = (props) => {
     };
 
     useEffect(async () => {
+      const token_1 = await AsyncStorageLib.getItem(REACT_APP_LOCAL_TOKEN);
+      settoken(token_1)
       setACTIVATION_MODAL(false)
         setAddress()
         setAmount()
@@ -233,6 +237,9 @@ const SendXLM = (props) => {
               }
             };
             
+            const CHECK_LOGIN=async()=>{
+              token ?[setACTIVATION_MODAL(false),navigation.navigate("exchange")]:[setACTIVATION_MODAL(false),navigation.navigate("exchangeLogin")]
+            }
 
 
     return (
@@ -420,13 +427,13 @@ const SendXLM = (props) => {
                 size={60}
                 color={"orange"}
               />
-              <Text style={style.AccounheadingContainer}>Login to Activate Stellar Wallet</Text>
+              <Text style={style.AccounheadingContainer}>{token ?" ":"Login to "}Activate Stellar Wallet</Text>
               <View style={{ flexDirection: "row",justifyContent:"space-around",width:wp(80),marginTop:hp(3),alignItems:"center" }}>
                 <TouchableOpacity style={style.AccounbtnContainer} onPress={() => {setACTIVATION_MODAL(false),navigation.goBack()}}>
                    <Text style={style.Accounbtntext}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.AccounbtnContainer} onPress={()=>{setACTIVATION_MODAL(false),navigation.navigate("exchangeLogin")}}>
-                   <Text style={style.Accounbtntext}>Login to fund</Text>
+                <TouchableOpacity style={style.AccounbtnContainer} onPress={()=>{CHECK_LOGIN()}}>
+                   <Text style={style.Accounbtntext}>{token?"Active ":"Login " }and fund</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -567,7 +574,7 @@ const style = StyleSheet.create({
         borderWidth:1
       },
       Accounbtntext:{
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "bold",
         color: "#fff"
       },
