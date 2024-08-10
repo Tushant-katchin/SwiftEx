@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Animated, StyleSheet, TextInput } from "react-native";
 import { Dimensions } from "react-native";
+import { useSelector } from "react-redux";
 
 const deviceWidth = Dimensions.get("window").width;
 const SearchComponent = (props) => {
   const [searchData, setSerachData] = useState([]);
+  const state=useSelector((state)=>state);
   const { clampedScroll, setSearch, data, setData } = props;
   const searchBarTranslate = clampedScroll.interpolate({
     inputRange: [0, 50],
@@ -46,12 +48,12 @@ const SearchComponent = (props) => {
             },
           ],
           opacity: searchBarOpacity,
-        },
+        backgroundColor:state.THEME.THEME===false?"#fff":"black"}
       ]}
     >
       <TextInput
         placeholder="Search"
-        style={styles.formField}
+        style={[styles.formField,{color:state.THEME.THEME===false?"black":"#fff",borderColor:"#4CA6EA",borderWidth:0.5}]}
         placeholderTextColor={"#888888"}
         onChangeText={(text) => {
           setSearch(text);

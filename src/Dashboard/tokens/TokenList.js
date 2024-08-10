@@ -59,6 +59,7 @@ const TokenList = ({
   const [loading, setLoading] = useState(false);
   const [scrollYValue, setScrollYValue] = useState(new Animated.Value(0));
   const [page, setPage] = useState(1);
+  const state=useSelector((state)=>state);
   const clampedScroll = Animated.diffClamp(
     Animated.add(
       scrollYValue.interpolate({
@@ -91,13 +92,13 @@ const TokenList = ({
   const renderFooter = () => (
     <View style={style.footerText}>
       {loading && <ActivityIndicator />}
-      {!Data && <Text>No more data at the moment</Text>}
+      {!Data && <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>No more data at the moment</Text>}
     </View>
   );
 
   const renderEmpty = () => (
     <View style={style.emptyText}>
-      <Text>No Data at the moment</Text>
+      <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>No Data at the moment</Text>
     </View>
   );
 
@@ -232,7 +233,7 @@ const TokenList = ({
           }}
         >
           <View>
-            <Text>{item.name}</Text>
+            <Text style={{color:state.THEME.THEME===false?"black":"#fff"}}>{item.name}</Text>
             <Text style={{ color: "gray", fontSize: 12 }}>0 {item.symbol==="WETH"?"ETH":item.symbol}</Text>
           </View>
           <Text>{item.chainId == 56 ? "bnb" : "eth"}</Text>
@@ -249,7 +250,7 @@ const TokenList = ({
     <View style={{ width: wp(100),height:hp(100) }}>
       <SwapHeader title='Tokens' setVisible={setVisible}/>
       {/* <TokenHeader setVisible={setVisible} name={name} /> */}
-      <View style={style.Body}>
+      <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
         <SearchComponent
           clampedScroll={clampedScroll}
           data={data}
@@ -292,8 +293,8 @@ const style = StyleSheet.create({
     height: hp(98),
     width: wp(100),
 
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
     alignItems: "center",
     textAlign: "center",
   },

@@ -428,7 +428,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
         backdropTransitionOutTiming={0}
         hideModalContentWhileAnimating
         statusBarTranslucent={true}
-        style={style.modal}
+        style={[style.modal,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}
         onBackButtonPress={() => {
           setModalVisible(false);
         }}
@@ -453,13 +453,13 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             type={"antDesign"}
             size={30}
             // color={"#fff"}
-            color={"black"}
+            color={state.THEME.THEME===false?"black":"#fff"}
             onPress={() => {
               setModalVisible(false);
             }}
           />
         </TouchableOpacity>
-        <View style={style.barCode}>
+        <View style={[style.barCode,{backgroundColor:state.THEME.THEME===false?"#fff":"black",borderColor: "#4169e",borderWidth:1}]}>
           <TouchableOpacity style={style.flatView}>
             <Image
               style={{ width: wp(10), height: hp(5) }}
@@ -480,9 +480,9 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               //size of QR Code
               size={250}
               //Color of the QR Code (Optional)
-              color="black"
+              color={state.THEME.THEME===false?"black":"#4169e1"}
               //Background Color of the QR Code (Optional)
-              backgroundColor="white"
+              backgroundColor={state.THEME.THEME===false?"#fff":"black"}
               //Logo of in the center of QR Code (Optional)
               logo={{
                 url: "https://raw.githubusercontent.com/AboutReact/sampleresource/master/logosmalltransparen.png",
@@ -497,7 +497,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               // logoBackgroundColor="yellow"
             />
           </View>
-          <Text style={style.addressTxt}>
+          <Text style={[style.addressTxt,{color:state.THEME.THEME===false?"black":"#fff"}]}>
             {iconType==="XLM"?Stellar_add:WalletAddress ? WalletAddress :""}
           </Text>
         </View>

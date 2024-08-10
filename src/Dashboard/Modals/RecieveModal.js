@@ -38,7 +38,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
   const [visible, setVisible] = useState(false);
   const [iconType, setIconType] = useState("");
   const dispatch = useDispatch();
-
+  const state=useSelector((state)=>state);
   let EtherLeftContent = (props) => (
     <Avatar.Image {...props} source={Etherimage} />
   );
@@ -84,7 +84,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           setModalVisible(false);
         }}
       >
-        <View style={style.Body}>
+        <View style={[style.Body,{ borderWidth:1,borderColor:state.THEME.THEME===false?"#E0E0E0":"#145DA0",backgroundColor:state.THEME.THEME===false?"#145DA0":"black"}]}>
           {/* <ModalHeader Function={closeModal} name={'Receive'}/> */}
           <Icon
             type={"entypo"}
@@ -99,7 +99,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
 
           <Text style={{ fontSize: 19, color: "#ffffff" }}>Receive</Text>
           <TouchableOpacity
-            style={style.Box3}
+            style={[style.Box3,{ borderWidth:1,borderColor:state.THEME.THEME===false?"#E0E0E0":"#145DA0",backgroundColor:state.THEME.THEME===false?"#E0E0E0":"black"}]}
             onPress={async () => {
 
                 setTimeout(() => {
@@ -110,7 +110,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={stellar} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>XLM</Text>
+              <Text style={{ marginHorizontal: wp(4),color:state.THEME.THEME===false?"black":"#E0E0E0" }}>XLM</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>
@@ -118,7 +118,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box3}
+            style={[style.Box3,{ borderWidth:1,borderColor:state.THEME.THEME===false?"#E0E0E0":"#145DA0",backgroundColor:state.THEME.THEME===false?"#E0E0E0":"black"}]}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
               if (
@@ -137,7 +137,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           >
             <View style={style.flatView}>
               <Image source={Bnbimage} style={style.img} />
-              <Text style={{ marginHorizontal: wp(4) }}>BNB</Text>
+              <Text style={{ marginHorizontal: wp(4),color:state.THEME.THEME===false?"black":"#E0E0E0" }}>BNB</Text>
               <View>
                 <Title style={{ color: "#fff" }}></Title>
               </View>
@@ -145,7 +145,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={style.Box3}
+            style={[style.Box3,{ borderWidth:1,borderColor:state.THEME.THEME===false?"#E0E0E0":"#145DA0",backgroundColor:state.THEME.THEME===false?"#E0E0E0":"black"}]}
             onPress={async () => {
               const walletType = await AsyncStorageLib.getItem("walletType");
               if (
@@ -168,7 +168,7 @@ const RecieveModal = ({ modalVisible, setModalVisible }) => {
             <View style={style.flatView}>
               <Image source={Etherimage} style={style.img} />
 
-              <Text style={{ marginHorizontal: wp(4) }}>Ethereum</Text>
+              <Text style={{ marginHorizontal: wp(4),color:state.THEME.THEME===false?"black":"#E0E0E0" }}>Ethereum</Text>
 
               <View>
                 <Title style={{ color: "#fff" }}></Title>

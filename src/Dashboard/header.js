@@ -96,9 +96,10 @@ export const WalletHeader = (props) => {
 export const SwapHeader = (props) => {
   const { title, title1, setVisible } = props;
   const navigation = useNavigation();
+  const state=useSelector((state)=>state);
 
   return (
-    <View style={styles.walletContainer}>
+    <View style={[styles.walletContainer,{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black"}]}>
       <Icon
         name={"left"}
         type={"antDesign"}
@@ -328,7 +329,9 @@ const styles = StyleSheet.create({
     paddingVertical: hp(2),
     width: wp(100),
     paddingHorizontal: wp(2),
-    height:wp(17)
+    height:wp(17),
+    borderBottomColor:"#4CA6EA",
+    borderWidth:1
   },
   logoImg: {
     height: hp("9"),
