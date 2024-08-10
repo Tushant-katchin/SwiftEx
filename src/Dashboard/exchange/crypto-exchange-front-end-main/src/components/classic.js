@@ -140,7 +140,8 @@ const getOffersData = async () => {
         textAlign: 'center',
         color:"#fff",
         flex: 1,
-        marginLeft:wp(13)
+        marginLeft:wp(13),
+        marginTop: '9%'
       }}>Bridge</Text>
 
       {/* Right Image and Menu Icon */}
