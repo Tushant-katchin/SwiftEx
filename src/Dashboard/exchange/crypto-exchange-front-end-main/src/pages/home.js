@@ -210,7 +210,7 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
             )
             .addOperation(
                 StellarSdk.Operation.changeTrust({
-                    asset: new StellarSdk.Asset("XUSD", "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI"),
+                    asset: new StellarSdk.Asset("USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
                 })
             )
             .setTimeout(30)
