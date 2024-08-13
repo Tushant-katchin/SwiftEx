@@ -137,6 +137,10 @@ const Dashboard = ({ navigation }) => {
               iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
               iconName = "ios-home-sharp";
             }
+            if (route.name === "Wallet") {
+              iconName = focused ? "ios-wallet-sharp" : "ios-wallet-sharp";
+              iconName = "ios-wallet-sharp";
+            }
             if (route.name === "Assets") {
               iconName = focused ? "ios-home-sharp" : "ios-home-outline";
               iconName = "ios-pie-chart-sharp";
@@ -210,24 +214,6 @@ const Dashboard = ({ navigation }) => {
             unmountOnBlur: true,
             header: () => {
               return Header3("Wallet");
-            },
-            tabBarIcon: ({ focused }) => {
-              let iconName;
-              iconName = "ios-home-sharp"; //for icon or image
-              let iconColor;
-
-              iconColor = focused ? statee.THEME.THEME===false?"#131E3A":"#145DA0":statee.THEME.THEME===false?"#fff":"gray";
-              return (
-                <View>
-                  <Text>
-                    <Ionicons
-                      name={"wallet"}
-                      size={hp("3")}
-                      color={iconColor}
-                    />
-                  </Text>
-                </View>
-              );
             },
           }}
         />
