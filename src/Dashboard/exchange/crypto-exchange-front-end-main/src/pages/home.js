@@ -63,9 +63,9 @@ export const HomeView = ({ setPressed }) => {
   const [VISIBLE_SELECT,setVISIBLE_SELECT]=useState(false);
   const [chart_api,setchart_api]=useState([
     {id:0,name:"XLM  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&start_time=1722320811000&resolution=60000&offset=0&limit=20&order=desc",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png',img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
-    {id:1,name:"ETH  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=native&start_time=1722322399000&resolution=60000&offset=0&limit=20&order=desc",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",img_0:"https://tokens.pancakeswap.finance/images/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png"},
+    {id:1,name:"ETH  ",name_0:"USDC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=ETH&base_asset_issuer=GBFXOHVAS43OIWNIO7XLRJAHT3BICFEIKOJLZVXNT572MISM4CMGSOCC&counter_asset_type=credit_alphanum4&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&start_time=1722320811000&resolution=60000&offset=0&limit=20&order=desc",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",img_0:"https://tokens.pancakeswap.finance/images/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png"},
     {id:2,name:"XLM  ",name_0:"EURC",url:"https://horizon.stellar.lobstr.co/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722322255000&resolution=60000&offset=0&limit=20&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png'},
-    {id:3,name:"USDC",name_0:"EURC",url:"https://horizon.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722229906000&resolution=900000&offset=0&limit=50&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
+    {id:3,name:"USDC",name_0:"EURC",url:"https://horizon.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=USDC&base_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=credit_alphanum4&counter_asset_code=EURC&counter_asset_issuer=GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2&start_time=1722229906000&resolution=900000&offset=0&limit=20&order=desc",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420",img_0:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"},
   ])
   const [chart_index,setchart_index]=useState(0);
   const chooseRenderItem_1 = ({ item }) => (
@@ -1073,7 +1073,7 @@ useFocusEffect(
         theme={{
           grid:{visible:false},
           labels: {
-            formatter: (v) => v.toFixed(4),
+            formatter: (v) => v.toFixed(1),
             label: { color: "#fff" }
           },
         }}
@@ -1100,7 +1100,7 @@ useFocusEffect(
             theme={{
               label: {
                 color: 'white',
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: 700,
                 textAnchor: 'middle',
                 opacity: 1,
