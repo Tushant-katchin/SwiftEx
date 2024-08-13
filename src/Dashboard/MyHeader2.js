@@ -7,7 +7,7 @@ import {
   UIManager,
   Touchable,
   TouchableOpacity,
-  Pressable,StatusBar, SafeAreaView, Image, Modal
+  Pressable,StatusBar, SafeAreaView, Image, Modal, TouchableWithoutFeedback
 } from "react-native";
 import { Button, Text } from "react-native-paper";
 import Icons from "react-native-vector-icons/FontAwesome";
@@ -550,6 +550,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         visible={Wallet_modal}
         onRequestClose={() => setWallet_modal(false)}
       >
+        <TouchableWithoutFeedback onPress={() => setWallet_modal(false)}>
         <View style={styles.modalBackground}>
             <TouchableOpacity
               onPress={() => setWallet_modal(false)}
@@ -575,6 +576,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
         <Wallet_selection_bottom onClose={handleClosewalletmodal}/>
           </View>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
     </SafeAreaView>
