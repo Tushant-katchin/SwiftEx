@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, RefreshControl, TouchableOpacity, ActivityIndicator, Modal, TouchableWithoutFeedback } from "react-native";
 import {
   Avatar,
   Card,
@@ -27,6 +27,7 @@ import alert from "./reusables/Toasts";
 import Icon from "../icon";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { RAPID_STELLAR, SET_ASSET_DATA } from "../components/Redux/actions/type";
+import { enableBiometrics } from "../biometrics/biometric";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
@@ -50,6 +51,7 @@ function InvestmentChart(setCurrentWallet) {
   const [ethPrice, setEthPrice] = useState();
   const [bnbPrice, setBnbPrice] = useState();
   const [loading, setLoading] = useState(false);
+  const [ACTIVATION_MODAL, setACTIVATION_MODAL] = useState(false);
   const dispatch = useDispatch()
   const getEthBnbPrice = async () => {
     await getEthPrice().then((response) => {
@@ -198,6 +200,14 @@ function InvestmentChart(setCurrentWallet) {
       setTimeout(()=>{
         setLoading(false);
       },1000)
+      setTimeout(async()=>{
+        const biometric = await AsyncStorageLib.getItem("Biometric");
+              if (biometric === "SET") {
+              }
+              else{
+                setACTIVATION_MODAL(true)
+              }
+      },1500)
     } catch (e) {
       console.log(e)
       setLoading(false);
@@ -527,7 +537,36 @@ function InvestmentChart(setCurrentWallet) {
       </TouchableOpacity>
         </>
       }
+ <Modal
+          animationType="fade"
+          transparent={true}
+          visible={ACTIVATION_MODAL}
+          >
+            <TouchableWithoutFeedback onPress={()=>{setACTIVATION_MODAL(false)}}>
+          <View style={styles.AccountmodalContainer}>
+            <View style={styles.AccounsubContainer}>
+              <Icon
+                name={"alert-circle-outline"}
+                type={"materialCommunity"}
+                size={60}
+                color={"orange"}
+              />
+              <Text style={styles.AccounheadingContainer}>Activate {Platform.OS==="android"?"biometric authentication":"Face ID"}</Text>
+              <Text style={[styles.AccounheadingContainer,{fontSize: 10,}]}>Make your wallet even more secure with biometric login.</Text>
+              <Text style={[styles.AccounheadingContainer,{fontSize: 10,marginTop: 0}]}>Use your fingerprint or facial recognition for fast and secure access.</Text>
+              <View style={{ flexDirection: "row",justifyContent:"space-around",width:wp(80),marginTop:hp(3),alignItems:"center" }}>
+                <TouchableOpacity style={styles.AccounbtnContainer} onPress={() => {setACTIVATION_MODAL(false)}}>
+                   <Text style={styles.Accounbtntext}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.AccounbtnContainer} onPress={async()=>{setACTIVATION_MODAL(false),await enableBiometrics() }}>
+                   <Text style={styles.Accounbtntext}>Continue</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            </View>
 
+            </TouchableWithoutFeedback>
+        </Modal>
     </ScrollView>
   );
 }
@@ -562,5 +601,41 @@ const styles = StyleSheet.create({
   priceDown: {
     color: "rgb(204,51,51)",
   },
-  refresh: { borderColor: "#4CA6EA",borderWidth:1, width: wp(10), paddingVertical: hp(0.3), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) }
+  refresh: { borderColor: "#4CA6EA",borderWidth:1, width: wp(10), paddingVertical: hp(0.3), marginTop: hp(1.9), marginLeft: wp(5), alignItems: "center", borderRadius: hp(1) },
+  AccountmodalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  AccounsubContainer:{
+    backgroundColor:"#131E3A",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: "90%",
+    height: "35%",
+    justifyContent: "center"
+  },
+  AccounbtnContainer:{
+    width:wp(35),
+    height:hp(5),
+    backgroundColor:"rgba(33, 43, 83, 1)",
+    alignItems:"center",
+    justifyContent:"center",
+    borderRadius:10,
+    borderColor:"#4CA6EA",
+    borderWidth:1
+  },
+  Accounbtntext:{
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff"
+  },
+  AccounheadingContainer:{
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 10,
+    color: "#fff"
+  }
 });

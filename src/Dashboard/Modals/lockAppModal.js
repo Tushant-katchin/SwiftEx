@@ -29,6 +29,7 @@ import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import darkBlue from '../../../assets/darkBlue.png'
 import { alert } from "../reusables/Toasts";
+import { enableBiometrics } from "../../biometrics/biometric";
 const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
 const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
   const state = useSelector((state) => state);
@@ -205,9 +206,7 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
                   if (biometric === "SET") {
                     useBiometrics();
                   }else{
-                        Platform.OS==="android"?
-                        alert('error','Enable biometrics in your device settings.'):
-                        alert('error','Enable face Id in your device settings.')
+                      await enableBiometrics()
                   }
                 }}
               />

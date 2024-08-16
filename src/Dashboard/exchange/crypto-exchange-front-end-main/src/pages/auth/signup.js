@@ -154,6 +154,7 @@ export const ExchangeRegister = (props) => {
                 theme={{ colors: { text: "white" } }}
                 value={formContent.email}
                 placeholder={"Enter your email address"}
+                keyboardType='visible-password'
                 onChangeText={(text) =>
                    onChangelmail(text)
                 }

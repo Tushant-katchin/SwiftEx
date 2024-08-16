@@ -51,8 +51,8 @@ export const NewOfferModal = () => {
   const [loading, setloading] = useState(false)
   const [show, setshow] = useState(false)
   const [activ,setactiv]=useState(false);
-  const [selectedValue, setSelectedValue] = useState("XETH");
-  const [SelectedBaseValue, setSelectedBaseValue] = useState("XUSD");
+  const [selectedValue, setSelectedValue] = useState("USDC");
+  const [SelectedBaseValue, setSelectedBaseValue] = useState("XLM");
   const [Balance, setbalance] = useState('');
   const [offer_amount, setoffer_amount] = useState('');
   const [offer_price, setoffer_price] = useState('');
@@ -114,12 +114,12 @@ const getAccountDetails = async () => {
 };
 
 const chooseItemList = [
-  { id: 1, name: "XLM/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"XLM",visible_1:"USDC",asset_dom:"steller.org",asset_dom_1:"centre.io"},
-  { id: 2, name: "ETH/USDC" ,base_value:"XUSD",counter_value:"XETH",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 3, name: "BNB/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 4, name: "SWIFTEX/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
-  { id: 5, name: "ETH/XLM" ,base_value:"XETH",counter_value:"XUSD",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
-  { id: 6, name: "USDC/ETH" ,base_value:"XETH",counter_value:"XUSD",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 1, name: "XLM/USDC" ,base_value:"USDC",counter_value:"XLM",visible_0:"XLM",visible_1:"USDC",asset_dom:"steller.org",asset_dom_1:"centre.io"},
+  { id: 2, name: "ETH/USDC" ,base_value:"USDC",counter_value:"XLM",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 3, name: "BNB/XLM" ,base_value:"XLM",counter_value:"USDC",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 4, name: "SWIFTEX/XLM" ,base_value:"XLM",counter_value:"USDC",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
+  { id: 5, name: "ETH/XLM" ,base_value:"XLM",counter_value:"USDC",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
+  { id: 6, name: "USDC/ETH" ,base_value:"XLM",counter_value:"USDC",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
 
 ]
 const chooseItemList_1 = [
@@ -349,7 +349,7 @@ const chooseRenderItem_1 = ({ item }) => (
   }
 
   const offer_creation = () => {
-    if(selectedValue==="XETH"||selectedValue==="XUSD")
+    if(selectedValue==="USDC"||selectedValue==="XLM")
     {
     getData();
     if (titel!=="Activate Stellar Account for trading" && offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
@@ -464,7 +464,7 @@ const chooseRenderItem_1 = ({ item }) => (
   useEffect(async()=>{
     setactiv(false)
     setshow_bal(true)
-    await get_stellar("XETH")
+    await get_stellar("USDC")
   },[isFocused])
   useEffect(()=>{
     getAccountDetails();
@@ -817,7 +817,7 @@ const reves_fun=async(fist_data,second_data)=>{
                 </View>
                 }
 
-                { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>}
+                {/* { show === true ? selectedValue==="XETH"?<></>:<ActivityIndicator color={"green"} /> : <></>} */}
               </View>
 
 
@@ -838,7 +838,7 @@ const reves_fun=async(fist_data,second_data)=>{
           >
             <View style={{width:wp(37),alignSelf:"center"}}>
             {Balance==="0.0000000"&&<Text style={{textAlign:"center",color:"red",borderColor:"red",borderWidth:1.9,borderRadius:10}}>Insufficient Balance</Text>}
-            {selectedValue==="XETH"||selectedValue==="XUSD"?<></>:<Text style={{textAlign:"center",color:"orange",borderColor:"orange",borderWidth:1.9,borderRadius:10}}>Available Soon</Text>}
+            {/* {selectedValue==="XETH"||selectedValue==="XUSD"?<></>:<Text style={{textAlign:"center",color:"orange",borderColor:"orange",borderWidth:1.9,borderRadius:10}}>Available Soon</Text>} */}
 
             </View>
             <View style={styles.inputContainer}>

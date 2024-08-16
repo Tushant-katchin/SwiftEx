@@ -129,7 +129,6 @@ const Dashboard = ({ navigation }) => {
         shifting={false}
         barStyle={{ backgroundColor: "#131E3A", color: "black" }} //This is where you can manipulate its look.
         screenOptions={({ route }) => ({
-          tabBarHideOnKeyboard: true,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             size = 25;
@@ -197,6 +196,7 @@ const Dashboard = ({ navigation }) => {
           name="Home"
           component={Home2}
           options={{
+            tabBarHideOnKeyboard: true,
             header: () =>
               state.extended === false
                 ? Header1("Home", state)

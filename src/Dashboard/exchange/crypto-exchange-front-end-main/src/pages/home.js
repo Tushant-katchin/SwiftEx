@@ -203,11 +203,11 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
             fee: StellarSdk.BASE_FEE,
             networkPassphrase: StellarSdk.Network.current().networkPassphrase,
         })
-            .addOperation(
-                StellarSdk.Operation.changeTrust({
-                    asset: new StellarSdk.Asset("XETH", "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI"),
-                })
-            )
+            // .addOperation(
+            //     StellarSdk.Operation.changeTrust({
+            //         asset: new StellarSdk.Asset("XETH", "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI"),
+            //     })
+            // )
             .addOperation(
                 StellarSdk.Operation.changeTrust({
                     asset: new StellarSdk.Asset("USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
@@ -965,7 +965,7 @@ useFocusEffect(
                       />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{setVISIBLE_SELECT(true)}}>
-                    <Text style={{color:"#4CA6EA",marginLeft:wp(1),marginTop:hp(0.5),paddingHorizontal:(1.5)}}>Manage</Text>
+                    <Text style={{color:"#4CA6EA",marginLeft:wp(1),marginTop:hp(0.5),marginRight:wp(3)}}>Import</Text>
                     </TouchableOpacity>
                   </View> 
 
@@ -1000,7 +1000,7 @@ useFocusEffect(
               {profile.isVerified===true ? (
                 <View style={{flexDirection:"row",justifyContent:"center"}}>
                   <TouchableOpacity 
-                    style={[styles.PresssableBtn,{width: wp(93),marginLeft:3,height:hp(7)}]}
+                    style={[styles.PresssableBtn,{width: wp(93),marginLeft:3,height:hp(8)}]}
                     onPress={() => {
                      // setOpen(true)
                         Offer_condition(Offer_active)
@@ -1029,7 +1029,7 @@ useFocusEffect(
 </View>
         <View style={{ backgroundColor: "#011434",flexDirection:"row",justifyContent:"center" }}>
           <TouchableOpacity
-            style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1,width: wp(45),height:hp(7),marginLeft:3,paddingHorizontal:wp(0)}]}
+            style={[styles.PresssableBtn,{flexDirection:"row",justifyContent:"center",marginTop:1,width: wp(45),height:hp(8),marginLeft:3,paddingHorizontal:wp(0)}]}
             onPress={() => {
               navigation.navigate("classic",{Asset_type:"Ethereum"})
             }}
@@ -1037,7 +1037,7 @@ useFocusEffect(
             <Text style={{ color: "#fff", fontSize: 17, fontWeight: "bold",textAlign:"center"}}>Bridge Tokens</Text>
           </TouchableOpacity>
           <TouchableOpacity 
-                    style={[styles.PresssableBtn,{height:hp(7),width: wp(45),marginLeft:10,marginTop:1,justifyContent:"center"}]}
+                    style={[styles.PresssableBtn,{height:hp(8),width: wp(45),marginLeft:10,marginTop:1,justifyContent:"center"}]}
                     onPress={() => {
                       navigation.navigate("Assets_manage");
                     }}
@@ -1073,7 +1073,7 @@ useFocusEffect(
         theme={{
           grid:{visible:false},
           labels: {
-            formatter: (v) => v.toFixed(1),
+            formatter: (v) => v.toFixed(4),
             label: { color: "#fff" }
           },
         }}
