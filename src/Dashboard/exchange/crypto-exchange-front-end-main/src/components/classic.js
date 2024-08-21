@@ -141,7 +141,7 @@ const getOffersData = async () => {
         color:"#fff",
         flex: 1,
         marginLeft:wp(13),
-        marginTop: '9%'
+        marginTop:Platform.OS==="android"?hp(0):hp(3)
       }}>Bridge</Text>
 
       {/* Right Image and Menu Icon */}
