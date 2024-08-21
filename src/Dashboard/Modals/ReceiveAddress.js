@@ -418,8 +418,8 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
       <Modal
         // animationIn="slideInLeft"
         // animationOut="slideOutRight"
-        animationIn="fadeIn"
-        animationOut="fadeOut"
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
         animationInTiming={500}
         animationOutTiming={650}
         isVisible={modalVisible}

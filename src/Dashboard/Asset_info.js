@@ -180,7 +180,7 @@ const Asset_info = ({ route }) => {
     const trade_bridge = async () => {
         // const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
         // const token = await AsyncStorageLib.getItem(REACT_APP_LOCAL_TOKEN);
-        token ? navigation.navigate("classic",{Asset_type:asset_type}) : navigation.navigate("exchangeLogin")
+        token ? navigation.navigate("classic",{Asset_type:asset_type==="XLM"?"ETH":asset_type}) : navigation.navigate("exchangeLogin")
     }
     const cashout_manage = async () => {
         // const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
@@ -297,7 +297,7 @@ const Asset_info = ({ route }) => {
                         <Icon type={'materialCommunity'} name='arrow-top-right' size={25} color={chart_show&&Loading?"gray":"#4CA6EA"} style={styles.opt_icon} />
                         <Text style={[styles.opt_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Send</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity  style={styles.opt_cons} disabled={chart_show&&Loading||asset_type==="XRP"||asset_type==="XLM"} onPress={async() => { await trade_bridge() }}>
+                    <TouchableOpacity  style={styles.opt_cons} disabled={chart_show&&Loading||asset_type==="XRP"} onPress={async() => { await trade_bridge() }}>
                         <Image source={brridge_new} style={styles.image_brige} />
                         {/* <Icon type={'materialCommunity'} name='swap-horizontal-variant' size={25} color={"#4CA6EA"} style={styles.opt_icon} /> */}
                         <Text style={[styles.opt_text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Bridge & Trade</Text>
