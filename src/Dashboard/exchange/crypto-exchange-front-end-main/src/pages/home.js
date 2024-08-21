@@ -1060,7 +1060,7 @@ useFocusEffect(
         onPress={()=>{setopen_chart_api(true)}}
       />
     </View>
-    <View  style={{  width:370,height:310,alignItems:"center",justifyContent:"center"}}>
+
     
     { API_data.length===0?<ActivityIndicator color={"green"} size={"large"}/>:
     <Chart
@@ -1075,7 +1075,7 @@ useFocusEffect(
         theme={{
           grid:{visible:false},
           labels: {
-            formatter: (v) => v.toFixed(4),
+            formatter: (v) => v.toFixed(1),
             label: { color: "#fff" }
           },
         }}
@@ -1131,7 +1131,7 @@ useFocusEffect(
       />
     </Chart>
     }
-    </View>
+
         <TouchableOpacity style={{backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",
     padding: hp(0.5),
     width: wp(95),

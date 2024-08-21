@@ -24,7 +24,7 @@ import {
 } from "../../components/Redux/actions/auth";
 import Modal from "react-native-modal";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { decodeUserToken } from "../Auth/jwtHandler";
 import { SendLoadingComponent } from "../../utilities/loadingComponent";
 import darkBlue from '../../../assets/darkBlue.png'
@@ -44,7 +44,7 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
-
+  const FOCUSED=useIsFocused()
   const Spin = new Animated.Value(0);
   const SpinValue = Spin.interpolate({
     inputRange: [0, 1],
@@ -65,7 +65,23 @@ const LockAppModal = ({ pinViewVisible, setPinViewVisible }) => {
     console.log('biometrics failed')
   })
 }
+useEffect(async () => {
+  if(pinViewVisible)
+  {
+    const biometric = await AsyncStorage.getItem("Biometric");
+    if (biometric === "SET") {
+      useBiometrics();
+    }
+  }
+},[FOCUSED,pinViewVisible])
   useEffect(async () => {
+    if(pinViewVisible)
+    {
+      const biometric = await AsyncStorage.getItem("Biometric");
+      if (biometric === "SET") {
+        useBiometrics();
+      }
+    }
     const Check = await AsyncStorage.getItem(`pin`);
     console.log(Check);
     if (Check) {
