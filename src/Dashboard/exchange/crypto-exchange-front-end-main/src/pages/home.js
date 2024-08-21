@@ -179,7 +179,7 @@ export const HomeView = ({ setPressed }) => {
     const data = await response.json();
      if(data.success===true)
      {
-        await changeTrust()
+         changeTrust()
      }
     if (response.ok) {
       console.log("===",data.success);
