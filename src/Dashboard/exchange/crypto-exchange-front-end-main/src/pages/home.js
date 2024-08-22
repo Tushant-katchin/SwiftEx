@@ -179,9 +179,16 @@ export const HomeView = ({ setPressed }) => {
     const data = await response.json();
      if(data.success===true)
      {
-        setTimeout(async()=>{
-          await changeTrust()
-        },500)
+      dispatch_({
+          type: RAPID_STELLAR,
+          payload: {
+            ETH_KEY:state.ETH_KEY,
+            STELLAR_PUBLICK_KEY:state.STELLAR_PUBLICK_KEY,
+            STELLAR_SECRET_KEY:state.STELLAR_SECRET_KEY,
+            STELLAR_ADDRESS_STATUS:true
+          },
+        })
+            // await changeTrust()
      }
     if (response.ok) {
       console.log("===",data.success);
@@ -193,8 +200,8 @@ export const HomeView = ({ setPressed }) => {
   }
   
   }
- 
- 
+
+  
  
  const changeTrust = async () => {
     try {

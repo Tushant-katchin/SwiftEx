@@ -1,5 +1,5 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { Button, FlatList, Image, Modal, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Button, FlatList, Image, Modal, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -15,13 +15,17 @@ import stellar from "../../../../../../../assets/Stellar_(XLM).png";
 
 
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Snackbar from "react-native-snackbar";
+import { SET_ASSET_DATA } from "../../../../../../components/Redux/actions/type";
 const StellarSdk = require('stellar-sdk');
 const Assets_manage = () => {
     const FOCUSED = useIsFocused();
     const navigation = useNavigation();
+    const dispatch_ = useDispatch()
     const [modalContainer_menu, setmodalContainer_menu] = useState(false);
     const [TRUST_ASSET, setTRUST_ASSET] = useState(false);
+    const [Loading,setLoading]=useState(false);
     const [assets, setassets] = useState([
         {
             "asset_type": "native",
@@ -45,6 +49,10 @@ const Assets_manage = () => {
                     .then(account => {
                         setassets([])
                         setassets(account.balances)
+                        dispatch_({
+                            type: SET_ASSET_DATA,
+                            payload: account.balances,
+                          })
                     })
                     .catch(error => {
                         console.log('Error loading account:', error);
@@ -59,18 +67,81 @@ const Assets_manage = () => {
     }
 
     const AVL_ASSETS = [
+        { name: 'USDC', domain: "USDC (center.io)",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
         { name: 'Tanzania Shiling', domain: "TZS (connect.clickpesa.com)",img:CLICKPESA },
         { name: 'BTC', domain: "BTC (ultracapital.xyz)",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png" },
         { name: 'ETH', domain: "ETH (ultracapital.xyz)",img:ethereum },
         { name: 'EURC', domain: "EURC (circle.com)",img:"https://assets.coingecko.com/coins/images/26045/thumb/euro-coin.png?1655394420" },
-        { name: 'USDC Coin', domain: "USDC (center.io)",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
         { name: 'yUSDC', domain: "yUSDC (ultracapital.xyz)",img:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" },
         { name: 'yXLM', domain: "yXLM (ultracapital.xyz)",img:stellar },
     ];
 
 
 
+    const changeTrust = async () => {
+        setLoading(true)
+        try {
+            console.log(":++++ Entered into trusting ++++:")
+            const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+            StellarSdk.Network.useTestNetwork();
+            const account = await server.loadAccount(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY).publicKey());
+            const transaction = new StellarSdk.TransactionBuilder(account, {
+                fee: StellarSdk.BASE_FEE,
+                networkPassphrase: StellarSdk.Network.current().networkPassphrase,
+            })
+                .addOperation(
+                    StellarSdk.Operation.changeTrust({
+                        asset: new StellarSdk.Asset("USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
+                    })
+                )
+                .setTimeout(30)
+                .build();
+            transaction.sign(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY));
+            const result = await server.submitTransaction(transaction);
+            console.log(`Trustline updated successfully`);
+            Snackbar.show({
+                text: 'USDC added successfully',
+                duration: Snackbar.LENGTH_SHORT,
+                backgroundColor:'green',
+            });
+            server.loadAccount(state.STELLAR_PUBLICK_KEY)
+                .then(account => {
+                    console.log('Balances for account:', state.STELLAR_PUBLICK_KEY);
+                    account.balances.forEach(balance => {
+                        setassets(account.balances)
+                        setLoading(false)
+                        dispatch_({
+                            type: SET_ASSET_DATA,
+                            payload: account.balances,
+                          })
+                    });
+                })
+                .catch(error => {
+                    console.log('Error loading account:', error);
+                    setLoading(false)
+                    Snackbar.show({
+                        text: 'USDC faild to added',
+                        duration: Snackbar.LENGTH_SHORT,
+                        backgroundColor:'red',
+                    });
+                });
+        } catch (error) {
+            console.error(`Error changing trust:`, error);
+            Snackbar.show({
+                text: 'USDC faild to added',
+                duration: Snackbar.LENGTH_SHORT,
+                backgroundColor:'red',
+            });
+        }
+    };
 
+    const alert_message=(message_new)=>{
+        Snackbar.show({
+            text: message_new,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor:'orange',
+        });
+    }
 
     useEffect(() => {
         get_stellar()
@@ -238,7 +309,7 @@ const Assets_manage = () => {
                 <View style={styles.modalView}>
                    <View style={{flexDirection:"row",justifyContent:"space-between",width:"100%"}}>
                      <Text style={styles.modal_heading}>Add Asset</Text>
-                     <TouchableOpacity onPress={()=>{setTRUST_ASSET(false)}}>
+                     <TouchableOpacity disabled={Loading} onPress={()=>{setTRUST_ASSET(false)}}>
                      <Icon
                             name={"close"}
                             type={"antDesign"}
@@ -252,15 +323,28 @@ const Assets_manage = () => {
                         return (
                             <View style={[styles.search_bar, { flexDirection: "row", justifyContent: "space-between", alignItems: "center" }]}>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                {index==3||index==1||index==4||index==5?<Image source={{uri:list.img}} style={styles.modal_IMG} />:<Image source={list.img} style={styles.modal_IMG} />}
+                                {index==0||index==2||index==5||index==4?<Image source={{uri:list.img}} style={styles.modal_IMG} />:<Image source={list.img} style={styles.modal_IMG} />}
                                     <View>
                                         <Text style={styles.modal_sub_heading}>{list.name}</Text>
                                         <Text style={[styles.modal_sub_heading, { fontSize: 10, color: "gray" }]}>{list.domain}</Text>
                                     </View>
                                 </View>
-                                <TouchableOpacity style={styles.btn}>
-                                    <Text style={[styles.modal_sub_heading]}>Add Asset</Text>
+                                {assets.some((list_item)=>list_item.asset_code===list.name)?
+                                    <View style={styles.btn}>
+                                        <Icon
+                                            name={"check-decagram"}
+                                            type={"materialCommunity"}
+                                            size={22}
+                                            color={"green"}
+                                            style={{paddingHorizontal:"10%"}}
+                                        />
+                                    </View> :
+                                <TouchableOpacity style={styles.btn} disabled={Loading} onPress={()=>{
+                                    list.name==="USDC"?changeTrust():alert_message(list.name+' Added Soon.')
+                                }}>
+                                    <Text style={[styles.modal_sub_heading]}>{Loading&&index==0?(<ActivityIndicator color={"green"}/>):("Add Asset")}</Text>
                                 </TouchableOpacity>
+                                }
                             </View>
                         )
                     })}
@@ -276,7 +360,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.3,
         padding: 5,
         borderRadius: 10,
-        marginRight: 10
+        marginRight: 10,
     },
     main_con: {
         backgroundColor: "#011434",
@@ -389,7 +473,7 @@ const styles = StyleSheet.create({
     },
     modal_IMG: {
         height: hp(6),
-        width: wp(12),
+        width: wp(12.5),
         marginRight:5
     },
 })
