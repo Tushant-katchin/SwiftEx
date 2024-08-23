@@ -36,12 +36,15 @@ import { authRequest, GET, getToken, POST } from "../api";
 import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import darkBlue from "../../../../../../assets/darkBlue.png";
 import Bridge from "../../../../../../assets/Bridge.png";
+import Snackbar from "react-native-snackbar";
+import { SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const alchemyUrl = RPC.ETHRPC;
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 export const NewOfferModal = () => {
+  const dispatch_=useDispatch();
   const [chooseSearchQuery, setChooseSearchQuery] = useState('');
   // const back_data=useRoute();
   // const { user, open, getOffersData, onCrossPress }=back_data.params;
@@ -52,7 +55,7 @@ export const NewOfferModal = () => {
   const [show, setshow] = useState(false)
   const [activ,setactiv]=useState(false);
   const [selectedValue, setSelectedValue] = useState("USDC");
-  const [SelectedBaseValue, setSelectedBaseValue] = useState("XLM");
+  const [SelectedBaseValue, setSelectedBaseValue] = useState("native");
   const [Balance, setbalance] = useState('');
   const [offer_amount, setoffer_amount] = useState('');
   const [offer_price, setoffer_price] = useState('');
@@ -60,6 +63,8 @@ export const NewOfferModal = () => {
   const [route, setRoute] = useState("BUY");
   const [Loading, setLoading] = useState(false);
   const [open_offer, setopen_offer] = useState(false);
+  const [show_trust_modal,setshow_trust_modal]=useState(false);
+  const [loading_trust_modal,setloading_trust_modal]=useState(false);
   const [u_email,setemail]=useState('');
   const [titel,settitel]=useState("UPDATING..");
   // const [PublicKey, setPublicKey] = useState("GBHRHA3KGRJBXBFER7VHI3WS5SKUXOP5TQ3YITVD7WJ2D3INGK62FZJR");
@@ -114,12 +119,12 @@ const getAccountDetails = async () => {
 };
 
 const chooseItemList = [
-  { id: 1, name: "XLM/USDC" ,base_value:"USDC",counter_value:"XLM",visible_0:"XLM",visible_1:"USDC",asset_dom:"steller.org",asset_dom_1:"centre.io"},
-  { id: 2, name: "ETH/USDC" ,base_value:"USDC",counter_value:"XLM",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 3, name: "BNB/XLM" ,base_value:"XLM",counter_value:"USDC",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 4, name: "SWIFTEX/XLM" ,base_value:"XLM",counter_value:"USDC",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
-  { id: 5, name: "ETH/XLM" ,base_value:"XLM",counter_value:"USDC",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
-  { id: 6, name: "USDC/ETH" ,base_value:"XLM",counter_value:"USDC",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 1, name: "XLM/USDC" ,base_value:"USDC",counter_value:"native",visible_0:"XLM",visible_1:"USDC",asset_dom:"steller.org",asset_dom_1:"centre.io"},
+  { id: 2, name: "ETH/USDC" ,base_value:"USDC",counter_value:"native",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 3, name: "BNB/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 4, name: "SWIFTEX/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
+  { id: 5, name: "ETH/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
+  { id: 6, name: "USDC/ETH" ,base_value:"native",counter_value:"USDC",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
 
 ]
 const chooseItemList_1 = [
@@ -330,15 +335,18 @@ const chooseRenderItem_1 = ({ item }) => (
   
 
   const get_stellar = async (asset) => {
-    console.log("-=-=-=-=-=aaa",asset)
     try {
-  
+      console.log("",ALL_STELLER_BALANCES)
+
               ALL_STELLER_BALANCES.forEach(balance => {
-                if (balance.asset_code === asset) {
-                  console.log("----+++++++-----",balance)
+                if (asset==="native"?balance.asset_type === asset:balance.asset_code === asset) {
                   setactiv(false)
                   setbalance(balance.balance)
                   setshow_bal(true)
+                }
+                if(!ALL_STELLER_BALANCES.some((obj) => obj.hasOwnProperty('asset_code')))
+                {
+                  setshow_trust_modal(true)
                 }
               });
     } catch (error) {
@@ -434,7 +442,7 @@ const chooseRenderItem_1 = ({ item }) => (
         const result = await server.submitTransaction(transaction);
 
         console.log(`Trustline updated successfully for ${g_asset}`);
-        get_stellar(selectedValue);
+        get_stellar(SelectedBaseValue);
 
     } catch (error) {
         console.error(`Error changing trust for ${g_asset}:`, error);
@@ -462,14 +470,16 @@ const chooseRenderItem_1 = ({ item }) => (
   }
  
   useEffect(async()=>{
+    setloading_trust_modal(false)
+    setshow_trust_modal(false);
     setactiv(false)
     setshow_bal(true)
-    await get_stellar("USDC")
+    await get_stellar("native")
   },[isFocused])
   useEffect(()=>{
     getAccountDetails();
     getData();
-    get_stellar(selectedValue)
+    get_stellar(SelectedBaseValue)
     getAssetIssuerId(selectedValue)
 
   },[isFocused])
@@ -479,7 +489,7 @@ const chooseRenderItem_1 = ({ item }) => (
     setinfo_(false);
     setinfo_amount(false);
     setinfo_price(false);
-    get_stellar(selectedValue)
+    get_stellar(SelectedBaseValue)
     getAssetIssuerId(selectedValue)
     // eth_services()
   }, [show_bal,selectedValue, route,isFocused])
@@ -538,6 +548,64 @@ const reves_fun=async(fist_data,second_data)=>{
   settop_domain(top_domain_0);
   settop_domain_0(top_domain)
 }
+
+
+const change_Trust_New = async () => {
+  setloading_trust_modal(true)
+  try {
+      console.log(":++++ Entered into trusting ++++:")
+      const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+      StellarSdk.Network.useTestNetwork();
+      const account = await server.loadAccount(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY).publicKey());
+      const transaction = new StellarSdk.TransactionBuilder(account, {
+          fee: StellarSdk.BASE_FEE,
+          networkPassphrase: StellarSdk.Network.current().networkPassphrase,
+      })
+          .addOperation(
+              StellarSdk.Operation.changeTrust({
+                  asset: new StellarSdk.Asset("USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
+              })
+          )
+          .setTimeout(30)
+          .build();
+      transaction.sign(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY));
+      const result = await server.submitTransaction(transaction);
+      console.log(`Trustline updated successfully`);
+      Snackbar.show({
+          text: 'USDC added successfully',
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor:'green',
+      });
+      server.loadAccount(state.STELLAR_PUBLICK_KEY)
+          .then(account => {
+              console.log('Balances for account:', state.STELLAR_PUBLICK_KEY);
+              account.balances.forEach(balance => {
+                setloading_trust_modal(false)
+                setshow_trust_modal(false)
+                  dispatch_({
+                      type: SET_ASSET_DATA,
+                      payload: account.balances,
+                    })
+              });
+          })
+          .catch(error => {
+              console.log('Error loading account:', error);
+              setloading_trust_modal(false)
+              Snackbar.show({
+                  text: 'USDC faild to added',
+                  duration: Snackbar.LENGTH_SHORT,
+                  backgroundColor:'red',
+              });
+          });
+  } catch (error) {
+      console.error(`Error changing trust:`, error);
+      Snackbar.show({
+          text: 'USDC faild to added',
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor:'red',
+      });
+  }
+};
 
 
   return (
@@ -958,7 +1026,31 @@ const reves_fun=async(fist_data,second_data)=>{
          
       </View>
 
-
+      <Modal
+          animationType="fade"
+          transparent={true}
+          visible={show_trust_modal}
+          >
+          <View style={styles.AccountmodalContainer}>
+            <View style={styles.AccounsubContainer}>
+              <Icon
+                name={"alert-circle-outline"}
+                type={"materialCommunity"}
+                size={60}
+                color={"orange"}
+              />
+              <Text style={styles.AccounheadingContainer}>Add USDT Asset</Text>
+              <View style={{ flexDirection: "row",justifyContent:"space-around",width:wp(80),marginTop:hp(3),alignItems:"center" }}>
+                <TouchableOpacity disabled={loading_trust_modal} style={styles.AccounbtnContainer} onPress={() => {setshow_trust_modal(false)}}>
+                   <Text style={styles.Accounbtntext}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity disabled={loading_trust_modal} style={styles.AccounbtnContainer} onPress={()=>{change_Trust_New()}}>
+                   <Text style={styles.Accounbtntext}>{loading_trust_modal?<ActivityIndicator color={"green"}/>:"Trust"}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
     </>
 
   );
@@ -1232,5 +1324,45 @@ searchInput: {
     borderRadius: 10,
     padding: 3,
     marginBottom:15
+  },
+  AccountmodalContainer: {
+    width:wp(100),
+    height:hp(100),
+    marginLeft:-20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:"rgba(0,0,0,0.4)"
+  },
+  AccounsubContainer:{
+    backgroundColor:"#131E3A",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: "90%",
+    height: "29%",
+    justifyContent: "center",
+    borderColor:"#4CA6EA",
+    borderWidth:1
+  },
+  AccounbtnContainer:{
+    width:wp(35),
+    height:hp(5),
+    backgroundColor:"rgba(33, 43, 83, 1)",
+    alignItems:"center",
+    justifyContent:"center",
+    borderRadius:10,
+    borderColor:"#4CA6EA",
+    borderWidth:1
+  },
+  Accounbtntext:{
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff"
+  },
+  AccounheadingContainer:{
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 10,
+    color: "#fff"
   }
 });
