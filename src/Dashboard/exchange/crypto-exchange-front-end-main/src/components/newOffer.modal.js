@@ -54,12 +54,12 @@ export const NewOfferModal = () => {
   const [loading, setloading] = useState(false)
   const [show, setshow] = useState(false)
   const [activ,setactiv]=useState(false);
-  const [selectedValue, setSelectedValue] = useState("USDC");
-  const [SelectedBaseValue, setSelectedBaseValue] = useState("native");
+  const [selectedValue, setSelectedValue] = useState("native");
+  const [SelectedBaseValue, setSelectedBaseValue] = useState("USDC");
   const [Balance, setbalance] = useState('');
   const [offer_amount, setoffer_amount] = useState('');
   const [offer_price, setoffer_price] = useState('');
-  const [AssetIssuerPublicKey, setAssetIssuerPublicKey] = useState("");
+  const [AssetIssuerPublicKey, setAssetIssuerPublicKey] = useState("GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN");
   const [route, setRoute] = useState("BUY");
   const [Loading, setLoading] = useState(false);
   const [open_offer, setopen_offer] = useState(false);
@@ -120,11 +120,12 @@ const getAccountDetails = async () => {
 
 const chooseItemList = [
   { id: 1, name: "XLM/USDC" ,base_value:"USDC",counter_value:"native",visible_0:"XLM",visible_1:"USDC",asset_dom:"steller.org",asset_dom_1:"centre.io"},
-  { id: 2, name: "ETH/USDC" ,base_value:"USDC",counter_value:"native",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 3, name: "BNB/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
-  { id: 4, name: "SWIFTEX/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
-  { id: 5, name: "ETH/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
-  { id: 6, name: "USDC/ETH" ,base_value:"native",counter_value:"USDC",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  { id: 2, name: "USDC/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"USDC",visible_1:"XLM",asset_dom:"centre.io",asset_dom_1:"steller.org"},
+  // { id: 2, name: "ETH/USDC" ,base_value:"USDC",counter_value:"native",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  // { id: 3, name: "BNB/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
+  // { id: 4, name: "SWIFTEX/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
+  // { id: 5, name: "ETH/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"ETH",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"steller.org"},
+  // { id: 6, name: "USDC/ETH" ,base_value:"native",counter_value:"USDC",visible_0:"USDC",visible_1:"ETH",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
 
 ]
 const chooseItemList_1 = [
@@ -145,7 +146,7 @@ const chooseRenderItem = ({ item }) => (
   </TouchableOpacity>
 );
 const chooseRenderItem_1 = ({ item }) => (
-  <TouchableOpacity onPress={() => {setRoute(item.name),setopen_offer(false)}} style={[styles.chooseItemContainer,{backgroundColor:item.name==="BUY"?"green":"red",borderRadius:5,height:hp(6),justifyContent:"center"}]}>
+  <TouchableOpacity onPress={() => {setRoute(item.name),reves_fun(top_value, top_value_0),setopen_offer(false)}} style={[styles.chooseItemContainer,{backgroundColor:item.name==="BUY"?"green":"red",borderRadius:5,height:hp(6),justifyContent:"center"}]}>
     <Text style={[styles.chooseItemText,{marginLeft:5}]}>{item.name}</Text>
   </TouchableOpacity>
 );
@@ -215,8 +216,8 @@ const chooseRenderItem_1 = ({ item }) => (
     console.log("Sell Offer Peram =>>>>>>>>>>>>", offer_amount, offer_price, SecretKey, AssetIssuerPublicKey)
     try {
       const account = await server.loadAccount(sourceKeypair.publicKey());
-      const base_asset_sell = new StellarSdk.Asset(selectedValue, AssetIssuerPublicKey);
-      const counter_asset_buy = new StellarSdk.Asset(SelectedBaseValue, AssetIssuerPublicKey);
+   const base_asset_sell = SelectedBaseValue==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(SelectedBaseValue, AssetIssuerPublicKey);
+      const counter_asset_buy = selectedValue==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(selectedValue, AssetIssuerPublicKey);
       const transaction = new StellarSdk.TransactionBuilder(account, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: StellarSdk.Networks.TESTNET
@@ -266,8 +267,8 @@ const chooseRenderItem_1 = ({ item }) => (
     console.log("Buy Offer Peram =>>>>>>>>>>>>", offer_amount, offer_price, SecretKey, AssetIssuerPublicKey)
     try {
       const account = await server.loadAccount(sourceKeypair.publicKey());
-      const base_asset_sell = new StellarSdk.Asset(selectedValue, AssetIssuerPublicKey);
-      const counter_asset_buy = new StellarSdk.Asset(SelectedBaseValue, AssetIssuerPublicKey);
+      const counter_asset_buy = SelectedBaseValue==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(SelectedBaseValue, AssetIssuerPublicKey);
+      const  base_asset_sell= selectedValue==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(selectedValue, AssetIssuerPublicKey);
       const transaction = new StellarSdk.TransactionBuilder(account, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: StellarSdk.Networks.TESTNET
@@ -314,7 +315,7 @@ const chooseRenderItem_1 = ({ item }) => (
 
       account.balances.forEach((balance) => {
         if (_code === balance.asset_code) {
-          setAssetIssuerPublicKey(balance.asset_issuer)
+          // setAssetIssuerPublicKey(balance.asset_issuer)
           console.log("L:::::> ", AssetIssuerPublicKey)
         }
       });
@@ -357,7 +358,14 @@ const chooseRenderItem_1 = ({ item }) => (
   }
 
   const offer_creation = () => {
-    if(selectedValue==="USDC"||selectedValue==="XLM")
+    const temp_amount=parseInt(offer_amount);
+   if(temp_amount>=Balance)
+    {
+      alert("error", "Insufficient Balance")
+      setLoading(false)
+    }
+    else{
+      if(selectedValue==="USDC"||selectedValue==="XLM")
     {
     getData();
     if (titel!=="Activate Stellar Account for trading" && offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
@@ -371,6 +379,7 @@ const chooseRenderItem_1 = ({ item }) => (
     else{
       setLoading(false)
       alert("success", "Available Soon.")
+    }
     }
   }
   const active_account=async()=>{
@@ -538,15 +547,13 @@ useEffect(() => {
   ).start();
 }, []);
 
-const shiningAnimation = animation.interpolate({
-  inputRange: [0, 1],
-  outputRange: ['gray', '#fff'],
-});
 const reves_fun=async(fist_data,second_data)=>{
   settop_value_0(fist_data)
   settop_value(second_data)
   settop_domain(top_domain_0);
   settop_domain_0(top_domain)
+  setSelectedValue(SelectedBaseValue)
+  setSelectedBaseValue(selectedValue)
 }
 
 
@@ -587,6 +594,7 @@ const change_Trust_New = async () => {
                       payload: account.balances,
                     })
               });
+              navigation.goBack()
           })
           .catch(error => {
               console.log('Error loading account:', error);
@@ -930,7 +938,7 @@ const change_Trust_New = async () => {
                 keyboardType="numeric"
                 returnKeyType="done"
                 value={offer_amount}
-                placeholder={"Amount of " + selectedValue}
+                placeholder={SelectedBaseValue==="native"?"Amount of XLM":"Amount of "+SelectedBaseValue}
                 onChangeText={(text) => {
                   onChangeamount(text)
                   // setoffer_amount(text)
@@ -993,7 +1001,7 @@ const change_Trust_New = async () => {
                   <Text style={{ color: "white" }}>Total for {selectedValue}</Text>
                 </View> : <></>}
               </View>
-              <Text style={[styles.input,{backgroundColor:"#fff",borderTopLeftRadius:4,borderTopRightRadius:4,color:"black",paddingTop:5,paddingLeft:10,fontSize:19}]}>{offer_price*offer_amount}</Text>
+              <Text style={[styles.input,{backgroundColor:"silver",borderTopLeftRadius:4,borderTopRightRadius:4,color:"black",paddingTop:5,paddingLeft:10,fontSize:19}]}>{offer_price*offer_amount}</Text>
 
 
             </View>

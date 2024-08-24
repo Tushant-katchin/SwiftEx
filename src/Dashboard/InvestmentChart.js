@@ -216,13 +216,16 @@ function InvestmentChart(setCurrentWallet) {
 
   useEffect(async () => {
     try {
+      setxmlBalance("0.00")
+      getData()
       await getData_dispatch();
       getTokenBalance();
+      get_stellar();
     } catch (e) {
       console.log(e)
     }
     // await GetBalance(await state)
-  }, [wallet.address, wallet.name, EthBalance, bnbBalance, XrpBalance, state.walletBalance, state.EthBalance, state.XrpBalance, state.MaticBalance]);
+  }, [state.STELLAR_PUBLICK_KEY,wallet.address, wallet.name, EthBalance, bnbBalance, XrpBalance, state.walletBalance, state.EthBalance, state.XrpBalance, state.MaticBalance]);
 
   let LeftContent = (props) => (
     <Avatar.Image
