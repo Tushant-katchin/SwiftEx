@@ -930,7 +930,7 @@ const change_Trust_New = async () => {
                     />
                </TouchableOpacity>
 {info_amount===true?<View style={{backgroundColor:"gray",backgroundColor:"#212B53",padding:3.6,borderRadius:10,zIndex:20,position:"absolute",marginStart:95}}>
-                      <Text style={{color:"white"}}>Offered Amount for {selectedValue}</Text>
+                      <Text style={{color:"white"}}>Offered Amount for {SelectedBaseValue==="native"?"XLM":SelectedBaseValue}</Text>
                     </View>:<></>}
              </View>
               <TextInput
@@ -970,7 +970,7 @@ const change_Trust_New = async () => {
                   />
                 </TouchableOpacity>
                 {info_price === true ? <View style={{ backgroundColor: "gray", backgroundColor: "#212B53", padding: 3.6, borderRadius: 10, zIndex: 20, position: "absolute", marginStart: 70 }}>
-                  <Text style={{ color: "white" }}>Offered Price for {selectedValue}</Text>
+                  <Text style={{ color: "white" }}>Offered Price for {selectedValue==="native"?"XLM":selectedValue}</Text>
                 </View> : <></>}
               </View>
               <TextInput
@@ -998,7 +998,7 @@ const change_Trust_New = async () => {
                   />
                 </TouchableOpacity>
                 {total_price_info === true ? <View style={{ backgroundColor: "gray", backgroundColor: "#212B53", padding: 3.6, borderRadius: 10, zIndex: 20, position: "absolute", marginStart: 70 }}>
-                  <Text style={{ color: "white" }}>Total for {selectedValue}</Text>
+                  <Text style={{ color: "white" }}>Total for {selectedValue==="native"?"XLM":selectedValue}</Text>
                 </View> : <></>}
               </View>
               <Text style={[styles.input,{backgroundColor:"silver",borderTopLeftRadius:4,borderTopRightRadius:4,color:"black",paddingTop:5,paddingLeft:10,fontSize:19}]}>{offer_price*offer_amount}</Text>
@@ -1049,7 +1049,7 @@ const change_Trust_New = async () => {
               />
               <Text style={styles.AccounheadingContainer}>Add USDT Asset</Text>
               <View style={{ flexDirection: "row",justifyContent:"space-around",width:wp(80),marginTop:hp(3),alignItems:"center" }}>
-                <TouchableOpacity disabled={loading_trust_modal} style={styles.AccounbtnContainer} onPress={() => {setshow_trust_modal(false)}}>
+                <TouchableOpacity disabled={loading_trust_modal} style={styles.AccounbtnContainer} onPress={() => {setshow_trust_modal(false),navigation.goBack()}}>
                    <Text style={styles.Accounbtntext}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity disabled={loading_trust_modal} style={styles.AccounbtnContainer} onPress={()=>{change_Trust_New()}}>
