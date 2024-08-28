@@ -119,6 +119,8 @@ const ImportMunziWallet = (props) => {
           <TextInput
             style={style.input}
             value={mnemonic}
+            placeholder="Please enter your mnemonic phrase here"
+            placeholderTextColor={"gray"}
             onChangeText={(text) => {
               setMnemonic(text);
             }}

@@ -206,6 +206,7 @@ const SendXLM = (props) => {
                   chainType
                 );
                 console.log(saveTransaction);
+                await get_stellar(steller_key);
                 navigation.navigate("Transactions");
               } catch (e) {
                 console.log(e);

@@ -307,9 +307,9 @@ function InvestmentChart(setCurrentWallet) {
               const temp_bal = balance.balance;
               const fullString = temp_bal.toString();
               // Extract the first 3 digits
-              const substring = fullString.slice(0, 3);
+              const substring = fullString.slice(0, 4);
               // Convert the substring back to an integer (optional)
-              const displayedInt = parseInt(substring, 10);
+              const displayedInt = parseFloat(substring).toFixed(2)
               setxmlBalance(displayedInt?displayedInt:0.00)
             }
           });
