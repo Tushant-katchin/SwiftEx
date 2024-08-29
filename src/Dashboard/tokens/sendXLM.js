@@ -434,7 +434,7 @@ const SendXLM = (props) => {
                    <Text style={style.Accounbtntext}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={style.AccounbtnContainer} onPress={()=>{CHECK_LOGIN()}}>
-                   <Text style={style.Accounbtntext}>{token?"Active ":"Login " }and fund</Text>
+                   <Text style={style.Accounbtntext}>{token?"Activate ":"Login " }and Fund</Text>
                 </TouchableOpacity>
               </View>
             </View>

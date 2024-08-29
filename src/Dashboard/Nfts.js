@@ -22,6 +22,7 @@ import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 // import profile from "../../assets/profile.jpg"
 import { style } from "@mui/system";
 import Icon from "../icon";
+import { Paste } from "../utilities/utilities";
 
 const Nfts = () => {
   const state2 = useSelector((state) => state.walletBalance);
@@ -36,6 +37,7 @@ const Nfts = () => {
 
   useEffect(()=>{
     setView_assets(false)
+    setcontract_text('')
   },[])
 
   if (Platform.OS === "android") {
@@ -123,10 +125,17 @@ const Nfts = () => {
           </View>
           <Icon type={"materialCommunity"} name="menu-down" size={hp(2.9)} color={state.THEME.THEME===false?"#fff":"black"} style={{margin:hp(2),}}/>
       </View>
-      {!View_assets?<><TextInput style={[styles.drop_down_con,{paddingLeft:10,fontSize:14,color:state.THEME.THEME===false?"black":"#fff"}]} placeholder="Contract Address" placeholderTextColor={"gray"} value={contract_text} onChangeText={(value)=>{setcontract_text(value)}}/>
+      {!View_assets?<>
+      <View style={[styles.drop_down_con,{paddingLeft:1,fontSize:14,color:state.THEME.THEME===false?"black":"#fff"}]}>
+      <TextInput editable={false} style={[{paddingLeft:10,fontSize:14,color:state.THEME.THEME===false?"black":"#fff",width:wp(75),height:hp(8),
+    marginTop:hp(0),}]} placeholder="Contract Address" placeholderTextColor={"gray"} value={contract_text} />
+        <TouchableOpacity onPress={()=>{Paste(setcontract_text)}}>
+          <Text style={{color: "blue", marginHorizontal: wp(3)}}>PASTE</Text>
+        </TouchableOpacity>
+      </View>
 
 <View style={{flexDirection:"row",justifyContent:"space-around"}}>
-<TouchableOpacity disabled={!contract_text} style={[styles.Add_asset_btn,{justifyContent:"center",backgroundColor:!contract_text?"gray":"green"}]}>
+<TouchableOpacity disabled={!contract_text} style={[styles.Add_asset_btn,{justifyContent:"center",backgroundColor:!contract_text?"gray":"green"}]} onPress={()=>{setcontract_text("")}}>
     <Text style={[styles.text,{ fontSize:17,textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"#fff":"#fff"}]}>Add Asset</Text>
 </TouchableOpacity>
 <TouchableOpacity style={[styles.Add_asset_btn,{justifyContent:"center",marginRight:wp(4),backgroundColor:"green"}]} onPress={()=>{setView_assets(true)}}>
