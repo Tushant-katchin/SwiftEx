@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Keyboard,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -48,6 +49,7 @@ const NewWalletPrivateKey = ({
   const [newWallet, setNewWallet] = useState(Wallet);
   const [data, setData] = useState();
   const [user, setUser] = useState("");
+  const [text_input_up,settext_input_up]=useState(false);
 
   const [MnemonicVisible, setMnemonicVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -59,6 +61,20 @@ const NewWalletPrivateKey = ({
     outputRange: ["0deg", "360deg"],
   });
 
+  useEffect(()=>{
+    const  Keybord_state_cls=Keyboard.addListener('keyboardDidHide',()=>{
+      settext_input_up(false);
+    });
+    const  Keybord_state_opn=Keyboard.addListener('keyboardDidShow',()=>{
+      settext_input_up(true);
+    });
+    
+    return ()=>{
+      Keybord_state_cls.remove();
+      Keybord_state_opn.remove();
+    }
+  },[]);
+  
   async function saveUserDetails() {
     let response;
     try {
@@ -202,7 +218,7 @@ const NewWalletPrivateKey = ({
           </Text> */}
           {/* <Text style={style.welcomeText2}> Account Name</Text> */}
 
-          <View style={[style.labelInputContainer]}>
+          <View style={[style.labelInputContainer,{marginTop:text_input_up?-130:38}]}>
             <Text style={[style.label,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>Account Name</Text>
             <TextInput
               value={accountName}
@@ -243,6 +259,7 @@ const NewWalletPrivateKey = ({
               // disabled={accountName && !/\s/.test(accountName) ? false : true}
               disabled={!accountName || !/\S/.test(accountName)}
               onPress={() => {
+                Keyboard.dismiss();
                 //setVisible(!visible)
                 let wallet = Wallet;
                 wallet.accountName = accountName;
