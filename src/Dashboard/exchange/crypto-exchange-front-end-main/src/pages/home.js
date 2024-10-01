@@ -278,19 +278,19 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
   const getData = async () => {
     try {
       const data = await AsyncStorageLib.getItem('myDataKey');
-      if (data) {
-        const parsedData = JSON.parse(data);
-        const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-        console.log('Retrieved data:', matchedData);
-        const publicKey = matchedData[0].publicKey;
-        console.log("========home===",publicKey)
-        setsteller_key(publicKey)
-        const secretKey_Key = matchedData[0].secretKey;
-        console.log("=======home====",secretKey_Key)
-        setsteller_key_private(secretKey_Key)
-      } else {
-        console.log('No data found for key steller keys');
-      }
+      // if (data) {
+        // const parsedData = JSON.parse(data);
+        // const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        // console.log('Retrieved data:', matchedData);
+        // const publicKey = matchedData[0].publicKey;
+        console.log("========home===",state.STELLAR_PUBLICK_KEY)
+        setsteller_key(state.STELLAR_PUBLICK_KEY)
+        // const secretKey_Key = matchedData[0].secretKey;
+        console.log("=======home====",state.STELLAR_SECRET_KEY)
+        setsteller_key_private(state.STELLAR_SECRET_KEY)
+      // } else {
+        // console.log('No data found for key steller keys');
+      // }
     } catch (error) {
       console.error('Error getting data for key steller keys:', error);
     }

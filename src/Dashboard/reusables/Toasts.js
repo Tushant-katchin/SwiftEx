@@ -1,5 +1,6 @@
 import Snackbar from 'react-native-snackbar';
 import { Box, useToast } from 'native-base';
+import { View,Text } from 'react-native';
 
 
 export const ShowToast = (toast,message)=>{
@@ -15,6 +16,36 @@ export const ShowToast = (toast,message)=>{
         })
     )
 
+}
+
+export const ShowErrotoast = (toast,message)=>{
+    return (
+        toast.show({
+          placement: "top",
+          render: () => {
+            return (
+              <View style={{ backgroundColor: "red", paddingHorizontal: 16, paddingVertical: 16, borderRadius: 15 }}>
+                <Text style={{ color: "white",fontWeight:'bold',fontSize:13 }}>{message}</Text>
+              </View>
+            );
+          }
+        })
+      );
+}
+
+export const Showsuccesstoast = (toast,message)=>{
+    return (
+        toast.show({
+          placement: "top",
+          render: () => {
+            return (
+              <View style={{ backgroundColor: "green", paddingHorizontal: 16, paddingVertical: 16, borderRadius: 15 }}>
+                <Text style={{ color: "white",fontWeight:'bold',fontSize:13 }}>{message}</Text>
+              </View>
+            );
+          }
+        })
+      );
 }
 
 export function alert(type,message){

@@ -28,14 +28,16 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import Icon from "../../icon";
 import darkBlue from "../../../assets/darkBlue.png"
 import { delay, isInteger } from "lodash";
-import { alert } from "../reusables/Toasts";
+import { ShowErrotoast, Showsuccesstoast, alert } from "../reusables/Toasts";
 import { isFloat } from "validator";
 import { RNCamera } from 'react-native-camera';
 import { REACT_APP_LOCAL_TOKEN } from "../exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
+import { useToast } from "native-base";
 const StellarSdK = require('stellar-base');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const SendXLM = (props) => {
+    const toast=useToast();
     const FOCUSED = useIsFocused()
     const [show, setshow] = useState(false);
     const [address, setAddress] = useState("");
@@ -101,18 +103,21 @@ const SendXLM = (props) => {
       }, [amount]);
     const getData = async () => {
         try {
-            const data = await AsyncStorageLib.getItem('myDataKey');
-            if (data) {
-                const parsedData = JSON.parse(data);
-                const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-                const publicKey = matchedData[0].publicKey;
-                setsteller_key(publicKey)
-                get_stellar(publicKey);
-                const secretKey_Key = matchedData[0].secretKey;
-                setsteller_key_private(secretKey_Key)
-            } else {
-                console.log('No data found for key steller keys');
-            }
+          setsteller_key(state.STELLAR_PUBLICK_KEY)
+          setsteller_key_private(state.STELLAR_SECRET_KEY)
+            get_stellar(state.STELLAR_PUBLICK_KEY);
+            // const data = await AsyncStorageLib.getItem('myDataKey');
+            // if (data) {
+            //     const parsedData = JSON.parse(data);
+            //     const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+            //     const publicKey = matchedData[0].publicKey;
+            //     setsteller_key(publicKey)
+            //     get_stellar(publicKey);
+            //     const secretKey_Key = matchedData[0].secretKey;
+            //     setsteller_key_private(secretKey_Key)
+            // } else {
+            //     console.log('No data found for key steller keys');
+            // }
         } catch (error) {
             console.error('Error getting data for key steller keys:', error);
         }
@@ -161,7 +166,7 @@ const SendXLM = (props) => {
         async function send_XLM(sourceSecret, destinationPublic, amount) {
             Keyboard.dismiss();
             try {
-            alert("success","Sending Payment");
+            Showsuccesstoast(toast,"Sending Payment");
             const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
             StellarSdk.Networks.TESTNET;
               // Load the source account
@@ -189,7 +194,7 @@ const SendXLM = (props) => {
               // Submit the transaction
               const transactionResult = await server.submitTransaction(transaction);
               console.log('Transaction successful!', transactionResult);
-              alert("success","Transaction successful!");
+              Showsuccesstoast(toast,"Transaction successful!");
               setdisable(false);
               setPayment_loading(false);
               try {
@@ -213,7 +218,7 @@ const SendXLM = (props) => {
               }
             } catch (error) {
               console.error('Error sending XLM:', error);
-              alert("error","Transaction Failed");
+              ShowErrotoast(toast,"Transaction Failed");
               setdisable(false);
               setPayment_loading(false);
             }
@@ -229,12 +234,12 @@ const SendXLM = (props) => {
                   if (requestResult === PermissionsAndroid.RESULTS.GRANTED) {
                     setModalVisible(!isModalVisible);
                   } else {
-                    alert("error","Permissions not allowed");
+                    ShowErrotoast(toast,"Permissions not allowed");
                   }
                 }
               } else {
                 // iOS permission is handled through Info.plist
-                
+                setModalVisible(!isModalVisible);
               }
             };
             
@@ -331,11 +336,11 @@ const SendXLM = (props) => {
                         onPress={() => {
                             setdisable(true)
                             if (validateStellarAddress(address)) {
-                                alert("success","Valid Stellar address");
+                                Showsuccesstoast(toast,"Valid Stellar address");
                                 send_XLM(setsteller_key_private, address, amount)
                             } else {
                                 console.log('Invalid Stellar address');
-                                alert("error","Invalid Stellar address");
+                                ShowErrotoast(toast,"Invalid Stellar address");
                                 setAddress();
                                 setdisable(false);
                             }
@@ -350,17 +355,17 @@ const SendXLM = (props) => {
                             setPayment_loading(true);
                            if(!address||!amount)
                            {
-                             alert("error","Recipient Address and Amount Required")
+                             ShowErrotoast(toast,"Recipient Address and Amount Required")
                              setPayment_loading(false);
                            }
                            else{
                             setdisable(true)
                            if (validateStellarAddress(address)) {
-                               alert("success","Valid Stellar address");
+                               Showsuccesstoast(toast,"Valid Stellar address");
                                send_XLM(steller_key_private, address, amount)
                            } else {
                                console.log('Invalid Stellar address');
-                               alert("error","Invalid Stellar address");
+                               ShowErrotoast(toast,"Invalid Stellar address");
                                setAddress();
                                setdisable(false);
                              setPayment_loading(false);

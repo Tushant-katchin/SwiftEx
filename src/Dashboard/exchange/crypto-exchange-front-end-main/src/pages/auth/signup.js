@@ -22,9 +22,11 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import PhoneInput from "react-native-phone-number-input";
 import { signup } from "../../api";
 import { useSelector } from "react-redux";
-import {alert} from '../../../../../reusables/Toasts'
+import {ShowErrotoast, alert} from '../../../../../reusables/Toasts'
+import { useToast } from "native-base";
 
 export const ExchangeRegister = (props) => {
+  const toast=useToast();
   const state = useSelector((state) => state);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -65,11 +67,20 @@ export const ExchangeRegister = (props) => {
     }
     if(err.message==="Email already registered")
     {
-      alert("error","Email already registered");
+      ShowErrotoast(toast,"Email already registered");
     }
     if(err.message==="Wallet already registered")
     {
-      alert("error","Wallet already registered");
+      ShowErrotoast(toast,"Wallet already registered");
+    }
+    if (Array.isArray(err.message) && err.message.includes("email must be an email")) {
+      ShowErrotoast(toast, "Email must be an email");
+    }
+    if (Array.isArray(err.message) && err.message.includes("lastName should not be empty")) {
+      ShowErrotoast(toast, "Last name should not be empty");
+    }
+    if (Array.isArray(err.message) && err.message.includes("firstName should not be empty")) {
+      ShowErrotoast(toast, "First name should not be empty");
     }
     
     if (err) {
@@ -154,7 +165,7 @@ export const ExchangeRegister = (props) => {
                 theme={{ colors: { text: "white" } }}
                 value={formContent.email}
                 placeholder={"Enter your email address"}
-                keyboardType='visible-password'
+                keyboardType='email-address'
                 onChangeText={(text) =>
                    onChangelmail(text)
                 }
@@ -171,7 +182,8 @@ export const ExchangeRegister = (props) => {
             </View>
            <View style={{height:32}}>
            {showMessage ? (
-              <Text style={{ color: "white",marginStart:13}}>{message}</Text>
+              // <Text style={{ color: "white",marginStart:13}}>{message}</Text>
+              <Text style={{ color: "white",marginStart:13}}></Text>
             ) : (
               <View></View>
             )}

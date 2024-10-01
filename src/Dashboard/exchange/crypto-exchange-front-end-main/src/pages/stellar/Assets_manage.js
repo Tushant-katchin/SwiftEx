@@ -26,6 +26,7 @@ const Assets_manage = () => {
     const [modalContainer_menu, setmodalContainer_menu] = useState(false);
     const [TRUST_ASSET, setTRUST_ASSET] = useState(false);
     const [Loading,setLoading]=useState(false);
+    const [Loading_assets_bal,setLoading_assets_bal]=useState(false);
     const [assets, setassets] = useState([
         {
             "asset_type": "native",
@@ -38,14 +39,15 @@ const Assets_manage = () => {
 
     const get_stellar = async () => {
         try {
-            const storedData = await AsyncStorageLib.getItem('myDataKey');
-            if (storedData !== null) {
-                const parsedData = JSON.parse(storedData);
-                const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-                const publicKey = matchedData[0].publicKey;
+            setLoading_assets_bal(true)
+            // const storedData = await AsyncStorageLib.getItem('myDataKey');
+            // if (storedData !== null) {
+            //     const parsedData = JSON.parse(storedData);
+            //     const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+            //     const publicKey = matchedData[0].publicKey;
                 StellarSdk.Network.useTestNetwork();
                 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-                server.loadAccount(publicKey)
+                server.loadAccount(state.STELLAR_PUBLICK_KEY)
                     .then(account => {
                         setassets([])
                         setassets(account.balances)
@@ -53,16 +55,19 @@ const Assets_manage = () => {
                             type: SET_ASSET_DATA,
                             payload: account.balances,
                           })
+                        setLoading_assets_bal(false)
                     })
                     .catch(error => {
                         console.log('Error loading account:', error);
+                        setLoading_assets_bal(false)
                     });
-            }
-            else {
-                console.log('No data found in AsyncStorage');
-            }
+            // }
+            // else {
+            //     console.log('No data found in AsyncStorage');
+            // }
         } catch (error) {
             console.log("Error in get_stellar")
+            setLoading_assets_bal(false)
         }
     }
 
@@ -144,6 +149,7 @@ const Assets_manage = () => {
     }
 
     useEffect(() => {
+        setLoading_assets_bal(false)
         get_stellar()
     }, [FOCUSED])
     return (
@@ -288,7 +294,7 @@ const Assets_manage = () => {
                                 </View>
                                 {/* <ScrollView style={{height:hp52)}}> */}
 
-                                <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.balance.slice(0, 6)}</Text>
+                                {Loading_assets_bal===true?<ActivityIndicator color={"green"}/>:<Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.balance.slice(0, 6)}</Text>}
                                 {/* </ScrollView> */}
                             </TouchableOpacity>
                         )

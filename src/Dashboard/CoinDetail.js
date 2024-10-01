@@ -431,7 +431,7 @@ const transformedData = resp.map(item => ({
                         xDomain={{ min: new Date(Data[0].x).getTime(), max: new Date(Data[Data.length - 1].x).getTime() }}
                         yDomain={{ min: Math.min(...Data.map(d => d.y)), max: Math.max(...Data.map(d => d.y)) }}
                     >
-                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(2) ,label: { color:state.THEME.THEME===false?"black":"#fff" }} }} />
+                        <VerticalAxis tickCount={10} theme={{ labels: { formatter: (v) => v.toFixed(0) ,label: { color:state.THEME.THEME===false?"black":"#fff" }} }} />
                         <HorizontalAxis  tickCount={10} theme={{
                           labels: {
                             formatter: (v) => {

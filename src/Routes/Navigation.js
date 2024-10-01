@@ -76,7 +76,7 @@ const Stack = createNativeStackNavigator();
 const AuthStack = () => (
   <NavigationContainer
     // theme={{ colors: { background: "#000C66" } }}
-    theme={{ colors: { background: "#fff" } }}
+    theme={{ colors: { background: "black" } }}
     ref={navigationRef}
   >
     <Stack.Navigator

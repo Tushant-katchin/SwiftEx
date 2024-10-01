@@ -279,17 +279,18 @@ export const TransactionView = () => {
 
 const getData = async () => {
   try {
-    const storedData = await AsyncStorageLib.getItem('myDataKey');
-    if (storedData !== null) {
-      const parsedData = JSON.parse(storedData);
-      const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-      console.log('Retrieved data:', matchedData);
-      const publicKey = matchedData[0].publicKey;
-      fetchData_(publicKey);
-    }
-    else {
-      console.log('No data found in AsyncStorage');
-    }
+    fetchData_(state.STELLAR_PUBLICK_KEY);
+    // const storedData = await AsyncStorageLib.getItem('myDataKey');
+    // if (storedData !== null) {
+    //   const parsedData = JSON.parse(storedData);
+    //   const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+    //   console.log('Retrieved data:', matchedData);
+    //   const publicKey = matchedData[0].publicKey;
+    //   fetchData_(publicKey);
+    // }
+    // else {
+    //   console.log('No data found in AsyncStorage');
+    // }
   } catch (error) {
     console.log('Error retrieving data:', error);
   }

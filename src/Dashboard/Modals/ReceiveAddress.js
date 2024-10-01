@@ -59,11 +59,11 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
   const navigation = useNavigation();
 
   const get_stellar = async () => {
-        const storedData = await AsyncStorageLib.getItem('myDataKey');
-            const parsedData = JSON.parse(storedData);
-            const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-            const publicKey = matchedData[0].publicKey;
-            setStellar_add(publicKey)
+        // const storedData = await AsyncStorageLib.getItem('myDataKey');
+        //     const parsedData = JSON.parse(storedData);
+        //     const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        //     const publicKey = matchedData[0].publicKey;
+            setStellar_add(state.STELLAR_PUBLICK_KEY)
     }
 
   let EtherLeftContent = (props) => (

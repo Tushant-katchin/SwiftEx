@@ -122,10 +122,10 @@ export const Generate_Wallet2  = () => (dispatch) => {
     
     if (response.status === "success") {
       
-      dispatch({
-        type: NEWWALLET,
-        payload: { wallet: response.wallet },
-      });
+      // dispatch({
+      //   type: NEWWALLET,
+      //   payload: { wallet: response.wallet },
+      // });
       Promise.resolve();
       console.log(response)
       return response;

@@ -46,11 +46,11 @@ const send_recive = ({route}) => {
       };
 
     const get_data=async()=>{
-        const storedData = await AsyncStorageLib.getItem('myDataKey');
-            const parsedData = JSON.parse(storedData);
-            const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-            const publicKey = matchedData[0].publicKey;
-            setqrvalue(publicKey)
+        // const storedData = await AsyncStorageLib.getItem('myDataKey');
+        //     const parsedData = JSON.parse(storedData);
+        //     const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        //     const publicKey = matchedData[0].publicKey;
+            setqrvalue(state.STELLAR_PUBLICK_KEY)
     }
     useEffect(() => {
         get_data()

@@ -313,7 +313,7 @@ const checkPermission = async () => {
     }
   } else {
     // iOS permission is handled through Info.plist
-    
+    setModalVisible(!isModalVisible);
   }
 };
   async function a()

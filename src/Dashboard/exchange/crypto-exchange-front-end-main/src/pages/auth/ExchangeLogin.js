@@ -25,12 +25,14 @@ import PhoneInput from "react-native-phone-number-input";
 import { getAuth, login, saveToken, verifyLoginOtp } from "../../api";
 import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import RNOtpVerify from "react-native-otp-verify";
-import { alert } from "../../../../../reusables/Toasts";
+import { ShowErrotoast, Showsuccesstoast, alert } from "../../../../../reusables/Toasts";
 import { ExchangeHeaderIcon } from "../../../../../header";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { REACT_APP_HOST } from "../../ExchangeConstants";
+import { useToast } from "native-base";
 
 export const ExchangeLogin = (props) => {
+  const toast=useToast();
   const [VERFIY_OTP, setVERFIY_OTP] = useState(false);
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
@@ -52,6 +54,9 @@ export const ExchangeLogin = (props) => {
   const [lodaing_ver,setlodaing_ver]=useState(false);
   const navigation = useNavigation();
 const FOCUSED=useIsFocused();
+  const [reset_otp,setreset_otp]=useState(true);
+  const [count, setCount] = useState(30);
+  const [resend_view,setresend_view]=useState(true);
   const otpHandler = (message) => {
     try {
       if (message) {
@@ -99,7 +104,7 @@ const FOCUSED=useIsFocused();
      if(!Email||!login_Passcode)
      {
       setTimeout(()=>{
-        alert("error","Both fields are required");
+      ShowErrotoast(toast,"Both fields are required");
       },400)
       setEmail("");
       setlogin_Passcode("");
@@ -127,7 +132,7 @@ const FOCUSED=useIsFocused();
           if(result.message==="Invalid credintials"||result.statusCode===400)
           {
             setTimeout(()=>{
-              alert("error","Invalid credintials");
+              ShowErrotoast(toast,"Invalid credintials");
             },400)
             setlogin_Passcode("");
             setLoading(false);
@@ -135,7 +140,7 @@ const FOCUSED=useIsFocused();
           else{
             saveToken(result.token);
             setTimeout(()=>{
-              alert("success","Success");
+              Showsuccesstoast(toast,"Success");
             },400)
             setLoading(false);
             setEmail("");
@@ -152,7 +157,7 @@ const FOCUSED=useIsFocused();
     try {
       if (!otp) {
         setTimeout(()=>{
-          alert("error","OTP is required");
+          ShowErrotoast(toast,"OTP is required");
         },400)
         return setMessage("OTP is required");
       }
@@ -163,7 +168,7 @@ const FOCUSED=useIsFocused();
       if (err) {
         setMessage(err.message);
         setTimeout(()=>{
-          alert("error","Worng OTP")
+          ShowErrotoast(toast,"Wrong OTP");
         },400)
         setOtp(null);
       } else {
@@ -189,7 +194,7 @@ const FOCUSED=useIsFocused();
       setcon_passcode("");
       setpasscode("");
       setTimeout(()=>{
-        alert("error", "Both fields are required");
+        ShowErrotoast(toast,"Both fields are required");
       },400)
     }
     else {
@@ -220,7 +225,7 @@ const FOCUSED=useIsFocused();
                 setpasscode("");
                 setcon_passcode("");
                 setTimeout(()=>{
-                  alert("success", "Exchange Account Ready.");
+                  Showsuccesstoast(toast,"Exchange Account Ready.");
                 },400)
                 setIsOtpSent(false);
                 navigation.navigate("exchange");
@@ -228,7 +233,7 @@ const FOCUSED=useIsFocused();
                 setpasscode("");
                setcon_passcode("");
                setTimeout(()=>{
-                 alert("error", "Something went worng.");
+                ShowErrotoast(toast,"Something went worng.");
                },400)
               }
             })
@@ -242,7 +247,7 @@ const FOCUSED=useIsFocused();
           setpasscode("");
           setcon_passcode("");
           setTimeout(()=>{
-            alert("error", "Password Not Match.");
+            ShowErrotoast(toast,"Password Not Match.");
           },400)
         }
       //  }
@@ -269,7 +274,7 @@ const FOCUSED=useIsFocused();
       setlodaing_ver(false);
        setLoading_fog(false);
        setTimeout(()=>{
-         alert("error", "Email reqired.");
+        ShowErrotoast(toast,"Email reqired.");
        },400)
       setVERFIY_OTP(false);
     } else {
@@ -295,7 +300,7 @@ const FOCUSED=useIsFocused();
               setLoading_fog(true);
               setEmail("");
               setTimeout(()=>{
-                alert("success", "OTP sent in your mail.");
+                Showsuccesstoast(toast,"OTP sent successfully in your mail.");
               },400)
               setLoading_fog(false);
               setVERFIY_OTP(false);
@@ -309,7 +314,7 @@ const FOCUSED=useIsFocused();
               setEmail("");
               setLoading_fog(false);
               setTimeout(()=>{
-                alert("error", "User not found.");
+                ShowErrotoast(toast,"User not found.");
               },400)
               setVERFIY_OTP(false);
             }
@@ -357,6 +362,9 @@ const FOCUSED=useIsFocused();
   });
 
   useEffect(() => {
+    setreset_otp(false)
+    setresend_view(true)
+    setCount(30)
     setLoading(false);
     setactive_forgot(false);
     try {
@@ -407,12 +415,35 @@ const FOCUSED=useIsFocused();
     const formattedInput = input.replace(/\s/g, '').toLowerCase();
     setEmail(formattedInput)
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount((prevCount) => {
+        if (prevCount > 0) {
+          return prevCount - 1;
+        } else {
+          clearInterval(interval);
+          setresend_view(false);
+          return 0;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [reset_otp]);
+
+  const resend_otp=async()=>{
+    setreset_otp(true)
+    setCount(30)
+    setresend_view(true);
+    await get_otp_forget()
+  }
   return (
     <>
      {lodaing_ver==true?alert("success","Email Verifying...."):<></>}
       <ExchangeHeaderIcon title="Exchange " isLogOut={false} />
       <SafeAreaView style={styles.container}>
-        <View
+        <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}
           // style={styles.container}
           // onStartShouldSetResponder={() => Keyboard.dismiss()}
         >
@@ -448,7 +479,7 @@ const FOCUSED=useIsFocused();
                         setLoading(true);
                         console.log(e);
                         setTimeout(()=>{
-                          alert("error", e);
+                          ShowErrotoast(toast,e)
                         },400)
                       }
                       setShowMessage(true);
@@ -466,7 +497,7 @@ const FOCUSED=useIsFocused();
                     end={{ x: 1, y: 1 }}
                     style={styles.button}
                   > */}
-                    <Text style={{ color: "white",fontWeight:"bold",fontSize:19 }}>{active_forgot===false?"Login":Loading_fog===false?"Verify":<ActivityIndicator color={"white"}/>}</Text>
+                    <Text style={{ color: "white",fontWeight:"bold",fontSize:19 }}>{active_forgot===false?"Login":lodaing_ver===false?"Verify":<ActivityIndicator color={"white"}/>}</Text>
                   {/* </LinearGradient> */}
                 </TouchableOpacity>
                 {/* {showMessage ? (
@@ -614,12 +645,17 @@ const FOCUSED=useIsFocused();
               {/* </LinearGradient> */}
                 </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => { navigation.navigate("exchangeLogin") }}> */}
-              <TouchableOpacity onPress={() => { navigation.goBack() }}>
-                <Text style={{ marginTop: 14, color: "gray" }}>Edit Email Id</Text>
+            {passcode_view === false? <View style={{flexDirection:"row", width:"90%",justifyContent:"center"}}>
+             <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                <Text style={{ marginTop: 14, color: "white" }}>Edit Email Id</Text>
               </TouchableOpacity>
+              <TouchableOpacity disabled={resend_view} onPress={() => {resend_otp()}}>
+                <Text style={{ marginLeft:19,marginTop: 14, color: resend_view?"gray":"white" }}>{resend_view?`Resend after: ${count}`:"Resend OTP"}</Text>
+              </TouchableOpacity>
+             </View>:<></>}
             </View>
           )}
-        </View>
+        </TouchableWithoutFeedback>
       </SafeAreaView>
     </>
   );

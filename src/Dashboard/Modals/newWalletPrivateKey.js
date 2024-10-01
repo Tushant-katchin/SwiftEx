@@ -218,7 +218,7 @@ const NewWalletPrivateKey = ({
           </Text> */}
           {/* <Text style={style.welcomeText2}> Account Name</Text> */}
 
-          <View style={[style.labelInputContainer,{marginTop:text_input_up?-130:38}]}>
+          <View style={[style.labelInputContainer,{marginTop:text_input_up?"-60%":38}]}>
             <Text style={[style.label,{backgroundColor:state.THEME.THEME===false?"#011434":"black"}]}>Account Name</Text>
             <TextInput
               value={accountName}

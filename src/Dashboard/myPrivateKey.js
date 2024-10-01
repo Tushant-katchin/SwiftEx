@@ -78,15 +78,15 @@ const MyPrivateKey = (props) => {
   const get_stellar = async () => {
     try {
         const storedData = await AsyncStorageLib.getItem('myDataKey');
-        if (storedData !== null) {
-            const parsedData = JSON.parse(storedData);
-            const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-            const secret_Key = matchedData[0].secretKey;
-            setSTTELLR(secret_Key);
-        }
-        else {
-            console.log('No data found in AsyncStorage');
-        }
+        // if (storedData !== null) {
+        //     const parsedData = JSON.parse(storedData);
+        //     const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+        //     const secret_Key = matchedData[0].secretKey;
+            setSTTELLR(state.STELLAR_SECRET_KEY);
+        // }
+        // else {
+        //     console.log('No data found in AsyncStorage');
+        // }
     } catch (error) {
         console.log("Error in get_stellar")
     }

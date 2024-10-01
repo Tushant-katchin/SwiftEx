@@ -5,6 +5,7 @@ const extraNodeModules = require('node-libs-browser');
 
 module.exports = {
   resolver: {
+    sourceExts: ['js', 'json', 'ts', 'tsx', 'mjs','cjs'], // Add 'cjs' here
     extraNodeModules,
   },
   transformer: {
@@ -16,5 +17,3 @@ module.exports = {
     }),
   },
 };
-
-

@@ -25,6 +25,7 @@ import { alert } from "../reusables/Toasts";
 import { LinearGradient } from "expo-linear-gradient";
 import darkBlue from "../../../assets/darkBlue.png";
 import Icon from "../../icon";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
 
 const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisible }) => {
   const state=useSelector((state)=>state);
@@ -159,7 +160,8 @@ const NewWalletModal = ({ props,onCrossPress, visible, setVisible, setModalVisib
 <TouchableOpacity
             style={[style.PresssableBtn,{width:wp(30),alignItems:"center",backgroundColor:  Checked && Checked2? "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)":"gray"}]}
               disabled={loading ? true : Checked && Checked2 ? false : true}
-              onPress={() => {
+              onPress={async() => {
+                await AsyncStorageLib.setItem('wallet_backup',await state.wallet.address);
                 setLoading(true);
                 setTimeout(() => {
                   dispatch(Generate_Wallet2()).then((response) => {

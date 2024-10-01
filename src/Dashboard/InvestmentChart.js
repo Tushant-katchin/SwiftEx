@@ -79,6 +79,17 @@ function InvestmentChart(setCurrentWallet) {
         console.log('No data found for key steller keys');
     }
     } catch (error) {
+      const preser_backup = await AsyncStorageLib.getItem('wallet_backup');
+      const storedData = await AsyncStorageLib.getItem('myDataKey');
+      if (storedData !== null) {
+        const parsedData = JSON.parse(storedData);
+        const matchedData = parsedData.filter(item => item.Ether_address === preser_backup);
+        const publicKey = matchedData[0].publicKey;
+        setPublicKey(publicKey)
+        get_stellar(publicKey);
+        const secretKey_Key = matchedData[0].secretKey;
+        setSecretKey(secretKey_Key)
+      }
       console.error('Error retrieving data:', error);
     }
   };
@@ -283,11 +294,70 @@ function InvestmentChart(setCurrentWallet) {
             });
         } catch (error) {
           console.log("Error in get_stellar")
+          const preser_backup = await AsyncStorageLib.getItem('wallet_backup');
+          const storedData = await AsyncStorageLib.getItem('myDataKey');
+          if (storedData !== null) {
+            const parsedData = JSON.parse(storedData);
+            const matchedData = parsedData.filter(item => item.Ether_address === preser_backup);
+            const publicKey = matchedData[0].publicKey;
+            setPublicKey(publicKey)
+            get_stellar(publicKey);
+            const secretKey_Key = matchedData[0].secretKey;
+            setSecretKey(secretKey_Key)
+            StellarSdk.Network.useTestNetwork();
+            const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+            server.loadAccount(matchedData[0].publicKey)
+              .then(account => {
+                dispatch({
+                  type: SET_ASSET_DATA,
+                  payload: account.balances,
+                })
+                account.balances.forEach(balance => {
+                dispatch({
+                  type: RAPID_STELLAR,
+                  payload: {
+                    ETH_KEY:matchedData[0].Ether_address,
+                    STELLAR_PUBLICK_KEY:matchedData[0].publicKey,
+                    STELLAR_SECRET_KEY:matchedData[0].secretKey,
+                    STELLAR_ADDRESS_STATUS:true
+                  },
+                })
+                dispatch(getEthBalance(matchedData[0].Ether_address))
+                console.log("==Dispacthed success==")
+                });
+              })
+              .catch(error => {
+                console.log('Error loading account:', error);
+                // active_account()
+                dispatch({
+                  type: RAPID_STELLAR,
+                  payload: {
+                    ETH_KEY:matchedData[0].Ether_address,
+                    STELLAR_PUBLICK_KEY:matchedData[0].publicKey,
+                    STELLAR_SECRET_KEY:matchedData[0].secretKey,
+                    STELLAR_ADDRESS_STATUS:false
+                  },
+                })
+                console.log("==Dispacthed success==")
+                console.log(':===ERROR STELLER ACCOUNT NEED TO ACTIVATE===:');
+              });
+          }
          }
     } else {
         console.log('No data found for key steller keys to dispacth');
     }
     } catch (error) {
+      const preser_backup = await AsyncStorageLib.getItem('wallet_backup');
+      const storedData = await AsyncStorageLib.getItem('myDataKey');
+      if (storedData !== null) {
+        const parsedData = JSON.parse(storedData);
+        const matchedData = parsedData.filter(item => item.Ether_address === preser_backup);
+        const publicKey = matchedData[0].publicKey;
+        setPublicKey(publicKey)
+        get_stellar(publicKey);
+        const secretKey_Key = matchedData[0].secretKey;
+        setSecretKey(secretKey_Key)
+      }
       console.error('Error retrieving data:', error);
     }
   };
@@ -336,6 +406,7 @@ function InvestmentChart(setCurrentWallet) {
       refreshControl={
         <RefreshControl
           refreshing={pull}
+          tintColor="#4CA6EA"
           onRefresh={() => {
             setPull(true);
             getData_dispatch()

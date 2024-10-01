@@ -24,7 +24,7 @@ import Modal from "react-native-modal";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { _getCurrencyOptions } from "./newAccount.model";
-import { alert } from "../../../../reusables/Toasts";
+import { ShowErrotoast, Showsuccesstoast, alert } from "../../../../reusables/Toasts";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "../../../../../icon";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
@@ -38,12 +38,14 @@ import darkBlue from "../../../../../../assets/darkBlue.png";
 import Bridge from "../../../../../../assets/Bridge.png";
 import Snackbar from "react-native-snackbar";
 import { SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
+import { useToast } from "native-base";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const alchemyUrl = RPC.ETHRPC;
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 export const NewOfferModal = () => {
+  const toast=useToast();
   const dispatch_=useDispatch();
   const [chooseSearchQuery, setChooseSearchQuery] = useState('');
   // const back_data=useRoute();
@@ -209,7 +211,7 @@ const chooseRenderItem_1 = ({ item }) => (
    if(temp_amount<=0||temp_offer_price<=0)
    {
     setLoading(false);
-    alert("error","Invalid value")
+    ShowErrotoast(toast,"Invalid value");
 
    }else{
      const sourceKeypair = StellarSdk.Keypair.fromSecret(SecretKey);
@@ -241,13 +243,13 @@ const chooseRenderItem_1 = ({ item }) => (
       const offerResult = await server.submitTransaction(offerTx);
       console.log('=> Sell Offer placed...',offerResult.hash);
       Save_offer(base_asset_sell, offer_amount, offer_price, "Sell", "Success", offerResult.hash);
-      alert("success", "Sell offer created.");
+      Showsuccesstoast(toast, "Sell offer created.");
       setLoading(false)
       // setOpen(false);
       return 'Sell Offer placed successfully';
     } catch (error) {
       console.error('Error occurred:', error.response ? error.response.data.extras.result_codes : error);
-      alert("error", "Sell Offer not-created.");
+      ShowErrotoast(toast,"Sell Offer not-created.");
       setLoading(false)
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -260,7 +262,7 @@ const chooseRenderItem_1 = ({ item }) => (
    if(temp_amount<=0||temp_offer_price<=0)
    {
     setLoading(false);
-    alert("error","Invalid value")
+    ShowErrotoast(toast,"Invalid value");
 
    }else{
     const sourceKeypair = StellarSdk.Keypair.fromSecret(SecretKey);
@@ -293,12 +295,12 @@ const chooseRenderItem_1 = ({ item }) => (
       console.log("++++++++++++++++++++++++++++",offerResult)
       console.log('=> Buy Offer placed...');
       Save_offer(counter_asset_buy, offer_amount, offer_price, "Buy", "Success", "1234");
-      alert("success", "Buy offer created.")
+      Showsuccesstoast(toast, "Buy offer created.")
       setLoading(false)
       // setOpen(false);
       return 'Sell Offer placed successfully';
     } catch (error) {
-      alert("error", "Buy offer not-created.");
+      ShowErrotoast(toast,"Buy offer not-created.");
       setLoading(false)
       console.error('Error occurred:', error.response ? error.response.data.extras.result_codes : error);
     }
@@ -352,7 +354,7 @@ const chooseRenderItem_1 = ({ item }) => (
               });
     } catch (error) {
       console.log("Error in get_stellar")
-      alert("success", "Please wait account is updating....");
+      Showsuccesstoast(toast, "Please wait account is updating....");
       setshow(false)
     }
   }
@@ -361,7 +363,7 @@ const chooseRenderItem_1 = ({ item }) => (
     const temp_amount=parseInt(offer_amount);
    if(temp_amount>=Balance)
     {
-      alert("error", "Insufficient Balance")
+      ShowErrotoast(toast,"Insufficient Balance");
       setLoading(false)
     }
     else{
@@ -372,13 +374,13 @@ const chooseRenderItem_1 = ({ item }) => (
       { route === "SELL" ? Sell() : Buy() }
     }
     else {
-      titel==="Activate Stellar Account for trading"? alert("success", "Activation Required"):alert("error", "Input Correct Value.")
+      titel==="Activate Stellar Account for trading"? ShowErrotoast(toast,"Activation Required"): ShowErrotoast(toast,"Input Correct Value.")
       setLoading(false)
     }
     }
     else{
       setLoading(false)
-      alert("success", "Available Soon.")
+      Showsuccesstoast(toast, "Available Soon.")
     }
     }
   }
@@ -419,12 +421,12 @@ const chooseRenderItem_1 = ({ item }) => (
       console.error('Error:', data);
       setactiv(false)
       settitel("Activate Stellar Account for trading");
-      alert("error","Internal server error.")
+      ShowErrotoast(toast,"Internal server error.")
     }
   } catch (error) {
     settitel("Activate Stellar Account for trading");
     console.error('Network error:', error);
-    alert("error","Something went worng.")
+    ShowErrotoast(toast,"Something went worng.")
     setactiv(true)
   }
   
@@ -943,7 +945,7 @@ const change_Trust_New = async () => {
                   onChangeamount(text)
                   // setoffer_amount(text)
                   if (offer_amount > Balance) {
-                    alert("error", "Inputed Balance not found in account.");
+                    ShowErrotoast(toast, "Inputed Balance not found in account.");
                   }
                 }}
                 disabled={Balance==="0.0000000"||Balance==="0"}
@@ -1047,7 +1049,7 @@ const change_Trust_New = async () => {
                 size={60}
                 color={"orange"}
               />
-              <Text style={styles.AccounheadingContainer}>Add USDT Asset</Text>
+              <Text style={styles.AccounheadingContainer}>Trust USDT by Center.io ?</Text>
               <View style={{ flexDirection: "row",justifyContent:"space-around",width:wp(80),marginTop:hp(3),alignItems:"center" }}>
                 <TouchableOpacity disabled={loading_trust_modal} style={styles.AccounbtnContainer} onPress={() => {setshow_trust_modal(false),navigation.goBack()}}>
                    <Text style={styles.Accounbtntext}>Cancel</Text>
@@ -1368,7 +1370,7 @@ searchInput: {
     color: "#fff"
   },
   AccounheadingContainer:{
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
     marginTop: 10,
     color: "#fff"

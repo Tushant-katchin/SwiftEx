@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, View, Text, Picker, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput, Image, Platform, Keyboard } from 'react-native';
 import Icon from "../../../../../icon";
-import { FlatList } from 'native-base';
+import { FlatList, useToast } from 'native-base';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import Bridge from "../../../../../../assets/Bridge.png";
 import { useSelector } from 'react-redux';
@@ -17,7 +17,11 @@ import steller_img from '../../../../../../assets/Stellar_(XLM).png'
 import bnbimage from "../../../../../../assets/bnb-icon2_2x.png";
 
 import { GET, authRequest } from '../api';
+import { ShowErrotoast, alert } from '../../../../reusables/Toasts';
+import { toInt } from 'validator';
+import { SignTransaction, swap_prepare } from '../../../../../../All_bridge';
 const classic = ({ route }) => {
+  const toast=useToast();
   const navigation=useNavigation();
   const { Asset_type } = route.params;
   const TEMPCHOSE=Asset_type==="ETH"?"Ethereum":Asset_type==="BNB"?"BNB":Asset_type 
@@ -34,6 +38,8 @@ const classic = ({ route }) => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [main_modal, setmain_modal] = useState(true);
   const [fianl_modal, setfianl_modal] = useState(false);
+  const [fianl_modal_error, setfianl_modal_error] = useState(false);
+  const [fianl_modal_loading, setfianl_modal_loading] = useState(false);
   const [amount, setamount] = useState('');
   const [chooseModalVisible_choose, setchooseModalVisible_choose] = useState(false);
   const chooseItemList = [
@@ -55,7 +61,9 @@ const classic = ({ route }) => {
     isEmailVerified: false,
 });
 const [open, setOpen] = useState(false);
-
+useEffect(()=>{
+  setfianl_modal_loading(false)
+},[])
   const for_trading = async () => {
     try {
         const { res, err } = await authRequest("/users/getUserDetails", GET);
@@ -112,6 +120,34 @@ const getOffersData = async () => {
     fianl_modal === true && setTimeout(() => {
       nav.goBack()
     }, 1300)
+  }
+
+  const manage_swap = async (wallet_type, asset_type, receive_token) => {
+    const receivetoken = wallet_type === "Ethereum" && asset_type === "USDT" && receive_token === null ? "USDC" : wallet_type === "BNB" && asset_type === "USDT" && receive_token === null ? "aeETH" : wallet_type === "Ethereum" && asset_type === "USDT" ? "aeETH" : wallet_type === "BNB" && asset_type === "USDT" ? "aeETH" : receive_token;
+    setfianl_modal_loading(true);
+    let temp_bal = toInt(state.EthBalance)
+    let temp_amt = toInt(amount)
+    if (temp_amt >= temp_bal || temp_amt === 0) {
+      setfianl_modal_loading(false)
+      ShowErrotoast(toast,temp_amt === 0 ? "Invalid amount" : "Insufficient funds");
+    }
+    else {
+      setfianl_modal_loading(false)      // comment this code for run allbridge
+      setfianl_modal_error(true)         // comment this code for run allbridge
+
+      // uncomment this code for run allbridge
+
+      // const ressult_swap = await swap_prepare(state.wallet.privateKey, state.wallet.address, state.STELLAR_PUBLICK_KEY, amount, asset_type, receivetoken, wallet_type)
+      // console.log("----", ressult_swap.status_task)
+      // if (ressult_swap.status_task) {
+      //   setfianl_modal_loading(false)
+      //   setfianl_modal(true)
+      // }
+      // else {
+      //   setfianl_modal_loading(false)
+      //   setfianl_modal_error(true)
+      // }
+    }
   }
   return (
     <View style={{ backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",width:wp(100),height:hp(100)}}>
@@ -300,9 +336,9 @@ const getOffersData = async () => {
             <TouchableOpacity
               // disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
               style={[styles.nextButton, { backgroundColor: !amount?"gray":'green',height:hp(6),marginTop:hp(5) }]}
-            disabled={!amount} onPress={() => { Keyboard.dismiss(),setfianl_modal(true) }}
+            disabled={!amount||fianl_modal_loading} onPress={() => { Keyboard.dismiss(),manage_swap(chooseSelectedItemId === null ? chooseItemList[1].name : chooseSelectedItemId,chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho,chooseSelectedItemIdCho) }}
             >
-              <Text style={styles.nextButtonText}>Confirm Transaction</Text>
+              {fianl_modal_loading?<ActivityIndicator color={"white"}/>:<Text style={styles.nextButtonText}>Confirm Transaction</Text>}
             </TouchableOpacity>
       <Modal
         animationType="fade"
@@ -435,6 +471,41 @@ const getOffersData = async () => {
         </View>
       </Modal>
 
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={fianl_modal_error}>
+          
+        <TouchableOpacity style={styles.modalContainer} onPress={()=>{setfianl_modal_error(false)}}>
+          <View style={{
+            backgroundColor: 'rgba(33, 43, 83, 1)',
+            padding: 20,
+            borderRadius: 10,
+            alignItems: 'center',
+            width: "90%",
+            height: "25%",
+            justifyContent: "center"
+          }}>
+             <TouchableOpacity style={{alignSelf:"flex-end",marginTop:-50,marginRight:-13}} onPress={()=>{setfianl_modal_error(false)}}>
+          <Icon
+              name={"close-circle-outline"}
+              type={"materialCommunity"}
+              size={35}
+              color={"orange"}
+            />
+          </TouchableOpacity>
+            <Icon
+              name={"alert-circle-outline"}
+              type={"materialCommunity"}
+              size={60}
+              color={"red"}
+              style={{marginTop:19}}
+            />
+            <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 10, color: "#fff" }}>Transaction Faild</Text>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
 
       <Modal
         animationType="slide"
@@ -531,6 +602,7 @@ const styles = StyleSheet.create({
   nextButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight:"bold"
   },
   confirmModalContent: {
     backgroundColor: 'rgba(33, 43, 83, 1)',

@@ -207,20 +207,22 @@ fetch(REACT_APP_HOST+"/users/SendXETH", requestOptions)
 
             const getData = async () => {
               try {
-                const data = await AsyncStorageLib.getItem('myDataKey');
-                if (data) {
-                  const parsedData = JSON.parse(data);
-                  const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
-                  console.log('Retrieved data:', matchedData);
-                  const publicKey = matchedData[0].publicKey;
-                  console.log("===========",publicKey)
-                  setPublicKey(publicKey);
-                  const secretKey_Key = matchedData[0].secretKey;
-                  console.log("===========",secretKey_Key)
-                  setSecretKey(secretKey_Key);
-                } else {
-                  console.log('No data found for key steller keys');
-                }
+                setPublicKey(state.STELLAR_PUBLICK_KEY);
+                setSecretKey(state.STELLAR_SECRET_KEY);
+                // const data = await AsyncStorageLib.getItem('myDataKey');
+                // if (data) {
+                //   const parsedData = JSON.parse(data);
+                //   const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
+                //   console.log('Retrieved data:', matchedData);
+                //   const publicKey = matchedData[0].publicKey;
+                //   console.log("===========",publicKey)
+                //   setPublicKey(publicKey);
+                //   const secretKey_Key = matchedData[0].secretKey;
+                //   console.log("===========",secretKey_Key)
+                //   setSecretKey(secretKey_Key);
+                // } else {
+                //   console.log('No data found for key steller keys');
+                // }
               } catch (error) {
                 console.error('Error getting data for key steller keys:', error);
               }
