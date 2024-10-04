@@ -1,5 +1,5 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { Alert, Image, Modal, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Alert, Image, Linking, Modal, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -247,12 +247,30 @@ const send_recive = ({route}) => {
               </View>
           </View>
         </View> */}
-        <RNCamera
+       <RNCamera
       ref={cameraRef}
       style={styles.preview}
       onBarCodeRead={onBarCodeRead}
       captureAudio={false}
-    >
+    >{({ status }) => {
+        console.log("****----",status)
+        if (status==="NOT_AUTHORIZED")
+        {
+          setModalVisible(false),
+          Alert.alert("Camera Permissions Required.","Please enable camera permissions in settings to scan QR code.",
+          [
+            {text:"Close",style:"cancel"},
+            {text:"Open",onPress:()=>{
+                Linking.openSettings()
+            }},
+          ])
+        }
+        if(status==="READY")
+        {
+            setModalVisible(true)
+        }
+        return (
+         <>
          <View style={styles.header}>
             <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
       <Icon name="arrow-left" size={24} color="#fff" style={styles.backIcon}/>
@@ -264,6 +282,9 @@ const send_recive = ({route}) => {
           <View style={styles.innerRectangle} />
         </View>
       </View>
+         </>
+          )
+        }}
     </RNCamera>
         
       </Modal>

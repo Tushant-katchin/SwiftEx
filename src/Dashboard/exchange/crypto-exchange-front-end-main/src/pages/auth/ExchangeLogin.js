@@ -225,10 +225,10 @@ const FOCUSED=useIsFocused();
                 setpasscode("");
                 setcon_passcode("");
                 setTimeout(()=>{
-                  Showsuccesstoast(toast,"Exchange Account Ready.");
+                  Showsuccesstoast(toast,"Choose a subscription and hold for more information.");
                 },400)
                 setIsOtpSent(false);
-                navigation.navigate("exchange");
+                navigation.navigate("Subscription");
               } else {
                 setpasscode("");
                setcon_passcode("");

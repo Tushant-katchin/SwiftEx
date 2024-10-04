@@ -14,7 +14,8 @@ import {
     Keyboard,
     Alert,
     Modal,
-    PermissionsAndroid
+    PermissionsAndroid,
+    Linking
 } from "react-native";
 import {
     widthPercentageToDP as wp,
@@ -63,7 +64,7 @@ const SendXLM = (props) => {
     const onBarCodeRead = (e) => {
         if (e.data !== qrData) {
             setQrData(e.data);
-            Alert.alert("QR Code ", "QR Code Decoded successfully..");
+            alert("success","QR Code Decoded successfully..");
             setAddress("");
             setAddress(e.data);
             toggleModal();
@@ -388,17 +389,39 @@ const SendXLM = (props) => {
       onBarCodeRead={onBarCodeRead}
       captureAudio={false}
     >
-         <View style={style.header}>
-            <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
-      <Icon name="arrow-left" size={24} color="#fff" style={style.backIcon}/>
-            </TouchableOpacity>
-      <Text style={[style.title,{marginTop:Platform.OS==="ios"?hp(5):0}]}>Scan QR Code</Text>
-    </View>
-      <View style={style.rectangleContainer}>
-        <View style={style.rectangle}>
-          <View style={style.innerRectangle} />
-        </View>
-      </View>
+            {({ status }) => {
+              if (status==="NOT_AUTHORIZED")
+              {
+                setModalVisible(false),
+                Alert.alert("Camera Permissions Required.","Please enable camera permissions in settings to scan QR code.",
+                [
+                  {text:"Close",style:"cancel"},
+                  {text:"Open",onPress:()=>{
+                      Linking.openSettings()
+                  }},
+                ])
+              }
+              if(status==="READY")
+              {
+                setModalVisible(true)
+              }
+              return (
+                <>
+                  <View style={style.header}>
+                    <TouchableOpacity onPress={() => { setModalVisible(false) }}>
+                      <Icon name="arrow-left" size={24} color="#fff" style={style.backIcon} />
+                    </TouchableOpacity>
+                    <Text style={[style.title, { marginTop: Platform.OS === "ios" ? hp(5) : 0 }]}>Scan QR Code</Text>
+                  </View>
+                  <View style={style.rectangleContainer}>
+                    <View style={style.rectangle}>
+                      <View style={style.innerRectangle} />
+                    </View>
+                  </View>
+                </>
+              )
+            }}
+         
     </RNCamera>
         {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <View style={{ backgroundColor: '#145DA0', padding: 20, borderRadius: 10,width:"90%",height:"50%" }}>

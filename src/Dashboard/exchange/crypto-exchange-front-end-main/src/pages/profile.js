@@ -541,37 +541,27 @@ export const ProfileView = (props) => {
 
     <View>
       <View style={styles.content}>
-        <Text style={{ color: "#fff" }}>{message}</Text>
-
-        <View style={styles.profileContainer}>
-          <Image source={Profile} style={styles.img}  />
-          <View style={[styles.fnlnTextView,{marginTop:Platform==="android"||-19}]}>
-            <FieldView
-              value={profile.firstName +" "+ profile.lastName}
-              valueStyle={styles.nameText}
-              numberOfLines={1}
+          <View style={styles.profileContainer}>
+            <Icon
+              name={"account-circle-outline"}
+              type={"materialCommunity"}
+              color={"white"}
+              size={60}
+              style={{ marginTop: 10 }}
             />
-          
+            <View style={[styles.fnlnTextView]}>
+              <Text style={{ fontSize: hp(2), color: "white", fontSize: hp(2.3), width: wp(63),marginLeft:wp(1.2) }}>{profile.firstName + " " + profile.lastName}</Text>
+              <View style={styles.verifiedTextCon}>
+                <Text style={styles.verifiedText}>Verified!</Text>
+              </View>
+            </View>
+            <View style={styles.emailphoneView}>
+              <Text style={{ color: "white", fontSize: 16 }}>Email</Text>
+              <Text style={{ color: "white", marginTop: 4, fontSize: 16 }}>{profile.email}</Text>
+            </View>
           </View>
 
-          <View style={{ flexDirection: "row", marginLeft: wp(10) }}>
-            
-            <Text style={styles.verifiedText}>   Verified!</Text>
-
-
-          </View>
-        </View>
-
-
-
-        <View style={styles.emailphoneView}>
-         
-          <Text style={{color:"white",fontSize:16}}>Email</Text>
-          <Text style={{color:"white",marginTop:4,fontSize:16}}>{profile.email}</Text>
-         
-        </View>
-
-        <View>
+          <View>
     {/* <Image source={darkBlue} style={{ height: hp("9"),width: wp("12"),alignSelf:"flex-end",position:"absolute"}} /> */}
         <View style={{justifyContent:"center",marginTop:hp(2.7)}}>
 
@@ -593,16 +583,16 @@ export const ProfileView = (props) => {
             style={styles.linearContainer}
           > */}
 
-<View  style={[styles.linearContainer,{backgroundColor:"rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)"}]}>
+<View  style={[styles.linearContainer]}>
             <View style={styles.iconwithTextContainer}>
               <View style={styles.walletContainer}>
                 <Text style={styles.myWallet}>My Wallet </Text>
-                <Icon
+                {/* <Icon
                       name={"wallet"}
                       type={"materialCommunity"}
                       color={"rgba(129, 108, 255, 0.97)"}
                       size={24}
-                    />
+                    /> */}
                 {/* <Image source={walletImg} style={styles.walletImg} /> */}
               </View>
               <View style={styles.walletContainer}>
@@ -644,9 +634,10 @@ export const ProfileView = (props) => {
             isVerified={profile.isEmailVerified}
           />
         </View>
-      {isLoading===true?<ActivityIndicator color="green"/>:
         
-        account ? (
+      {/* {isLoading===true?<ActivityIndicator color="green"/>: */}
+        
+        {/* // account ? (
           <>
           <View style={styles.deleteContainer}>
             <Text style={styles.accountText}>Account Details</Text>
@@ -690,21 +681,21 @@ export const ProfileView = (props) => {
                       <Text style={styles.amountText}>{item.currency}</Text>
                     </View>
                   );
-                })}
+                })} */}
               {/* </LinearGradient> */}
-              </View>
+              {/* </View>
             </View>
             <View style={styles.enableContainer}>
               <Text style={styles.enableText}>Charges Enabled: No</Text>
               <Text style={styles.payoutText}>Payout Enabled: No</Text>
             </View>
-          </>
-        ) : (
-          <View>
+          </> */}
+        {/* ) : ( */}
+        {/* <View>
             <Text style={styles.addedText}>No Bank Account Added!</Text>
 
-               <View style={styles.addacountBtn}>
-              <TouchableOpacity
+               <View style={styles.addacountBtn}> */}
+              {/* <TouchableOpacity
                 style={{
                   paddingVertical: hp(1),
                   width: wp(50),
@@ -720,9 +711,9 @@ export const ProfileView = (props) => {
               >
                 <Text style={styles.accounttextColor}>Add Bank Account</Text>
               </TouchableOpacity>
-              </View>
+              </View> */}
             {/* </LinearGradient> */}
-            <NewAccountModal
+            {/* <NewAccountModal
               onCrossIcon={() => {
                 setModalVisible(false);
               }}
@@ -733,15 +724,15 @@ export const ProfileView = (props) => {
                 setModalVisible(!modalVisible);
                 setIsSubmit(!isSubmit);
               }}
-            />
-            <BankModel
+            /> */}
+            {/* <BankModel
               isVisible={isSubmit}
               onPress={() => {
                 setIsSubmit(!isSubmit);
               }}
             />
-          </View>
-        )}
+          </View> */}
+        {/* )} */}
       </View>
     </View>
     </>
@@ -792,29 +783,48 @@ const styles = StyleSheet.create({
     borderWidth:1.9
   },
   profileContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "center",
     alignItems: "center",
-    // marginTop: hp(2),
-    width: wp(90),
-    // marginLeft: wp(3),
+    marginTop: hp(2),
+    width: wp(95),
+    borderWidth: StyleSheet.hairlineWidth * 1,
+    paddingVertical: hp(1),
+    borderRadius: hp(2),
+    borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderWidth:0.9,
+    paddingBottom:19
   },
   verifiedText: {
-    color: "#35CA1D",
+    color: "white",
     fontSize: hp(2),
-    width: wp(25),
+    textAlign:"center"
   },
-  fnlnTextView: {
+  verifiedTextCon:{ 
+    flexDirection: "row", 
+    marginLeft: wp(5),
+    backgroundColor:"#2DAA2069",
+    width: wp(20),
+    height:hp(3),
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:10
+   },
+    fnlnTextView: {
+    marginTop: hp(3),
     flexDirection: "row",
-    marginRight: wp(19),
-    justifyContent: "space-evenly",
-    width: wp(21),
+    justifyContent: "space-between",
+    alignSelf:"center",
+    width: wp(90),
+    borderBottomWidth: StyleSheet.hairlineWidth * 1,
+    paddingBottom: hp(1.6),
+    borderColor: "#659DEA",
   },
   emailphoneView: {
     // flexDirection: "row",
     // justifyContent: "space-between",
-    marginTop: hp(4),
+    marginTop: hp(3),
     borderBottomWidth: StyleSheet.hairlineWidth * 1,
     paddingBottom: hp(1.6),
     borderColor: "#659DEA",
@@ -828,19 +838,17 @@ const styles = StyleSheet.create({
   },
   valueColor: { color: "#CBBBDC" },
   nameText: {
-    width: wp(30),
-    marginLeft: wp(10),
+    width: wp(90),
     fontSize:16,
     color:"white",
     fontWeight:"bold"
   },
   walletCard: {
     width: wp(95),
-    marginTop: hp(1.5),
+    marginTop: hp(1),
     alignSelf: "center",
   },
   linearContainer: {
-    marginTop: hp(1),
     padding: hp(2),
     borderWidth: StyleSheet.hairlineWidth * 1,
     paddingVertical: hp(4),

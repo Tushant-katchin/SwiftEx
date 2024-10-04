@@ -70,6 +70,9 @@ import Assets_manage from "../Dashboard/exchange/crypto-exchange-front-end-main/
 import send_recive from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/stellar/send_recive";
 import SendXLM from "../Dashboard/tokens/sendXLM";
 import Asset_info from "../Dashboard/Asset_info";
+import Subscription from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/Subscription";
+import Subscription_det from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/Subscription_det";
+import Subcription_payment from "../Dashboard/exchange/crypto-exchange-front-end-main/src/pages/auth/Subcription_payment";
 
 const Stack = createNativeStackNavigator();
 
@@ -492,6 +495,27 @@ const AuthStack = () => (
             fontWeight: "bold",
             gestureEnabled: false
           },
+        }}
+      />
+       <Stack.Screen
+        name="Subscription"
+        component={Subscription}
+        options={{
+          headerShown: false,gestureEnabled:false,
+        }}
+      />
+      <Stack.Screen
+        name="Subscription_det"
+        component={Subscription_det}
+        options={{
+          headerShown: false,gestureEnabled:false,
+        }}
+      />
+      <Stack.Screen
+        name="Subcription_payment"
+        component={Subcription_payment}
+        options={{
+          headerShown: false,gestureEnabled:false,
         }}
       />
       <Stack.Screen

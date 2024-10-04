@@ -456,6 +456,8 @@ const swapTokensforEth = async (privateKey, address, tokenaddress, amount) => {
 };
 const SwapEthForTokens = async (privateKey, address, tokenaddress, amount) => {
   try {
+    // const provider = new ethers.providers.JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo");
+    // const chainId = ChainId.MAINNET;
     const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC);
     const chainId = ChainId.GÖRLI;
     const gas = await provider.getGasPrice();
@@ -470,6 +472,8 @@ const SwapEthForTokens = async (privateKey, address, tokenaddress, amount) => {
 
     const weth = WETH[token.chainId];
     const pair = await Fetcher.fetchPairData(token, weth, provider);
+    console.log("****pair******",pair)
+
     const amountIn = ethers.utils.parseEther(amount);
     const route = new Route([pair], weth);
     const trade = new Trade(
@@ -511,6 +515,7 @@ const SwapEthForTokens = async (privateKey, address, tokenaddress, amount) => {
       tx.wait();
       console.log(tx.wait());
       const txx = await tx.wait();
+      console.log("*************-------",txx)
       if (txx) {
         return { code: 401, tx: txx };
       } else {
@@ -521,7 +526,7 @@ const SwapEthForTokens = async (privateKey, address, tokenaddress, amount) => {
       return response;
     }
   } catch (error) {
-    console.log(error);
+    console.log("-----OP----",error);
   }
 };
 
