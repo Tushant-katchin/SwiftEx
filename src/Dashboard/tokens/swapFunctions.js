@@ -22,7 +22,7 @@ import {
 } from "@uniswap/sdk";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
-import { RPC } from "../constants";
+import { EthereumSecret, RPC } from "../constants";
 const { Percent } = require("@uniswap/sdk");
 var ethers = require("ethers");
 const UNISWAP = require("@uniswap/sdk");
@@ -266,7 +266,7 @@ function toHex(Amount) {
 // };
 
 async function getETHtoTokenPrice(tokenAddress, ethAmount) {
-  const provider = new ethers.providers.AlchemyProvider("homestead", "k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo");
+  const provider = new ethers.providers.AlchemyProvider("homestead", EthereumSecret.apiKey);
   
   const chainId = ChainId.MAINNET;
   const token = await Fetcher.fetchTokenData(chainId, tokenAddress, provider);
@@ -456,8 +456,6 @@ const swapTokensforEth = async (privateKey, address, tokenaddress, amount) => {
 };
 const SwapEthForTokens = async (privateKey, address, tokenaddress, amount) => {
   try {
-    // const provider = new ethers.providers.JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo");
-    // const chainId = ChainId.MAINNET;
     const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC);
     const chainId = ChainId.GÖRLI;
     const gas = await provider.getGasPrice();

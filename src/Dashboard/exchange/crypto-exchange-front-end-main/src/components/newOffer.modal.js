@@ -30,7 +30,7 @@ import Icon from "../../../../../icon";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { useIsFocused } from '@react-navigation/native';
-import { EthereumSecret, smart_contract_Address,RPC } from "../../../../constants";
+import { EthereumSecret, smart_contract_Address,RPC, STELLAR_URL } from "../../../../constants";
 import contractABI from './contractABI.json';
 import { authRequest, GET, getToken, POST } from "../api";
 import { REACT_APP_HOST, REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
@@ -43,7 +43,7 @@ const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const alchemyUrl = RPC.ETHRPC;
-const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+const server = new StellarSdk.Server(STELLAR_URL.URL);
 export const NewOfferModal = () => {
   const toast=useToast();
   const dispatch_=useDispatch();
@@ -563,7 +563,7 @@ const change_Trust_New = async () => {
   setloading_trust_modal(true)
   try {
       console.log(":++++ Entered into trusting ++++:")
-      const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+      const server = new StellarSdk.Server(STELLAR_URL.URL);
       StellarSdk.Network.useTestNetwork();
       const account = await server.loadAccount(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY).publicKey());
       const transaction = new StellarSdk.TransactionBuilder(account, {

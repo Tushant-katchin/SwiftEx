@@ -26,6 +26,7 @@ import { useToast } from "native-base";
 import { alert, ShowToast } from "./reusables/Toasts";
 import { CommonActions } from "@react-navigation/native";
 import Icon from "../icon";
+import { EthereumSecret } from "./constants";
 const { Alchemy, Network, Wallet, Utils } = require("alchemy-sdk");
 
 var ethers = require("ethers");
@@ -69,7 +70,7 @@ const ConfirmTransaction = (props) => {
       console.log("----",rawTransaction)
       console.log("________________________________________________")
       const settings = {
-        apiKey: "k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
+        apiKey: EthereumSecret.apiKey,
         network: Network.ETH_SEPOLIA,
       }
       const alchemy = new Alchemy(settings);

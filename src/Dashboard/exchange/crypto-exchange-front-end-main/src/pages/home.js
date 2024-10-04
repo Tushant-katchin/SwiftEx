@@ -48,6 +48,7 @@ import { useRef } from "react";
 import { RAPID_STELLAR, SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
 import SelectWallet from "../../../../Modals/SelectWallet";
 import SELECT_WALLET_EXC from "../../../../Modals/SELECT_WALLET_EXC";
+import { STELLAR_URL } from "../../../../constants";
 // import StellarSdk from '@stellar/stellar-sdk';
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -206,7 +207,7 @@ export const HomeView = ({ setPressed }) => {
  const changeTrust = async () => {
     try {
       console.log(":++++ Entered into trusting ++++:")
-const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+const server = new StellarSdk.Server(STELLAR_URL.URL);
         const account = await server.loadAccount(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY).publicKey());
         const transaction = new StellarSdk.TransactionBuilder(account, {
             fee: StellarSdk.BASE_FEE,
@@ -438,7 +439,6 @@ const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 
   const fetchData = async () => {
     try {
-      // const response =await fetch('https://horizon-testnet.stellar.org/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code='+base_asset_code+'&base_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&counter_asset_type=credit_alphanum4&counter_asset_code='+counter_asset_code+'&counter_asset_issuer=GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI&resolution=60000&offset=0&limit=6&order=desc')
       const response =await fetch(chart_api[chart_index].url)
 
       

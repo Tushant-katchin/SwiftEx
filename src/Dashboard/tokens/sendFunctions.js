@@ -23,7 +23,7 @@ const sendEth = async (
   let alchemyProvider;
 
   const settings = {
-    apiKey: "k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
+    apiKey: EthereumSecret.apiKey,
     network: Network.ETH_SEPOLIA,
   };
 

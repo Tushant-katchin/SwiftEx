@@ -38,6 +38,7 @@ import { alert } from "../../../../reusables/Toasts";
 import { ActivityIndicator } from "react-native";
 import { useIsFocused } from '@react-navigation/native';
 import { useDispatch, useSelector } from "react-redux";
+import { STELLAR_URL } from "../../../../constants";
 export const TransactionsListView = ({
   transactions,
   self = false,
@@ -270,7 +271,7 @@ export const TransactionView = () => {
   const state = useSelector((state) => state);
   const isFocused = useIsFocused();
   StellarSdk.Network.useTestNetwork();
-        const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+        const server = new StellarSdk.Server(STELLAR_URL.URL);
   const navigation = useNavigation();
   const [pull, setPull] = useState([])
   const [Key,setKey]=useState("");
@@ -301,7 +302,7 @@ useEffect(()=>{
 const fetchData_ = async (key) => {
   setload(true);
   try {
-    const response =await fetch('https://horizon-testnet.stellar.org/accounts/'+key+'/trades?limit=30&order=desc')
+    const response =await fetch(STELLAR_URL.URL+'/accounts/'+key+'/trades?limit=30&order=desc')
     if (!response.ok) {
       console.log("`HTTP error! Status: ${response.status}")
     }

@@ -32,11 +32,12 @@ import contractABI from './contractABI.json';
 import { authRequest, GET, getToken, POST } from "../api";
 import { REACT_APP_HOST } from "../ExchangeConstants";
 import darkBlue from "../../../../../../assets/darkBlue.png";
+import { STELLAR_URL } from "./src/Dashboard/constants";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
 const alchemyUrl = RPC.ETHRPC;
-const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+const server = new StellarSdk.Server(STELLAR_URL.URL);
 export const NewOfferModal = () => {
   const back_data=useRoute();
   const { user, open, setOpen, getOffersData, onCrossPress }=back_data.params;
@@ -269,7 +270,7 @@ const getAccountDetails = async () => {
           setshow(true)
           console.log("<><", PublicKey)
           StellarSdk.Network.useTestNetwork();
-          const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+          const server = new StellarSdk.Server(STELLAR_URL.URL);
           server.loadAccount(PublicKey)
             .then(account => {
               console.log('Balances for account:', PublicKey);

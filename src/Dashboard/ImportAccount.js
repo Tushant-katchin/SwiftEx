@@ -31,7 +31,6 @@ import Xrpimage from "../../assets/xrp.png";
 import stellar from "../../assets/Stellar_(XLM).png"
 import Maticimage from "../../assets/matic.png";
 
-//'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
 const ImportAccount = (props) => {
   const [Checked, setCheckBox] = useState(false);
   const [Checked2, setCheckBox2] = useState(false);

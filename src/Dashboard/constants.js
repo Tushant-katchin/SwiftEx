@@ -61,6 +61,15 @@ export const RPC = {
 export const WSS = {
   XRPWSS: "wss://s.altnet.rippletest.net:51233",
 };
+
+export const WSS_TEST = {
+  WSS_SEP: "wss://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo",
+};
+
+export const STELLAR_URL={
+  URL:"https://horizon-testnet.stellar.org"
+}
+
 //172.20.10.6:2000
 
 /*<WebView 

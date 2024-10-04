@@ -46,6 +46,7 @@ import { resolve } from "bluebird";
 import { reject } from "lodash";
 import store from "././../../src/components/Redux/Store"
 import PushNotification from 'react-native-push-notification';
+import { WSS_TEST } from "./constants";
  
   const handleLocalNotification = (msg) => {
     PushNotification.localNotification({
@@ -60,8 +61,7 @@ import PushNotification from 'react-native-push-notification';
 function listion(addressToMonitor) {
 // const addressToMonitor= store.getState().wallet.address;
   console.log('>>>>>>',addressToMonitor)
-  // const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-goerli.g.alchemy.com/v2/favrOyEWGeWQfG-rjh2KkqhJyUriu72j')) //OLD
-  const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo'))
+  const web3 = new Web3(new Web3.providers.WebsocketProvider(WSS_TEST.WSS_SEP))
 
   web3.eth.subscribe('newBlockHeaders', (error, blockHeader) => {
     if (!error) {

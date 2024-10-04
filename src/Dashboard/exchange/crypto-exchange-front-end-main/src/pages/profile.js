@@ -346,13 +346,55 @@ export const ProfileView = (props) => {
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [modalContainer_menu,setmodalContainer_menu]=useState(false);
-
+  const [avl_plan, setavl_plan] = useState([
+    { id: 1, month: "1 month", save_on_price: 16, org_price: "5", current_price: "Free", type: "Mothly", subscriber_type: "" },
+    { id: 2, month: "3 month", save_on_price: 16, org_price: "15", current_price: "$ 14.6", type: "Quarter", subscriber_type: "MOST POPULAR" },
+    { id: 3, month: "Yearly", save_on_price: 16, org_price: "60", current_price: "$ 58", type: "Yearly", subscriber_type: "BEST VALUE" }
+  ]);
+  const [expire_plan, setexpire_plan] = useState("");
+  const [subscription_id,setsubscription_id]=useState(0);
   useEffect(() => {
     fetchProfileData();
   }, []);
+  
+  useEffect(() => {
+    // setsubscription_id(1)
+    const res = PlanExpire(avl_plan[subscription_id].month)
+    setexpire_plan(res);
+  }, [subscription_id]);
+
   useEffect(() => {
     getAccountDetails();
   }, []);
+
+  const PlanExpire = (time_line) => {
+    let today = new Date();
+    let expire_date = new Date(today);
+
+    switch (time_line) {
+        case '1 month':
+            expire_date.setMonth(today.getMonth() + 1);
+            break;
+        case '3 month':
+            expire_date.setMonth(today.getMonth() + 3);
+            break;
+        case 'Yearly':
+            expire_date.setFullYear(today.getFullYear() + 1);
+            break;
+        default:
+            console.log('Invalid subscription time line.');
+            return;
+    }
+
+    const day = expire_date.getDate();
+    const year = expire_date.getFullYear();
+    const months = [
+        "January", "February", "March", "April", "May", "June", "July",
+        "August", "September", "October", "November", "December"
+    ];
+    const month = months[expire_date.getMonth()];
+    return `Valid till ${day} ${month} ${year}`;
+}
 
   const getAccountDetails = async () => {
     setIsLoading(true);
@@ -625,8 +667,25 @@ export const ProfileView = (props) => {
             </View>
             </View>
           {/* </LinearGradient> */}
-        </View>
+          <Text style={styles.heading_text}>Activated Subcription</Text>
+        <TouchableOpacity style={styles.plan_details} onPress={()=>{navigation.navigate("Subscription_det",{ID:subscription_id})}}>
+                    <View style={styles.Check_box}>
+                        <Icon name={"check"} type={"materialCommunity"} size={28} color={"#fff"} />
+                    </View>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: wp(5) }}>
+                        <View style={[styles.right_container, { alignItems: "flex-start", }]}>
+                            <Text style={styles.comman_text}>{avl_plan[subscription_id].month}</Text>
+                            <Text style={styles.expire_text}>{expire_plan}</Text>
+                        </View>
+
+                        <View style={[styles.right_container, { marginRight: wp(2) }]}>
+                            <Text style={styles.comman_text_1}>{avl_plan[subscription_id].current_price}</Text>
+                            <Text style={[styles.comman_text_1, { fontSize: 13, fontWeight: "400" }]}>{avl_plan[subscription_id].type}</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
         <View>
+        </View>
           <EmailView
             numberOfLines={1}
             emailStyle={styles.emailText}
@@ -1126,5 +1185,48 @@ fontSize:20,
 fontWeight:"bold",
 color:"gray",
 marginStart:5
+},
+plan_details: {
+  backgroundColor: "rgba(42, 84, 156, 1)rgba(43, 82, 147, 1)",
+  borderRadius: 10,
+  paddingVertical: wp(5),
+  width:wp(95)
+},
+Check_box: {
+  alignContent:"center",
+  justifyContent:"center",
+  top: hp(-1),
+  height: hp(3.4),
+  width: wp(7.5),
+  backgroundColor: "rgba(230, 114, 41, 1)rgba(230, 161, 32, 1)",
+  borderRadius: 24,
+  position: "absolute",
+  marginLeft: wp(-1.4),
+},
+right_container: {
+  alignItems: "center",
+  paddingVertical: hp(0.5),
+  paddingLeft: wp(2)
+}, comman_text: {
+  color: "#fff",
+  fontSize: 26,
+  fontWeight: "800"
+},
+expire_text: {
+  color: "orange",
+  fontSize: 12,
+  fontWeight: "500",
+  marginTop: hp(0.2)
+},
+comman_text_1: {
+  color: "#fff",
+  fontSize: 24,
+  fontWeight: "800"
+},
+heading_text:{
+  color: "#fff",
+  fontSize: 19,
+  fontWeight: "600",
+  paddingVertical:hp(1.4)
 }
 });

@@ -34,6 +34,7 @@ import { isFloat } from "validator";
 import { RNCamera } from 'react-native-camera';
 import { REACT_APP_LOCAL_TOKEN } from "../exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { useToast } from "native-base";
+import { STELLAR_URL } from "../constants";
 const StellarSdK = require('stellar-base');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -126,7 +127,7 @@ const SendXLM = (props) => {
 
     const get_stellar = async (steller_key) => {
         StellarSdk.Network.useTestNetwork();
-        const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+        const server = new StellarSdk.Server(STELLAR_URL.URL);
         server.loadAccount(steller_key)
             .then(account => {
                 account.balances.forEach(balance => {
@@ -168,7 +169,7 @@ const SendXLM = (props) => {
             Keyboard.dismiss();
             try {
             Showsuccesstoast(toast,"Sending Payment");
-            const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+            const server = new StellarSdk.Server(STELLAR_URL.URL);
             StellarSdk.Networks.TESTNET;
               // Load the source account
               const sourceKeypair = StellarSdk.Keypair.fromSecret(sourceSecret);

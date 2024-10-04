@@ -28,6 +28,7 @@ import Icon from "../icon";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { RAPID_STELLAR, SET_ASSET_DATA } from "../components/Redux/actions/type";
 import { enableBiometrics } from "../biometrics/biometric";
+import { STELLAR_URL } from "./constants";
 const StellarSdk = require('stellar-sdk');
 
 function InvestmentChart(setCurrentWallet) {
@@ -256,7 +257,7 @@ function InvestmentChart(setCurrentWallet) {
         const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
         try {
           StellarSdk.Network.useTestNetwork();
-          const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+          const server = new StellarSdk.Server(STELLAR_URL.URL);
           server.loadAccount(matchedData[0].publicKey)
             .then(account => {
               dispatch({
@@ -305,7 +306,7 @@ function InvestmentChart(setCurrentWallet) {
             const secretKey_Key = matchedData[0].secretKey;
             setSecretKey(secretKey_Key)
             StellarSdk.Network.useTestNetwork();
-            const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+            const server = new StellarSdk.Server(STELLAR_URL.URL);
             server.loadAccount(matchedData[0].publicKey)
               .then(account => {
                 dispatch({
@@ -367,7 +368,7 @@ function InvestmentChart(setCurrentWallet) {
       console.log("<><", publicKey)
 
       StellarSdk.Network.useTestNetwork();
-      const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+      const server = new StellarSdk.Server(STELLAR_URL.URL);
       server.loadAccount(publicKey)
         .then(account => {
           console.log('Balances for account:', publicKey);

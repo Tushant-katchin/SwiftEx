@@ -18,6 +18,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import Snackbar from "react-native-snackbar";
 import { SET_ASSET_DATA } from "../../../../../../components/Redux/actions/type";
+import { STELLAR_URL } from "../../../../../constants";
 const StellarSdk = require('stellar-sdk');
 const Assets_manage = () => {
     const FOCUSED = useIsFocused();
@@ -46,7 +47,7 @@ const Assets_manage = () => {
             //     const matchedData = parsedData.filter(item => item.Ether_address === state.wallet.address);
             //     const publicKey = matchedData[0].publicKey;
                 StellarSdk.Network.useTestNetwork();
-                const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+                const server = new StellarSdk.Server(STELLAR_URL.URL);
                 server.loadAccount(state.STELLAR_PUBLICK_KEY)
                     .then(account => {
                         setassets([])
@@ -87,7 +88,7 @@ const Assets_manage = () => {
         setLoading(true)
         try {
             console.log(":++++ Entered into trusting ++++:")
-            const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+            const server = new StellarSdk.Server(STELLAR_URL.URL);
             StellarSdk.Network.useTestNetwork();
             const account = await server.loadAccount(StellarSdk.Keypair.fromSecret(state.STELLAR_SECRET_KEY).publicKey());
             const transaction = new StellarSdk.TransactionBuilder(account, {
