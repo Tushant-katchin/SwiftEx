@@ -1,4 +1,4 @@
-Read me
+SwiftEx Backend Repo - https://github.com/rohan-sethi/SwiftEX-NestJS-Backend
 
 Prerequisites
 Before you begin, ensure you have met the following requirements:
