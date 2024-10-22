@@ -1,3 +1,5 @@
+App Demo Link - https://youtu.be/E1r25Uua6BY?si=iBCXaKq3edTas1-p
+
 SwiftEx Backend Repo - https://github.com/rohan-sethi/SwiftEX-NestJS-Backend
 
 Prerequisites
