@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
@@ -24,8 +24,10 @@ import Xrpimage from "../../assets/xrp.png";
 import Maticimage from "../../assets/matic.png";
 import title_icon from "../../assets/title_icon.png";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import { Wallet_screen_header } from "./reusables/ExchangeHeader";
 
 const Transactions = (props) => {
+  const navi=useNavigation();
   const [transactions, setTransactions] = useState("");
   const state = useSelector((state) => state);
   const isFocused=useIsFocused();
@@ -84,8 +86,15 @@ try{
   let MaticLeftContent = (props) => (
     <Avatar.Image {...props} source={Maticimage} />
   );
-  useEffect(async () => {
-    await getTransactions();
+  useEffect(() => {
+    const fetch_transactions=async()=>{
+      try {
+        await getTransactions();
+       } catch (error) {
+        console.log("***",error)
+       }
+    }
+    fetch_transactions()
   }, [isFocused]);
 
   return (
@@ -95,6 +104,7 @@ try{
         backgroundColor: state.THEME.THEME===false?"#fff":"black",
       }}
     >
+      <Wallet_screen_header title="Transactions" onLeftIconPress={() => navi.goBack()} />
       <View style={[styles.footer,{backgroundColor: state.THEME.THEME===false?"#fff":"black"}]}>
         <View elevation={5} style={{ height: hp(100) }}>
           <ScrollView
@@ -118,7 +128,7 @@ try{
                   LeftContent = Xrpimage;
                 } else if (item.walletType == "Matic") {
                   LeftContent = Maticimage;
-                } else if (item.walletType === "Multi-coin") {
+                } else if (item.walletType === "Multi-coin"||item.walletType === "") {
                   if (item.chainType === "Eth") {
                     LeftContent = Etherimage;
                   } else if (item.chainType === "BSC") {
@@ -157,11 +167,13 @@ try{
                     <View style={styles.flatView}>
                       <Image source={LeftContent} style={styles.img} />
                       <View style={{ marginHorizontal: wp(3) }}>
-                        <View style={{flexDirection:"row",width:"70%",justifyContent:"space-between"}}>
+                        <View style={{flexDirection:"row",width:wp(70),justifyContent:"space-between"}}>
                           <Text style={{color: state.THEME.THEME===false?"black":"#fff"}}>{item.type}</Text>
+                          <View>
                           {item.type==="Send"?Platform.OS==="android"?<View style={{transform:[{rotate:'46deg'}]}}><Icon name="arrow-up" size={23} color="red"/></View>:<View style={{transform:[{rotate:'46deg'}]}}><Icon name="arrow-up" size={23} color="red"/></View>:<></>}
-                          {item.type==="Recieved"?Platform.OS==="android"?<View style={{transform:[{rotate:'230deg'}],marginLeft:"91%"}}><Icon name="arrow-up" size={23} color="green"/></View>:<View style={{transform:[{rotate:'230deg'}],marginLeft:"91%"}}><Icon name="arrow-up" size={23} color="green"/></View>:<></>}
-                          {item.type==="Swap"? <Icon type={"fa"} name="exchange" size={23} color="green" />:<></>}                
+                          {item.type==="Received"?Platform.OS==="android"?<View style={{transform:[{rotate:'230deg'}]}}><Icon name="arrow-up" size={23} color="green"/></View>:<View style={{transform:[{rotate:'230deg'}],marginLeft:"91%"}}><Icon name="arrow-up" size={23} color="green"/></View>:<></>}
+                          {item.type==="Swap"? <Icon type={"fa"} name="exchange" size={23} color="green" />:<></>}
+                          </View>                
                         </View>
                         <Text style={[styles.text,{color: state.THEME.THEME===false?"black":"#fff"}]} numberOfLines={1}>
                           {item.hash}

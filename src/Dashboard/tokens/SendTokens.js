@@ -44,6 +44,8 @@ import Icon from "../../icon";
 import { WalletHeader } from "../header";
 import { NavigationActions } from "react-navigation";
 import darkBlue from "../../../assets/darkBlue.png"
+import { Wallet_screen_header } from "../reusables/ExchangeHeader";
+import ErrorComponet from "../../utilities/ErrorComponet";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 //'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850'
@@ -64,19 +66,46 @@ const SendTokens = (props) => {
   const dispatch = useDispatch();
   const isFocused=useIsFocused();
   const [show,setshow]=useState(false);
+  const [lastScannedData, setLastScannedData] = useState(null);
+  const [ErroVisible,setErroVisible]=useState(false);
   const navigation = useNavigation();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  
   const onBarCodeRead = (e) => {
-    if (e.data !== qrData) { 
-      setQrData(e.data);
-      alert("success","QR Code Decoded successfully..");
+    if (e?.data && e?.data !== lastScannedData) {
+      setLastScannedData(e?.data); // Update the last scanned data
+      setErroVisible(false)
+      alert("success", "QR Code Decoded successfully..");
       setAddress("");
-      setAddress(e.data);
-      toggleModal();
+      setAddress(e?.data);
+      setModalVisible(false);
+  
+      if (!checkAddressValidity(e?.data)) {
+        setModalVisible(false);
+        setErroVisible(false)
+        setAddress("");
+        setErroVisible(true)
+      }
     }
   };
 
+
+  const handleCameraStatus = (status) => {
+    if (status === "NOT_AUTHORIZED") {
+      setModalVisible(false);
+      Alert.alert(
+        "Camera Permissions Required.",
+        "Please enable camera permissions in settings to scan QR code.",
+        [
+          { text: "Close", style: "cancel" },
+          { text: "Open", onPress: () => Linking.openSettings() },
+        ]
+      );
+    }
+    // No need to explicitly toggle modal visibility on "READY"
+    // Let `toggleModal` or user actions handle visibility
+  };
   const getXrpBal = async (address) => {
     console.log(address);
 
@@ -214,28 +243,35 @@ const SendTokens = (props) => {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    const new_data=async()=>{
+      try {
+          setErroVisible(false)
+          console.log(props?.route?.params?.token);
+          const Type = await AsyncStorageLib.getItem("walletType");
+          setWallettype(JSON.parse(Type));
+    
+          await Balance(props?.route?.params?.token).catch((e) => {
+            console.log(e);
+          });
+        } catch (e) {
+          console.log(e);
+        }
+    }
+
     setshow(true);
+    new_data()
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
     }).start();
-    try {
-      console.log(props?.route?.params?.token);
-      const Type = await AsyncStorageLib.getItem("walletType");
-      setWallettype(JSON.parse(Type));
-
-      await Balance(props?.route?.params?.token).catch((e) => {
-        console.log(e);
-      });
-    } catch (e) {
-      console.log(e);
-    }
     setshow(false);
   }, [isFocused]);
 
   useEffect(() => {
-    let inputValidation;
+    const data_fetch=async()=>{
+      try {
+        let inputValidation;
     let inputValidation1;
     let valid
     let xrpInvalid
@@ -274,26 +310,39 @@ const SendTokens = (props) => {
     if (address) {
       if (!valid) {
         setMessage("Please enter a valid address");
+        setAddress("")
       } else {
         setMessage("");
       }
     }
+      } catch (error) {
+        console.log("[",error)
+      }
+    }
+    data_fetch()
   }, [amount, address]);
   useEffect(() => {
-    let inputValidation;
-    let inputValidation1;
-    if (amount) {
-      inputValidation = isFloat(amount);
-      inputValidation1 = isInteger(amount);
-         console.log(amount,balance,JSON.stringify(balance)<JSON.stringify(amount))
-      if (Number(balance)<Number(amount)) {
-        setMessage("Low Balance");
-      } else if (!inputValidation && !inputValidation1) {
-        setMessage("Please enter a valid amount");
-      } else {
-        setMessage("");
+     const data=async()=>{
+      try {
+        let inputValidation;
+        let inputValidation1;
+        if (amount) {
+          inputValidation = isFloat(amount);
+          inputValidation1 = isInteger(amount);
+             console.log(amount,balance,JSON.stringify(balance)<JSON.stringify(amount))
+          if (Number(balance)<Number(amount)) {
+            setMessage("Low Balance");
+          } else if (!inputValidation && !inputValidation1) {
+            setMessage("Please enter a valid amount");
+          } else {
+            setMessage("");
+          }
+        }
+      } catch (error) {
+        console.log("*",error)
       }
-    }
+     }
+     data()
   }, [amount]);
   const [isModalVisible, setModalVisible] = useState(false);
   const toggleModal = () => {
@@ -321,29 +370,23 @@ const checkPermission = async () => {
   {
     
   }
+
+    // Reset lastScannedData when modal is closed
+    useEffect(() => {
+      if (!isModalVisible) {
+        setLastScannedData(null);
+      }
+    }, [isModalVisible]);
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
-{Platform.OS==="ios"?<View style={{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",flexDirection:"row",height: hp(8),borderBottomColor:"gray",borderColor:state.THEME.THEME===false?"gray":"black",borderWidth:0.5}}>
-<Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
-<Text style={{color:"white",alignSelf:"center",marginLeft:"19%",marginTop:'9%',fontSize:19}}>Transaction Details</Text>
-<TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
-<Image source={darkBlue} style={{height: hp("9"),
-    width: wp("12"),
-    marginLeft: Platform.OS==="ios"?wp(11):wp(6)}}/>
-</TouchableOpacity>
-    </View>:
-<View style={{backgroundColor:state.THEME.THEME===false?"#4CA6EA":"black",flexDirection:"row",borderWidth:0.5,borderBottomColor:"gray",borderColor:state.THEME.THEME===false?"gray":"black",}}>
-<Icon type={'antDesign'} name='left' size={29} color={'white'} onPress={()=>{navigation.goBack()}} style={{padding:hp(1.5),marginTop:'3%'}}/>
-<Text style={{color:"white",alignSelf:"center",marginLeft:"20%",fontWeight:'bold',fontSize:17}}>Transaction Details</Text>
-<TouchableOpacity onPress={()=>{navigation.navigate("Home")}}>
-<Image source={darkBlue} style={{height: hp("9"),
-    width: wp("12"),
-    marginLeft: wp(15)}}/>
-</TouchableOpacity>
-</View>}
-      {/* <WalletHeader title={props.route.params.token}/> */}
+    <Wallet_screen_header title="Send" onLeftIconPress={() => navigation.goBack()} />
+    <ErrorComponet
+          isVisible={ErroVisible}
+          onClose={() => setErroVisible(false)}
+          message="The scanned QR code contains an invalid public key. Please make sure you're scanning the correct QR code and try again."
+        />
       <View style={{ backgroundColor:state.THEME.THEME===false?"#fff":"black", height: hp(100) }}>
         <View style={style.inputView}>
           <TextInput
@@ -387,6 +430,7 @@ const checkPermission = async () => {
           <TextInput
             value={amount}
             keyboardType="numeric"
+            returnKeyType="done"
             onChangeText={(input) => {
               if (amount && address) {
                 setDisable(false);
@@ -501,44 +545,27 @@ const checkPermission = async () => {
         visible={isModalVisible}
         onRequestClose={toggleModal}
       >
-         <RNCamera
-      ref={cameraRef}
-      style={style.preview}
-      onBarCodeRead={onBarCodeRead}
-      captureAudio={false}
-    >
-          {({ status }) => {
-            if (status==="NOT_AUTHORIZED") {
-              setModalVisible(false),
-              Alert.alert("Camera Permissions Required.","Please enable camera permissions in settings to scan QR code.",
-              [
-                {text:"Close",style:"cancel"},
-                {text:"Open",onPress:()=>{
-                    Linking.openSettings()
-                }},
-              ])
-            }
-            if(status==="READY")
-              {
-                setModalVisible(true)
-              }
-            return (
-              <>
-                <View style={style.header}>
-                  <TouchableOpacity onPress={() => { setModalVisible(false) }}>
-                    <Icon name="arrow-left" size={24} color="#fff" style={style.backIcon} />
-                  </TouchableOpacity>
-                  <Text style={[style.title, { marginTop: Platform.OS === "ios" ? hp(5) : 0 }]}>Scan QR Code</Text>
+          <RNCamera
+            ref={cameraRef}
+            style={style.preview}
+            onBarCodeRead={onBarCodeRead}
+            captureAudio={false}
+            onStatusChange={({ status }) => handleCameraStatus(status)} // Use onStatusChange
+          >
+            <>
+              <View style={style.header}>
+                <TouchableOpacity onPress={() => { setModalVisible(false); }}>
+                  <Icon name="arrow-left" size={24} color="#fff" style={style.backIcon} />
+                </TouchableOpacity>
+                <Text style={[style.title, { marginTop: Platform.OS === "ios" ? hp(5) : 0 }]}>Scan QR Code</Text>
+              </View>
+              <View style={style.rectangleContainer}>
+                <View style={style.rectangle}>
+                  <View style={style.innerRectangle} />
                 </View>
-                <View style={style.rectangleContainer}>
-                  <View style={style.rectangle}>
-                    <View style={style.innerRectangle} />
-                  </View>
-                </View>
-              </>
-            )
-          }}
-    </RNCamera>
+              </View>
+            </>
+          </RNCamera>
         {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <View style={{ backgroundColor: '#145DA0', padding: 20, borderRadius: 10,width:"90%",height:"50%" }}>
             <Text style={{color:"white",fontWeight:"700",alignSelf:"center",fontSize:19}} onPress={()=>{
@@ -658,7 +685,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingHorizontal: 16,
-    height: 60,
+    height: hp(10)
   },
   backIcon: {
     marginRight:wp(28),

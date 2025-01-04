@@ -38,6 +38,7 @@ import chooseSwap from "../tokens/chooseSwap.json";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { SwapHeader, WalletHeader } from "../header";
+import { Wallet_screen_header } from "../reusables/ExchangeHeader";
 var ethers = require("ethers");
 const xrpl = require("xrpl");
 const { ChainId, Fetcher, WETH, Route } = require("@uniswap/sdk");
@@ -242,13 +243,13 @@ const TokenList = ({
     );
   });
 
-  useEffect(async () => {
+  useEffect(() => {
     setData(data);
   }, []);
 
   return (
     <View style={{ width: wp(100),height:hp(100) }}>
-      <SwapHeader title='Tokens' setVisible={setVisible}/>
+      <Wallet_screen_header title="Tokens" onLeftIconPress={() => {setVisible(false)}} />
       {/* <TokenHeader setVisible={setVisible} name={name} /> */}
       <View style={[style.Body,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
         <SearchComponent

@@ -9,6 +9,7 @@ import {
   FlatList,
   Pressable,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -21,7 +22,11 @@ import { alert } from "./reusables/Toasts";
 import * as Clipboard from "expo-clipboard";
 import Icon from "../icon";
 import { Button } from "native-base";
+import { Wallet_screen_header } from "./reusables/ExchangeHeader";
+import { useNavigation } from "@react-navigation/native";
 const PrivateKey = (props) => {
+  const navi=useNavigation();
+  const [text_input_up,settext_input_up]=useState(false);
   const [accountName, setAccountName] = useState("");
   const [visible, setVisible] = useState(false);
   const[ mnemonic,setMnemonic]= useState()
@@ -40,17 +45,35 @@ const PrivateKey = (props) => {
     alert("success","Copied");
   };
 
-  useEffect(async () => {
+  useEffect( () => {
+    setAccountName('')
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
     }).start();
 
+   const fetch_new=async()=>{
     console.log(props.route.params.wallet.wallet.mnemonic);
     const mnemonic = props.route.params.wallet.wallet.mnemonic.match(/\b(\w+)'?(\w+)?\b/g)
     console.log("My mnemonic",mnemonic)
     setMnemonic(mnemonic)
+   }
+   fetch_new()
   }, []);
+
+  useEffect(()=>{
+    const  Keybord_state_cls=Keyboard.addListener('keyboardDidHide',()=>{
+      settext_input_up(false);
+    });
+    const  Keybord_state_opn=Keyboard.addListener('keyboardDidShow',()=>{
+      settext_input_up(true);
+    });
+    
+    return ()=>{
+      Keybord_state_cls.remove();
+      Keybord_state_opn.remove();
+    }
+  },[]);
   
   const RenderItem = ({ item, index }) => {
     console.log("-------------", item);
@@ -58,15 +81,21 @@ const PrivateKey = (props) => {
       <Pressable style={style.pressable} onPress={()=>{
         console.log("Hello World")
       }}>
-        <Text style={style.pressText}>{index + 1}</Text>
+        <Text style={[style.pressText,{color:"black"}]}>{index + 1}</Text>
 
-        <Text style={style.itemText}>{item}</Text>
+        <Text style={[style.itemText,{color:"black"}]}>{item}</Text>
       </Pressable>
     );
   };
-
+  const handleUsernameChange = (text) => {
+    // Remove whitespace from the username
+    const formattedUsername = text.replace(/\s/g, '')
+    .replace(/[\p{Emoji}\u200d\uFE0F]+/gu, '');
+    setAccountName(formattedUsername);
+  };
   return (
-    <ScrollView>
+    <>
+    <Wallet_screen_header title="Private Key" onLeftIconPress={() => navi.goBack()} />
     <View style={{ backgroundColor: "white", height: hp(100),marginBottom:hp(15) }}>
       <Animated.View // Special animatable View
         style={{ opacity: fadeAnim }}
@@ -108,31 +137,31 @@ const PrivateKey = (props) => {
         <View style={style.dotView}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={{ color: "black" }}>
-            Keep your Mnemonic in a safe place isolated from any network
+          Keep your mnemonic in a safe place, isolated from any network.
           </Text>
         </View>
         <View style={style.dotView1}>
           <Icon name="dot-single" type={"entypo"} size={20} />
           <Text style={style.welcomeText}>
-            Don't share such as email,photo,social apps,etc
+          Do not share it through email, photos, social media, apps, etc.
           </Text>
         </View>
 
         {/* <Text selectable={true} style={style.welcomeText2}>
           {props.route.params.wallet.wallet.mnemonic}
         </Text> */}
-
+        <View style={{marginTop:text_input_up?"-60%":10}}>
         <Text style={style.accountText}> Account Name</Text>
-
         <TextInput
-          style={style.input}
+          style={[style.input,{color:"black"}]}
           placeholder="Enter your account name"
           value={accountName}
-          onChangeText={(text) => setAccountName(text)}
+          onChangeText={(text) => {handleUsernameChange(text)}}
           placeholderTextColor="gray"
           autoCapitalize={"none"}
           maxLength={20}
-        />
+          />
+          </View>
         <TouchableOpacity
           style={{alignSelf: "center",
           alignItems: "center",
@@ -169,7 +198,7 @@ const PrivateKey = (props) => {
         {/* </View> */}
       </Animated.View>
     </View>
-    </ScrollView>
+    </>
   );
 };
 
@@ -217,7 +246,7 @@ const style = StyleSheet.create({
     borderRadius: 10,
     width: wp(80),
     height: hp(5),
-    marginTop: hp(2),
+    marginTop: hp(1),
     alignSelf: "center",
   },
   pressable: {
@@ -259,7 +288,7 @@ const style = StyleSheet.create({
   dotView1: {
     flexDirection: "row",
     alignItems: "center",
-    width: wp(90),
+    width: wp(80),
     marginLeft: 18,
     marginTop: hp(2),
   },

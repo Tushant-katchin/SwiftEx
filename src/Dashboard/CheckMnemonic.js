@@ -383,6 +383,9 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genrateAuthToken, genUsrToken } from "./Auth/jwtHandler";
 import { alert } from "./reusables/Toasts";
+import { Wallet_screen_header } from "./reusables/ExchangeHeader";
+import { useNavigation } from "@react-navigation/native";
+import Snackbar from "react-native-snackbar";
 const StellarSdk = require('stellar-sdk');
 const storeData = async (publicKey,secretKey,Ether_address) => {
   try {
@@ -431,6 +434,7 @@ const getData = async () => {
 };
 
 const CheckMnemonic = (props) => {
+  const navi=useNavigation();
   console.log("||||||||||||||||||||||||||||||||||||||||||||||",props.route.params.wallet.addres)
   const wallet_Men = props.route.params.wallet.mnemonic.split(' ');
 
@@ -536,6 +540,7 @@ const CheckMnemonic = (props) => {
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
+    <Wallet_screen_header title="Check Mnemonic" onLeftIconPress={() => navi.goBack()} />
       <View style={style.Body}>
         <Text style={style.verifyText}>Verify Secret Phrase</Text>
         <Text style={style.wordText}>
@@ -571,11 +576,11 @@ const CheckMnemonic = (props) => {
           ))}
         </View>
         
-        {loading ? (
+        {loading ? 
+          <View style={[style.ButtonView,{backgroundColor:"white"}]}>
           <ActivityIndicator size="large" color="green" />
-        ) : (
-          <Text></Text>
-        )}
+          </View>
+          :        
         <TouchableOpacity
           style={style.ButtonView}
           onPress={async () => {
@@ -673,21 +678,39 @@ const CheckMnemonic = (props) => {
                 genrate_keypair(props.route.params.wallet.address)
                 console.log("navigating to home screen");
                 props.navigation.navigate("HomeScreen");
-                alert("success", "correct mnemonic");
+                alert("success", "Mnemonic validated successfully!");
                 getData();      
             } catch (e) {
               console.log(e);
             }
           }
           else {
-            alert("error","Incorrect Answers, please try again");
-            setAnswers(Array(4).fill(null));
-            shuffleQuestions();
+                  const hasNull = answers.some((answer) => answer === null);
+                  if (hasNull) {
+                    Snackbar.show({
+                      text: 'Please provide all answers before submitting.',
+                      duration: Snackbar.LENGTH_SHORT,
+                      backgroundColor: 'red',
+                    });
+                    setAnswers(Array(4).fill(null));
+                    shuffleQuestions();
+                  }
+                  else{
+
+                    Snackbar.show({
+                      text: 'Incorrect Answers, please try again',
+                      duration: Snackbar.LENGTH_SHORT,
+                      backgroundColor:'red',
+                    });
+                    setAnswers(Array(4).fill(null));
+                    shuffleQuestions();
+                  }
           }
           }}
         >
           <Text style={{ color: "white" }}>Done</Text>
         </TouchableOpacity>
+        }
       </View>
     </Animated.View>
   );

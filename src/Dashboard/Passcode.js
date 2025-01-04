@@ -1,302 +1,313 @@
-import React, { useRef, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-// import title_icon from "../../assets/title_icon.png";
-// import title_icon from "../../assets/Pink.png"
+import React, { useState, useRef, useEffect } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Animated, Alert, Image, Platform, } from "react-native";
 import darkBlue from "../../assets/darkBlue.png";
-
-import { Animated } from "react-native";
-import ReactNativePinView from "react-native-pin-view";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { Platform } from "react-native";
-import { setPlatform } from "../components/Redux/actions/auth";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useBiometrics } from "../biometrics/biometric";
-import { useFocusEffect } from "@react-navigation/native";
-import { alert } from "./reusables/Toasts";
-import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SET_APP_THEME } from "../components/Redux/actions/type";
+import { alert } from "./reusables/Toasts";
 import Icon from "../icon";
+import { setPlatform } from "../components/Redux/actions/auth";
 
 const Passcode = (props) => {
-  const [pin, setPin] = useState();
-  const [status, setStatus] = useState("");
-  const [showRemoveButton, setShowRemoveButton] = useState(false);
-  const [enteredPin, setEnteredPin] = useState("");
-  const [showCompletedButton, setShowCompletedButton] = useState(false);
-  const pinView = useRef(null);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [pin, setPin] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
+  const [status, setStatus] = useState("");
+  const [tempPin, setTempPin] = useState("");
+  const handlePress = async (value) => {
+  if (pin.length < 6) {
+    const newPin = pin + value; 
+    setPin(newPin);
+
+    if (newPin.length === 6) {
+      if (status === "verify") {
+        if (tempPin === newPin) {
+          await AsyncStorage.setItem("pin", JSON.stringify(tempPin));
+          resetInput();
+          setStatus("");
+          props.navigation.navigate("Welcome");
+        } else {
+          triggerShake();
+          setIsError(true);
+          setTimeout(() => {
+            alert("error", "PIN did not match. Please try again.");
+            resetInput();
+            setStatus("");
+          }, 200);
+        }
+      } else if (status === "pinset") {
+        const storedPin = await AsyncStorage.getItem("pin");
+        const user = await AsyncStorage.getItem("user");
+
+        if (JSON.parse(storedPin) === newPin) {
+          setIsSuccess(true);
+          setTimeout(() => {
+            resetInput();
+            props.navigation.navigate(user ? "HomeScreen" : "Welcome");
+          }, 500);
+        } else {
+          triggerShake();
+          setIsError(true);
+          setTimeout(() => {
+            resetInput();
+          }, 1000);
+        }
+      } else {
+        setTempPin(newPin);
+        setStatus("verify");
+        resetInput();
+      }
+    }
+  }
+};
 
   
 
-  const Spin = new Animated.Value(0);
-  const SpinValue = Spin.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
-  const Screen = () => {
-    return <View></View>;
+  const handleDelete = () => {
+    setPin((prev) => prev.slice(0, -1));
   };
 
+  const resetInput = () => {
+    setPin("");
+    setIsError(false);
+    setIsSuccess(false);
+  };
+
+  const triggerShake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnimation, {
+        toValue: 10,
+        duration: 50,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 50,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: 10,
+        duration: 50,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
   useFocusEffect(
     React.useCallback(() => {
       const checkBioMetric = async () => {
         const biometric = await AsyncStorage.getItem("Biometric");
         if (biometric === "SET") {
           useBiometrics(props.navigation);
-          return;
         }
       };
       checkBioMetric();
     }, [])
   );
-  useEffect(async () => {
-    const Checked=await AsyncStorageLib.getItem("APP_THEME");
-    dispatch({
-      type: SET_APP_THEME,
-      payload: { THEME: Checked===null?false:Checked==="false"?false:true},
-    });
-    const Check = await AsyncStorage.getItem("pin");
+  useEffect(() => {
+    const initializeApp = async () => {
+      const Checked = await AsyncStorage.getItem("APP_THEME");
+      dispatch({
+        type: SET_APP_THEME,
+        payload: { THEME: Checked === null ? false : Checked === "false" ? false : true },
+      });
+      const Check = await AsyncStorage.getItem("pin");
+      const biometric = await AsyncStorage.getItem("Biometric");
+      if (biometric === "SET") {
+        useBiometrics(props.navigation);
+      }
+      if (Check) {
+        setStatus("pinset");
+      }
+      if (Platform.OS === "ios") {
+        dispatch(setPlatform("ios"));
+      }
+    };
+    initializeApp();
+  }, []);
+
+  const handleBiometrics = async () => {
     const biometric = await AsyncStorage.getItem("Biometric");
     if (biometric === "SET") {
-      //useBiometrics(props.navigation);
-    }
-
-    console.log(Check);
-    if (Check) {
-      setStatus("pinset");
-    }
-    console.log(Platform.OS);
-    if (Platform.OS === "ios") {
-      const platform = "ios";
-      dispatch(setPlatform(platform)).then((response) => {
-        console.log(response);
-      });
-    }
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-    }).start();
-
-    Animated.timing(Spin, {
-      toValue: 1,
-      duration: 1500,
-      useNativeDriver: true,
-    }).start();
-
-    if (enteredPin.length > 0) {
-      setShowRemoveButton(true);
+      useBiometrics(props.navigation);
     } else {
-      setShowRemoveButton(false);
+      alert('error', Platform.OS === "android"
+        ? 'Enable biometrics in SwiftEx app settings.'
+        : 'Enable face Id in SwiftEx app settings.'
+      );
     }
-    if (enteredPin.length === 6) {
-      setShowCompletedButton(true);
-      if (status === "verify") {
-        if (pin === enteredPin) {
-          pinView.current.clearAll();
-          props.navigation.navigate("Welcome");
-
-          AsyncStorage.setItem("pin", JSON.stringify(pin));
-        } else {
-          
-          pinView.current.clearAll();
-          setTimeout(()=>{
-            alert("error","PIN did not match. Please try again.");
-           },200)
-          // alert("error","password ");
-          setStatus("");
-        }
-      } else if (status === "pinset") {
-        const Pin = await AsyncStorage.getItem("pin");
-        const user = await AsyncStorage.getItem("user");
-        const wallets = await AsyncStorage.getItem(`${user}-wallets`);
-
-        if (JSON.parse(Pin) === enteredPin) {
-          console.log(Pin);
-          console.log(user);
-          console.log(wallets);
-          if (user) {
-            pinView.current.clearAll();
-            props.navigation.navigate("HomeScreen");
-          } else {
-            pinView.current.clearAll();
-            props.navigation.navigate("Welcome");
-          }
-        } else {
-          pinView.current.clearAll();
-         setTimeout(()=>{
-          alert("error","Incorrect pin try again.");
-         },100)
-        }
-      } else {
-        setPin(enteredPin);
-        setStatus("verify");
-
-        pinView.current.clearAll();
-      }
-    }
-  }, [fadeAnim, enteredPin]);
-
+  };
   return (
-    <Animated.View // Special animatable View
-      style={{ opacity: fadeAnim }}
-    >
-      <View style={style.Body}>
-         <Animated.Image
+    <View style={[styles.container]}>
+      <View style={styles.upper_con}>
+        <Image
           style={{
             width: wp("20"),
             height: hp("15"),
             padding: 30,
             marginTop: hp(2),
-            transform: [{ rotate: SpinValue }],
           }}
           source={darkBlue}
-        /> 
-        <Text style={style.welcomeText}> Hi,</Text>
-        <Text style={style.welcomeText}>
-          {" "}
-          {status == "verify"
+        />
+        <View style={styles.text_con}>
+          <Text style={styles.text_style}>Hi,</Text>
+          <Text style={[styles.text_style, { marginTop: 10 }]}>{status === "verify"
             ? "Please Re-enter your pin"
             : status === "pinset"
             ? "Please enter your pin"
-            : "Please create a pin"}
-        </Text>
-        <View style={{ marginTop: hp(2) }}>
-          <ReactNativePinView
-            inputSize={23}
-            ref={pinView}
-            pinLength={6}
-            buttonSize={60}
-            // customLeftButtonViewStyle={{backgroundColor:'gray'}}
-            onValueChange={(value) => setEnteredPin(value)}
-            buttonAreaStyle={{
-              marginTop: 24,
-            }}
-            inputAreaStyle={{
-              marginBottom: 24,
-            }}
-            inputViewEmptyStyle={{
-              backgroundColor: "transparent",
-              borderWidth: 1,
-              borderColor: "#fff",
-            }}
-            inputViewFilledStyle={{
-              backgroundColor: "#fff",
-            }}
-            // buttonViewStyle={{
-            //   borderWidth: 1,
-            //   borderColor: "#FFF",
-            // }}
-            buttonTextStyle={{
-              color: "#fff",
-            }}
-            
-            onButtonPress={async (key) => {
-              if (key ===  "custom_right") {
-                pinView.current.clear();
-              }
-              if (key === "custom_left") {
-               
-              }
-              if (key === "three") {
-                //alert("You can't use 3")
-              }
-            }}
-
-            customLeftButton={
-              
-                <Icon
-                  type={"materialCommunity"} 
-                  name={Platform.OS==="android"?"fingerprint":"face-recognition"}
-                  size={36}
-                  color={"gray"}
-                  onPress={async ()=>{
-                    const biometric = await AsyncStorage.getItem("Biometric");
-                    if (biometric === "SET") {
-                      useBiometrics(props.navigation);
-                    }else{
-                          Platform.OS==="android"?
-                          alert('error','Enable biometrics in your device settings.'):
-                          alert('error','Enable face Id in your device settings.')
-                    }
-                  }}
-                />
-            
-            }
-            customRightButton={
-              showRemoveButton ? (
-                <Icon type={"materialCommunity"} name={"backspace"} size={36} color={"gray"} />
-              ) : undefined
-            }
-
-          />
-          <View style={style.textView}>
-          <Text style={style.simpleText}>Passcode adds an extra layer of security</Text>
-          <Text style={style.simpleText}>when using the app</Text>
-          </View>
-          
+            : "Please create a pin"}</Text>
         </View>
+        <Animated.View
+          style={[
+            styles.pinContainer,
+            { transform: [{ translateX: shakeAnimation }] },
+          ]}
+        >
+          {[0, 1, 2, 3, 4, 5].map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.pinBox,
+                isError && styles.pinBoxError,
+                isSuccess && styles.pinBoxSuccess,
+              ]}
+            >
+              {pin.length > index && (
+                <View
+                  style={[
+                    styles.dot,
+                    isError && styles.dotError,
+                    isSuccess && styles.dotSuccess,
+                  ]}
+                />
+              )}
+            </View>
+          ))}
+        </Animated.View>
       </View>
-    </Animated.View>
+      <View style={styles.keypad}>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((key) => (
+          <TouchableOpacity
+            key={key}
+            onPress={() => handlePress(key.toString())}
+            style={styles.key}
+          >
+            <Text style={styles.keyText}>{key}</Text>
+          </TouchableOpacity>
+        ))}
+        <TouchableOpacity onPress={()=>{handleBiometrics()}} style={styles.key}>
+          <Icon
+                type={"materialCommunity"}
+                name={Platform.OS === "android" ? "fingerprint" : "face-recognition"}
+                size={36}
+                color={"gray"}
+              />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress("0")} style={styles.key}>
+          <Text style={styles.keyText}>0</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleDelete} style={styles.key}>
+          <Icon
+                type={"materialCommunity"}
+                name={"backspace"}
+                size={36}
+                color={"gray"}
+              />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.text_con}>
+        <Text style={[styles.text_style, { fontSize: 13, color: "gray" }]}>Passcode adds an extra layer of security</Text>
+        <Text style={[styles.text_style, { fontSize: 13, color: "gray" }]}>when using the app</Text>
+      </View>
+    </View>
   );
 };
 
-export default Passcode;
-
-const style = StyleSheet.create({
-  Body: {
-    display: "flex",
-    backgroundColor:'#131E3A',
-    height: hp(100),
-    justifyContent: "center",
-    width: wp(100),
+const styles = StyleSheet.create({
+  upper_con:{ 
+    height: "50%",
     alignItems: "center",
-    textAlign: "center",
+    width: "100%",
+    paddingTop: 40
   },
-  welcomeText: {
-    fontSize: 20,
-    fontWeight: "200",
-    color: "#fff",
-    marginTop: hp(2),
+  text_con: {
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10
   },
-  welcomeText2: {
-    fontSize: 20,
-    fontWeight: "200",
+  text_style: {
+    fontSize: 19,
+    color: "#fff"
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#011434"
+  },
+  pinContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+    marginTop:20
+  },
+  pinBox: {
+    width: 48,
+    height: 50,
+    margin: 5,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pinBoxError: {
+    borderColor: "red",
+  },
+  pinBoxSuccess: {
+    borderColor: "green",
+  },
+  dot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "silver",
+  },
+  dotError: {
+    backgroundColor: "red",
+  },
+  dotSuccess: {
+    backgroundColor: "green",
+  },
+  keypad: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    width: "100%",
+    justifyContent: "center"
+  },
+  key: {
+    width: 60,
+    height: 60,
+    marginHorizontal: 33,
+    marginVertical: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+  },
+  keyText: {
+    fontSize: 23,
+    fontWeight: "bold",
     color: "white",
-    marginTop: hp(10),
   },
-  Button: {
-    marginTop: hp(20),
-  },
-  tinyLogo: {
-    width: wp("5"),
-    height: hp("5"),
-    padding: 30,
-    marginTop: hp(10),
-  },
-  Text: {
-    marginTop: hp(5),
-    fontSize: 15,
-    fontWeight: "200",
-    color: "white",
-  },
-  textView:{
-marginTop:"25%"
-  },
-  simpleText:{
-    textAlign:"center",
-    color:"#fff"
-  }
 });
+
+export default Passcode;

@@ -23,7 +23,7 @@ import {
 } from "react-native-responsive-screen";
 import Modal from "react-native-modal";
 //import Snackbar from 'react-native-snackbar';
-import SnackBar from "react-native-snackbar-component";
+// import SnackBar from "react-native-snackbar-component";
 import WebView from "react-native-webview";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { SelectView, _getCurrencyOptions } from "./newAccount.model";
@@ -612,7 +612,7 @@ export const NewBidModal = ({ offer, onCrossPress }) => {
           right: wp(-62),
         }}
       >
-        <SnackBar
+        {/* <SnackBar
           visible={snackbarVisible}
           position={"bottom"}
           textMessage="Bid is an exact match. Proceed to complete the transaction"
@@ -623,7 +623,7 @@ export const NewBidModal = ({ offer, onCrossPress }) => {
             setSnackbarVisible(false);
           }}
           actionText="Proceed"
-        />
+        /> */}
       </View>
       <SeeTransactions />
     </>

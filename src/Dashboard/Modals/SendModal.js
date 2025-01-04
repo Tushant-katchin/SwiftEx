@@ -353,11 +353,17 @@ const SendModal = ({ modalVisible, setModalVisible }) => {
   };
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(async () => {
-    await Balance();
-    const token = await state.token;
-    console.log(token);
-    // console.log(result)
+  useEffect( () => {
+   const get_bal=async()=>{
+    try {
+      await Balance();
+      const token = await state.token;
+      console.log(token);
+    } catch (error) {
+      console.log(error)
+    }
+     get_bal()
+   }
   }, [state.wallet.address, MaticBalance]);
 
   useEffect(() => {

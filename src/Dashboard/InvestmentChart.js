@@ -176,14 +176,14 @@ function InvestmentChart(setCurrentWallet) {
             console.log(e)
           }
 
-          GetXrpBalance(Number(xrpBalance).toFixed(2));
+          // GetXrpBalance(Number(xrpBalance).toFixed(2)); //UNCOMMENT
 
 
         } else {
           GetXrpBalance(0.00);
         }
         if (maticBalance >= 0) {
-          getMaticBalance(Number(maticBalance).toFixed(2));
+          // getMaticBalance(Number(maticBalance).toFixed(2)); //UNCOMMENT
         } else {
           getMaticBalance(0.00);
         }
@@ -196,47 +196,61 @@ function InvestmentChart(setCurrentWallet) {
       setPull(false)
     });
   }
-  useEffect(async()=>{
+  useEffect(()=>{
     // await getData_dispatch();
-    await get_stellar();
+    const get_dataa=async()=>{
+     try {
+      await get_stellar();
+     } catch (error) {
+      console.log(error)
+     }
+    }
+    get_dataa()
+   
   },[foused])
 
-  useEffect(async () => {
-    setLoading(true);
-    try {
-      await getTokenBalance();
-      await getData();
-      // await getTokenBalance()
-      getEthBnbPrice();
-      get_stellar();
-      setTimeout(()=>{
+  useEffect( () => {
+   const insilize=async()=>{
+      setLoading(true);
+      try {
+        await getTokenBalance();
+        await getData();
+        // await getTokenBalance()
+        getEthBnbPrice();
+        get_stellar();
+        setTimeout(()=>{
+          setLoading(false);
+        },1000)
+        setTimeout(async()=>{
+          const biometric = await AsyncStorageLib.getItem("Biometric");
+                if (biometric === "SET") {
+                }
+                else{
+                  setACTIVATION_MODAL(true)
+                }
+        },1500)
+      } catch (e) {
+        console.log(e)
         setLoading(false);
-      },1000)
-      setTimeout(async()=>{
-        const biometric = await AsyncStorageLib.getItem("Biometric");
-              if (biometric === "SET") {
-              }
-              else{
-                setACTIVATION_MODAL(true)
-              }
-      },1500)
-    } catch (e) {
-      console.log(e)
-      setLoading(false);
-    }
+      }
+   }
+   insilize()
   }, []);
 
-  useEffect(async () => {
-    try {
-      setxmlBalance("0.00")
-      getData()
-      await getData_dispatch();
-      getTokenBalance();
-      get_stellar();
-    } catch (e) {
-      console.log(e)
-    }
-    // await GetBalance(await state)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setxmlBalance("0.00"); 
+        await getData();
+        await getData_dispatch();
+        getTokenBalance(); 
+        get_stellar(); 
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  
+    fetchData();
   }, [state.STELLAR_PUBLICK_KEY,wallet.address, wallet.name, EthBalance, bnbBalance, XrpBalance, state.walletBalance, state.EthBalance, state.XrpBalance, state.MaticBalance]);
 
   let LeftContent = (props) => (
@@ -395,10 +409,17 @@ function InvestmentChart(setCurrentWallet) {
       console.log("Error in get_stellar")
     }
   }
- useEffect(async()=>{
+ useEffect(()=>{
+   const get_new_all_bal = async () => {
+   try {
     await getData_dispatch();
     getData();
-  get_stellar();
+    get_stellar();
+   } catch (error) {
+    console.log(error)
+   }
+   }
+   get_new_all_bal()
  },[])
 
   return (

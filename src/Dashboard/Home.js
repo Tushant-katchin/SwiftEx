@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, Image, Platform } from "react-native";
+import { View, Text, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, setUser } from "../components/Redux/actions/auth";
+import { setUser, Extend, Collapse } from "../components/Redux/actions/auth";
 import Home2 from "./Home2";
 import Settings from "../../Settings";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -10,247 +10,208 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyHeader from "./MyHeader";
 import Wallet from "./Wallet";
 import MyHeader2 from "./MyHeader2";
-import { Extend } from "../components/Redux/actions/auth";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import { Collapse } from "../components/Redux/actions/auth";
 import store from "../components/Redux/Store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyHeader3 from "./Header3";
-import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { REACT_APP_LOCAL_TOKEN } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { ExchangeNavigation } from "./exchange/crypto-exchange-front-end-main/src/Navigation";
 import { ExchangeLogin } from "./exchange/crypto-exchange-front-end-main/src/pages/auth/ExchangeLogin";
-import { ExchangeHeaderApp } from "./reusables/ExchangeHeader";
 import { AppHeader } from "./reusables/AppHeader";
-import { ExchangeHeaderIcon, WalletHeader } from "./header";
-import { CoinDetails } from "./CoinDetail";
+import { useIsFocused } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
 const Dashboard = ({ navigation }) => {
-  let statee = useSelector((state) => state);
-  let extend = useSelector((state) => state.extended);
-  const [extended, setExtended] = useState(extend);
-  const [state, setState] = useState(statee);
+  const Focused_screen=useIsFocused()
+  const statee = useSelector((state) => state);
+  const extend = useSelector((state) => state.extended);
   const dispatch = useDispatch();
-  //let state = store.getState()
-  console.log(state);
+  const [extended, setExtended] = useState(extend);
   const [token, setToken] = useState("");
 
   const updateState = () => {
-    let data = store.getState();
-    return setState(data);
+    const data = store.getState();
+    setState(data);
   };
 
-  function changeState() {
-    const data = dispatch(Extend())
+  const changeState = () => {
+    dispatch(Extend())
       .then((response) => {
-        console.log(response);
-        const res = response;
-        if (res.status == "success") {
-          console.log(res);
-          console.log("success");
+        if (response.status === "success") {
           updateState();
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
-    console.log(data);
-  }
+      .catch((error) => console.error(error));
+  };
 
-  function collapseState() {
-    const data = dispatch(Collapse())
+  const collapseState = () => {
+    dispatch(Collapse())
       .then((response) => {
-        console.log(response);
-        const res = response;
-        if (res.status == "success") {
-          console.log(res);
-          console.log("success");
+        if (response.status === "success") {
           updateState();
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  const Header1 = (title, state) => {
-        return (
-      <MyHeader
-        title={title}
-        state={state}
-        changeState={changeState}
-        extended={extended}
-        setExtended={setExtended}
-      />
-    );
-  };
-  const Header2 = (title, state) => {
-    return (
-      <MyHeader2
-        title={title}
-        state={state}
-        changeState={collapseState}
-        extended={extended}
-        setExtended={setExtended}
-      />
-    );
-  };
-  const Header3 = (title) => {
-    // return <MyHeader2 title={title} state={state} changeState={collapseState} extended={extended} setExtended={setExtended}/>
-    return <AppHeader name={title} />;
+      .catch((error) => console.error(error));
   };
 
-  // useEffect(async () => {
-  //   // CheckWallet(statee.user, dispatch, importAllWallets)
-  //   const user = await AsyncStorageLib.getItem("user");
-  //   console.log(user);
-  //   dispatch(setUser(JSON.parse(user)));
+  useEffect(() => {
+    const fetchToken = async () => {
+      const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+      const token = await AsyncStorage.getItem(LOCAL_TOKEN);
+      setToken(token);
+    };
 
-  //   const data = await AsyncStorage.getItem(`${user}-wallets`);
-  //   console.log(data);
-  // }, []);
+    fetchToken();
+  }, [Focused_screen]);
 
-  useEffect(async () => {
-    const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-    const token = await AsyncStorageLib.getItem(LOCAL_TOKEN);
-    console.log(token);
+  const Header1 = (title, state) => (
+    <MyHeader
+      title={title}
+      state={state}
+      changeState={changeState}
+      extended={extended}
+      setExtended={setExtended}
+    />
+  );
 
-    setToken(token);
-  });
+  const Header2 = (title, state) => (
+    <MyHeader2
+      title={title}
+      state={state}
+      changeState={collapseState}
+      extended={extended}
+      setExtended={setExtended}
+    />
+  );
+
+  const Header3 = (title) => <AppHeader name={title} />;
 
   return (
-    <>
-      <Tab.Navigator
-        shifting={false}
-        barStyle={{ backgroundColor: "#131E3A", color: "black" }} //This is where you can manipulate its look.
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            size = 25;
-            if (route.name === "Home") {
-              iconName = focused ? "ios-home-sharp" : "ios-home-sharp";
-              iconName = "ios-home-sharp";
-            }
-            if (route.name === "Wallet") {
-              iconName = focused ? "ios-wallet-sharp" : "ios-wallet-sharp";
-              iconName = "ios-wallet-sharp";
-            }
-            if (route.name === "Assets") {
-              iconName = focused ? "ios-home-sharp" : "ios-home-outline";
+    <Tab.Navigator
+      shifting={false}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size = 25 }) => {
+          let iconName;
+
+          switch (route.name) {
+            case "Home":
+              iconName = "home-sharp";
+              break;
+            case "Wallet":
+              iconName = "wallet-sharp";
+              break;
+            case "Assets":
               iconName = "ios-pie-chart-sharp";
-            }
-            if (route.name === "Market") {
-              iconName = focused ? "ios-home-sharp" : "ios-home-outline";
-              iconName = "ios-bar-chart-sharp";
-            }
-            if (route.name === "Settings") {
-              iconName = focused ? "ios-settings-sharp" : "ios-settings-sharp";
-              iconName = "ios-settings-sharp";
-            }
-            if (route.name === "Exchange") {
-              iconName = focused
-                ? "swap-vertical-outline"
-                : "swap-vertical-outline";
+              break;
+            case "Market":
+              iconName = "bar-chart-sharp";
+              break;
+            case "Settings":
+              iconName = "settings-sharp";
+              break;
+            case "Exchange":
               iconName = "swap-vertical-outline";
-            }
+              break;
+            default:
+              iconName = "ios-home-sharp";
+          }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
 
-          tabBarLabel: ({ focused }) => {
-            let iconColor;
-            iconColor = focused ? statee.THEME.THEME===false?"#131E3A":"#145DA0":statee.THEME.THEME===false?"#131E3A":"gray";
-            return (
-              <Text
-                style={{
-                  color: iconColor,
-                  fontSize: hp(2),
-                  textAlign: "center",
-                  marginBottom: Platform.OS==="android"?10:10,
-                }}
-              >
-                {route.name}
-              </Text>
-            );
-          },
-          tabBarActiveTintColor: statee.THEME.THEME===false?"#131E3A":"#145DA0",
-          tabBarInactiveTintColor: statee.THEME.THEME===false?"white":"gray",
-          tabBarStyle: {
-            position: "absolute",
-            backgroundColor: statee.THEME.THEME===false?"#4CA6EA":"black",
-            height: Platform.OS == 'android' ?  hp("9") : hp("11"),
-            borderTopColor: statee.THEME.THEME===false?"#131E3A":"#145DA0",
-            borderTopWidth: 1,
-          },
-          headerTitleAlign: "center",
+        tabBarLabel: ({ focused }) => {
+          const iconColor = focused
+            ? statee.THEME.THEME === false
+              ? "#131E3A"
+              : "#145DA0"
+            : statee.THEME.THEME === false
+            ? "#131E3A"
+            : "gray";
 
-          //Tab bar styles can be added here
-        })}
-      >
-        <Tab.Screen
-          name="Home"
-          component={Home2}
-          options={{
-            tabBarHideOnKeyboard: true,
-            header: () =>
-              state.extended === false
-                ? Header1("Home", state)
-                : Header2("Home", state),
-            headerShown: true,
-          }}
+          return (
+            <Text
+              style={{
+                color: iconColor,
+                fontSize: 16,
+                textAlign: "center",
+                marginBottom: Platform.OS === "android" ? 10 : 1,
+                marginHorizontal:1
+              }}
+            >
+              {route.name}
+            </Text>
+          );
+        },
 
-        />
-
-        <Tab.Screen
-          name="Wallet"
-          component={Wallet}
-          options={{
-            headerShown: true,
-            unmountOnBlur: true,
-            header: () => {
-              return Header3("Wallet");
-            },
-          }}
-        />
-
-        <Tab.Screen
-          name="Market"
-          component={Market}
-          options={{
-            header: () => Header3("Market"),
-            headerShown: true,
-            unmountOnBlur: true,
-          }}
-        />
+        tabBarActiveTintColor:
+          statee.THEME.THEME === false ? "#131E3A" : "#145DA0",
+        tabBarInactiveTintColor:
+          statee.THEME.THEME === false ? "white" : "gray",
+        tabBarStyle: {
+          backgroundColor: statee.THEME.THEME === false ? "#4CA6EA" : "black",
+          height: Platform.OS === "android" ? 70 : 80,
+          borderTopColor:
+            statee.THEME.THEME === false ? "#131E3A" : "#145DA0",
+          borderTopWidth: 1,
+        },
+        headerTitleAlign: "center",
+      })}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home2}
+        options={{
+          tabBarHideOnKeyboard: true,
+          header: () =>
+            statee.extended === false
+              ? Header1("Home", statee)
+              : Header2("Home", statee),
+          headerShown: true,
+        }}
+      />
+      <Tab.Screen
+        name="Wallet"
+        component={Wallet}
+        options={{
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tab.Screen
+        name="Market"
+        component={Market}
+        options={{
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      {token ? (
         <Tab.Screen
           name="Exchange"
-          component={token ? ExchangeNavigation : ExchangeLogin}
+          component={ExchangeNavigation}
           options={{
-            header: () => {
-              null;
-            },
-            headerShown: true,
-            display: "none",
+            headerShown: false,
             tabBarStyle: { display: "none" },
           }}
         />
+      ) : (
         <Tab.Screen
-          name="Settings"
-          component={Settings}
+          name="Exchange"
+          component={ExchangeLogin}
           options={{
-            header: () => Header3("Settings"),
-            headerShown: true,
+            headerShown: false,
+            tabBarStyle: { display: "none" },
           }}
         />
-
-
-      </Tab.Navigator>
-    </>
+      )}
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Tab.Navigator>
   );
 };
+
 export default Dashboard;

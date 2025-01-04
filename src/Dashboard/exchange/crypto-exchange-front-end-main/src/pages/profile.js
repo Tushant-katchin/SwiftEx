@@ -24,7 +24,7 @@ import walletImg from "../../../../../../assets/walletImg.png";
 import copyRide from "../.././../../../../assets/copyRide.png";
 import { REACT_APP_LOCAL_TOKEN } from "../ExchangeConstants";
 import darkBlue from "../../../../../../assets/darkBlue.png";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -37,6 +37,8 @@ import BankModel from "../components/bankModel";
 import idCard from "../../../../../../assets/idCard.png";
 import * as Clipboard from "expo-clipboard";
 import { alert } from "../../../../reusables/Toasts";
+import { Exchange_screen_header } from "../../../../reusables/ExchangeHeader";
+import {Exchange_profile_loading} from "../../../../reusables/Exchange_loading";
 const VERIFICATION_STATUS = {
   VERIFIED: "VERIFIED",
   UNVERIFIED: "UNVERIFIED",
@@ -332,6 +334,7 @@ export const ProfileView = (props) => {
   const { emailStyle } = props;
   const [modalVisible, setModalVisible] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [Load, setLoad] = useState(true);
   const state = useSelector((state) => state);
   const [profile, setProfile] = useState({
     isVerified: false,
@@ -347,15 +350,16 @@ export const ProfileView = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [modalContainer_menu,setmodalContainer_menu]=useState(false);
   const [avl_plan, setavl_plan] = useState([
-    { id: 1, month: "1 month", save_on_price: 16, org_price: "5", current_price: "Free", type: "Mothly", subscriber_type: "" },
+    { id: 1, month: "1 month", save_on_price: 16, org_price: "5", current_price: "Free", type: "Monthly", subscriber_type: "" },
     { id: 2, month: "3 month", save_on_price: 16, org_price: "15", current_price: "$ 14.6", type: "Quarter", subscriber_type: "MOST POPULAR" },
     { id: 3, month: "Yearly", save_on_price: 16, org_price: "60", current_price: "$ 58", type: "Yearly", subscriber_type: "BEST VALUE" }
   ]);
   const [expire_plan, setexpire_plan] = useState("");
   const [subscription_id,setsubscription_id]=useState(0);
+  const FOUCUSED=useIsFocused();
   useEffect(() => {
     fetchProfileData();
-  }, []);
+  }, [FOUCUSED]);
   
   useEffect(() => {
     // setsubscription_id(1)
@@ -414,12 +418,16 @@ export const ProfileView = (props) => {
 
   const fetchProfileData = async () => {
     try {
-      const { res, err } = await authRequest("/users/getUserDetails", GET);
-      if (err) return [navigation.navigate("exchangeLogin"),setMessage(`${err.status}: ${err.message}`)];
+      setLoad(true)
+      const { res, err } = await authRequest("/users/:id", GET);
+      console.log("----ATAEWWW---",err,res)
+      if (err) return [setLoad(true),setMessage(`${err.status}: ${err.message}`)];
       setProfile(res);
+      setLoad(false)
     } catch (err) {
       console.log(err);
       setMessage(err.message || "Something went wrong");
+      setLoad(true);
     }
   };
 
@@ -450,157 +458,54 @@ export const ProfileView = (props) => {
     Clipboard.setString(state.STELLAR_PUBLICK_KEY);
     alert("success", "Copied");
   };
+  const logout_functio=async()=>{
+    try {
+      console.log('clicked');
+      const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
+      await AsyncStorage.removeItem(LOCAL_TOKEN);
+      setmodalContainer_menu(false)
+      navigation.navigate('exchangeLogin');
+    } catch (error) {
+      console.log("--===9",error)
+    }
+  }
   return (
     <>
-       <View style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      // padding: 10,
-      backgroundColor: '#4CA6EA',
-      elevation: 4,
-    }}>
-      {/* Left Icon */}
-      <Icon
-              name={"left"}
-              type={"antDesign"}
-              size={28}
-              color={"white"}
-              style={{marginLeft:wp(2)}}
-              onPress={() =>navigation.goBack()}
-            />
-
-      {/* Middle Text */}
-      <Text style={{
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color:"#fff",
-        flex: 1,
-        marginLeft:wp(13),
-        marginTop:Platform.OS==="ios"?hp(3):hp(0)
-      }}>Profile</Text>
-
-      {/* Right Image and Menu Icon */}
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Image
-          source={darkBlue}
-          style={{
-            height: hp("8"),
-            width: wp("12"),
-            marginRight: 10,
-            borderRadius: 15,
-          }}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity
-            onPress={() => {
-              setmodalContainer_menu(true)
-            }}
-          >
-        <Icon
-              name={"menu"}
-              type={"materialCommunity"}
-              size={30}
-              color={"#fff"}
-            />
-        </TouchableOpacity>
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalContainer_menu}>
-
-            <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
-              <View style={styles.modalContainer_option_sub}>
-
-
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"anchor"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"badge-account-outline"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>KYC</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{navigation.navigate("Wallet")}}>
-      <Icon
-        name={"wallet-outline"}
-        type={"materialCommunity"}
-        size={30}
-        color={"white"}
-      />
-      <Text style={[styles.modalContainer_option_text,{color:"white"}]}>Wallet</Text>
-      </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
-                  console.log('clicked');
-                  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-                  AsyncStorage.removeItem(LOCAL_TOKEN);
-                  setmodalContainer_menu(false)
-                  navigation.navigate('exchangeLogin');
-                }}>
-                  <Icon
-                    name={"logout"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
-                  <Icon
-                    name={"close"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </Modal>
-      </View>
-    </View>
-
-
+    <Exchange_screen_header title="Profile" onLeftIconPress={() => navigation.goBack()} onRightIconPress={() => console.log('Pressed')} />
     <View>
       <View style={styles.content}>
-          <View style={styles.profileContainer}>
-            <Icon
+        <View style={styles.profileContainer}>
+        {Load?
+      <Exchange_profile_loading/>
+      :  
+      <>
+            {/* <Icon
               name={"account-circle-outline"}
               type={"materialCommunity"}
               color={"white"}
               size={60}
               style={{ marginTop: 10 }}
-            />
+            /> */}
+                <LinearGradient
+                  colors={['#3b82f6', '#8b5cf6']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[styles.tokenImage, { borderRadius: 30, justifyContent: "center", alignItems: "center" }]}
+                >
+                  <Text style={[styles.tokenName, { color: "#fff", fontSize: 28 }]}>{profile?.firstName?.charAt(0)?.toLocaleUpperCase()}</Text>
+                </LinearGradient>
             <View style={[styles.fnlnTextView]}>
-              <Text style={{ fontSize: hp(2), color: "white", fontSize: hp(2.3), width: wp(63),marginLeft:wp(1.2) }}>{profile.firstName + " " + profile.lastName}</Text>
+              <Text style={{ fontSize: hp(2), color: "white", fontSize: hp(2.3), width: wp(63),marginLeft:wp(1.2) }}>{profile?.firstName + " " + profile?.lastName}</Text>
               <View style={styles.verifiedTextCon}>
                 <Text style={styles.verifiedText}>Verified!</Text>
               </View>
             </View>
             <View style={styles.emailphoneView}>
               <Text style={{ color: "white", fontSize: 16 }}>Email</Text>
-              <Text style={{ color: "white", marginTop: 4, fontSize: 16 }}>{profile.email}</Text>
+              <Text style={{ color: "white", marginTop: 4, fontSize: 16 }}>{profile?.email}</Text>
             </View>
+            </>
+            }
           </View>
 
           <View>
@@ -1228,5 +1133,15 @@ heading_text:{
   fontSize: 19,
   fontWeight: "600",
   paddingVertical:hp(1.4)
-}
+},
+tokenImage: {
+  width: 53,
+  height: 53,
+  marginTop: 10,
+},
+tokenName: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  textAlign:"center"
+},
 });

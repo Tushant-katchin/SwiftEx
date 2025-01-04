@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -30,7 +30,7 @@ import {
 } from "react-native-tab-view";
 import { useIsFocused, useNavigationState, useRoute } from "@react-navigation/native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import useFirebaseCloudMessaging from "./notifications/firebaseNotifications";
+// import useFirebaseCloudMessaging from "./notifications/firebaseNotifications";
 import {
   getEthBalance,
   getMaticBalance,
@@ -47,6 +47,7 @@ import { reject } from "lodash";
 import store from "././../../src/components/Redux/Store"
 import PushNotification from 'react-native-push-notification';
 import { WSS_TEST } from "./constants";
+import useFirebaseCloudMessaging from "./notifications/firebaseNotifications";
  
   const handleLocalNotification = (msg) => {
     PushNotification.localNotification({
@@ -254,6 +255,8 @@ const Home2 = ({ navigation }) => {
     console.log(user);
     let walletType = await AsyncStorageLib.getItem("walletType");
     let wallet = await AsyncStorageLib.getItem(`Wallet`).then((wallet) => {
+      console.log("888881101091091090190190909---------",wallet)
+      console.log("------888881101091091090190190909---------") 
       console.log("My Wallet", JSON.parse(wallet));
       if (JSON.parse(wallet).xrp) {
         dispatch(
@@ -297,15 +300,36 @@ const Home2 = ({ navigation }) => {
   //   });
   // },10000)
   useEffect(() => {
-    getAllBalance().catch((e) => {
-      console.log(e);
-    });
-     setTimeout(()=>{
-      const addressToMonitor= store.getState().wallet.address;
-      console.log('><<<<',addressToMonitor)
-     listion(addressToMonitor)
-     },6000)
-  }, [])
+    const fetchBalances = async () => {
+      try {
+        await getAllBalance();
+      } catch (e) {
+        console.error(e);
+      }
+    };
+  
+    fetchBalances();
+
+    const timeoutId = setTimeout(() => {
+      const addressToMonitor = store.getState().wallet.address;
+      console.log('><<<<', addressToMonitor);
+      listion(addressToMonitor);
+    }, 6000);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []); 
+  
+  // useEffect(() => {
+  //   getAllBalance().catch((e) => {
+  //     console.log(e);
+  //   });
+  //    setTimeout(()=>{
+  //     const addressToMonitor= store.getState().wallet.address;
+  //     console.log('><<<<',addressToMonitor)
+  //    listion(addressToMonitor)
+  //    },6000)
+  // }, [])
 
   const renderTabBar = (props) => (
     <TabBar
@@ -359,15 +383,18 @@ const Home2 = ({ navigation }) => {
   //   }
   // */
   // }, []);
-  useEffect(async () => {
-    try {
-      await SetCurrentWallet().catch((e) => {
+  useEffect(() => {
+    const set_wallet=async()=>{
+      try {
+        await SetCurrentWallet().catch((e) => {
+          console.log(e);
+        });
+  
+      } catch (e) {
         console.log(e);
-      });
-
-    } catch (e) {
-      console.log(e);
+      }
     }
+    set_wallet()
   }, []);
 
   // useEffect(() => {
@@ -402,25 +429,43 @@ const Home2 = ({ navigation }) => {
       currentState.current = changedState;
       setAppState(currentState.current);
       console.log(currentState.current);
+      
       if (currentState.current === "background") {
-        
-        // if (currentRoute !== routeName) {
-        //   setVisible(true);
-        // }
-        if (currentRoute && extractRouteName(currentRoute) === "On/Off Ramp"||currentRout==="Wallet") {
-        }
-        else{
+        if (currentRoute && (extractRouteName(currentRoute) === "On/Off Ramp" || currentRout === "Wallet")) {
+        } else {
           setVisible(true);
         }
       }
     };
-    
-    AppState.addEventListener("change", handleAppStateChange);
-
+    const subscription = AppState.addEventListener("change", handleAppStateChange);
     return () => {
-      AppState.removeEventListener("change", handleAppStateChange);
+      subscription.remove(); 
     };
-  }, [currentRoute,currentRout]);
+  }, [currentRoute, currentRout]); 
+  // useEffect(() => {
+  //   const handleAppStateChange = (changedState) => {
+  //     currentState.current = changedState;
+  //     setAppState(currentState.current);
+  //     console.log(currentState.current);
+  //     if (currentState.current === "background") {
+        
+  //       // if (currentRoute !== routeName) {
+  //       //   setVisible(true);
+  //       // }
+  //       if (currentRoute && extractRouteName(currentRoute) === "On/Off Ramp"||currentRout==="Wallet") {
+  //       }
+  //       else{
+  //         setVisible(true);
+  //       }
+  //     }
+  //   };
+    
+  //   AppState.addEventListener("change", handleAppStateChange);
+
+  //   return () => {
+  //     AppState.removeEventListener("change", handleAppStateChange);
+  //   };
+  // }, [currentRoute,currentRout]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -462,7 +507,11 @@ const Home2 = ({ navigation }) => {
       }
     }, [])
   );*/
-
+  useFocusEffect(
+    useCallback(() => {
+      setIndex(0);
+    }, [])
+  );
   return (
     <View style={{ backgroundColor: "#000C66" }}>
       <View style={Styles.container}>

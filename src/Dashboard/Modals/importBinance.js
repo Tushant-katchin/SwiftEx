@@ -121,6 +121,16 @@ const ImportBinanceWallet = ({
     }
     },[mnemonic,privateKey,json,accountName])
 
+    const handleUsernameChange = (text) => {
+      const formattedUsername = text
+        .replace(/\s/g, '')
+        .replace(/[\p{Emoji}\u200d\uFE0F]+/gu, '')
+        .replace(/[^a-zA-Z0-9]/g, '');
+    
+      setAccountName(formattedUsername);
+    };
+  
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
@@ -211,9 +221,9 @@ const ImportBinanceWallet = ({
             <TextInput
               value={accountName}
               onChangeText={(text) => {
-                setAccountName(text);
+                handleUsernameChange(text)
               }}
-              style={{ width: wp("78%") }}
+              style={{ width: wp("78%"),color:"black" }}
               placeholder={accountName ? accountName : "Wallet 1"}
               placeholderTextColor={"gray"}
             />
@@ -247,9 +257,9 @@ const ImportBinanceWallet = ({
             >
               <Text style={style.paste}>Paste</Text>
             </TouchableOpacity>
-            <Text>Phrase</Text>
+            <Text style={{color:"#4CA6EA"}}>Phrase</Text>
             <TextInput
-              style={style.input}
+              style={[style.input,{color:"black"}]}
               value={text}
               onChangeText={(text) => {
                 if (label === "privateKey") {
@@ -280,6 +290,7 @@ const ImportBinanceWallet = ({
           <TextInput
             style={{
               display: optionVisible === false ? "none" : "flex",
+              color:"black"
             }}
             value={jsonKey}
             onChangeText={(text) => {
@@ -756,7 +767,8 @@ const style = StyleSheet.create({
     textAlign:"center",
     fontSize:15,
     fontWeight:"700",
-    marginTop:hp(1)
+    marginTop:hp(1),
+    color:"black"
   },
   crossIcon:{
     alignSelf:"flex-end",

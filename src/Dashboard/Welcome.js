@@ -1,30 +1,25 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
-  Image,
   TouchableOpacity,
+  Dimensions,
+  Animated,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Animated } from "react-native";
-import W4 from "../../assets/W4.png";
-import W3 from "../../assets/W3.png";
-import W2 from "../../assets/W2.png";
+
 import W1 from "../../assets/W1.png";
-import { LoginModal } from "./Modals/LoginModal";
-import { SliderBox } from "react-native-image-slider-box";
-import { Colors } from "react-native-paper";
+import W2 from "../../assets/W2.png";
+import W3 from "../../assets/W3.png";
+import W4 from "../../assets/W4.png";
+import CustomImageSlider from '../../Custom_scroller'; // Make sure to create this file
 
 const Welcome = (props) => {
-  var Slider = {
-    images: [W4, W2, W3, W1],
-  };
-  const [loginVisible, setLoginVisible] = useState(false);
+  const images = [W4, W2, W3, W1];
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const Spin = new Animated.Value(0);
@@ -35,61 +30,72 @@ const Welcome = (props) => {
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 100,
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
     }).start();
 
     Animated.timing(Spin, {
-      toValue: 0,
-      duration: 100,
+      toValue: 1,
+      duration: 1000,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim, Spin]);
 
   return (
-    
-
-    <View style={style.imageContainer}>
-
-      <SliderBox
-        disableOnPress={true}
-        scrollEnabled={false}
-        images={Slider.images}
-        autoplay
-        circleLoop
-        // autoplayInterval={3000}
-        ImageComponentStyle={style.imageStyle}
-      />
+    <View style={styles.container}>
+      <CustomImageSlider images={images} />
       
-      <View
-        style={{
-          position: "absolute",
-          zIndex: 2,
-          alignSelf: "center",
-          bottom: 40,
-        }}
-      >
+      <Animated.View style={[styles.buttonContainer, { opacity: fadeAnim }]}>
         <TouchableOpacity
-          style={style.createView}
-          onPress={() => {
-            const wallet = "";
-            props.navigation.navigate("GenerateWallet");
-          }}
+          style={styles.createView}
+          onPress={() => props.navigation.navigate("GenerateWallet")}
         >
-          <Text style={style.btnText}>CREATE A NEW WALLET</Text>
+          <Text style={styles.btnText}>CREATE A NEW WALLET</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate("Import");
-          }}
-        >
-          <Text style={style.Text}>Import Wallet</Text>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Import")}>
+          <Text style={styles.importText}>Import Wallet</Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     </View>
   );
 };
+
+const { width, height } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#131E3A',
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: 40,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+  createView: {
+    width: wp(70),
+    borderRadius: 8,
+    paddingVertical: hp(1),
+    backgroundColor: "#000C66",
+    justifyContent: "center",
+    alignSelf: "center",
+    marginBottom: hp(2),
+  },
+  btnText: {
+    color: "#fff",
+    textAlign: "center",
+  },
+  importText: {
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "200",
+    color: "white",
+  },
+});
 
 export default Welcome;
 

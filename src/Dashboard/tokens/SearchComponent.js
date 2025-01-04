@@ -35,7 +35,7 @@ const SearchComponent = (props) => {
       setData(Data);
     }
   };
-  useEffect(() => [setSerachData(data)], []);
+  useEffect(() => {setSerachData(data)}, []);
 
   return (
     <Animated.View

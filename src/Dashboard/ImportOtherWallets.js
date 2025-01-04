@@ -33,8 +33,11 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genUsrToken } from "./Auth/jwtHandler";
 import { alert } from "./reusables/Toasts";
+import { Wallet_screen_header } from "./reusables/ExchangeHeader";
+import { useNavigation } from "@react-navigation/native";
 
 const ImportOtherWallets = (props) => {
+  const navi=useNavigation();
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
   const [mnemonic, setMnemonic] = useState("");
@@ -103,10 +106,18 @@ const ImportOtherWallets = (props) => {
     }
   }, [mnemonic, privateKey, json]);
 
+  const handleUsernameChange = (text) => {
+    // Remove whitespace from the username
+    const formattedUsername = text.replace(/\s/g, '')
+    .replace(/[\p{Emoji}\u200d\uFE0F]+/gu, '');
+    setAccountName(formattedUsername);
+  };
+
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
+      <Wallet_screen_header title="Ethereum Wallet" onLeftIconPress={() => navi.goBack()} />
       <View style={style.Body}>
         <View style={style.Button}>
           <TouchableOpacity
@@ -173,10 +184,10 @@ const ImportOtherWallets = (props) => {
           <TextInput
             value={accountName}
             onChangeText={(text) => {
-              setAccountName(text);
+              handleUsernameChange(text);
             }}
-            style={{ width: wp("78%") }}
-            placeholder={accountName?accountName: "Wallet 1"}
+            style={{ width: wp("78%"),color:"black" }}
+            placeholder={accountName?accountName: "Wallet"}
             placeholderTextColor={"gray"}
           />
         </View>
@@ -216,9 +227,9 @@ const ImportOtherWallets = (props) => {
           }}>
           <Text style={style.paste}>Paste</Text>
           </TouchableOpacity>
-            <Text>Phrase</Text>
+            <Text style={{color:"#4CA6EA"}}>Phrase</Text>
           <TextInput
-            style={style.input}
+            style={[style.input,{color:"black"}]}
             value={text}
             onChangeText={(text) => {
               if (label === "privateKey") {

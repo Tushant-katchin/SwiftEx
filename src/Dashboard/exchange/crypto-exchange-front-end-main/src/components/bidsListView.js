@@ -18,7 +18,7 @@ import {
 import { Button as Btn } from "native-base";
 import { useToast } from "native-base";
 import { ShowToast } from "../../../../reusables/Toasts";
-import SnackBar from "react-native-snackbar-component";
+// import SnackBar from "react-native-snackbar-component";
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -521,7 +521,7 @@ export const BidsListView = ({ bids, getBids }) => {
                   </View>
                 )}
 
-                <SnackBar
+                {/* <SnackBar
                   visible={snackbarVisible}
                   position={"top"}
                   textMessage="Bid is an exact match. Proceed to complete the transaction"
@@ -532,7 +532,7 @@ export const BidsListView = ({ bids, getBids }) => {
                     setSnackbarVisible(false);
                   }}
                   actionText="Proceed"
-                />
+                /> */}
               </ScrollView>
               <SeeTransactions />
             </ScrollView>

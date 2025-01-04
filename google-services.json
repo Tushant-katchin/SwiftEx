@@ -1,36 +1,45 @@
 {
   "project_info": {
-    "project_number": "883312291340",
-    "project_id": "crypto-exchange-poc",
-    "storage_bucket": "crypto-exchange-poc.appspot.com"
+    "project_number": "121537912071",
+    "project_id": "proxy-server-99cc2",
+    "storage_bucket": "proxy-server-99cc2.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:883312291340:android:72b426e0b66af90aa74829",
+        "mobilesdk_app_id": "1:121537912071:android:d6bf276bdf492730e3b9a2",
         "android_client_info": {
-          "package_name": "com.simpleapp"
+          "package_name": "com.swiftex.com"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "883312291340-2rp3jraheskso5bu8rrk042l7c326pi1.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBIVOnU7jHijSJLDUKRSrXRtvYOS2CAzXc"
+          "current_key": "AIzaSyCQ1ACIJOONkGqzQ8g8ZNUPoUsSjZFVLFM"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "883312291340-2rp3jraheskso5bu8rrk042l7c326pi1.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121537912071:android:93a902ddfa283639e3b9a2",
+        "android_client_info": {
+          "package_name": "com.test_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ1ACIJOONkGqzQ8g8ZNUPoUsSjZFVLFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -21,6 +21,10 @@ import Icon from "../icon";
 import { alert } from "./reusables/Toasts";
 import { REACT_APP_HOST } from "./exchange/crypto-exchange-front-end-main/src/ExchangeConstants";
 import { useSelector } from "react-redux";
+import { Wallet_screen_header } from "./reusables/ExchangeHeader";
+import { Wallet_market_loading } from "./reusables/Exchange_loading";
+import monkey from "../../assets/monkey.png"
+
 
 const Market = (props) => {
   const state=useSelector((state)=>state);
@@ -33,6 +37,7 @@ const Market = (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const [updatedData, setUpdatedData] = useState([])
   const [searchItem, setSearchItem] = useState('')
+  const [Load_new_data,setLoad_new_data]=useState(true);
   const navigation = useNavigation();
   const fetchKline = async (
     setData,
@@ -43,6 +48,7 @@ const Market = (props) => {
     setImageUrl
   ) => {
     try {
+      setLoad_new_data(true)
 const raw = "";
 const requestOptions = {
   method: "GET",
@@ -60,6 +66,7 @@ const requestOptions = {
           setPrice(responseJson[0].MarketData[0].current_price);
           setPercent(responseJson[0].MarketData[0].price_change_percentage_24h);
           setImageUrl(responseJson[0].MarketData[0].image);
+          setLoad_new_data(false)
     })
       .catch((error) =>{ 
        setLoading(false);
@@ -86,28 +93,37 @@ const requestOptions = {
     }, 2000);
   };
 
-  useEffect(async () => {
-    await fetchKline(
-      setData,
-      setLoading,
-      setPercent,
-      setPrice,
-      setTrades,
-      setImageUrl
-    );
+  useEffect(() => {
+   const fetch_token_data=async()=>{
+    try {
+      setLoad_new_data(true)
+      await fetchKline(
+        setData,
+        setLoading,
+        setPercent,
+        setPrice,
+        setTrades,
+        setImageUrl
+      );
+    } catch (error) {
+      console.log("::::***-",error)
+    }
+   }
+   fetch_token_data()
   }, []);
 
 
   return (
     <View style={{ backgroundColor: state.THEME.THEME===false?"#fff":"black" }}>
+    <Wallet_screen_header title="Market" onLeftIconPress={() => navigation.goBack()} />
     {Platform.OS === 'ios' &&  <StatusBar hidden={true} />}
       <View style={{ height: hp(100) }}>
         <View style={Styles.searchContainer}>
-          <Icon name="search1" type="antDesign" size={hp(2.4)} />
+          <Icon name="search1" type="antDesign" size={25} color={"black"} />
           <TextInput
             placeholder="Search Crypto"
             placeholderTextColor={"gray"}
-            style={Styles.input}
+            style={[Styles.input,{width:wp(80),fontSize:18}]}
             onChangeText={(input) => {
               setSearchItem(input)
               let UpdatedData = []
@@ -124,24 +140,25 @@ const requestOptions = {
             }}
           />
         </View>
-        <View style={Styles.iconwithTextContainer1}>
-          <Text style={{ color: "gray" }}>New DApps</Text>
+        {/* <View style={Styles.iconwithTextContainer1}> */}
+          {/* <Text style={{ color: "gray" }}>New DApps</Text> */}
           {/* <Icon
             name={"arrowright"}
             type={"antDesign"}
             size={hp(3)}
             color={"gray"}
           /> */}
-        </View>
-        <View style={{height:hp(63)}}>
+        {/* </View> */}
+        {Load_new_data?<Wallet_market_loading/>:
+        <View style={{height:hp(75),paddingBottom: hp(5)}}>
         <ScrollView
           alwaysBounceVertical={true}
           contentContainerStyle={{ marginBottom: hp(2) }}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl tintColor={"#4CA6EA"} refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
-          {data ? (
+          {data.length>0 ? (
             data.map((item,index) => {
               const image = item.image;
               const color = item.price_change_24h > 0 ? "green" : "red";
@@ -173,11 +190,11 @@ const requestOptions = {
             })
           ) : (
             <View>
-              <ActivityIndicator size="large" color="blue"/>
+                <Image source={monkey} style={Styles.monkey_img}/>
             </View>
           )}
         </ScrollView>
-        </View>
+        </View>}
       </View>
     </View>
   );
@@ -205,6 +222,12 @@ const Styles = StyleSheet.create({
   img: {
     height: hp(5),
     width: wp(10),
+  },
+  monkey_img:{
+    width:hp(20),
+    height:hp(20),
+    alignSelf:"center",
+    marginTop:hp(13)
   },
   searchContainer: {
     flexDirection: "row",

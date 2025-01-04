@@ -20,6 +20,7 @@ import { GET, authRequest } from '../api';
 import { ShowErrotoast, alert } from '../../../../reusables/Toasts';
 import { toInt } from 'validator';
 import { SignTransaction, swap_prepare } from '../../../../../../All_bridge';
+import { Exchange_screen_header } from '../../../../reusables/ExchangeHeader';
 const classic = ({ route }) => {
   const toast=useToast();
   const navigation=useNavigation();
@@ -42,6 +43,9 @@ const classic = ({ route }) => {
   const [fianl_modal_loading, setfianl_modal_loading] = useState(false);
   const [amount, setamount] = useState('');
   const [chooseModalVisible_choose, setchooseModalVisible_choose] = useState(false);
+  const [not_avilable, setnot_avilable] = useState(true);
+  const [WALLETADDRESS,setWALLETADDRESS]=useState('')
+  const [WALLETBALANCE,setWALLETBALANCE]=useState('')
   const chooseItemList = [
     { id: 1, name: "Ethereum", url: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" },
     { id: 2, name: "BNB", url: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" },
@@ -62,11 +66,14 @@ const classic = ({ route }) => {
 });
 const [open, setOpen] = useState(false);
 useEffect(()=>{
+  setWALLETBALANCE(state&&state.EthBalance)
+  setWALLETADDRESS(state&&state.wallet && state.wallet.address)
   setfianl_modal_loading(false)
+  setamount('');
 },[])
   const for_trading = async () => {
     try {
-        const { res, err } = await authRequest("/users/getUserDetails", GET);
+        const { res, err } = await authRequest("/users/:id", GET);
         setProfile(res);
         await getOffersData()
     } catch (err) {
@@ -125,11 +132,11 @@ const getOffersData = async () => {
   const manage_swap = async (wallet_type, asset_type, receive_token) => {
     const receivetoken = wallet_type === "Ethereum" && asset_type === "USDT" && receive_token === null ? "USDC" : wallet_type === "BNB" && asset_type === "USDT" && receive_token === null ? "aeETH" : wallet_type === "Ethereum" && asset_type === "USDT" ? "aeETH" : wallet_type === "BNB" && asset_type === "USDT" ? "aeETH" : receive_token;
     setfianl_modal_loading(true);
-    let temp_bal = toInt(state.EthBalance)
+    let temp_bal = toInt(WALLETBALANCE)
     let temp_amt = toInt(amount)
     if (temp_amt >= temp_bal || temp_amt === 0) {
       setfianl_modal_loading(false)
-      ShowErrotoast(toast,temp_amt === 0 ? "Invalid amount" : "Insufficient funds");
+      ShowErrotoast(toast,temp_amt === 0 ? "This feature is not supported in the test environment." : "Insufficient funds");
     }
     else {
       setfianl_modal_loading(false)      // comment this code for run allbridge
@@ -150,182 +157,56 @@ const getOffersData = async () => {
     }
   }
   return (
-    <View style={{ backgroundColor: "rgba(33, 43, 83, 1)rgba(28, 41, 77, 1)",width:wp(100),height:hp(100)}}>
-      <View style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      // padding: 10,
-      backgroundColor: '#4CA6EA',
-      elevation: 4,
-    }}>
-      {/* Left Icon */}
-      <Icon
-              name={"left"}
-              type={"antDesign"}
-              size={28}
-              color={"white"}
-              style={{marginLeft:wp(2)}}
-              onPress={() =>navigation.goBack()}
-            />
-
-      {/* Middle Text */}
-      <Text style={{
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color:"#fff",
-        flex: 1,
-        marginLeft:wp(13),
-        marginTop:Platform.OS==="android"?hp(0):hp(3)
-      }}>Bridge</Text>
-
-      {/* Right Image and Menu Icon */}
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Image
-          source={darkBlue}
-          style={{
-            height: hp("8"),
-            width: wp("12"),
-            marginRight: 10,
-            borderRadius: 15,
-          }}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity
-            onPress={() => {
-              setmodalContainer_menu(true)
-            }}
-          >
-        <Icon
-              name={"menu"}
-              type={"materialCommunity"}
-              size={30}
-              color={"#fff"}
-            />
-        </TouchableOpacity>
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalContainer_menu}>
-
-            <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
-              <View style={styles.modalContainer_option_sub}>
-
-
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"anchor"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"badge-account-outline"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>KYC</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"playlist-check"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>My Subscription</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
-                  console.log('clicked');
-                  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-                  AsyncStorage.removeItem(LOCAL_TOKEN);
-                  setmodalContainer_menu(false)
-                  navigation.navigate('exchangeLogin');
-                }}>
-                  <Icon
-                    name={"logout"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
-                  <Icon
-                    name={"close"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </Modal>
-      </View>
-    </View>
+    <View style={{ backgroundColor: "#011434",width:wp(100),height:hp(100)}}>
+     <Exchange_screen_header title="Bridge" onLeftIconPress={() => navigation.goBack()} onRightIconPress={() => console.log('Pressed')} />
       <View style={styles.modalHeader}>
             <Text style={styles.textModal}>Import assets on exchange</Text>
           </View>
 
-          <View style={{ flexDirection: "row", justifyContent: "space-between",marginTop: hp(3),paddingHorizontal:wp(4) }}>
+          <View style={{ marginTop: hp(3),paddingHorizontal:wp(4),alignSelf:"flex-start" }}>
 
-            <View style={{ width: wp(30), alignSelf: "center" }}>
+            <View style={{ width: wp(40), alignSelf: "center" }}>
               <Text style={[styles.textModal, { fontSize: 18 }]}>Select wallet</Text>
 
-              <TouchableOpacity style={[styles.modalOpen, { width: wp(40) }]} onPress={() => { setChooseModalVisible(true); setIdIndex(1); }}>
+              <TouchableOpacity style={[styles.modalOpen, { width: wp(90) }]} onPress={() => { setChooseModalVisible(true); setIdIndex(1); }}>
                 {chooseSelectedItemId === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemId === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemId === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
-                <Text>{chooseSelectedItemId === null ? chooseItemList[1].name : chooseSelectedItemId}</Text>
+                <Text style={{color:"#fff",fontSize:19,marginLeft:wp(1.3)}}>{chooseSelectedItemId === null ? chooseItemList[1].name : chooseSelectedItemId}</Text>
               </TouchableOpacity>
             </View>
             <View style={{ width: wp(40), alignSelf: "center" }}>
               <Text style={[styles.textModal, { fontSize: 18 }]}>Choose asset</Text>
-              <TouchableOpacity style={[styles.modalOpen, { width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
+              <TouchableOpacity style={[styles.modalOpen, { width: wp(90) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
                 {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" }} style={styles.logoImg_TOP_1} />}
-                <Text>{chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho}</Text>
+                <Text style={{color:"#fff",fontSize:19,marginLeft:wp(1.3)}}>{chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho}</Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          <View style={{ width: wp(90),borderRadius:10, alignSelf: "flex-start",marginTop:40,height: hp(6.9),backgroundColor: '#ededeb',alignItems:"flex-start",justifyContent:"center",marginLeft:wp(4),paddingHorizontal:wp(1) }}>
+          <View style={{ width: wp(90),borderRadius:10, alignSelf: "flex-start",marginTop:hp(4),borderWidth: 1.9,borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",height: hp(8.6),backgroundColor: '#2F7DFF33',alignItems:"flex-start",justifyContent:"center",marginLeft:wp(4),paddingHorizontal:wp(1) }}>
               <View style={{flexDirection:"row",alignItems:"center",width:wp(85)}}>
-              <Text style={{fontSize:16,textAlign:"center"}}>Address: </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%",borderRadius:10,borderColor:"#4CA6EA",borderWidth:1,backgroundColor:"silver"}}>
-                <Text style={{fontSize:17 }}>{state.wallet.address}</Text>
+              <Text style={{fontSize:16,textAlign:"center",color:"#fff",fontSize:19}}>Address: </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%",borderRadius:10}}>
+                <Text style={{fontSize:17,color:"#fff" }}>{WALLETADDRESS}</Text>
               </ScrollView>
               </View>
               <View style={{flexDirection:"row",alignItems:"center",width:wp(30)}}>
-              <Text style={{fontSize:16,textAlign:"center"}}>Balance: </Text>
+              <Text style={{fontSize:19,textAlign:"center",color:"#fff"}}>Balance: </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%"}}>
-                <Text style={{fontSize:17 }}>{state.EthBalance}</Text>
+                <Text style={{color:"#fff",fontSize:19 }}>{WALLETBALANCE}</Text>
               </ScrollView>
               </View>
           </View>
-          <View style={{ flexDirection: "row", justifyContent: "space-between" ,marginTop:19,paddingHorizontal:wp(4)}}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" ,marginTop:hp(2),paddingHorizontal:wp(4)}}>
             <View style={{ width: wp(40), alignSelf: "center" }}>
             <Text style={[styles.textModal, { fontSize: 18 }]}>Amount</Text>
-              <TextInput placeholder='0.0' placeholderTextColor={"gray"} keyboardType="number-pad" style={[styles.modalOpen, { padding:10, width: wp(40),fontSize:18 }]} onChangeText={(value) => { setamount(value) }} returnKeyType="done"/>
+              <TextInput placeholder='0.0' placeholderTextColor={"gray"} keyboardType="number-pad" style={[styles.modalOpen, { padding:10, width: wp(40),fontSize:18,color:"#fff" }]} onChangeText={(value) => { setamount(value) }} returnKeyType="done"/>
             </View>
             <View style={{ width: wp(40), alignSelf: "center" }}>
               <Text style={[styles.textModal, { fontSize: 18 }]}>Receive</Text>
-              <View style={[styles.modalOpen, { backgroundColor: "silver", width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
+              <View style={[styles.modalOpen, { backgroundColor: "#33373DCC", width: wp(40) }]} onPress={() => { setchooseModalVisible_choose(true); setIdIndex(3); }}>
                 {chooseSelectedItemIdCho === null ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "USDC" ? <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "BNB" ? <Image source={{ uri: "https://tokens.pancakeswap.finance/images/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" }} style={styles.logoImg_TOP_1} /> : chooseSelectedItemIdCho === "Matic" ? <Image source={{ uri: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912" }} style={styles.logoImg_TOP_1} /> : <Image source={{ uri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" }} style={styles.logoImg_TOP_1} />}
                 <View>
-                <Text>{chooseSelectedItemIdCho === null ? "USDC" : chooseSelectedItemIdCho === "USDC" ? chooseSelectedItemId === "Matic" || chooseSelectedItemIdCho === "Matic" ? "apUSDC" : "USDC" : chooseSelectedItemIdCho === "BNB" ? "BNB" : chooseSelectedItemIdCho === "Matic" ? "apMATIC" : "aeETH"}</Text>
+                <Text style={{color:"#fff",fontSize:19,marginLeft:2}}>{chooseSelectedItemIdCho === null ? "USDC" : chooseSelectedItemIdCho === "USDC" ? chooseSelectedItemId === "Matic" || chooseSelectedItemIdCho === "Matic" ? "apUSDC" : "USDC" : chooseSelectedItemIdCho === "BNB" ? "BNB" : chooseSelectedItemIdCho === "Matic" ? "apMATIC" : "aeETH"}</Text>
                 {chooseSelectedItemIdCho === null||chooseSelectedItemIdCho ==="USDC"?<Text style={{color:"gray",fontSize:10}}>centre.io</Text>:chooseSelectedItemIdCho ==="USDT"?<Text style={{color:"gray",fontSize:10}}>allbridge.io</Text>:<></>}
                 </View>
               </View>
@@ -335,7 +216,7 @@ const getOffersData = async () => {
 
             <TouchableOpacity
               // disabled={chooseSelectedItemIdCho === null||chooseSelectedItemId === null} 
-              style={[styles.nextButton, { backgroundColor: !amount?"gray":'green',height:hp(6),marginTop:hp(5) }]}
+              style={[styles.nextButton, { backgroundColor: !amount?"gray":'#2F7DFF',height:hp(6),marginTop:hp(5) }]}
             disabled={!amount||fianl_modal_loading} onPress={() => { Keyboard.dismiss(),manage_swap(chooseSelectedItemId === null ? chooseItemList[1].name : chooseSelectedItemId,chooseSelectedItemIdCho === null ? chooseItemList_ETH[0].name : chooseSelectedItemIdCho,chooseSelectedItemIdCho) }}
             >
               {fianl_modal_loading?<ActivityIndicator color={"white"}/>:<Text style={styles.nextButtonText}>Confirm Transaction</Text>}
@@ -429,7 +310,7 @@ const getOffersData = async () => {
             </View>
             <View style={styles.inputContainer}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "96%" }}>
-                <Text>{state.wallet.address}</Text>
+                <Text>{WALLETADDRESS}</Text>
               </ScrollView>
             </View>
             <View style={styles.inputContainer}>
@@ -514,14 +395,15 @@ const getOffersData = async () => {
       >
         <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setChooseModalVisible(false)}>
           <View style={styles.chooseModalContent}>
-            <TextInput
+          <Text style={{ fontSize: 20, fontWeight: "bold", marginVertical:hp(1), color: "#fff" }}>Select Wallet</Text>
+            {/* <TextInput
               style={styles.searchInput}
               placeholder="Search..."
               placeholderTextColor={"gray"}
               onChangeText={text => setChooseSearchQuery(text)}
               value={chooseSearchQuery}
               autoCapitalize='none'
-            />
+            /> */}
             <FlatList
               data={chooseFilteredItemList}
               renderItem={chooseRenderItem}
@@ -538,14 +420,15 @@ const getOffersData = async () => {
       >
         <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setchooseModalVisible_choose(false)}>
           <View style={styles.chooseModalContent}>
-            <TextInput
+          <Text style={{ fontSize: 20, fontWeight: "bold", marginVertical:hp(1), color: "#fff" }}>Choose Asset</Text>
+            {/* <TextInput
               style={styles.searchInput}
               placeholder="Search..."
               placeholderTextColor={"gray"}
               onChangeText={text => setChooseSearchQuery(text)}
               value={chooseSearchQuery}
               autoCapitalize='none'
-            />
+            /> */}
             <FlatList
               data={chooseItemList_ETH}
               renderItem={chooseRenderItem}
@@ -554,6 +437,38 @@ const getOffersData = async () => {
           </View>
         </TouchableOpacity>
       </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={not_avilable}>
+        <View style={styles.modalContainer} onPress={() => { setfianl_modal_error(false) }}>
+          <View style={{
+            backgroundColor: 'rgba(33, 43, 83, 1)',
+            padding: 10,
+            borderRadius: 10,
+            alignItems: 'center',
+            width: "95%",
+            height: "30%",
+            justifyContent: "center",
+            borderColor:"#4CA6EA",
+            borderWidth:2
+          }}>
+            <Icon
+              name={"shield-alert-outline"}
+              type={"materialCommunity"}
+              size={60}
+              color={"orange"}
+            />
+            <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: hp(2.5), color: "#fff",textAlign:"center" }}>This feature is currently not available in the development environment.</Text>
+            <TouchableOpacity style={{ alignSelf: "center", marginTop:hp(2.5),backgroundColor:"green",alignContent:"center",justifyContent:"center",paddingHorizontal:wp(10),paddingVertical:hp(2),borderRadius:10,borderColor:"#4CA6EA",
+            borderWidth:2 }} onPress={() => { setnot_avilable(false) }}>
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "#fff",textAlign:"center" }}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 };
@@ -572,8 +487,9 @@ const styles = StyleSheet.create({
   },
   modalHeader: {
     flexDirection: 'row',
-    justifyContent: "center",
-    marginTop: 19
+    justifyContent: "flex-start",
+    marginTop: 19,
+    paddingLeft:wp(5)
   },
   textModal: {
     marginTop: 10,
@@ -582,16 +498,20 @@ const styles = StyleSheet.create({
   },
   modalOpen: {
     width: '90%',
-    height: hp(6),
-    backgroundColor: '#ededeb',
+    height: hp(8),
     alignItems: "center",
     borderRadius: 10,
+    backgroundColor:"#33373DCC",
     // paddingLeft: 10,
     marginTop: 10,
-    flexDirection: "row"
+    flexDirection: "row",
+    borderWidth: 1.9,
+    borderColor: "rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",
+    borderRadius: 19,
+    paddingLeft:10,
   },
   nextButton: {
-    width: '50%',
+    width: wp(90),
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -645,15 +565,15 @@ const styles = StyleSheet.create({
   },
   chooseModalContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "flex-end",
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   chooseModalContent: {
     backgroundColor: 'rgba(33, 43, 83, 1)',
     padding: 20,
     borderRadius: 10,
-    width: '80%',
+    width: wp(99),
     maxHeight: '80%',
   },
   searchInput: {
@@ -668,20 +588,20 @@ const styles = StyleSheet.create({
     marginVertical: 3,
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: 'rgba(28, 41, 77, 1)',
-    borderWidth: 0.9,
-    borderBottomColor: '#fff',
-    marginBottom: 4,
+    borderBottomWidth:0.9,
+    borderBlockEndColor: '#fff',
+    marginBottom: hp(0.5),
+    paddingBottom:hp(2)
   },
   chooseItemImage: {
-    width: 25,
-    height: 25,
+    width: 39,
+    height: 39,
     resizeMode: 'contain',
     marginVertical: 3,
   },
   chooseItemText: {
     marginLeft: 10,
-    fontSize: 19,
+    fontSize: 24,
     color: '#fff',
   },
   headerContainer1_TOP: {
@@ -699,8 +619,8 @@ const styles = StyleSheet.create({
     marginLeft: wp(22),
   },
   logoImg_TOP_1: {
-    height: hp(4),
-    width: wp(8.3),
+    height: hp(4.5),
+    width: wp(9),
     marginLeft: wp(1),
     marginRight: 3
   },

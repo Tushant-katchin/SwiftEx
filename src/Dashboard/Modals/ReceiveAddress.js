@@ -29,14 +29,13 @@ import * as Clipboard from "expo-clipboard";
 import Moralis from "moralis";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import SnackBar from "react-native-snackbar-component";
+// import SnackBar from "react-native-snackbar-component";
 import { checkPendingTransactions, getAllBalances } from "../../utilities/web3utilities";
 import Header from "../reusables/Header";
 import ModalHeader from "../reusables/ModalHeader";
 import { alert } from "../reusables/Toasts";
 import Icon from "../../icon";
 import { WalletHeader } from "../header";
-import { AntDesign } from "@expo/vector-icons";
 const RippleAPI = require("ripple-lib").RippleAPI;
 
 const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
@@ -369,43 +368,92 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
     }).start();
   }, [fadeAnim]);
 
-  useEffect(async () => {
-    if (WalletAddress) {
-      setQrvalue(WalletAddress);
+  useEffect(() => {
+    const fetch_address=async()=>{
+      try {
+        if (WalletAddress) {
+          setQrvalue(WalletAddress);
+        }
+        //  await check()
+      } catch (error) {
+        console.log("--.-",error)
+      }
     }
-    //  await check()
+    fetch_address()
   }, []);
 
-  useEffect(async () => {
-    // await checkPendingTransactions(WalletAddress)
-    get_stellar()
+  useEffect( () => {
+    const fetch_str = async () => {
+      try {
+        // await checkPendingTransactions(WalletAddress)
+        get_stellar()
+      } catch (error) {
+        console.log("---", error)
+      }
+    }
+    fetch_str()
   }, []);
+
   useFocusEffect(
     React.useCallback(() => {
-      try {
-        getTransactions().then(async (res) => {
-          consolse.log(res);
+      const fetchTransactions = async () => {
+        try {
+          const res = await getTransactions();
+          console.log(res);
+  
           const walletType = await AsyncStorageLib.getItem("walletType");
-          console.log(JSON.parse(walletType));
-          if (JSON.parse(walletType) == "BSC") {
+          const parsedWalletType = JSON.parse(walletType);
+  
+          console.log(parsedWalletType);
+  
+          if (parsedWalletType === "BSC") {
             checkIncomingTx(res ? res : [], "97");
-          } else if (JSON.parse(walletType) == "Ethereum") {
+          } else if (parsedWalletType === "Ethereum") {
             checkIncomingTx(res ? res : [], "5");
-          } else if (JSON.parse(walletType) == "Matic") {
+          } else if (parsedWalletType === "Matic") {
             checkIncomingTx(res ? res : [], "0x13881");
-          } else if (JSON.parse(walletType) == "Xrp") {
+          } else if (parsedWalletType === "Xrp") {
             await getIncomingXrpTx(res ? res : [], "Xrp");
-          } else if (JSON.parse(walletType) === "Multi-coin") {
+          } else if (parsedWalletType === "Multi-coin") {
           } else {
             // alert(`Saving receive tx for ${walletType} is  not supported yet`)
-            console.log(JSON.parse(walletType));
+            console.log(`Saving receive tx for ${parsedWalletType} is not supported yet`);
           }
-        });
-      } catch (e) {
-        console.log(e);
-      }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+  
+      fetchTransactions();
     }, [])
   );
+  
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     try {
+  //       getTransactions().then(async (res) => {
+  //         consolse.log(res);
+  //         const walletType = await AsyncStorageLib.getItem("walletType");
+  //         console.log(JSON.parse(walletType));
+  //         if (JSON.parse(walletType) == "BSC") {
+  //           checkIncomingTx(res ? res : [], "97");
+  //         } else if (JSON.parse(walletType) == "Ethereum") {
+  //           checkIncomingTx(res ? res : [], "5");
+  //         } else if (JSON.parse(walletType) == "Matic") {
+  //           checkIncomingTx(res ? res : [], "0x13881");
+  //         } else if (JSON.parse(walletType) == "Xrp") {
+  //           await getIncomingXrpTx(res ? res : [], "Xrp");
+  //         } else if (JSON.parse(walletType) === "Multi-coin") {
+  //         } else {
+  //           // alert(`Saving receive tx for ${walletType} is  not supported yet`)
+  //           console.log(JSON.parse(walletType));
+  //         }
+  //       });
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }, [])
+  // );
 
   const closeModal = () => {
     setModalVisible(false);
@@ -447,10 +495,11 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             // backgroundColor: "#4CA6EA",
           }}
         >
-          <Icon
+         <View style={{flexDirection:"row",alignItems:"center"}}>
+         <Icon
             // name={"left"}
-            name={"close"}
-            type={"antDesign"}
+            name={"arrow-left"}
+            type={"materialCommunity"}
             size={30}
             // color={"#fff"}
             color={state.THEME.THEME===false?"black":"#fff"}
@@ -458,20 +507,22 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
               setModalVisible(false);
             }}
           />
+          <Text style={{fontSize:22,fontWeight: 'bold',color:state.THEME.THEME===false?"black":"#fff",marginLeft:wp(3)}}>Recieve {iconType}</Text>
+         </View>
         </TouchableOpacity>
-        <View style={[style.barCode,{backgroundColor:state.THEME.THEME===false?"#fff":"black",borderColor: "#4169e",borderWidth:1}]}>
           <TouchableOpacity style={style.flatView}>
             <Image
-              style={{ width: wp(10), height: hp(5) }}
+              style={{ width: wp(14.3), height: hp(7) }}
               source={
                 iconType === "BNB"? Bnbimage: iconType === "ETH"? Etherimage: iconType === "Xrp"? xrpImage: iconType==="XLM"?stellar:maticImage
               }
             />
 
-            <Text style={{ marginHorizontal: wp(2), color: "#4169e1" }}>
+            {/* <Text style={{ marginHorizontal: wp(2), color: "#4169e1" }}>
               {iconType}
-            </Text>
+            </Text> */}
           </TouchableOpacity>
+        <View style={[style.barCode,{backgroundColor:state.THEME.THEME===false?"#fff":"black",borderColor: "#4169e",borderWidth:1}]}>
 
           <View style={{ alignSelf: "center", marginTop: hp(1) }}>
             <QRCode
@@ -539,7 +590,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
           </View>
         </View>
 
-        <SnackBar
+        {/* <SnackBar
           visible={snackbarVisible}
           position={"bottom"}
           textMessage="New Receive Tx Found. Proceed to save it"
@@ -560,7 +611,7 @@ const RecieveAddress = ({ modalVisible, setModalVisible, iconType }) => {
             }, 0);
           }}
           actionText="Proceed"
-        />
+        /> */}
       </Modal>
     </Animated.View>
   );

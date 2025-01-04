@@ -84,10 +84,19 @@ const ChooseTokens = ({ setModalVisible }) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  useEffect(async () => {
-    const walletType = await AsyncStorageLib.getItem("walletType");
-    const Type = JSON.parse(walletType);
-    setWalletType(Type)
+  useEffect(() => {
+    const fetch_token = async () => {
+      try {
+        const walletType = await AsyncStorageLib.getItem("walletType");
+        const Type = JSON.parse(walletType);
+        setWalletType(Type)
+      } catch (error) {
+        console.log("=[[]>", error)
+      }
+    }
+    fetch_token()
+
+
     Animated.timing(fadeAnim, {
       toValue: 1,
       // duration: 1000,

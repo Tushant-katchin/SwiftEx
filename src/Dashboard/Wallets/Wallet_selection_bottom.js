@@ -257,15 +257,22 @@ const Wallet_selection_bottom = ({ onClose }) => {
     }).start();
   }, [fadeAnim]);
 
-  useEffect(async () => {
-    let allwallets = [];
-    const data = await getALlWallets();
-
-    allwallets.push(data);
-    console.log(data);
-    console.log(allwallets);
-
-    setAllWallets(allwallets);
+  useEffect(() => {
+   const fetch_all_wallet=async()=>{
+    try {
+      let allwallets = [];
+      const data = await getALlWallets();
+  
+      allwallets.push(data);
+      console.log(data);
+      console.log(allwallets);
+  
+      setAllWallets(allwallets);
+    } catch (error) {
+      console.log("***00",error)
+    }
+   }
+   fetch_all_wallet()
   }, []);
 
   return (
@@ -429,9 +436,11 @@ const Wallet_selection_bottom = ({ onClose }) => {
                     flexDirection: "row",
                     alignItems: "center"
                   }}>
-                  <Text style={{ textAlign:"center",marginRight:wp(2),backgroundColor:"green",padding:wp(0.9),color:"#fff",borderRadius:5 }} left={LeftContent}>
+                  <View style={{backgroundColor:"green",padding:wp(1),marginRight:wp(2),borderRadius:8}}>
+                 <Text style={{color:"#fff",fontSize:17 }}>
                     Active
                   </Text>
+                 </View>
                   <Icon
                     name="check-decagram"
                     type={"materialCommunity"}

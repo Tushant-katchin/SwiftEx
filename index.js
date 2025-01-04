@@ -2,41 +2,24 @@ import 'react-native-gesture-handler';
 import "@ethersproject/shims"
 import 'text-encoding-polyfill'
 import { registerRootComponent } from 'expo';
- import PushNotification from "react-native-push-notification";
-import messaging from '@react-native-firebase/messaging';
+import PushNotification from "react-native-push-notification";
+import messaging, { firebase } from '@react-native-firebase/messaging';
 import App from './App';
-//import { SendNotification } from './src/Dashboard/notifications/pushController';
-//import notifee, {EventType, AndroidImportance} from '@notifee/react-native';
+
 import { NavigationController } from './src/utilities/utilities';
 import { firebaseNotification } from './src/Dashboard/notifications/firebasePushMessages';
 
-// messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-//     console.log('Message handled in the background!', remoteMessage);
-//     SendNotification(remoteMessage.notification.title,remoteMessage.notification.body)
-// });
-
-// notifee.onBackgroundEvent(async ({type, detail}) => {
-//     const {notification, pressAction} = detail;
-//     console.log(JSON.stringify(detail, null, 2));
-//     if (type === EventType.PRESS) {
-//     //console.log('BACKGROUND CLICK EVENT', detail);
-//     NavigationController('exchange')
-//     }
-//     // this.cancelNotification(notification.id);
-//     });
-    
-//     notifee.onForegroundEvent(({type, detail}) => {
-//     switch (type) {
-//     case EventType.DISMISSED:
-//     break;
-//     case EventType.PRESS:
-//     //console.log('FOREGROUND CLICK EVENT', detail);
-//     NavigationController('exchange')
-//     break;
-//     }
-//     });
-
-
+const firebaseConfig = {
+    apiKey: "AIzaSyAWxzGg2Jiy3clbfywr0TZKRwg1g0eeNd0",
+    authDomain: "proxy-server-99cc2.firebaseapp.com",
+    projectId: "proxy-server-99cc2",
+    storageBucket: "proxy-server-99cc2.firebasestorage.app",
+    messagingSenderId: "121537912071",
+    appId: "1:121537912071:web:07efa9bed63b89dce3b9a2",
+    measurementId: "G-V78H9W46GL"
+  }
+  
+  firebase.initializeApp(firebaseConfig)
 
 PushNotification.getChannels(function (channel_ids) {
     console.log(channel_ids); // ['channel_id_1']
@@ -48,7 +31,7 @@ PushNotification.getChannels(function (channel_ids) {
       console.log('LOCAL NOTIFICATION ==>', notification)
       if(notification.userInteraction){
         //Navigation.navigate('exchange')
-        NavigationController('exchange')
+        NavigationController('Home')
       }
       console.log("Actions",notification.actions)
     },
@@ -78,10 +61,11 @@ PushNotification.getChannels(function (channel_ids) {
   );
 
 
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    console.log('Message handled in the background!', remoteMessage);
-    firebaseNotification(remoteMessage.notification.title,'Swift Ex',remoteMessage.notification.message,remoteMessage.notification.body)
-});
+// messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+//     firebaseNotification(remoteMessage.notification.title,'SwiftEx',remoteMessage.notification.message,remoteMessage.notification.body,remoteMessage?.notification?.android?.imageUrl,remoteMessage?.data?.transaction)
+// });
+messaging().onMessage(async (remoteMessage) => {
+    firebaseNotification(remoteMessage.notification.title,'SwiftEx',remoteMessage.notification.message,remoteMessage.notification.body,remoteMessage?.notification?.android?.imageUrl,remoteMessage?.data?.transaction)
+  });
 
-
-registerRootComponent(App);
+  registerRootComponent(App);

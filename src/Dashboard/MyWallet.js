@@ -40,9 +40,12 @@ import {
 } from "../utilities/utilities";
 import Icon from "../icon";
 import { GetPrivateKeyModal } from "./Modals/getPrivateKeyModal";
+import { Wallet_screen_header } from "./reusables/ExchangeHeader";
+import { useNavigation } from "@react-navigation/native";
 const { StorageAccessFramework } = FileSystem;
 
 const MyWallet = (props) => {
+  const navigation=useNavigation();
   const state = useSelector((state) => state);
   const User = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -139,15 +142,23 @@ const MyWallet = (props) => {
       setBnbPrice(response.USD);
     });
   };
-  useEffect(async () => {
-    const user = await state.wallet.name;
-    setUser(user);
-  }, []);
-
+  
+  useEffect(() => {
+    const fetch_wallet_name=async()=>{
+     try {
+       const user = await state.wallet.name;
+       setUser(user);
+     } catch (error) {
+       console.log("[=-=",error)
+     }
+    }
+    fetch_wallet_name()
+ }, []);
   
 
   return (
     <View style={[styles.mainView,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+       <Wallet_screen_header title="Wallet" onLeftIconPress={() => navigation.goBack()} />
       <View style={[styles.labelInputContainer,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
         <Text style={[styles.label,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>Name</Text>
       

@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Snackbar from "react-native-snackbar";
 import { SET_ASSET_DATA } from "../../../../../../components/Redux/actions/type";
 import { STELLAR_URL } from "../../../../../constants";
+import { Exchange_screen_header } from "../../../../../reusables/ExchangeHeader";
 const StellarSdk = require('stellar-sdk');
 const Assets_manage = () => {
     const FOCUSED = useIsFocused();
@@ -97,7 +98,7 @@ const Assets_manage = () => {
             })
                 .addOperation(
                     StellarSdk.Operation.changeTrust({
-                        asset: new StellarSdk.Asset("USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
+                        asset: new StellarSdk.Asset("USDC", "GALANI4WK6ZICIQXLRSBYNGJMVVH3XTZYFNIVIDZ4QA33GJLSFH2BSID"),
                     })
                 )
                 .setTimeout(30)
@@ -126,15 +127,16 @@ const Assets_manage = () => {
                     console.log('Error loading account:', error);
                     setLoading(false)
                     Snackbar.show({
-                        text: 'USDC faild to added',
+                        text: 'USDC failed to be added',
                         duration: Snackbar.LENGTH_SHORT,
                         backgroundColor:'red',
                     });
                 });
         } catch (error) {
             console.error(`Error changing trust:`, error);
+            setLoading(false)
             Snackbar.show({
-                text: 'USDC faild to added',
+                text: 'USDC failed to be added',
                 duration: Snackbar.LENGTH_SHORT,
                 backgroundColor:'red',
             });
@@ -155,140 +157,14 @@ const Assets_manage = () => {
     }, [FOCUSED])
     return (
         <>
-           <View style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      // padding: 10,
-      backgroundColor: '#4CA6EA',
-      elevation: 4,
-    }}>
-      {/* Left Icon */}
-      <Icon
-              name={"left"}
-              type={"antDesign"}
-              size={28}
-              color={"white"}
-              style={{marginLeft:wp(2)}}
-              onPress={() =>navigation.goBack()}
-            />
-
-      {/* Middle Text */}
-      <Text style={{
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color:"#fff",
-        flex: 1,
-        marginLeft:wp(13),
-        marginTop:Platform.OS==="ios"?hp(4):hp(0)
-      }}>Assets</Text>
-
-      {/* Right Image and Menu Icon */}
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Image
-          source={darkBlue}
-          style={{
-            height: hp("8"),
-            width: wp("12"),
-            marginRight: 10,
-            borderRadius: 15,
-          }}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity
-            onPress={() => {
-              setmodalContainer_menu(true)
-            }}
-          >
-        <Icon
-              name={"menu"}
-              type={"materialCommunity"}
-              size={30}
-              color={"#fff"}
-            />
-        </TouchableOpacity>
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalContainer_menu}>
-
-            <TouchableOpacity style={styles.modalContainer_option_top} onPress={() => { setmodalContainer_menu(false) }}>
-              <View style={styles.modalContainer_option_sub}>
-
-
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"anchor"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"badge-account-outline"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>KYC</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{navigation.navigate("Wallet")}}>
-      <Icon
-        name={"wallet-outline"}
-        type={"materialCommunity"}
-        size={30}
-        color={"white"}
-      />
-      <Text style={[styles.modalContainer_option_text,{color:"white"}]}>Wallet</Text>
-      </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
-                  console.log('clicked');
-                  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-                  AsyncStorage.removeItem(LOCAL_TOKEN);
-                  setmodalContainer_menu(false)
-                  navigation.navigate('exchangeLogin');
-                }}>
-                  <Icon
-                    name={"logout"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
-                  <Icon
-                    name={"close"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </Modal>
-      </View>
-    </View>
+     <Exchange_screen_header title="Assets" onLeftIconPress={() => navigation.goBack()} onRightIconPress={() => console.log('Pressed')} />
 
             <View style={[styles.main_con]}>
                 <Text style={styles.mode_text}>My Assets</Text>
                 <View style={styles.assets_con}>
                     {assets.map((list, index) => {
                         return (
-                            <TouchableOpacity style={styles.assets_card} onPress={() => { navigation.navigate("send_recive",{bala:list.balance,asset_name:list.asset_type === "native" ? "Lumens" : list.asset_code}) }}>
+                            <TouchableOpacity style={styles.assets_card} onPress={() => { navigation.navigate("send_recive",{bala:list.balance,asset_name:list.asset_type === "native" ? "native" : list.asset_code=== "USDC"?"USDC":list.asset_code}) }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.asset_type === "native" ? "Lumens" : list.asset_code=== "USDC"&&"USDC"}</Text>
                                     <Text style={[styles.mode_text, { fontSize: 16, fontWeight: "300", color: "silver" }]}>{list.asset_type === "native" ? "(stellar.org)" : list.asset_code==="USDC" && "(centre.io)"}</Text>
@@ -349,7 +225,7 @@ const Assets_manage = () => {
                                 <TouchableOpacity style={styles.btn} disabled={Loading} onPress={()=>{
                                     list.name==="USDC"?changeTrust():alert_message(list.name+' Added Soon.')
                                 }}>
-                                    <Text style={[styles.modal_sub_heading]}>{Loading&&index==0?(<ActivityIndicator color={"green"}/>):("Add Asset")}</Text>
+                                    {Loading&&index==0?<ActivityIndicator color={"green"}/>:<Text style={[styles.modal_sub_heading]}>Add Asset</Text>}
                                 </TouchableOpacity>
                                 }
                             </View>
@@ -387,7 +263,10 @@ const styles = StyleSheet.create({
     assets_card: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginTop: 10
+        marginTop: 10,
+        borderBottomWidth:0.9,
+        borderBlockEndColor: '#fff',
+        paddingBottom:hp(1)
     },
     assets_con: {
         width: wp(90),

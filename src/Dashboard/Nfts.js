@@ -23,6 +23,7 @@ import { Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 import { style } from "@mui/system";
 import Icon from "../icon";
 import { Paste } from "../utilities/utilities";
+import Token_Import from "./Token_Import";
 
 const Nfts = () => {
   const state2 = useSelector((state) => state.walletBalance);
@@ -49,23 +50,31 @@ const Nfts = () => {
 
   const translation = useRef(new Animated.Value(0)).current;
 
-  useEffect(async () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-    }).start();
-
-    Animated.timing(translation, {
-      toValue: 1,
-      delay: 0.1,
-      useNativeDriver: true,
-    }).start();
-    const bal = await state.walletBalance;
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-
-    if (bal) {
-      getBalance(bal);
+  useEffect( () => {
+   const fetch_nfts=async()=>{
+    try {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+      }).start();
+  
+      Animated.timing(translation, {
+        toValue: 1,
+        delay: 0.1,
+        useNativeDriver: true,
+      }).start();
+      const bal = await state.walletBalance;
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  
+      if (bal) {
+        getBalance(bal);
+      }
+    } catch (error) {
+      console.log("--nfts--",error)
     }
+   }
+
+   fetch_nfts()
   }, [state2]);
 
   let LeftContent = (props) => (
@@ -112,13 +121,16 @@ const Nfts = () => {
     <Animated.View
       style={[styles.mainContainer,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
        
+      <Token_Import/>
+
+
 {/* <Image source={monkey} style={styles.img}/>
 <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff"}]}>Collectibles will appear here</Text>
 <TouchableOpacity style={styles.btnContainer}>
   <Text style={styles.btnText}>Receive</Text>
 </TouchableOpacity> */}
       {/* <TouchableOpacity style={[styles.drop_down_con]} onPress={()=>{setopen_offer(true)}}> */}
-      <View style={[styles.drop_down_con]}>
+      {/* <View style={[styles.drop_down_con]}>
           <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
           <Image source={{uri:"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"}} style={[styles.img_icon,{ height: hp(3.6), width: wp(7.6)}]} />
           <Text style={[styles.text,{color:state.THEME.THEME===false?"black":"#fff",marginLeft:5}]}>Ethereum</Text>
@@ -171,8 +183,7 @@ const Nfts = () => {
       <TouchableOpacity style={[styles.Add_asset_btn,{alignSelf:"flex-end",justifyContent:"center",marginRight:wp(4),marginTop:hp(1),}]} onPress={()=>{setView_assets(false)}}>
     <Text style={[styles.text,{ fontSize:17, textAlign:"center",margin:hp(0),color:state.THEME.THEME===false?"black":"#fff"}]}>Back</Text>
 </TouchableOpacity>
-</>}
-
+</> 
       <Modal
         animationType="slide"
         transparent={true}
@@ -203,7 +214,7 @@ const Nfts = () => {
             />
           </View>
         </TouchableOpacity>
-      </Modal>
+      </Modal>*/}
 
 
 
@@ -218,7 +229,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     height: hp(100),
     backgroundColor: "#fff",
-    paddingLeft:wp(3)
   },
   chooseModalContainer: {
     flex: 1,

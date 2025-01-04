@@ -34,8 +34,11 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { genUsrToken } from "./Auth/jwtHandler";
 import { alert } from "./reusables/Toasts";
+import { Wallet_screen_header } from "./reusables/ExchangeHeader";
+import { useNavigation } from "@react-navigation/native";
 
 const ImportBscWallet = (props) => {
+  const navi=useNavigation();
   const [loading, setLoading] = useState(false);
   const [accountName, setAccountName] = useState("");
   const [mnemonic, setMnemonic] = useState("");
@@ -100,11 +103,20 @@ const ImportBscWallet = (props) => {
       setMessage("");
     }
   }, [mnemonic, privateKey, json]);
+  const handleUsernameChange = (text) => {
+    const formattedUsername = text
+      .replace(/\s/g, '')
+      .replace(/[\p{Emoji}\u200d\uFE0F]+/gu, '')
+      .replace(/[^a-zA-Z0-9]/g, '');
+  
+    setAccountName(formattedUsername);
+  };
 
   return (
     <Animated.View // Special animatable View
       style={{ opacity: fadeAnim }}
     >
+      <Wallet_screen_header title="Binance Wallet" onLeftIconPress={() => navi.goBack()} />
       <View style={style.Body}>
         <View style={style.Button}>
           <TouchableOpacity
@@ -172,9 +184,9 @@ const ImportBscWallet = (props) => {
           <TextInput
             value={accountName}
             onChangeText={(text) => {
-              setAccountName(text);
+              handleUsernameChange(text)
             }}
-            style={{ width: wp("78%") }}
+            style={{ width: wp("78%"),color:"black" }}
             placeholder={accountName ? accountName : "Wallet 1"}
             placeholderTextColor={"gray"}
           />
@@ -214,9 +226,9 @@ const ImportBscWallet = (props) => {
           }}>
           <Text style={style.paste}>Paste</Text>
           </TouchableOpacity>
-          <Text>Phrase</Text>
+          <Text style={{color:"#4CA6EA"}}>Phrase</Text>
           <TextInput
-            style={style.input}
+            style={[style.input,{color:"black"}]}
             value={text}
             onChangeText={(text) => {
               if (label === "privateKey") {
@@ -243,7 +255,7 @@ const ImportBscWallet = (props) => {
         </View>
 
         <TextInput
-          style={style.jsonInput}
+          style={[style.jsonInput,{color:"black"}]}
           value={jsonKey}
           onChangeText={(text) => {
             setJsonKey(text);

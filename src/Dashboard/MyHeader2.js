@@ -105,7 +105,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
       ) {
         setModalVisible(false);
         setModalVisible2(false);
-        setModalVisible3(true);
+        // setModalVisible3(true); //uncommet for old swap and comment EthSwap
+        navigation.navigate("EthSwap")
       } else {
         alert("Swapping is only supported for Ethereum and Binance ");
       }
@@ -272,15 +273,17 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     }
   };
 
-  useEffect(async () => {
-    try {
-      getAllBalance().catch((e) => {
+  useEffect( () => {
+    const get_bal=async()=>{
+      try {
+        getAllBalance().catch((e) => {
+          console.log(e);
+        });
+      } catch (e) {
         console.log(e);
-      });
-    } catch (e) {
-      console.log(e);
+      }
     }
-
+    get_bal()
     Animated.timing(translation, {
       toValue: 1,
       delay: 0.1,
@@ -289,6 +292,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   }, [state2, wallet,state.walletBalance,state.EthBalance,state.XrpBalance,state.MaticBalance]);
 
   useEffect(() => {
+   const get_ALL_BALE=async()=>{
     try {
       getAllBalance().catch((e) => {
         console.log(e);
@@ -296,6 +300,8 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
     } catch (e) {
       console.log(e);
     }
+   }
+   get_ALL_BALE()
   }, [state.wallet.address, state.wallet.name, state.walletType,state.walletBalance,state.EthBalance,state.XrpBalance,state.MaticBalance]);
 
   const openExtended = () => {
@@ -370,7 +376,7 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
 
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -385,10 +391,17 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   }, []);
 
   useEffect(() => {
-    console.log(balanceUsd);
-    //getEthPrice()
-    getETHBNBPrice();
-    getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
+     const get_BAL=async()=>{
+      try {
+        console.log(balanceUsd);
+        //getEthPrice()
+        getETHBNBPrice();
+        getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
+      } catch (error) {
+        console.log(":::",error)
+      }
+     }
+     get_BAL()
   }, [
     ethPrice,
     bnbPrice,
@@ -408,14 +421,21 @@ const MyHeader2 = ({ title, changeState, state, extended, setExtended }) => {
   //     getBalanceInUsd(EthBalance, bnbBalance, xrpBalance);
   //   })
   // }, []);
-  useEffect(async () => {
-    const user = await state.wallet.name;
-    if (user) {
-      setUser(user);
+  useEffect(() => {
+    const set_user_current=async()=>{
+      try {
+        const user = await state.wallet.name;
+        if (user) {
+          setUser(user);
+        }
+        setTimeout(()=>{
+          setLoading_upper(false)
+        },600)
+      } catch (error) {
+        console.log("::::",error)
+      }
     }
-    setTimeout(()=>{
-      setLoading_upper(false)
-    },600)
+    set_user_current()
   }, [state.wallet.name]);
   const handleClosewalletmodal = () => {
     setWallet_modal(false);

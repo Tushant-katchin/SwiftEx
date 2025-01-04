@@ -36,7 +36,7 @@ const MyHeader = ({ title, changeState, state, extended, setExtended, title1 }) 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,

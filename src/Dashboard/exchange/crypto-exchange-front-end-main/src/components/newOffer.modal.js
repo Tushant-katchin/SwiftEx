@@ -14,14 +14,14 @@ import {
   Image,
   Animated,
   Easing,
-  FlatList
+  FlatList,
+  TextInput
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Modal from "react-native-modal";
-import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { _getCurrencyOptions } from "./newAccount.model";
 import { ShowErrotoast, Showsuccesstoast, alert } from "../../../../reusables/Toasts";
@@ -39,6 +39,9 @@ import Bridge from "../../../../../../assets/Bridge.png";
 import Snackbar from "react-native-snackbar";
 import { SET_ASSET_DATA } from "../../../../../components/Redux/actions/type";
 import { useToast } from "native-base";
+import { Exchange_screen_header } from "../../../../reusables/ExchangeHeader";
+import StellarAccountReserve from "../utils/StellarReserveComponent";
+import { GetStellarAvilabelBalance, GetStellarUSDCAvilabelBalance } from "../../../../../utilities/StellarUtils";
 const Web3 = require('web3');
 const StellarSdk = require('stellar-sdk');
 StellarSdk.Network.useTestNetwork();
@@ -56,13 +59,13 @@ export const NewOfferModal = () => {
   const [loading, setloading] = useState(false)
   const [show, setshow] = useState(false)
   const [activ,setactiv]=useState(false);
-  const [selectedValue, setSelectedValue] = useState("native");
-  const [SelectedBaseValue, setSelectedBaseValue] = useState("USDC");
+  const [selectedValue, setSelectedValue] = useState("USDC");
+  const [SelectedBaseValue, setSelectedBaseValue] = useState("native");
   const [Balance, setbalance] = useState('');
   const [offer_amount, setoffer_amount] = useState('');
   const [offer_price, setoffer_price] = useState('');
-  const [AssetIssuerPublicKey, setAssetIssuerPublicKey] = useState("GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN");
-  const [route, setRoute] = useState("BUY");
+  const [AssetIssuerPublicKey, setAssetIssuerPublicKey] = useState("GALANI4WK6ZICIQXLRSBYNGJMVVH3XTZYFNIVIDZ4QA33GJLSFH2BSID");
+  const [route, setRoute] = useState("SELL");
   const [Loading, setLoading] = useState(false);
   const [open_offer, setopen_offer] = useState(false);
   const [show_trust_modal,setshow_trust_modal]=useState(false);
@@ -77,7 +80,7 @@ export const NewOfferModal = () => {
   const activeColor = ["rgba(70, 169, 234, 1)", "rgba(185, 116, 235, 1)"];
   const navigation = useNavigation()
   const [show_bal,setshow_bal]=useState(false);
-  const [deposit_loading,setdeposit_loading]=useState(false);
+  const [reserveLoading,setreserveLoading]=useState(false);
   const [postData, setPostData] = useState({
     email: "",
     publicKey: "",
@@ -95,6 +98,7 @@ const [modalContainer_menu,setmodalContainer_menu]=useState(false);
 const [chooseModalPair,setchooseModalPair]=useState(false);
 const [total_price,settotal_price]=useState(0);
 const [total_price_info,settotal_price_info]=useState(false);
+const [reservedError, setreservedError] = useState(false);
 
 
 
@@ -105,7 +109,7 @@ const getAccountDetails = async () => {
       console.log('Retrieved data:', matchedData);
       const publicKey = matchedData[0].publicKey;
     try {
-      const { res, err } = await authRequest("/users/getUserDetails", GET);
+      const { res, err } = await authRequest("/users/:id", GET);
       // console.log("_+++++++",res.email)
       setPostData({
         email: res.email,
@@ -122,7 +126,7 @@ const getAccountDetails = async () => {
 
 const chooseItemList = [
   { id: 1, name: "XLM/USDC" ,base_value:"USDC",counter_value:"native",visible_0:"XLM",visible_1:"USDC",asset_dom:"steller.org",asset_dom_1:"centre.io"},
-  { id: 2, name: "USDC/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"USDC",visible_1:"XLM",asset_dom:"centre.io",asset_dom_1:"steller.org"},
+  // { id: 2, name: "USDC/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"USDC",visible_1:"XLM",asset_dom:"centre.io",asset_dom_1:"steller.org"},
   // { id: 2, name: "ETH/USDC" ,base_value:"USDC",counter_value:"native",visible_0:"ETH",visible_1:"USDC",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
   // { id: 3, name: "BNB/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"BNB",visible_1:"XLM",asset_dom:"allbridge.io",asset_dom_1:"allbridge.io"},
   // { id: 4, name: "SWIFTEX/XLM" ,base_value:"native",counter_value:"USDC",visible_0:"SWIFTEX",visible_1:"XLM",asset_dom:"swiftex",asset_dom_1:"steller.org"},
@@ -143,13 +147,17 @@ const chooseFilteredItemList = chooseItemList.filter(
   item => item.name.toLowerCase().includes(chooseSearchQuery.toLowerCase())
 );
 const chooseRenderItem = ({ item }) => (
-  <TouchableOpacity onPress={() => {setvisible_value(item.name),settop_value(item.visible_0),settop_domain(item.asset_dom),settop_domain_0(item.asset_dom_1),settop_value_0(item.visible_1),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={styles.chooseItemContainer}>
+  <TouchableOpacity onPress={() => { setRoute("SELL"),setvisible_value(item.name),settop_value(item.visible_0),settop_domain(item.asset_dom),settop_domain_0(item.asset_dom_1),settop_value_0(item.visible_1),setSelectedValue(item.base_value),setSelectedBaseValue(item.counter_value),setchooseModalPair(false)}} style={[styles.chooseItemContainer,{
+    borderBottomWidth:0.9,
+    borderBlockEndColor: '#fff',
+    paddingVertical:hp(1.5)
+  }]}>
     <Text style={styles.chooseItemText}>{item.name}</Text>
   </TouchableOpacity>
 );
 const chooseRenderItem_1 = ({ item }) => (
-  <TouchableOpacity onPress={() => {setRoute(item.name),reves_fun(top_value, top_value_0),setopen_offer(false)}} style={[styles.chooseItemContainer,{backgroundColor:item.name==="BUY"?"green":"red",borderRadius:5,height:hp(6),justifyContent:"center"}]}>
-    <Text style={[styles.chooseItemText,{marginLeft:5}]}>{item.name}</Text>
+  <TouchableOpacity onPress={() => {setRoute(item.name),reves_fun(top_value, top_value_0),setopen_offer(false)}} style={[styles.chooseItemContainer,{backgroundColor:item.name==="BUY"?"green":"red",borderRadius:15,height:hp(8),justifyContent:"center"}]}>
+    <Text style={[styles.chooseItemText,{marginLeft:5,fontWeight:"500"}]}>{item.name}</Text>
   </TouchableOpacity>
 );
   ///////////////////////////////////start offer function
@@ -206,14 +214,18 @@ const chooseRenderItem_1 = ({ item }) => (
     }
 };
   async function Sell() {
-    const temp_amount=parseInt(offer_amount);
-    const temp_offer_price=parseInt(offer_price);
-   if(temp_amount<=0||temp_offer_price<=0)
-   {
-    setLoading(false);
-    ShowErrotoast(toast,"Invalid value");
-
-   }else{
+    const temp_amount=parseFloat(offer_amount);
+    const temp_offer_price=parseFloat(offer_price);
+    if (
+      isNaN(parseFloat(temp_amount)) || 
+      isNaN(parseFloat(temp_offer_price)) || 
+      parseFloat(temp_amount) < 0.1 || 
+      parseFloat(temp_offer_price) < 0.1
+    ) {
+      setLoading(false);
+      ShowErrotoast(toast, "Invalid value");
+    } 
+    else{
      const sourceKeypair = StellarSdk.Keypair.fromSecret(SecretKey);
     console.log("Sell Offer Peram =>>>>>>>>>>>>", offer_amount, offer_price, SecretKey, AssetIssuerPublicKey)
     try {
@@ -242,14 +254,20 @@ const chooseRenderItem_1 = ({ item }) => (
       offerTx.sign(sourceKeypair);
       const offerResult = await server.submitTransaction(offerTx);
       console.log('=> Sell Offer placed...',offerResult.hash);
-      Save_offer(base_asset_sell, offer_amount, offer_price, "Sell", "Success", offerResult.hash);
+      // Save_offer(base_asset_sell, offer_amount, offer_price, "Sell", "Success", offerResult.hash);
       Showsuccesstoast(toast, "Sell offer created.");
       setLoading(false)
       // setOpen(false);
+      navigation?.navigate("Offers")
       return 'Sell Offer placed successfully';
     } catch (error) {
-      console.error('Error occurred:', error.response ? error.response.data.extras.result_codes : error);
-      ShowErrotoast(toast,"Sell Offer not-created.");
+      setoffer_amount('')
+      setoffer_price('')
+      console.error('Error occurred:---', error.response ? error.response.data.extras.result_codes : error);
+      const errMessage = error.response && error.response.data.extras ? 
+      error.response.data.extras.result_codes.operations.join(', ') : 
+      "An error occurred while creating the sell offer.";
+      ShowErrotoast(toast,errMessage==="op_low_reserve"||errMessage==="op_underfunded"?SelectedBaseValue==="native"?"XLM low reserve in account":SelectedBaseValue +"low reserve in account":errMessage==="op_cross_self"?"Account already has an active offer with an Opposing order":"Sell Offer not-created");
       setLoading(false)
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -257,14 +275,17 @@ const chooseRenderItem_1 = ({ item }) => (
   }
 
   async function Buy() {
-    const temp_amount=parseInt(offer_amount);
-    const temp_offer_price=parseInt(offer_price);
-   if(temp_amount<=0||temp_offer_price<=0)
-   {
-    setLoading(false);
-    ShowErrotoast(toast,"Invalid value");
-
-   }else{
+    const temp_amount=parseFloat(offer_amount);
+    const temp_offer_price=parseFloat(offer_price);
+    if (
+      isNaN(parseFloat(temp_amount)) || 
+      isNaN(parseFloat(temp_offer_price)) || 
+      parseFloat(temp_amount) < 0.1 || 
+      parseFloat(temp_offer_price) < 0.1
+    ) {
+      setLoading(false);
+      ShowErrotoast(toast, "Invalid value");
+    } else{
     const sourceKeypair = StellarSdk.Keypair.fromSecret(SecretKey);
     console.log("Buy Offer Peram =>>>>>>>>>>>>", offer_amount, offer_price, SecretKey, AssetIssuerPublicKey)
     try {
@@ -276,8 +297,8 @@ const chooseRenderItem_1 = ({ item }) => (
         networkPassphrase: StellarSdk.Networks.TESTNET
       })
       const offer = StellarSdk.Operation.manageOffer({
-        selling: base_asset_sell,
-        buying: counter_asset_buy,
+        selling: counter_asset_buy,
+        buying: base_asset_sell,
         amount: offer_amount,
         price: offer_price,
         offerId: parseInt(0)
@@ -294,13 +315,19 @@ const chooseRenderItem_1 = ({ item }) => (
       const offerResult = await server.submitTransaction(offerTx);
       console.log("++++++++++++++++++++++++++++",offerResult)
       console.log('=> Buy Offer placed...');
-      Save_offer(counter_asset_buy, offer_amount, offer_price, "Buy", "Success", "1234");
+      // Save_offer(counter_asset_buy, offer_amount, offer_price, "Buy", "Success", "1234");
       Showsuccesstoast(toast, "Buy offer created.")
       setLoading(false)
       // setOpen(false);
+      navigation?.navigate("Offers")
       return 'Sell Offer placed successfully';
     } catch (error) {
-      ShowErrotoast(toast,"Buy offer not-created.");
+      setoffer_amount('')
+      setoffer_price('')
+      const errMessage = error.response && error.response.data.extras ? 
+      error.response.data.extras.result_codes.operations.join(', ') : 
+      "An error occurred while creating the sell offer.";
+      ShowErrotoast(toast,errMessage==="op_low_reserve"||errMessage==="op_underfunded"?SelectedBaseValue==="native"?"XLM low reserve in account":SelectedBaseValue +" low reserve in account": errMessage==="op_cross_self"?"Account already has an active offer with an Opposing order":"Buy offer not-created.");
       setLoading(false)
       console.error('Error occurred:', error.response ? error.response.data.extras.result_codes : error);
     }
@@ -339,13 +366,38 @@ const chooseRenderItem_1 = ({ item }) => (
 
   const get_stellar = async (asset) => {
     try {
+      setbalance("")
+      setreserveLoading(true)
       console.log("",ALL_STELLER_BALANCES)
 
               ALL_STELLER_BALANCES.forEach(balance => {
                 if (asset==="native"?balance.asset_type === asset:balance.asset_code === asset) {
-                  setactiv(false)
-                  setbalance(balance.balance)
-                  setshow_bal(true)
+                  if (asset !== "native"||asset !== "USDC") {
+                    setactiv(false)
+                    // setbalance(balance?.balance)
+                    setshow_bal(true)
+                    // setreserveLoading(false)
+                  }
+                }
+                if(asset==="native")
+                {
+                  GetStellarAvilabelBalance(state?.STELLAR_PUBLICK_KEY).then((result) => {
+                    setbalance(result?.availableBalance)
+                    setreserveLoading(false)
+                    }).catch(error => {
+                      console.log('Error loading account:', error);
+                      setreserveLoading(false)
+                  });
+                }
+                if(asset==="USDC")
+                {
+                  GetStellarUSDCAvilabelBalance(state?.STELLAR_PUBLICK_KEY).then((result) => {
+                    setbalance(result?.availableBalance)
+                    setreserveLoading(false)
+                    }).catch(error => {
+                      console.log('Error loading account:', error);
+                      setreserveLoading(false)
+                  });
                 }
                 if(!ALL_STELLER_BALANCES.some((obj) => obj.hasOwnProperty('asset_code')))
                 {
@@ -356,18 +408,20 @@ const chooseRenderItem_1 = ({ item }) => (
       console.log("Error in get_stellar")
       Showsuccesstoast(toast, "Please wait account is updating....");
       setshow(false)
+      setreserveLoading(false)
     }
   }
 
   const offer_creation = () => {
     const temp_amount=parseInt(offer_amount);
-   if(temp_amount>=Balance)
+   if(temp_amount>Balance)
     {
       ShowErrotoast(toast,"Insufficient Balance");
       setLoading(false)
     }
     else{
-      if(selectedValue==="USDC"||selectedValue==="XLM")
+      console.log("---selectedValue",selectedValue)
+      if(selectedValue==="USDC"||selectedValue==="XLM"||selectedValue==="native")
     {
     getData();
     if (titel!=="Activate Stellar Account for trading" && offer_amount !== "" && offer_price !== ""&& offer_amount !== "0"&& offer_price !== "0"&& offer_amount !== "."&& offer_price !== "."&& offer_amount !== ","&& offer_price !== ",") {
@@ -480,12 +534,21 @@ const chooseRenderItem_1 = ({ item }) => (
     });
   }
  
-  useEffect(async()=>{
-    setloading_trust_modal(false)
-    setshow_trust_modal(false);
-    setactiv(false)
-    setshow_bal(true)
-    await get_stellar("native")
+  useEffect(()=>{
+    const fetch_ins = async () => {
+      try {
+        setreservedError(false)
+        setloading_trust_modal(false)
+        setALL_STELLER_BALANCES(state?.assetData)
+        setshow_trust_modal(false);
+        setactiv(false)
+        setshow_bal(true)
+        await get_stellar("native")
+      } catch (error) {
+        console.log("=-====#", error)
+      }
+    }
+    fetch_ins()
   },[isFocused])
   useEffect(()=>{
     getAccountDetails();
@@ -572,7 +635,7 @@ const change_Trust_New = async () => {
       })
           .addOperation(
               StellarSdk.Operation.changeTrust({
-                  asset: new StellarSdk.Asset("USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
+                  asset: new StellarSdk.Asset("USDC", "GALANI4WK6ZICIQXLRSBYNGJMVVH3XTZYFNIVIDZ4QA33GJLSFH2BSID"),
               })
           )
           .setTimeout(30)
@@ -602,152 +665,31 @@ const change_Trust_New = async () => {
               console.log('Error loading account:', error);
               setloading_trust_modal(false)
               Snackbar.show({
-                  text: 'USDC faild to added',
+                  text: 'USDC failed to be added',
                   duration: Snackbar.LENGTH_SHORT,
                   backgroundColor:'red',
               });
           });
   } catch (error) {
       console.error(`Error changing trust:`, error);
+      setloading_trust_modal(false)
       Snackbar.show({
-          text: 'USDC faild to added',
+          text: 'USDC failed to be added',
           duration: Snackbar.LENGTH_SHORT,
           backgroundColor:'red',
       });
   }
 };
 
+const handleCloseModal = () => {
+  setreservedError(false);
+};
+
 
   return (
    
     <>
-    <View style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      // padding: 10,
-      backgroundColor: '#4CA6EA',
-      elevation: 4,
-    }}>
-      {/* Left Icon */}
-      <Icon
-              name={"left"}
-              type={"antDesign"}
-              size={28}
-              color={"white"}
-              style={{marginLeft:wp(2)}}
-              onPress={() =>navigation.goBack()}
-            />
-
-      {/* Middle Text */}
-      <Text style={{
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color:"#fff",
-        flex: 1,
-        marginLeft:wp(13),
-        marginTop:Platform.OS==="android"?hp(0):hp(3)
-      }}>Create Offer</Text>
-
-      {/* Right Image and Menu Icon */}
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Image
-          source={darkBlue}
-          style={{
-            height: hp("8"),
-            width: wp("12"),
-            marginRight: 10,
-            borderRadius: 15,
-          }}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity
-            onPress={() => {
-              setmodalContainer_menu(true)
-            }}
-          >
-        <Icon
-              name={"menu"}
-              type={"materialCommunity"}
-              size={30}
-              color={"#fff"}
-            />
-        </TouchableOpacity>
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalContainer_menu}>
-
-            <TouchableOpacity style={[styles.modalContainer_option_top,{marginTop:-350,marginRight:-20}]} onPress={() => { setmodalContainer_menu(false) }}>
-              <View style={styles.modalContainer_option_sub}>
-
-
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"anchor"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>Anchor Settings</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view}>
-                  <Icon
-                    name={"badge-account-outline"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"gray"}
-                  />
-                  <Text style={styles.modalContainer_option_text}>KYC</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={()=>{navigation.navigate("Wallet")}}>
-      <Icon
-        name={"wallet-outline"}
-        type={"materialCommunity"}
-        size={30}
-        color={"white"}
-      />
-      <Text style={[styles.modalContainer_option_text,{color:"white"}]}>Wallet</Text>
-      </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => {
-                  console.log('clicked');
-                  const LOCAL_TOKEN = REACT_APP_LOCAL_TOKEN;
-                  AsyncStorageLib.removeItem(LOCAL_TOKEN);
-                  setmodalContainer_menu(false)
-                  navigation.navigate('exchangeLogin');
-                }}>
-                  <Icon
-                    name={"logout"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Logout</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.modalContainer_option_view} onPress={() => { setmodalContainer_menu(false) }}>
-                  <Icon
-                    name={"close"}
-                    type={"materialCommunity"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                  <Text style={[styles.modalContainer_option_text, { color: "#fff" }]}>Close Menu</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </Modal>
-      </View>
-    </View>
+    <Exchange_screen_header title="Trade" onLeftIconPress={() => navigation.goBack()} onRightIconPress={() => console.log('Pressed')} />
       <View
         style={{
           backgroundColor: "#011434",
@@ -755,7 +697,6 @@ const change_Trust_New = async () => {
         }}
       >
       
-
       <View
       style={{
         width: "100%",
@@ -764,7 +705,7 @@ const change_Trust_New = async () => {
         marginTop: 19,
         marginLeft: 6
       }}
-    >
+      >
       <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
         <Text style={{ fontSize: 24, color: "#fff" }}>{top_value}</Text>
         <Text style={{ fontSize: 10, color: "gray" }}>{top_domain}</Text>
@@ -775,8 +716,8 @@ const change_Trust_New = async () => {
           type="materialCommunity"
           color="rgba(129, 108, 255, 0.97)"
           size={29}
-          onPress={() => { reves_fun(top_value, top_value_0); }}
-        />
+          // onPress={() => { reves_fun(top_value, top_value_0); }}
+          />
       </View>
       <View style={{ flex: 1, alignItems: "flex-start", paddingLeft: 10 }}>
         <Text style={{ fontSize: 24, color: "#fff" }}>{top_value_0}</Text>
@@ -786,8 +727,19 @@ const change_Trust_New = async () => {
        
        <View style={{flexDirection:"row",justifyContent:"space-between",padding:Platform.OS==="android"?10:19}}>
        <View style={{ width: '40%', marginTop: 19 }}>
-                <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="android"&&30}}>{Platform.OS==="android"?"Trading Pair":"Trading Pair"}</Text>
-                <TouchableOpacity  style={Platform.OS === "ios" ? { marginTop: 10, width: '90%', borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1, marginLeft: 15,paddingVertical:7.6,alignItems:"center",borderRadius:6 } : { marginTop: 13, width: "90%", color: "white", marginLeft:30,borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,height:"19%",justifyContent:"center",alignItems:"center",borderRadius:5 }} onPress={()=>{setchooseModalPair(true)}}>
+               <View style={{flexDirection:"row"}}>
+               <Text style={{color:"#fff",fontSize:21,textAlign:"center",marginLeft:Platform.OS==="android"&&30}}>{Platform.OS==="android"?"Trading Pair":"Trading Pair"}</Text>
+                <TouchableOpacity onPress={() => { setreservedError(!reservedError)}}>
+                  <Icon
+                    name={"information-outline"}
+                    type={"materialCommunity"}
+                    color={"rgba(129, 108, 255, 0.97)"}
+                    size={21}
+                    style={{ marginLeft: 10 }}
+                  />
+                </TouchableOpacity>
+               </View>
+                <TouchableOpacity  style={Platform.OS === "ios" ? { marginTop: 10, width: '90%', borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1, marginLeft: 15,paddingVertical:7.6,alignItems:"center",borderRadius:6 } : { height:hp(4),marginTop: 13, width: "90%", color: "white", marginLeft:30,borderColor:"'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)",borderWidth:1,justifyContent:"center",alignItems:"center",borderRadius:5 }} onPress={()=>{setchooseModalPair(true)}}>
                   <Text style={{fontSize:15,color:"#fff"}}>{top_value+"/"+top_value_0}</Text>
                 </TouchableOpacity>
                 
@@ -795,22 +747,23 @@ const change_Trust_New = async () => {
         animationType="slide"
         transparent={true}
         visible={chooseModalPair}
-      >
+        >
         <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setchooseModalPair(false)}>
           <View style={styles.chooseModalContent}>
-            <TextInput
+          <Text style={styles.chooseItem_text}>Select Trading Pair</Text>
+            {/* <TextInput
               style={styles.searchInput}
               placeholder="Search..."
               placeholderTextColor={"gray"}
               onChangeText={text => setChooseSearchQuery(text)}
               value={chooseSearchQuery}
               autoCapitalize='none'
-            />
+            /> */}
             <FlatList
               data={chooseFilteredItemList}
               renderItem={chooseRenderItem}
               keyExtractor={(item) => item.id.toString()}
-            />
+              />
           </View>
         </TouchableOpacity>
       </Modal>
@@ -830,6 +783,7 @@ const change_Trust_New = async () => {
       >
         <TouchableOpacity style={styles.chooseModalContainer} onPress={() => setopen_offer(false)}>
           <View style={[styles.chooseModalContent]}>
+          <Text style={styles.chooseItem_text}>Select Offer</Text>
             <FlatList
               data={chooseItemList_1}
               renderItem={chooseRenderItem_1}
@@ -856,7 +810,7 @@ const change_Trust_New = async () => {
           style={{
             display: "flex",
             alignItems: "center",
-            marginTop:Platform.OS==="ios"?30:-80
+            marginTop:Platform.OS==="ios"?30:30
           }}
         >
           <View
@@ -880,6 +834,11 @@ const change_Trust_New = async () => {
             >
 
             
+              <StellarAccountReserve
+                isVisible={reservedError}
+                onClose={handleCloseModal}
+                title="Reserved"
+              />
 
     <View style={{ flexDirection: "row",alignSelf:"center" }}>
               {activ===true?
@@ -890,8 +849,10 @@ const change_Trust_New = async () => {
                 </Animated.View>
                 </TouchableOpacity>
                 :
-                <View style={{flexDirection:"row"}}><Text style={styles.balance}>Balance:</Text><ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9),marginLeft:1 }}>
-                <Text style={styles.balance}>{Balance ? Number(Balance).toFixed(8) : 0.0} </Text></ScrollView>
+                <View style={{flexDirection:"row"}}><Text style={styles.balance}>Balance: </Text>
+                {reserveLoading?<ActivityIndicator color={"green"}/>:
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(9),marginLeft:1 }}>
+                <Text style={styles.balance}>{Balance ? Number(Balance).toFixed(5) : 0.0} </Text></ScrollView>}
                 </View>
                 }
 
@@ -915,7 +876,7 @@ const change_Trust_New = async () => {
             }}
           >
             <View style={{width:wp(37),alignSelf:"center"}}>
-            {Balance==="0.0000000"&&<Text style={{textAlign:"center",color:"red",borderColor:"red",borderWidth:1.9,borderRadius:10}}>Insufficient Balance</Text>}
+            {Balance==="0.0000000"||parseFloat(Balance)===0&&<Text style={{textAlign:"center",color:"red",borderColor:"red",borderWidth:1.9,borderRadius:10}}>Insufficient Balance</Text>}
             {/* {selectedValue==="XETH"||selectedValue==="XUSD"?<></>:<Text style={{textAlign:"center",color:"orange",borderColor:"orange",borderWidth:1.9,borderRadius:10}}>Available Soon</Text>} */}
 
             </View>
@@ -936,11 +897,12 @@ const change_Trust_New = async () => {
                     </View>:<></>}
              </View>
               <TextInput
-                style={[styles.input,{backgroundColor:"silver"}]}
+                style={[styles.input,{backgroundColor:"#fff",color:"black",borderRadius:5,paddingHorizontal:5}]}
                 keyboardType="numeric"
                 returnKeyType="done"
                 value={offer_amount}
                 placeholder={SelectedBaseValue==="native"?"Amount of XLM":"Amount of "+SelectedBaseValue}
+                placeholderTextColor={"gray"}
                 onChangeText={(text) => {
                   onChangeamount(text)
                   // setoffer_amount(text)
@@ -976,11 +938,12 @@ const change_Trust_New = async () => {
                 </View> : <></>}
               </View>
               <TextInput
-                style={[styles.input,{backgroundColor:"silver"}]}
+                style={[styles.input,{backgroundColor:"#fff",color:"black",borderRadius:5,paddingHorizontal:5}]}
                 returnKeyType="done"
                 keyboardType="numeric"
                 value={offer_price}
                 placeholder={"Price of " + route.toLocaleLowerCase()}
+                placeholderTextColor={"gray"}
                 onChangeText={(text) => {
                   onChangename(text)
                 }}
@@ -1021,7 +984,7 @@ const change_Trust_New = async () => {
                 },styles.confirmButton]}
                 onPress={() => { setLoading(true), offer_creation() }}
                 color="green"
-                disabled={Loading||Balance==="0.0000000"}
+                disabled={Loading||Balance==="0.0000000"||parseFloat(Balance)===0}
               >
                 <Text style={styles.textColor}>{Loading === true ? <ActivityIndicator color={"white"} /> :"Create Offer"}</Text>
               </TouchableOpacity>
@@ -1073,6 +1036,7 @@ const styles = StyleSheet.create({
     marginTop: hp("1"),
     borderBottomWidth: 1,
     width: wp(80),
+    fontSize:16
   },
   content: {
     display: "flex",
@@ -1292,16 +1256,27 @@ marginStart:5
 },
 chooseModalContainer: {
   flex: 1,
-  justifyContent: 'center',
+  justifyContent: 'flex-end',
   alignItems: 'center',
   // backgroundColor: 'rgba(0, 0, 0, 0.5)',
 },
 chooseModalContent: {
   backgroundColor: 'rgba(33, 43, 83, 1)',
-  padding: 20,
-  borderRadius: 10,
-  width: '80%',
+  paddingVertical: 5,
+  paddingHorizontal: 20,
+  borderTopLeftRadius: 10,
+  borderTopRightRadius:10,
+  width: wp(99),
   maxHeight: '80%',
+  borderColor: 'rgba(72, 93, 202, 1)rgba(67, 89, 205, 1)',
+  borderTopWidth:3,
+},
+chooseItem_text:{
+  color:"#fff",
+  fontSize:21,
+  textAlign:"left",
+  marginVertical:hp(2),
+  fontWeight:"500"
 },
 searchInput: {
   height: 40,
@@ -1315,10 +1290,7 @@ searchInput: {
     marginVertical: 3,
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: 'rgba(28, 41, 77, 1)',
-    borderWidth: 0.9,
-    borderBottomColor: '#fff',
-    marginBottom: 4,
+    marginBottom: 4
   },
   chooseItemText: {
     marginLeft: 10,

@@ -14,6 +14,7 @@ import {
   Keyboard,
   Image,
   ScrollView,
+  Platform,
 } from "react-native";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
@@ -64,6 +65,8 @@ import { SwapEthForTokens } from "../tokens/swapFunctions";
 import { SwapTokensToTokens, UniSwap } from "../tokens/UniswapFunctions";
 import { useBiometricsForSwapTransaction } from "../../biometrics/biometric";
 import { alert } from "../reusables/Toasts";
+import { Wallet_screen_header } from "../reusables/ExchangeHeader";
+import Snackbar from "react-native-snackbar";
 
 const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
   const FOCUSED=useIsFocused()
@@ -118,10 +121,33 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
   const navigation = useNavigation();
   console.log(state.wallet);
   
-    useEffect(async() => {
-        let bal = await AsyncStorageLib.getItem("EthBalance");
-        setBalance(bal)
-    }, [FOCUSED]);
+    useEffect(() => {
+      setPinViewVisible(false)
+      const fetchData = async () => {
+        try {
+          setSwapType("ETH")
+          setCoin0( {
+            name: "Ethereum",
+            address: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+            symbol: "WETH",
+            ChainId: "1",
+            logoUri: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+          })
+          setCoin1({
+            name: "Uniswap",
+            address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            symbol: "UNI",
+            ChainId: "5",
+            logoUri: "https://tokens.pancakeswap.finance/images/0xBf5140A22578168FD562DCcF235E5D43A02ce9B1.png",
+          })
+          let bal = await AsyncStorageLib.getItem("EthBalance");
+          setBalance(bal)
+        } catch (e) {
+          console.error(e);
+        }
+      };
+      fetchData();
+  }, [FOCUSED]);
 
   const dispatch = useDispatch();
   const SaveTransaction = async (type, hash, walletType, chainType) => {
@@ -821,28 +847,36 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
       console.log(e);
     }
   }
-  useEffect(async () => {
-    AsyncStorage.getItem("walletType").then(async (type) => {
-      console.log(JSON.parse(type));
-      const Type = JSON.parse(type);
-      setWalletType(Type);
-
-      if (Type === "Multi-coin") {
-        setData(chooseSwap);
-        setChooseChain(chooseSwap);
-      } else if (Type === "Ethereum") {
-        const data = tokenList.reverse();
-        // console.log(data)
-        setChooseChain(data);
-        setData(data);
-      } else if (Type === "BSC") {
-        const data = PancakeList;
-        // console.log(data);
-        setChooseChain(data);
-        setData(data);
+  useEffect( () => {
+    const fetchData = async () => {
+      try {
+        AsyncStorage.getItem("walletType").then(async (type) => {
+          console.log(JSON.parse(type));
+          const Type = JSON.parse(type);
+          setWalletType(Type);
+    
+          if (Type === "Multi-coin") {
+            setData(chooseSwap);
+            setChooseChain(chooseSwap);
+          } else if (Type === "Ethereum") {
+            const data = tokenList.reverse();
+            // console.log(data)
+            setChooseChain(data);
+            setData(data);
+          } else if (Type === "BSC") {
+            const data = PancakeList;
+            // console.log(data);
+            setChooseChain(data);
+            setData(data);
+          }
+        });
+    
+      } catch (e) {
+        console.error(e);  // Use console.error for errors
       }
-    });
-
+    };
+  
+    fetchData();
     /* await getPrice(coin0.address,coin1.address)
        .then((response)=>{
         console.log(response)
@@ -851,7 +885,9 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
        })*/
   }, []);
 
-  useEffect(async () => {
+  useEffect( () => {
+    const fetchData = async () => {
+      try {
     AsyncStorage.getItem("walletType").then(async (type) => {
       console.log(JSON.parse(type));
       const Type = JSON.parse(type);
@@ -872,6 +908,12 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
         setData(data);
       }
     });
+  } catch (e) {
+    console.error(e);  // Use console.error for errors
+  }
+};
+
+fetchData();
 
     /* await getPrice(coin0.address,coin1.address)
        .then((response)=>{
@@ -881,92 +923,113 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
        })*/
   }, [state.wallet]);
 
-  useEffect(async () => {
-    console.log(coin0);
-    if (coin0.ChainId === 1 || coin0.ChainId === 5) {
-      const data = tokenList;
-      // console.log(data)
-      setData(data);
-    } else {
-      const data = PancakeList;
-      //  console.log(data)
-      setData(data);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log(coin0);
+        if (coin0.ChainId === 1 || coin0.ChainId === 5) {
+          const data = tokenList;
+          // console.log(data)
+          setData(data);
+        } else {
+          const data = PancakeList;
+          //  console.log(data)
+          setData(data);
+        }
+      } catch (e) {
+        console.error(e);  // Use console.error for errors
+      }
     }
+    fetchData();
   }, [coin0.name]);
 
-  useEffect(async () => {
-    const walletType = await AsyncStorageLib.getItem("walletType");
+  useEffect( () => {
+    const fetchData=async()=>{
+      try {
+        const walletType = await AsyncStorageLib.getItem("walletType");
 
-    const address = await state.wallet.address;
-
-    if (JSON.parse(walletType) === "Ethereum") {
-      if (coin0.symbol === "WETH") {
-        console.log(await state.EthBalance);
-        setBalance(await state.EthBalance);
-        return;
-      } else if (coin0.ChainId === 1 || coin0.ChainId === 5) {
-        await getEthTokenBalance(address, coin0.address).then((balance) => {
-          console.log("My Token Balance", balance);
-          setBalance(balance);
-        });
-      } else {
-        setBalance(0);
-      }
-    } else if (JSON.parse(walletType) === "BSC") {
-      if (coin0.symbol === "BNB") {
-        console.log(await state.walletBalance);
-        setBalance(await state.walletBalance);
-        return;
-      } else if (coin0.ChainId === 56) {
-        await getBnbTokenBalance(address, coin0.address).then((balance) => {
-          console.log(balance);
-          setBalance(balance);
-        });
-      } else {
-        setBalance(0);
-      }
-    } else if (JSON.parse(walletType) === "Multi-coin") {
-      if (coin0.ChainId === 56) {
-        if (coin0.symbol === "BNB") {
-          console.log(await state.walletBalance);
-          setBalance(await state.walletBalance);
-          return;
+        const address = await state.wallet.address;
+    
+        if (JSON.parse(walletType) === "Ethereum") {
+          if (coin0.symbol === "WETH") {
+            console.log(await state.EthBalance);
+            setBalance(await state.EthBalance);
+            return;
+          } else if (coin0.ChainId === 1 || coin0.ChainId === 5) {
+            await getEthTokenBalance(address, coin0.address).then((balance) => {
+              console.log("My Token Balance", balance);
+              setBalance(balance);
+            });
+          } else {
+            setBalance(0);
+          }
+        } else if (JSON.parse(walletType) === "BSC") {
+          if (coin0.symbol === "BNB") {
+            console.log(await state.walletBalance);
+            setBalance(await state.walletBalance);
+            return;
+          } else if (coin0.ChainId === 56) {
+            await getBnbTokenBalance(address, coin0.address).then((balance) => {
+              console.log(balance);
+              setBalance(balance);
+            });
+          } else {
+            setBalance(0);
+          }
+        } else if (JSON.parse(walletType) === "Multi-coin") {
+          if (coin0.ChainId === 56) {
+            if (coin0.symbol === "BNB") {
+              console.log(await state.walletBalance);
+              setBalance(await state.walletBalance);
+              return;
+            }
+            await getBnbTokenBalance(address, coin0.address).then((balance) => {
+              console.log(balance);
+              setBalance(balance);
+            });
+          } else if (coin0.ChainId === 1 || coin0.ChainId === 5) {
+            if (coin0.symbol === "WETH") {
+              console.log(await state.EthBalance);
+              setBalance(await state.EthBalance);
+              return;
+            }
+            await getEthTokenBalance(address, coin0.address).then((balance) => {
+              console.log("My Token Balance", balance);
+              setBalance(balance);
+            });
+          }
         }
-        await getBnbTokenBalance(address, coin0.address).then((balance) => {
-          console.log(balance);
-          setBalance(balance);
-        });
-      } else if (coin0.ChainId === 1 || coin0.ChainId === 5) {
-        if (coin0.symbol === "WETH") {
-          console.log(await state.EthBalance);
-          setBalance(await state.EthBalance);
-          return;
-        }
-        await getEthTokenBalance(address, coin0.address).then((balance) => {
-          console.log("My Token Balance", balance);
-          setBalance(balance);
-        });
+      } catch (error) {
+        console.log(e)
       }
     }
+    fetchData()
   }, [coin0.address]);
 
   useEffect(() => {
-    let inputValidation;
-    let inputValidation1;
-    inputValidation = isFloat(amount);
-    inputValidation1 = isInteger(amount);
-
-    if (
-      coin1.address &&
-      coin0.address &&
-      amount != 0 &&
-      Number(amount) < Number(balance) &&
-      (inputValidation || inputValidation1)
-    ) {
-      setDisable(false);
-    } else {
-      setDisable(true);
+   const fetch=async()=>{
+    try {
+      let inputValidation;
+      let inputValidation1;
+      inputValidation = isFloat(amount);
+      inputValidation1 = isInteger(amount);
+  
+      if (
+        coin1.address &&
+        coin0.address &&
+        amount != 0 &&
+        Number(amount) < Number(balance) &&
+        (inputValidation || inputValidation1)
+      ) {
+        setDisable(false);
+      } else {
+        setDisable(true);
+      }
+    } catch (error) {
+      console.log(e)
     }
+   }
+   fetch()
   }, [coin0, coin1, amount]);
 
   useEffect(() => {
@@ -978,10 +1041,17 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
     if (amount != 0) {
       console.log(amount > balance);
       if (amount > balance) {
+        Keyboard.dismiss();
         setDisable(true);
         setMessage("Low Balance");
-        alert("error", "Low Balance");
+        Snackbar.show({
+          text: "Low Balance",
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: 'red',
+        });
+        setLoading2(false)
       } else if (!inputValidation && !inputValidation1) {
+        setLoading2(false)
         setMessage("Please enter a valid amount");
         alert("error", "Please enter a valid amount");
       } else {
@@ -1358,20 +1428,8 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
           setModalVisible(false);
         }}
       >
-        <View style={[styles.mainContainermodal,{backgroundColor:state.THEME.THEME===false?"white":"black",borderColor:"#4CA6EA",borderWidth:0.5}]}>
-          <View style={styles.leftView}>
-            <MaterialCommunityIcons
-              name="arrow-left"
-              size={20}
-              color={state.THEME.THEME===false?"black":"#fff"}
-              style={{ padding: hp(2) }}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                setTrade(0);
-              }}
-            />
-            <Text style={[styles.swapText,{color:state.THEME.THEME===false?"black":"#fff"}]}>Swap</Text>
-          </View>
+        <View style={[styles.mainContainermodal,{backgroundColor:state.THEME.THEME===false?"white":"black",paddingTop:Platform.OS==="ios"?0:hp(5)}]}>
+        <Wallet_screen_header title="Swap" onLeftIconPress={() => {setModalVisible(!modalVisible),setTrade(0)}} />
           <View style={styles.cardBoxContainer}>
             {/* <TokenHeader setVisible={setModalVisible} name={name} /> */}
             <View
@@ -1381,18 +1439,19 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
               <View style={styles.tokenView}>
                 {/* <Text style={{ color: "#C1BDBD" }}>You Pay</Text> */}
                 <Text style={{ color: state.THEME.THEME===false?"black":"#fff" }}>You Pay</Text>
-                <Text style={{ color: state.THEME.THEME===false?"black":"#fff" }}>{coin0.name}</Text>
+                {/* <Text style={{ color: state.THEME.THEME===false?"black":"#fff" }}>{coin0.name}</Text> */}
               </View>
               <View style={styles.tokenView}>
                 <TextInput
                   keyboardType="numeric"
+                  returnKeyType="done"
                   onChangeText={(text) => {
                     swap_get(text);
                     setAmount(text);
                   }}
                   placeholder="0"
                   placeholderTextColor={"gray"}
-                  style={[styles.textinputCon,{backgroundColor:state.THEME.THEME===false?"#fff":"black",color:state.THEME.THEME===false?"black":"#fff"}]}
+                  style={[styles.textinputCon,{backgroundColor:state.THEME.THEME===false?"#fff":"black",color:state.THEME.THEME===false?"black":"#fff",fontSize:19}]}
                 />
                 <TouchableOpacity
                   onPress={() => {
@@ -1411,12 +1470,11 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                         ? coin0.logoUri
                         : "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
                     }}
-                    style={{ height: hp(3), width: wp(6) }}
+                    style={{ height: hp(4), width: wp(8.3) }}
                   />
-                  <Text style={{ marginRight: wp(13),color:state.THEME.THEME===false?"black":"#fff" }}>
+                  <Text style={{ marginRight: wp(5),marginLeft:wp(1),color:state.THEME.THEME===false?"black":"#fff" }}>
                     {coin0.symbol ? coin0.symbol==="WETH"?" ETH":coin0.symbol : "ETH"}
                   </Text>
-                </TouchableOpacity>
 
                 <AntDesign
                   onPress={() => {
@@ -1425,9 +1483,10 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                   }}
                   name={"right"}
                   size={15}
-                  color={"gray"}
-                  style={{ marginRight: wp(10), marginLeft: -34 }}
-                />
+                  color={"#4CA6EA"}
+                  style={{ marginRight: wp(1) }}
+                  />
+                  </TouchableOpacity>
               </View>
 
               <View style={{ flexDirection: "row", width: wp(90) }}>
@@ -1455,14 +1514,18 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
 
             
 
-            <TouchableOpacity style={[styles.swapiconView,{borderColor:"#3574B6",borderWidth:1,backgroundColor:state.THEME.THEME===false?"#fff":"black"}]} onPress={() => { setCoin0(coin1), setCoin1(coin0) }}>
-              <Icon
-                name={"swap-vertical"}
-                size={15}
-                color={"#3574B6"}
-                style={{ alignSelf: "center", marginTop: hp(1) }}
-              />
-            </TouchableOpacity>
+            <View style={{width:"100%",flexDirection:"row",marginLeft:6,alignItems:"center",marginTop:-45}}>
+              <View style={{  borderColor: 'rgba(28, 41, 77, 1)',borderBottomWidth:0.9,width:"60%",borderBlockEndColor: 'gray'}}/>
+              <TouchableOpacity style={[styles.swapiconView, { borderColor: "#3574B6", borderWidth: 1, backgroundColor: "#2F7DFF66",marginHorizontal:10 }]} onPress={() => { setCoin0(coin1), setCoin1(coin0) }}>
+                <Icon
+                  name={"swap-vertical"}
+                  size={22}
+                  color={"#3574B6"}
+                  style={{ alignSelf: "center", marginTop: hp(1) }}
+                />
+              </TouchableOpacity>
+              <View style={{  borderColor: 'rgba(28, 41, 77, 1)',borderBottomWidth:0.9,width:"14%",borderBlockEndColor: 'gray'}}/>
+            </View>
             <View
               style={styles.cardmainContainer1}
               onStartShouldSetResponder={() => Keyboard.dismiss()}
@@ -1470,13 +1533,13 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
               <View style={styles.tokenView}>
                 {/* <Text style={{ color: "#C1BDBD" }}>You Get</Text> */}
                 <Text style={{ color:state.THEME.THEME===false?"black":"#fff" }}>You Get</Text>
-                <Text style={{ color:state.THEME.THEME===false?"black":"#fff" }}> {coin1.name}</Text>
+                {/* <Text style={{ color:state.THEME.THEME===false?"black":"#fff" }}> {coin1.name}</Text> */}
               </View>
               <View style={styles.tokenView}>
                 <View style={{ flexDirection: "row", width: wp(19) }}>
                   <View style={{ width: wp(13) }}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(11) }}>
-                      <Text style={{ marginLeft: wp(1), marginTop: hp(2),color:state.THEME.THEME===false?"black":"#fff" }}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: wp(16) }}>
+                      <Text style={{ fontSize:19,marginLeft: wp(1), marginTop: hp(2),color:state.THEME.THEME===false?"black":"#fff" }}>
                         {trade ? `${trade.minimumAmountOut}` : <Text style={{ color:state.THEME.THEME===false?"black":"#fff"}}>0</Text>}
                       </Text>
                     </ScrollView>
@@ -1485,8 +1548,18 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                 
                 <TouchableOpacity
                   onPress={() => {
-                    setCoinType("1");
-                    setVisible(true);
+                    Keyboard.dismiss()
+                    if(coin0.symbol==="WETH")
+                    {
+                      Snackbar.show({
+                        text: "Eth test net only swap with UNI",
+                        duration: Snackbar.LENGTH_LONG,
+                        backgroundColor: 'orange',
+                      });
+                    }else{
+                      setCoinType("1");
+                      setVisible(true);
+                    }
                   }}
                   style={{
                     flexDirection: "row",
@@ -1500,12 +1573,11 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                         ? coin1.logoUri
                         : "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png ",
                     }}
-                    style={{ height: hp(3), width: wp(6) }}
+                    style={{ height: hp(4), width: wp(8.3) }}
                   />
-                  <Text style={{ marginRight: wp(13),color:state.THEME.THEME===false?"black":"#fff" }}>
+                  <Text style={{ marginRight: wp(5),marginLeft:wp(1),color:state.THEME.THEME===false?"black":"#fff" }}>
                     { coin1.symbol ? coin1.symbol : "WBTC"}
                   </Text>
-                </TouchableOpacity>
                 <AntDesign
                   onPress={() => {
                     setCoinType("1");
@@ -1513,9 +1585,10 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
                   }}
                   name={"right"}
                   size={15}
-                  color={"grey"}
+                  color={"#4CA6EA"}
                   style={styles.rightICon}
-                />
+                  />
+                  </TouchableOpacity>
               </View>
             </View>
 
@@ -1544,6 +1617,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
             // }}
             disabled={disable}
             onPress={async () => {
+              Keyboard.dismiss()
               //setVisible(true)
               setLoading2(true);
               console.log(coin1.address);
@@ -1904,12 +1978,7 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
               }
             }}
           >
-            <Text style={styles.addButtonText}>
-              {loading2 ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                "Swap"
-              )}
+            <Text style={styles.addButtonText}>Swap
             </Text>
           </TouchableOpacity>
         </View>
@@ -1930,12 +1999,10 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
         >
           <View
             style={{
-              height: hp(98),
               width: wp(99),
               backgroundColor: "#ddd",
               borderTopRightRadius: 10,
               borderTopLeftRadius: 10,
-              marginTop: hp(5),
               left: wp(-4.5),
             }}
           >
@@ -1967,12 +2034,10 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
         >
           <View
             style={{
-              height: hp(98),
               width: wp(99),
               backgroundColor: "#ddd",
               borderTopRightRadius: 10,
               borderTopLeftRadius: 10,
-              marginTop: hp(5),
               left: wp(-4.5),
             }}
           >
@@ -2003,85 +2068,104 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
             setTradeVisible(false);
           }}
         >
-          <View style={styles.modelView}>
-            {/* <Entypo
-              name="cross"
-              // color={"gray"}
-              color={"white"}
-              size={24}
-              style={styles.crossIcon}
-              onPress={() => {
-                setTradeVisible(false);
-              }}
-            /> */}
-            <Entypo
-              name="cross"
-              // color={"gray"}
-              color={"black"}
-              size={24}
-              style={styles.crossIcon}
-              onPress={() => {
-                setTradeVisible(false);
-              }}
-            />
-            <Text style={{ alignSelf: 'center', fontSize: 19, fontWeight: '700', color: 'black', marginBottom: '15%' }}>Swap Confirmation</Text>
+          <View style={[styles.modelView,{backgroundColor:state.THEME.THEME===false?"#fff":"black"}]}>
+      <Wallet_screen_header title="Confirmation" onLeftIconPress={() => {setTradeVisible(false)}} />
+           
             <View style={styles.container_view}>
-              <Text style={styles.headings}>Slip Page Tolerance</Text>
-              <View style={styles.data_view}>
-                <Text style={styles.data_text} numberOfLines={1}>
-                  {trade ? trade.slippageTolerance : 0} %
+              <View style={styles.token_details}>
+                <Image
+                  source={{
+                    uri: coin0.logoUri
+                      ? coin0.logoUri
+                      : "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+                  }}
+                  style={{ height: hp(5), width: wp(11) }}
+                />
+               <View style={{marginLeft:10}}>
+               <Text style={{ fontWeight:"500",marginRight: wp(5), marginLeft: wp(1), color: state.THEME.THEME === false ? "black" : "#fff",fontSize:19 }}>
+                  {coin0.name}
                 </Text>
-              </View>
-            </View>
-
-            <View style={styles.container_view}>
-              <Text style={styles.headings}>Amount</Text>
-              <View style={styles.data_view}>
-                <Text style={styles.data_text} numberOfLines={1}>
-                  {amount ? amount : 0} {coin0.name}
+                <Text style={{ marginRight: wp(5), marginLeft: wp(1), color: state.THEME.THEME === false ? "black" : "#fff",fontSize:15 }}>
+                {amount ? amount : 0}
                 </Text>
+               </View>
               </View>
-            </View>
+              
+              <View style={{ marginLeft: wp(2.2),paddingVertical:14 }}>
+                <Icon
+                  name={"arrow-down-outline"}
+                  size={30}
+                  color={state.THEME.THEME === false ? "black" : "#fff"}
+                />
+              </View>
 
-            <View style={styles.container_view}>
-              <Text style={styles.headings}>You get</Text>
-              <View style={styles.data_view}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: "3%" }}>
-                  <Text style={styles.data_text} numberOfLines={1}>
+              <View style={styles.token_details}>
+                <Image
+                  source={{
+                    uri: coin1.logoUri
+                      ? coin1.logoUri
+                      : "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png ",
+                  }}
+                  style={{ height: hp(5), width: wp(11) }}
+                />
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ fontWeight:"500",marginRight: wp(5), marginLeft: wp(1), color: state.THEME.THEME === false ? "black" : "#fff", fontSize: 19 }}>
+                    {coin1.name}
+                  </Text>
+                  <Text style={{ marginRight: wp(5), marginLeft: wp(1), color: state.THEME.THEME === false ? "black" : "#fff", fontSize: 15 }}>
                     {trade ? trade.minimumAmountOut : 0}
                   </Text>
-                </ScrollView>
-                <Text style={{ width: '79%', fontWeight: '700', marginLeft: '3%' }} numberOfLines={1}>{coin1.name}</Text>
+                </View>
+               </View>
+
               </View>
+           
+
+            <View style={[styles.container_info,{width:wp(93),justifyContent:"center",paddingVertical:hp(2)}]}>
+              <View style={[styles.token_details, { width: "100%", justifyContent: "space-between",borderColor: 'rgba(28, 41, 77, 1)',borderBottomWidth:0.9,borderBlockEndColor: 'gray',paddingBottom:hp(2) }]}>
+                <Text style={[styles.data_text_, { width: wp(33),color:"gray",fontWeight:"500" }]} numberOfLines={1} >From Wallet :</Text>
+                <View style={{ width: wp(40) }}>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <Text style={[styles.data_text_,{color:"gray",fontWeight:"500"}]} numberOfLines={1} >{state?.wallet?.address}</Text>
+                  </ScrollView>
+                </View>
+              </View>
+
+              <View style={[styles.token_details, { width: "100%", justifyContent: "space-between",marginTop:hp(2) }]}>
+              <View style={{flexDirection:"row",width:wp(31),alignItems:"center"}}>
+               <Text style={[styles.data_text_, { color:"gray",fontWeight:"500" }]} numberOfLines={1} >Provider </Text>
+                <Icon name={"information-circle"} size={22} color={"#3574B6"} />
+                </View>
+
+                <View style={{alignContent:"flex-end" }}>
+                    <Text style={[styles.data_text_,{color:"gray",fontWeight:"500"}]} numberOfLines={1} >UniSwap</Text>
+                </View>
+              </View>
+
+              <View style={[styles.token_details, { width: "100%", justifyContent: "space-between",marginTop:hp(1.5) }]}>
+              <View style={{flexDirection:"row",width:wp(31),alignItems:"center"}}>
+               <Text style={[styles.data_text_, { color:"gray",fontWeight:"500" }]} numberOfLines={1} >Max Slippage </Text>
+               <Icon name={"information-circle"} size={22} color={"#3574B6"} />
+               </View>
+
+                <View style={{alignContent:"flex-end" }}>
+                    <Text style={[styles.data_text_,{color:"gray",fontWeight:"500"}]} numberOfLines={1} >{trade ? trade.slippageTolerance : 0} %</Text>
+                </View>
+              </View>
+
+              <View style={[styles.token_details, { width: "100%", justifyContent: "space-between",marginTop:hp(1.5) }]}>
+               <View style={{flexDirection:"row",width:wp(31),alignItems:"center"}}>
+               <Text style={[styles.data_text_, { color:"gray",fontWeight:"500" }]} numberOfLines={1} >Network Fee </Text>
+                <Icon name={"information-circle"} size={22} color={"#3574B6"} />
+               </View>
+                <View style={{alignContent:"flex-end" }}>
+                    <Text style={[styles.data_text_,{color:"gray",fontWeight:"500"}]} numberOfLines={1} >null</Text>
+                </View>
+              </View>
+
             </View>
 
-            {/* <View style={styles.modelmainContainer}>
-              <Text style={styles.headingColor}>Slip Page Tolerance</Text>
-              <Text style={styles.colon}>:</Text>
-              <ScrollView horizontal>
-                <Text style={styles.textColor}>
-                  {trade ? trade.slippageTolerance : 0} %
-                </Text>
-              </ScrollView>
-            </View>
-            <View style={styles.modelmainContainer}>
-              <Text style={styles.headingColor}>Amount</Text>
-              <Text style={styles.colon}>:</Text>
-              <ScrollView horizontal>
-                <Text style={styles.textColor} numberOfLines={1}>
-                  {amount ? amount : 0} {coin0.name}
-                </Text>
-              </ScrollView>
-            </View>
-            <View style={styles.modelmainContainer}>
-              <Text style={styles.headingColor}>You get</Text>
-              <Text style={styles.colon}>:</Text>
-              <ScrollView horizontal>
-                <Text style={styles.textColor} numberOfLines={1}>
-                  {trade ? trade.minimumAmountOut : 0} {coin1.name}
-                </Text>
-              </ScrollView>
-            </View> */}
+            
 
             <TouchableOpacity
               disabled={loading === true ? true : false}
@@ -2117,20 +2201,19 @@ const SwapModal = ({ modalVisible, setModalVisible, onCrossPress }) => {
               </Text>
             </TouchableOpacity>
           </View>
-
           <SwapPinModal
-            pinViewVisible={pinViewVisible}
-            setPinViewVisible={setPinViewVisible}
-            setModalVisible={setModalVisible}
-            setTradeVisible={setTradeVisible}
-            pancakeSwap={pancakeSwap}
-            coin0={coin0}
-            coin1={coin1}
-            SaveTransaction={SaveTransaction}
-            swapType={swapType}
-            setLoading={setLoading}
-            amount={amount}
-          />
+        pinViewVisible={pinViewVisible}
+        setPinViewVisible={setPinViewVisible}
+        setModalVisible={setModalVisible}
+        setTradeVisible={setTradeVisible}
+        pancakeSwap={pancakeSwap}
+        coin0={coin0}
+        coin1={coin1}
+        SaveTransaction={SaveTransaction}
+        swapType={swapType}
+        setLoading={setLoading}
+        amount={amount}
+      />
         </Modal2>
       </Modal>
     </View>
@@ -2141,30 +2224,18 @@ export default SwapModal;
 
 const styles = StyleSheet.create({
   mainContainermodal: {
-    borderColor: "#C1BDBD",
-    backgroundColor: "white",
     alignSelf: "center",
-    borderRadius: hp(1),
-    borderWidth: StyleSheet.hairlineWidth * 1,
-    borderColor: "gray",
-    height: hp(80),
-    width: wp(98),
-    marginTop: "auto",
+    width: "100%",
+    height:"100%"
+    // marginTop: "auto",
     // backgroundColor: "#131E3A",
   },
   modelView: {
-    paddingTop: hp(1),
     paddingBottom: hp(5),
-    width: wp(93),
+    width: wp(100),
+    height:hp(100),
     alignSelf: "center",
     alignItems: "center",
-    // backgroundColor: "#131E3A",
-    // backgroundColor:"#145DA0",
-    backgroundColor: "white",
-    borderRadius: hp(1.9),
-    justifyContent: "center",
-    borderWidth: StyleSheet.hairlineWidth * 2,
-    borderColor: "white",
   },
   modelmainContainer: {
     flexDirection: "row",
@@ -2224,19 +2295,15 @@ const styles = StyleSheet.create({
   },
   swapiconView: {
     backgroundColor: "white",
-    height: hp(4),
-    width: wp(8),
-    borderRadius: hp(2),
-    // alignSelf: ""mar,
-    marginLeft: wp(73),
-
+    height: 40,
+    width: 40,
+    borderRadius: hp(10),
+    alignContent:"center",
     borderWidth: StyleSheet.hairlineWidth * 1,
     borderColor: "gray",
     alignItems: "center",
-    position: "absolute",
-    marginTop: hp(16),
   },
-  rightICon: { marginRight: wp(10), marginLeft: -34 },
+  rightICon: { marginRight: wp(1), },
   txtInput: {
     width: wp(20),
     padding: 4,
@@ -2344,12 +2411,12 @@ const styles = StyleSheet.create({
   addButton3: {
     // backgroundColor: "#000C66",
     backgroundColor: "#53A3EA",
-    width: wp(60),
+    width: wp(95),
     paddingVertical: hp(1.9),
     alignItems: "center",
     alignSelf: "center",
     borderRadius: hp(1.9),
-    marginTop: hp(8),
+    marginTop: hp(10),
   },
   addButtonText: {
     color: "#fff",
@@ -2439,9 +2506,10 @@ const styles = StyleSheet.create({
     padding: hp(1),
   },
   container_view: {
-    width: wp(80),
+    width: wp(90),
     alignItems: "flex-start",
     justifyContent: "space-between",
+    marginTop:hp(6)
   },
   headings: {
     width: wp(50),
@@ -2466,5 +2534,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
     textAlign: "left"
+  },
+  data_text_: {
+    color: "black",
+    fontSize: 14,
+    fontWeight: "700",
+    textAlign: "left"
+  },
+  token_details:{
+    flexDirection:"row",
+    alignItems:"center",
+    width:wp(99),
+    padding:5
+  },
+  container_info:{
+    width:wp(95),
+    padding:5,
+    borderColor:"gray",
+    borderWidth:1,
+    borderRadius:10,
+    marginTop:hp(5)
   }
 });

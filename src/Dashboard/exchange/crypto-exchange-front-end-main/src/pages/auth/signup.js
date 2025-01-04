@@ -9,10 +9,10 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
 } from "react-native";
-import { TextInput } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,6 +24,10 @@ import { signup } from "../../api";
 import { useSelector } from "react-redux";
 import {ShowErrotoast, alert} from '../../../../../reusables/Toasts'
 import { useToast } from "native-base";
+import { Exchange_Login_screen } from "../../../../../reusables/ExchangeHeader";
+import darkBlue from "../../../../../../../assets/darkBlue.png";
+import Icon from "../../../../../../icon";
+import Snackbar from "react-native-snackbar";
 
 export const ExchangeRegister = (props) => {
   const toast=useToast();
@@ -51,50 +55,94 @@ export const ExchangeRegister = (props) => {
   const phoneInput = useRef(null);
 
   const navigation = useNavigation();
+  const FOCUSED=useIsFocused();
+
+useEffect(()=>{
+  setFormContent({
+    firstName: "",
+    lastName: "",
+    phoneNumber: email,
+    email: "",
+    accountAddress: "",
+    walletAddress: state.wallet ? state.wallet.address : "",
+    password: "",
+  })
+},[FOCUSED])
 
   const handleSubmit = async () => {
     setLoading(true);
-    const { err } = await signup({
-      ...formContent,
-      phoneNumber: `${formContent.email}`,
-    });
-    setLoading(false);
-    console.log(err)
-    if (err.message === "Otp Send successfully") {
-        navigation.navigate("exchangeLogin", {
-        phoneNumber: formContent.email,
+    
+    try {
+      const { err, res } = await signup({
+        ...formContent,
+        phoneNumber: `${formContent.email}`,
+      });
+  
+      setLoading(false);
+      console.log(err);
+      console.log("----", err, res);
+  
+      if (res && res.message === "OTP sent successfully") {
+        navigation.navigate("Exchange_otp", {
+          Email: res.token,
+          type: "new_res",
+        });
+        return;
+      }
+  
+      if (err) {
+        handleErrorMessage(err);
+      }
+  
+    } catch (error) {
+      setLoading(false);
+      console.error('Error during signup:', error);
+      Snackbar.show({
+        text: "An unexpected error occurred.",
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'red',
       });
     }
-    if(err.message==="Email already registered")
-    {
-      ShowErrotoast(toast,"Email already registered");
-    }
-    if(err.message==="Wallet already registered")
-    {
-      ShowErrotoast(toast,"Wallet already registered");
-    }
-    if (Array.isArray(err.message) && err.message.includes("email must be an email")) {
-      ShowErrotoast(toast, "Email must be an email");
-    }
-    if (Array.isArray(err.message) && err.message.includes("lastName should not be empty")) {
-      ShowErrotoast(toast, "Last name should not be empty");
-    }
-    if (Array.isArray(err.message) && err.message.includes("firstName should not be empty")) {
-      ShowErrotoast(toast, "First name should not be empty");
-    }
-    
-    if (err) {
+  };
+  
+  const handleErrorMessage = (err) => {
+    if (err.message === "Otp not Send.") {
+      showSnackbar("Something went wrong.");
+    } else if (err.message === "Phone number already registered") {
+      showSnackbar("Email already registered.");
+    } else if (err.message === "Wallet already registered") {
+      showSnackbar("Wallet already registered.");
+    } else if (Array.isArray(err.message)) {
+      if (err.message.includes("email must be an email")) {
+        showSnackbar("Email must be a valid email.");
+      } else if (err.message.includes("lastName should not be empty")) {
+        showSnackbar("Last name should not be empty.");
+      } else if (err.message.includes("firstName should not be empty")) {
+        showSnackbar("First name should not be empty.");
+      }
+    } else {
       setShowMessage(true);
-      return setMessage(err.message);
+      setMessage(err.message);
     }
   };
+  
+  const showSnackbar = (message) => {
+    Snackbar.show({
+      text: message,
+      duration: Snackbar.LENGTH_SHORT,
+      backgroundColor: 'red',
+    });
+  };
+  
 
   const onChangename = (input) => {
-    const formattedInput = input.replace(/\s/g, '');
+    const formattedInput = input.replace(/\s/g, '')
+    .replace(/[\p{Emoji}\u200d\uFE0F]+/gu, '');
     setFormContent({ ...formContent, firstName: formattedInput })
   };
   const onChangelast = (input) => {
-    const formattedInput = input.replace(/\s/g, '');
+    const formattedInput = input.replace(/\s/g, '')
+    .replace(/[\p{Emoji}\u200d\uFE0F]+/gu, '');
     setFormContent({ ...formContent, lastName: formattedInput })
   };
   const onChangelmail = (input) => {
@@ -104,6 +152,7 @@ export const ExchangeRegister = (props) => {
 
   return (
     <>
+    <Exchange_Login_screen title="" onLeftIconPress={() => navigation.goBack()} />
       <KeyboardAvoidingView style={styles.container} behavior="height">
         <ScrollView>
           <View
@@ -116,7 +165,8 @@ export const ExchangeRegister = (props) => {
               color: "white",
             }}
           >
-            <Text style={{ color: "#fff", marginBottom: 20, fontSize: 16,textAlign:"center",marginTop:hp(3) ,fontWeight:"700"}}>
+            <Image style={styles.tinyLogo} source={darkBlue} />
+            <Text style={{ color: "#fff", paddingVertical:hp(0.4), fontSize: 20,textAlign:"center" ,fontWeight:"700"}}>
               Create your exchange account
             </Text>
 
@@ -142,7 +192,7 @@ export const ExchangeRegister = (props) => {
 
 
             <View style={styles.inp}>
-                <Text style={styles.text}>Last name</Text>
+                <Text style={styles.text}>Last Name</Text>
               <TextInput
                 placeholderTextColor="gray"
                 style={styles.input}
@@ -157,7 +207,7 @@ export const ExchangeRegister = (props) => {
             
             <View style={styles.inp}>
                 <Text style={styles.text}>
-                  Email address
+                  Email Address
                 </Text>
               <TextInput
                 placeholderTextColor="gray"
@@ -175,21 +225,27 @@ export const ExchangeRegister = (props) => {
                 <Text style={styles.text}>
                   Wallet Address
                 </Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.input}>
               <Text
-                style={styles.input}
-              >{formContent.walletAddress}
+                style={{ color: "black",fontSize:18,textAlign:"center",marginTop:hp(1.3)}}
+                >{formContent.walletAddress}
               </Text>
+                </ScrollView>
             </View>
-           <View style={{height:32}}>
-           {showMessage ? (
-              // <Text style={{ color: "white",marginStart:13}}>{message}</Text>
-              <Text style={{ color: "white",marginStart:13}}></Text>
-            ) : (
-              <View></View>
-            )}
-           </View>
-
+            <View style={{ flexDirection:"row",alignSelf:"flex-start",marginHorizontal:wp(10),marginTop:hp(3)}}>
+              <Icon name={"information-outline"} type={"materialCommunity"} size={27} color={"gray"} />
+              <Text style={{ color: "gray",fontSize:19,marginLeft:wp(2) }}>First Name should not be empty</Text>
+            </View>
+            <View style={{ flexDirection:"row",alignSelf:"flex-start",marginHorizontal:wp(10),marginTop:hp(1)}}>
+              <Icon name={"information-outline"} type={"materialCommunity"} size={27} color={"gray"} />
+              <Text style={{ color: "gray",fontSize:19,marginLeft:wp(2) }}>Last Name should not be empty</Text>
+            </View>
+            <View style={{ flexDirection:"row",alignSelf:"flex-start",marginHorizontal:wp(10),marginTop:hp(1)}}>
+              <Icon name={"information-outline"} type={"materialCommunity"} size={27} color={"gray"} />
+              <Text style={{ color: "gray",fontSize:19,marginLeft:wp(2) }}>Email  should not be empty</Text>
+            </View>
 <TouchableOpacity
+  disabled={loading}
   onPress={() => {
     handleSubmit();
   }}
@@ -203,9 +259,7 @@ export const ExchangeRegister = (props) => {
               > */}
                   <Text style={styles.buttonText}>
                     {loading ? (
-                      <View style={{display:'flex', alignContent:'center', alignItems:'center', alignSelf:'center', marginLeft:wp(70)}}>
                         <ActivityIndicator size="small" color="white" />
-                      </View>
                     ) : (
                       "Create my account"
                     )}
@@ -235,14 +289,14 @@ export const ExchangeRegister = (props) => {
 const styles = StyleSheet.create({
   input: {
     height: hp("5%"),
-    marginBottom: hp("2"),
-    color: "#fff",
-    marginTop: hp("1"),
-    width: wp("70"),
-    paddingRight: wp("7"),
-    backgroundColor: "#131E3A",
-    borderRadius: wp("20"),
+    color: "black",
+    marginTop: hp(0.5),
+    width: wp(80),
+    backgroundColor: "#fff",
+    borderRadius: 4,
     marginLeft: wp("10"),
+    fontSize:18,
+    paddingHorizontal:wp(1)
   },
   content: {
     display: "flex",
@@ -256,6 +310,12 @@ const styles = StyleSheet.create({
     marginTop: hp(3),
     color: "#FFF",
    
+  },
+  tinyLogo: {
+    width: wp("20"),
+    height: hp("13"),
+    marginTop: hp(0.3),
+    alignSelf: "center",
   },
   btn: {
     width: wp("80"),
@@ -275,11 +335,11 @@ const styles = StyleSheet.create({
     marginBottom: wp("5"),
     fontSize: hp("5"),
   },
-  tinyLogo: {
-    width: wp("5"),
-    height: hp("5"),
-    padding: 20,
-  },
+  // tinyLogo: {
+  //   width: wp("5"),
+  //   height: hp("5"),
+  //   padding: 20,
+  // },
   icon: {
     display: "flex",
     flexDirection: "row",
@@ -319,15 +379,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     textAlign: "center",
-    // fontSize: 24,
+    fontSize: 16,
   },
   lowerbox: {
-    marginTop: hp(8),
-    height:hp(6),
+    marginTop: hp(0.2),
+    height:hp(3),
     width: 400,
-    backgroundColor: "#003166",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     display: "flex",
     alignItems: "center",
     textAlign: "center",
