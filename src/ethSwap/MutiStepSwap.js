@@ -3,6 +3,7 @@ const FACTORY_ABI = require('./abi/factory.json');
 const QUOTER_ABI = require('./abi/quoter.json');
 const SWAP_ROUTER_ABI = require('./abi/swaprouter.json');
 const POOL_ABI = require('./abi/pool.json');
+const { RPC } = require('../Dashboard/constants');
 const WETH_ABI = [
     "function deposit() external payable",
     "function withdraw(uint amount) external",
@@ -27,7 +28,7 @@ class SwapResult {
     }
 }
 
-async function swapETHtoUSDC(amount, privateKey, rpcUrl = 'https://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo') {
+async function swapETHtoUSDC(amount, privateKey, rpcUrl = RPC.ETHRPC) {
     try {
         // Initialize provider and signer
         const provider = new ethers.providers.JsonRpcProvider(rpcUrl);

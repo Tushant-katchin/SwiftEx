@@ -11,7 +11,7 @@
 // const SWAP_ROUTER_CONTRACT_ADDRESS = '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E'
 
 // // Provider, Contract & Signer Instances
-// const provider = new ethers.providers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo') // Changed provider initialization
+// const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC) // Changed provider initialization
 // const factoryContract = new ethers.Contract(POOL_FACTORY_CONTRACT_ADDRESS, FACTORY_ABI, provider);
 // const quoterContract = new ethers.Contract(QUOTER_CONTRACT_ADDRESS, QUOTER_ABI, provider)
 
@@ -143,6 +143,7 @@ const FACTORY_ABI = require('./abi/factory.json');
 const QUOTER_ABI = require('./abi/quoter.json');
 const SWAP_ROUTER_ABI = require('./abi/swaprouter.json');
 const POOL_ABI = require('./abi/pool.json');
+const { RPC } = require('../Dashboard/constants');
 const USDC_ABI = [
     "function approve(address spender, uint256 amount) external returns (bool)",
     "function balanceOf(address account) external view returns (uint256)",
@@ -169,7 +170,7 @@ class SwapResult {
 
 async function swapUSDCtoWETH(amount, privateKey) {
     // Initialize provider
-    const provider = new ethers.providers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo');
+    const provider = new ethers.providers.JsonRpcProvider(RPC.ETHRPC);
     const signer = new ethers.Wallet(privateKey, provider);
 
     try {

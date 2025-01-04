@@ -29,6 +29,7 @@ import { main, swapUSDCtoWETH } from './SwapExecution';
 import Snackbar from 'react-native-snackbar';
 import { swapETHtoUSDC } from './MutiStepSwap';
 import { SaveTransaction } from '../utilities/utilities';
+import { RPC } from '../Dashboard/constants';
 
 const FACTORY_ABI = require('./abi/factory.json');
 const QUOTER_ABI = require('./abi/quoter.json');
@@ -36,7 +37,7 @@ const POOL_ABI = require('./abi/pool.json');
 
 const POOL_FACTORY_CONTRACT_ADDRESS = '0x0227628f3F023bb0B980b67D528571c95c6DaC1c'
 const QUOTER_CONTRACT_ADDRESS = '0xEd1f6473345F45b75F8179591dd5bA1888cf2FB3'
-const RPC_URL = 'https://eth-sepolia.g.alchemy.com/v2/k5oEPTr8Pryz-1bdXyNzH3TfwczQ_TRo'
+const RPC_URL = RPC.ETHRPC;
 
 // Token List
 const TOKENS = [
