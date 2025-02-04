@@ -267,7 +267,7 @@ const tokenHande=()=>{
             {quoteLoading ? '...' : estimatedUsdt}
           </Text>
           </ScrollView>
-          <Text style={styles.outputAmount}> {fromToken.symbol}</Text>
+          <Text style={styles.outputAmount}> {toToken.symbol}</Text>
         </View>
 
         {showQuoteDetails && (
@@ -275,7 +275,7 @@ const tokenHande=()=>{
             <Text style={[styles.quoteTitle,{color:state?.THEME?.THEME===false?"black":"#fff"}]}>Quote Details</Text>
             <View style={styles.quoteRow}>
               <Text style={styles.quoteLabel}>Rate</Text>
-              <Text style={[styles.quoteValue,{color:state?.THEME?.THEME===false?"black":"#fff"}]}>1 WBNB = {parseFloat(estimatedUsdt).toFixed(6)} {fromToken.symbol}</Text>
+              <Text style={[styles.quoteValue,{color:state?.THEME?.THEME===false?"black":"#fff"}]}>1 WBNB = {parseFloat(estimatedUsdt).toFixed(6)} {toToken.symbol}</Text>
             </View>
             <View style={styles.quoteRow}>
               <Text style={styles.quoteLabel}>Fee Tier</Text>
@@ -283,7 +283,7 @@ const tokenHande=()=>{
             </View>
             <View style={styles.quoteRow}>
               <Text style={styles.quoteLabel}>Minimum Received</Text>
-              <Text style={[styles.quoteValue,{color:state?.THEME?.THEME===false?"black":"#fff"}]}>{(parseFloat(estimatedUsdt) * 0.95).toFixed(6)} {fromToken.symbol}</Text>
+              <Text style={[styles.quoteValue,{color:state?.THEME?.THEME===false?"black":"#fff"}]}>{(parseFloat(estimatedUsdt) * 0.95).toFixed(6)} {toToken.symbol}</Text>
             </View>
           </View>
         )}
