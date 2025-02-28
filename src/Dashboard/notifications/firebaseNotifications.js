@@ -9,6 +9,7 @@ import {SendNotification} from "./pushController"
 import AsyncStorageLib from '@react-native-async-storage/async-storage'
 import * as Clipboard from "expo-clipboard";
 import { firebaseNotification } from './firebasePushMessages'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const copyToClipboard = (text) => {

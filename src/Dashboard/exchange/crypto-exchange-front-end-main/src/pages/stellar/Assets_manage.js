@@ -21,7 +21,7 @@ import { SET_ASSET_DATA } from "../../../../../../components/Redux/actions/type"
 import { STELLAR_URL } from "../../../../../constants";
 import { Exchange_screen_header } from "../../../../../reusables/ExchangeHeader";
 const StellarSdk = require('stellar-sdk');
-const Assets_manage = () => {
+const Assets_manage = ({route}) => {
     const FOCUSED = useIsFocused();
     const navigation = useNavigation();
     const dispatch_ = useDispatch()
@@ -152,6 +152,7 @@ const Assets_manage = () => {
     }
 
     useEffect(() => {
+        setTRUST_ASSET(route?.params?.openAssetModal || false);
         setLoading_assets_bal(false)
         get_stellar()
     }, [FOCUSED])
@@ -166,8 +167,8 @@ const Assets_manage = () => {
                         return (
                             <TouchableOpacity style={styles.assets_card} onPress={() => { navigation.navigate("send_recive",{bala:list.balance,asset_name:list.asset_type === "native" ? "native" : list.asset_code=== "USDC"?"USDC":list.asset_code}) }}>
                                 <View style={{ flexDirection: "column" }}>
-                                    <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.asset_type === "native" ? "Lumens" : list.asset_code=== "USDC"&&"USDC"}</Text>
-                                    <Text style={[styles.mode_text, { fontSize: 16, fontWeight: "300", color: "silver" }]}>{list.asset_type === "native" ? "(stellar.org)" : list.asset_code==="USDC" && "(centre.io)"}</Text>
+                                    <Text style={[styles.mode_text, { fontSize: 19, fontWeight: "300" }]}>{list.asset_type === "native" ? "Lumens" : list.asset_code}</Text>
+                                    <Text style={[styles.mode_text, { fontSize: 16, fontWeight: "300", color: "silver" }]}>{list.asset_type === "native" ? "(stellar.org)" : list.asset_code==="USDC"?"(centre.io)":list.asset_code==="ETH"?"(ultracapital.xyz)":"(ultracapital.xyz)"}</Text>
                                 </View>
                                 {/* <ScrollView style={{height:hp52)}}> */}
 

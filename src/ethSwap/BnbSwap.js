@@ -81,6 +81,8 @@ const initializeWallet = async () => {
     );
     setProvider(provider);
     
+    // In a real app, you'd implement wallet connection here
+    // This is just for demonstration
     const testPrivateKey = state?.wallet?.privateKey; // PRIVATE-KEY
     const wallet = new ethers.Wallet(testPrivateKey, provider);
     setSigner(wallet);

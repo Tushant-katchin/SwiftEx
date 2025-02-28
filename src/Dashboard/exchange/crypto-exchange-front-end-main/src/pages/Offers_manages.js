@@ -68,7 +68,7 @@ const Offers_manages = () => {
   }, [isFocused]);
 
 
-  const fetchAvilableBalance=async(asset)=>{
+  const fetchAvilableBalance=async(asset,coinName)=>{
     if(asset==="native")
     {
       GetStellarAvilabelBalance(state?.STELLAR_PUBLICK_KEY).then((result) => {
@@ -81,7 +81,7 @@ const Offers_manages = () => {
     }
     if(asset==="credit_alphanum4")
     {
-      GetStellarUSDCAvilabelBalance(state?.STELLAR_PUBLICK_KEY).then((result) => {
+      GetStellarUSDCAvilabelBalance(state?.STELLAR_PUBLICK_KEY,coinName).then((result) => {
         setstellarAvalibleBalance(result?.availableBalance).toFixed(5)
         setreserveLoading(false)
         }).catch(error => {
@@ -94,7 +94,7 @@ const Offers_manages = () => {
   const fetchOffers = async () => {
     setLoading(true);
     try {
-      const apiUrl = `${STELLAR_URL.URL}/accounts/${state?.STELLAR_PUBLICK_KEY}/offers?limit=200&order=desc`;
+      const apiUrl = `https://horizon-testnet.stellar.org/accounts/${state?.STELLAR_PUBLICK_KEY}/offers?limit=200&order=desc`;
       const response = await axios.get(apiUrl);
       const fetchedOffers = response.data._embedded?.records || [];
 
@@ -108,13 +108,15 @@ const Offers_manages = () => {
         if (firstOffer.selling) {
           const sellingAssetType = firstOffer.selling.asset_type;
 
-          sellingAssetCode = sellingAssetType === 'native' ? 'XLM' : firstOffer.selling.asset_type || 'Unknown Asset Code';
+          sellingAssetCode = sellingAssetType === 'native' ? 'XLM' : firstOffer.selling.asset_code ;
           sellingAssetIssuer = firstOffer.selling.asset_issuer || 'Unknown Issuer';
 
         }
 
         if (firstOffer.buying) {
-          buyingAssetCode = firstOffer.buying?.asset_code || firstOffer.buying?.asset_type;
+          const buyAssetType = firstOffer.buying.asset_type;
+          buyingAssetCode = buyAssetType === 'native' ? firstOffer.buying?.asset_type:firstOffer.buying?.asset_code;
+
           buyingAssetIssuer = firstOffer.buying.asset_issuer || 'Unknown Issuer';
         }
 
@@ -157,8 +159,8 @@ const Offers_manages = () => {
       })
         .addOperation(StellarSdk.Operation.manageOffer({
           offerId: offerId,
-          selling:sellingAssetCode==="XLM"||sellingAssetCode==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(sellingAssetCode==='credit_alphanum4'&&"USDC", sellingAssetIssuer), 
-          buying: buyingAssetCode==="XLM"||buyingAssetCode==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(buyingAssetCode==='credit_alphanum4'&&"USDC", buyingAssetIssuer), 
+          selling:sellingAssetCode==="XLM"||sellingAssetCode==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(sellingAssetCode, sellingAssetIssuer), 
+          buying: buyingAssetCode==="XLM"||buyingAssetCode==="native"?new StellarSdk.Asset.native():new StellarSdk.Asset(buyingAssetCode, buyingAssetIssuer), 
           amount: '0', 
           price: '1', 
         }))
@@ -182,7 +184,7 @@ const Offers_manages = () => {
   const handleEdit = (offer,index) => {
     setlastOfferAmount(Number(offer.amount).toFixed(5))
     setreserveLoading(true)
-    fetchAvilableBalance(offer?.selling?.asset_type)
+    fetchAvilableBalance(offer?.selling?.asset_type,offer?.selling?.asset_code)
     setSelectedIndex(index)
     setSelectedOffer(offer);
     setNewAmount(Number(offer.amount).toFixed(5));
@@ -192,6 +194,7 @@ const Offers_manages = () => {
 
   const updateOffer = async () => {
     Keyboard.dismiss();
+    console.log("++_++_+_____",sellingAssetCode,buyingAssetCode)
     console.log("data---", {
       newAmount: BigNumber(newAmount || 0).toString(),
       lastOfferAmount: BigNumber(lastOfferAmount || 0).toString(),
@@ -232,20 +235,11 @@ const Offers_manages = () => {
           })
             .addOperation(StellarSdk.Operation.manageOffer({
               offerId: selectedOffer.id,
-              selling: sellingAssetCode === "XLM" || sellingAssetCode === "native" ? 
-                new StellarSdk.Asset.native() : 
-                new StellarSdk.Asset(
-                  sellingAssetCode === 'credit_alphanum4' || sellingAssetCode === 'USDC' ? 
-                    "USDC" : sellingAssetCode, 
-                  sellingAssetIssuer
-                ),
+              selling: sellingAssetCode === "XLM" || sellingAssetCode === "native" ? new StellarSdk.Asset.native() : 
+                new StellarSdk.Asset( sellingAssetCode, sellingAssetIssuer),
               buying: buyingAssetCode === "XLM" || buyingAssetCode === "native" ? 
                 new StellarSdk.Asset.native() : 
-                new StellarSdk.Asset(
-                  buyingAssetCode === 'credit_alphanum4' || buyingAssetCode === 'USDC' ? 
-                    "USDC" : sellingAssetCode, 
-                  buyingAssetIssuer
-                ),
+                new StellarSdk.Asset( buyingAssetCode, buyingAssetIssuer),
               amount: newAmountBN.toString(),
               price: BigNumber(newPrice).toString(),
             }))
@@ -280,11 +274,11 @@ const Offers_manages = () => {
       </View>
       <View style={styles.container_sub}>
       <Text style={styles.offerText}>Asset Selling</Text>
-      <Text style={styles.offerText}>{item.selling.asset_type==="credit_alphanum4"?"USDC":item.selling.asset_type==="native"?"XLM":item.selling.asset_type}</Text>
+      <Text style={styles.offerText}>{item?.selling?.asset_type==="native"?"XLM":item.selling?.asset_code}</Text>
       </View>
       <View style={styles.container_sub}>
       <Text style={styles.offerText}>Asset Buying</Text>
-      <Text style={styles.offerText}>{item.buying?.asset_type==="native"?"XLM":item.buying?.asset_type==="credit_alphanum4"?"USDC":item.buying?.asset_type||item.buying?.asset_code}</Text>
+      <Text style={styles.offerText}>{item?.buying?.asset_type==="native"?"XLM":item.buying?.asset_code}</Text>
       </View>
       <View style={styles.container_sub}>
       <Text style={styles.offerText}>Amount</Text>
